@@ -1,0 +1,96 @@
+// Copyright (C) 2006 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org/LICENSE_1_0.txt)
+
+package uk.org.toot.audio.spi;
+
+import java.util.List;
+import uk.org.toot.service.*;
+import uk.org.toot.control.spi.*;
+import uk.org.toot.audio.core.AudioProcess;
+import uk.org.toot.audio.core.AudioControls;
+
+abstract public class AudioServiceProvider extends ServiceProvider
+{
+    private List<ServiceDescriptor> controls;
+
+    private List<ServiceDescriptor> processors;
+
+    /**
+     * Constructs an <code>AudioServiceProvider</code> with a given
+     * provider name and version identifier.
+     *
+     * @param providerName the provider name.
+     * @param version a version identifier.
+     *
+     * @exception IllegalArgumentException if <code>providerName</code>
+     * is <code>null</code>.
+     * @exception IllegalArgumentException if <code>version</code>
+     * is <code>null</code>.
+     */
+    public AudioServiceProvider(int providerId, String providerName, String description, String version) {
+        super(providerId, providerName, description, version);
+        controls = service(AudioControls.class);
+        processors = service(AudioProcess.class);
+    }
+
+    public String lookupName(int moduleId) {
+        for ( ServiceDescriptor d : controls ) {
+            try {
+	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
+    	            return d.getName();
+        	    }
+            } catch ( Exception e ) {
+                e.printStackTrace();
+			}
+        }
+        return null;
+    }
+
+    public AudioControls createControls(int moduleId) {
+        for ( ServiceDescriptor d : controls ) {
+            try {
+	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
+    	            return (AudioControls)d.getServiceClass().newInstance();
+        	    }
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds a ControlServiceDescriptor for the matching service.
+     */
+    protected void addControls(Class clazz, int moduleId, String name, String description, String version) {
+        add(new ControlServiceDescriptor(clazz, moduleId, name, description, version));
+    }
+
+
+    public AudioControls createControls(String name) {
+        for ( ServiceDescriptor d : controls ) {
+            try {
+	            if ( d.getName().equals(name) ) {
+    	            return (AudioControls)d.getServiceClass().newInstance();
+        	    }
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public abstract AudioProcess createProcessor(AudioControls c);
+
+/*    public Iterator<ServiceDescriptor> controlsDescriptors() {
+        return controls.iterator();
+    }
+
+    public Iterator<ServiceDescriptor> processDescriptors() {
+        return processors.iterator();
+    } */
+
+
+}
