@@ -3,7 +3,8 @@
 package uk.org.toot.audio.core;
 
 /**
- * A simple AudioProcess with empty open and close implementations
+ * A simple AudioProcess with empty open and close implementations.
+ * Many AudioProcesses don't need open and close implementations.
  */
 abstract public class SimpleAudioProcess implements AudioProcess
 {
