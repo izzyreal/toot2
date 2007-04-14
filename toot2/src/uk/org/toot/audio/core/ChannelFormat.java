@@ -1,9 +1,30 @@
-/* Copyright Steve Taylor 2006 */
+// Copyright (C) 2007 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org/LICENSE_1_0.txt)
 
 package uk.org.toot.audio.core;
 
 import static uk.org.toot.localisation.Localisation.*;
 
+/**
+ * ChannelFormat provides information about AudioProcess channels.
+ *
+ * You can find out whether a channel index is left, right, center, front, rear
+ * or a low frequency extension (LFE) which is sufficient to describe mono,
+ * stereo, quad and 5.1, those formats being predefined as MONO, STEREO, QUAD
+ * and FIVE_1.
+ *
+ * You can also find out which channel indices are left, right, center, front,
+ * rear and LFE.
+ *
+ * You can get the localised name for a channel index and for the format.
+ *
+ * You can also mix a format with less channels to a format (upmixing).
+ *
+ * Odd formats like 1.1, 2.1, 3, 3.1 and 4.1 could be provided but are not
+ * believed to be significant enough to implement.
+ */
 public abstract class ChannelFormat
 {
     /**
@@ -28,7 +49,7 @@ public abstract class ChannelFormat
 
     // experimental !!! !!! !!!
     // valid for destBuffer MONO/STEREO/QUAD
-    // override for other formats
+    // override for other formats (or refactor for extension)
 	public int mix(AudioBuffer destBuffer, AudioBuffer sourceBuffer, float[] gain) {
         boolean doMix = destBuffer != sourceBuffer;
         int snc = sourceBuffer.getChannelCount();
@@ -53,7 +74,6 @@ public abstract class ChannelFormat
         }
        	int ret = 1;
 		if ( !doMix ) ret |= 2;
-//      if ( clipped ) ret |= 4;
     	return ret;
     }
 

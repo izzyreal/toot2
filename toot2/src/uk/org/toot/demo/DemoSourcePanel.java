@@ -1,4 +1,7 @@
-/* Copyright Steve Taylor 2006 */
+// Copyright (C) 2007 Steve Taylor.
+// Distributed under under the terms of the GNU General Public License as
+// published by the Free Software Foundation; either version 2 of the License,
+// or (at your option) any later version.
 
 package uk.org.toot.demo;
 

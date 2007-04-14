@@ -14,6 +14,8 @@ package uk.org.toot.audio.core;
  * Something else provides the buffer.
  *
  * There is intentionally no support for routing, that's a separate concern.
+ *
+ * Inputs should also call buffer.setMetaInfo() and buffer.setChannelFormat().
  */
 public interface AudioProcess
 {
