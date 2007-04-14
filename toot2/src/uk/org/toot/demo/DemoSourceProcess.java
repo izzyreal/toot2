@@ -4,15 +4,13 @@ package uk.org.toot.demo;
 
 import uk.org.toot.audio.core.*;
 
-public class DemoSourceProcess implements AudioProcess
+public class DemoSourceProcess extends SimpleAudioProcess
 {
     private DemoSourceControls vars;
 
     public DemoSourceProcess(DemoSourceControls controls) {
         vars = controls;
     }
-
-    public void open() {}
 
     public int processAudio(AudioBuffer buffer) {
         // attach source name meta info so our mixer strip shows our name
@@ -29,6 +27,4 @@ public class DemoSourceProcess implements AudioProcess
         }
         return AUDIO_OK;
     }
-
-    public void close() {}
 }

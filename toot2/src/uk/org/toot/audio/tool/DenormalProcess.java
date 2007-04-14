@@ -11,7 +11,7 @@ import static uk.org.toot.audio.core.FloatDenormals.*;
 /**
  * This class
  */
-public class DenormalProcess implements AudioProcess
+public class DenormalProcess extends SimpleAudioProcess
 {
     public final static int COUNT = 0;
     public final static int DAZ = 1; // Denormal As Zero
@@ -27,10 +27,6 @@ public class DenormalProcess implements AudioProcess
     public DenormalProcess(DenormalControls c) {
         controls = c;
     }
-
-    public void open() {}
-
-    public void close() {}
 
     public int processAudio(AudioBuffer buffer) {
         if ( controls.isBypassed() ) return AUDIO_OK;

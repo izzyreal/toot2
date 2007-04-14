@@ -6,9 +6,9 @@
 package uk.org.toot.audio.basic.stereoImage;
 
 import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.audio.core.AudioProcess;
+import uk.org.toot.audio.core.SimpleAudioProcess;
 
-public class StereoImageProcess implements AudioProcess
+public class StereoImageProcess extends SimpleAudioProcess
 {
     /** @link aggregation
      * @supplierCardinality 1 */
@@ -17,8 +17,6 @@ public class StereoImageProcess implements AudioProcess
     public StereoImageProcess(StereoImageProcessVariables variables) {
         vars = variables;
     }
-
-    public void open() {}
 
     public int processAudio(AudioBuffer buffer) {
         int nsamples = buffer.getSampleCount();
@@ -41,6 +39,4 @@ public class StereoImageProcess implements AudioProcess
         }
         return AUDIO_OK;
     }
-
-    public void close() {}
 }

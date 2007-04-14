@@ -6,7 +6,7 @@
 package uk.org.toot.audio.meter;
 
 import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.audio.core.AudioProcess;
+import uk.org.toot.audio.core.SimpleAudioProcess;
 
 /**
  * A partial K-System meter process, for proper K-System compatibility 0dBr
@@ -16,7 +16,7 @@ import uk.org.toot.audio.core.AudioProcess;
  * high peak is always infinite hold, last 10s unimplemented.
  * no pink noise source.
  */
-public class MeterProcess implements AudioProcess
+public class MeterProcess extends SimpleAudioProcess
 {
     /**
      * @supplierCardinality 1
@@ -29,8 +29,6 @@ public class MeterProcess implements AudioProcess
     public MeterProcess(MeterControls controls) {
         this.controls = controls;
     }
-
-    public void open() {}
 
     public int processAudio(AudioBuffer buffer) {
         int nc = buffer.getChannelCount();
@@ -48,8 +46,6 @@ public class MeterProcess implements AudioProcess
         }
         return AUDIO_OK;
     }
-
-    public void close() {}
 
     private void check(AudioBuffer buffer) {
         // tell controls of buffer latency time changes

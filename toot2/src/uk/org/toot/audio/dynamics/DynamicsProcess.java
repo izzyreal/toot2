@@ -3,9 +3,9 @@
 package uk.org.toot.audio.dynamics;
 
 import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.audio.core.AudioProcess;
+import uk.org.toot.audio.core.SimpleAudioProcess;
 
-abstract public class DynamicsProcess implements AudioProcess
+abstract public class DynamicsProcess extends SimpleAudioProcess
 {
     protected float envelope = 0f;
 
@@ -29,10 +29,6 @@ abstract public class DynamicsProcess implements AudioProcess
         this.vars = vars;
         this.isPeak = peak;
     }
-
-    public void open() {}
-
-    public void close() {}
 
     public void clear() {
         envelope = 1f; // envelope of gain

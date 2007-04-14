@@ -9,13 +9,9 @@ package uk.org.toot.audio.core;
  * An AudioProcess that does nothing.
  * Useful for testing.
  */
-public class NullAudioProcess implements AudioProcess
+public class NullAudioProcess extends SimpleAudioProcess
 {
-    public void open() {}
-
     public int processAudio(AudioBuffer buffer) {
     	return AUDIO_DISCONNECT;
     }
-
-    public void close() {}
 }
