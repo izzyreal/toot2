@@ -20,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
-import uk.org.toot.misc.Log;
 import java.awt.Rectangle;
 
 // for the camera
@@ -38,22 +37,13 @@ public class SwingApplication
     public SwingApplication(final String aBasename, final String aFullname) {
         basename = aBasename;
         fullname = aFullname;
-        Log.addStream(System.err);
         String filename = basename+".log";
         File path = new File(new File(System.getProperty("user.home"), "toot"), "logs");
         File file = new File(path, filename);
         path.mkdirs();
-        try {
-        	// append to or create an auto-flushing print stream
-        	Log.addStream(new PrintStream(new FileOutputStream(file, true), true));
-            Log.debug("Logging "+basename+" to "+file.getPath());
-        } catch ( FileNotFoundException fnfe ) {
-            Log.exception(fnfe, "Failed to access "+filename);
-        }
         setLookAndFeel();
 //        UIManager.put("TabbedPane.selected", new Color(15, 50, 125));
         UIManager.put("TabbedPane.selectedForeground", new Color(15, 50, 125));
-        Log.debug("Opened "+basename);
     }
 
     public void setLookAndFeel() { setNativeLookAndFeel(); }
@@ -143,7 +133,6 @@ public class SwingApplication
             subject = sub.getTopLevelAncestor();
             if ( subject == null ) {
                 subject = sub;
-                Log.debug("null TopLevel Ancestor for "+sub);
             }
         }
 
@@ -169,7 +158,6 @@ public class SwingApplication
     }
 
     protected void close() {
-        Log.debug("Closed "+basename);
         System.exit(0);
     }
 
@@ -181,7 +169,7 @@ public class SwingApplication
 	      	String syslaf = UIManager.getSystemLookAndFeelClassName() ;
       		UIManager.setLookAndFeel(syslaf);
     	} catch(Exception e) {
-	      	Log.exception(e, "Error setting native LAF");
+	      	e.printStackTrace();
     	}
   	}
 
@@ -190,7 +178,7 @@ public class SwingApplication
      		UIManager.setLookAndFeel(
        		UIManager.getCrossPlatformLookAndFeelClassName());
     	} catch(Exception e) {
-      		Log.exception(e, "Error setting Java LAF");
+	      	e.printStackTrace();
     	}
   	}
 
@@ -199,7 +187,7 @@ public class SwingApplication
       		UIManager.setLookAndFeel(
         		"com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 	    } catch(Exception e) {
-      		Log.exception(e, "Error setting Motif LAF");
+	      	e.printStackTrace();
     	}
   	}
 
