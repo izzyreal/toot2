@@ -22,7 +22,8 @@ public class RoomSimulatorControls extends AbstractDelayControls
     private static final int WIDTH_ID = 2;
     private static final int HEIGHT_ID = 3;
 
-    private List<DelayTap>[] taps;
+    @SuppressWarnings("unused")
+	private List<DelayTap>[] taps;
     private FloatControl lengthControl;
     private FloatControl widthControl;
     private FloatControl heightControl;

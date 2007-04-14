@@ -11,8 +11,10 @@ import java.io.FileNotFoundException;
 
 public class RandomAccessAudioFile extends RandomAccessFile
 {
-    private long offset; // byte offset of audio data (after any header)
-    private long startFrame = 0; // frame that represents zero microseconds
+    @SuppressWarnings("unused")
+	private long offset; // byte offset of audio data (after any header)
+    @SuppressWarnings("unused")
+	private long startFrame = 0; // frame that represents zero microseconds
 
     public RandomAccessAudioFile(File file, String mode)
     	throws FileNotFoundException {

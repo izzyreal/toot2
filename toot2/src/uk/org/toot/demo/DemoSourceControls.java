@@ -41,11 +41,11 @@ public class DemoSourceControls extends CompoundControl
         // to sync Frinika folders to mixer group strips
         routeControl = mainMixControls.getRouteControl();
         // set the default Frinika lane and folder names
-        setName("m/s demo");
+        setLabel("m/s demo");
         setGroup(groupName, "demo");
     }
 
-    public void setName(String aName) {
+    public void setLabel(String aName) {
         name = aName;
         // update the MetaInfo that will be used by the DemoSourceProcess
         info = new AudioBuffer.MetaInfo(name);

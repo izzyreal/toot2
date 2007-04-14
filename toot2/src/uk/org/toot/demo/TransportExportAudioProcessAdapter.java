@@ -11,7 +11,8 @@ import javax.sound.sampled.AudioFormat;
  */
 public class TransportExportAudioProcessAdapter extends ExportAudioProcessAdapter
 {
-    private Transport transport;
+    @SuppressWarnings("unused")
+	private Transport transport;
 
     public TransportExportAudioProcessAdapter(AudioProcess process,
         	AudioFormat format, String name,Transport transport) {

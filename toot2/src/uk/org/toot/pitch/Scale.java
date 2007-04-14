@@ -80,12 +80,14 @@ public class Scale {
         	scales.add(new Scale("Pentatonic Minor", pentatonicMinor)) ;
 
 		// 3 Semitone		R	 	 	b3	 	 	b5	 	 	6
-        int[] threeSemitone = {
+        @SuppressWarnings("unused")
+		int[] threeSemitone = {
             UNISON, MINOR_THIRD, DIMINISHED_FIFTH, MAJOR_SIXTH } ;
 //        scales.add(new Scale("3 Semitone", threeSemitone)) ;
 
 		// 4 Semitone		R	 	 	 	3	 	 	 	b6
-        int[] fourSemitone= {
+        @SuppressWarnings("unused")
+		int[] fourSemitone= {
             UNISON, MAJOR_THIRD, MINOR_SIXTH } ;
 //        scales.add(new Scale("4 Semitone", fourSemitone)) ;
 
