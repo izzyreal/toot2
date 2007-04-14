@@ -37,10 +37,6 @@ public class SwingApplication
     public SwingApplication(final String aBasename, final String aFullname) {
         basename = aBasename;
         fullname = aFullname;
-        String filename = basename+".log";
-        File path = new File(new File(System.getProperty("user.home"), "toot"), "logs");
-        File file = new File(path, filename);
-        path.mkdirs();
         setLookAndFeel();
 //        UIManager.put("TabbedPane.selected", new Color(15, 50, 125));
         UIManager.put("TabbedPane.selectedForeground", new Color(15, 50, 125));

@@ -10,7 +10,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import javax.swing.*;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.List;
 import uk.org.toot.control.*;
 

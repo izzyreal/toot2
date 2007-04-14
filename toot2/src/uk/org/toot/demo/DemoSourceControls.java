@@ -3,7 +3,6 @@
 package uk.org.toot.demo;
 
 import uk.org.toot.control.*;
-import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.mixer.*;
 import uk.org.toot.audio.core.AudioBuffer;
 

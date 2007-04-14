@@ -5,7 +5,6 @@
 
 package uk.org.toot.demo;
 
-import javax.swing.JPanel;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.mixer.AudioMixer;
 import uk.org.toot.swingui.audioui.mixerui.*;

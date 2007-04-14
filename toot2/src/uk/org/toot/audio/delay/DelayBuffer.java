@@ -6,8 +6,6 @@
 package uk.org.toot.audio.delay;
 
 import org.tritonus.share.sampled.FloatSampleBuffer;
-import java.util.List;
-
 import static uk.org.toot.audio.core.FloatDenormals.*;
 
 /**

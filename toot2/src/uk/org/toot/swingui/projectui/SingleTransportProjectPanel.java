@@ -20,7 +20,8 @@ public class SingleTransportProjectPanel extends SingleProjectPanel
 {
     private Transport transport;
     private TransportActions transportActions;
-    private KeyEventDispatcher transportDispatcher;
+    @SuppressWarnings("unused")
+	private KeyEventDispatcher transportDispatcher;
 
     public SingleTransportProjectPanel(SingleTransportProject p) {
         super(p);

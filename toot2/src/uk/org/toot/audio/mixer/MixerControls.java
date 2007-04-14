@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import uk.org.toot.control.*;
-import java.util.Observable;
-import uk.org.toot.audio.*;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;

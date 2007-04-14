@@ -166,7 +166,6 @@ abstract public class MixerControlsMidiSequenceSnapshotAutomation extends BasicS
         int providerId = 0;
         int moduleId = 0;
         int instanceIndex = -1;
-        int controlId = 0;
         CompoundControl module = null;
         for ( int t = 0; t < tracks.length; t++ ) {
             track = tracks[t];

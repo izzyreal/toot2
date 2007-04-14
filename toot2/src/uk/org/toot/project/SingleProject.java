@@ -5,7 +5,6 @@
 
 package uk.org.toot.project;
 
-import uk.org.toot.transport.Transport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

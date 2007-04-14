@@ -11,7 +11,6 @@ import java.awt.Graphics;
 import javax.swing.Icon;
 //import javax.swing.JSlider;
 import javax.swing.plaf.UIResource;
-import javax.swing.plaf.metal.*;
 
 public class FaderKnobIcon implements Icon, UIResource { // was Serializable
 	private static int IW = 24; // icon width

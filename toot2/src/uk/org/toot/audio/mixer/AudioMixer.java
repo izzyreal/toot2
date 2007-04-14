@@ -34,7 +34,8 @@ public class AudioMixer implements AudioClient
      * @link aggregationByValue
      * @supplierCardinality 1 
      */
-    private MixerControls controls;
+    @SuppressWarnings("unused")
+	private MixerControls controls;
 
     /**
      * @supplierCardinality 1

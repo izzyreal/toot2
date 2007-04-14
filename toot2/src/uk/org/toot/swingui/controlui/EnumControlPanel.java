@@ -6,7 +6,6 @@
 package uk.org.toot.swingui.controlui;
 
 import java.awt.Dimension;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import uk.org.toot.control.EnumControl;
@@ -14,11 +13,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JComponent;
 import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 import java.util.Observable;
-import java.util.Observer;
 
 public class EnumControlPanel extends ControlPanel
 {

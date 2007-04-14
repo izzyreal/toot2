@@ -19,8 +19,7 @@ public class YieldTimingStrategy implements AudioTimingStrategy
 
     public void block(long nowNanos, long blockNanos) {
         long untilNanos = nowNanos + blockNanos;
-        long nanos;
-        while ( (nanos = System.nanoTime()) < untilNanos ) {
+        while ( System.nanoTime() < untilNanos ) {
             Thread.yield();
         }
     }

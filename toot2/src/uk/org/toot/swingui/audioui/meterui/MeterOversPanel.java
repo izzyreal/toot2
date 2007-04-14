@@ -6,7 +6,6 @@
 package uk.org.toot.swingui.audioui.meterui;
 
 import java.util.Observable;
-import java.util.Observer;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.control.Control;
 import uk.org.toot.audio.meter.MeterControls;

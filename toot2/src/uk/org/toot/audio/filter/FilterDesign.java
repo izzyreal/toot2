@@ -5,8 +5,6 @@
 
 package uk.org.toot.audio.filter;
 
-import java.util.Observer;
-
 interface FilterDesign
 {
     void design(int sampleRate);

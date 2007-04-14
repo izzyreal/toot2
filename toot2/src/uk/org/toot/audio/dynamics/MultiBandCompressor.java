@@ -3,7 +3,6 @@
 package uk.org.toot.audio.dynamics;
 
 import java.util.List;
-import uk.org.toot.audio.*;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;

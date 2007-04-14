@@ -5,7 +5,6 @@
 
 package uk.org.toot.audio.mixer.automation;
 
-import java.util.List;
 import java.util.ArrayList;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioControls;

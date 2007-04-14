@@ -11,7 +11,6 @@ import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.mixer.*;
 import uk.org.toot.audio.fader.*;
-import uk.org.toot.swingui.controlui.*;
 import uk.org.toot.swingui.audioui.*;
 import uk.org.toot.swingui.audioui.faderui.*;
 //import uk.org.toot.swingui.audioui.meterui.*;

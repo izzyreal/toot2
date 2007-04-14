@@ -7,7 +7,6 @@ package uk.org.toot.swingui.audioui.meterui;
 
 import uk.org.toot.control.*;
 import uk.org.toot.audio.meter.MeterControls;
-import uk.org.toot.swingui.controlui.*;
 import javax.swing.*;
 import uk.org.toot.swingui.audioui.AudioPanelFactory;
 

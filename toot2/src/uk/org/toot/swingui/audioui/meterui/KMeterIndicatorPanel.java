@@ -19,11 +19,7 @@ import uk.org.toot.swingui.controlui.*;
 
 public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
 {
-    private MeterControls.MeterIndicator indicator;
     private MeterControls controls;
-    private Timer timer;
-    private float dBprecision;
-
     /**
      * @supplierCardinality 1..*
      * @link aggregationByValue
@@ -44,10 +40,8 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
         super(indicator, times[timeIndex]);
         timeIndex += 1;
         timeIndex %= times.length;
-        this.indicator = indicator;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         controls = (MeterControls)indicator.getParent();
-        dBprecision = indicator.getPrecision();
         ChannelFormat channelFormat = controls.getChannelFormat();
         nchannels = channelFormat.getCount();
         movement = new MeterMovement[nchannels];

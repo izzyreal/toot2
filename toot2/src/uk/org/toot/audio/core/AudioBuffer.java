@@ -116,7 +116,8 @@ public class AudioBuffer extends FloatSampleBuffer
 	        // how do we convert other formats ???
 	        // get format with highest channel count to do it
     	    // because only it knows about that many channels
-        	ChannelFormat convertingFormat =
+        	@SuppressWarnings("unused")
+			ChannelFormat convertingFormat =
                 channelFormat.getCount() > format.getCount()
             		? channelFormat : format;
 //        	if ( convertingFormat.convertTo(format) ) {

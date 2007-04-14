@@ -6,24 +6,19 @@
 package uk.org.toot.swingui.audioui;
 
 import java.util.Observer;
-import java.util.Observable;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 
 import java.awt.Color;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.SwingUtilities;
 import uk.org.toot.swingui.controlui.*;
 
 public class AudioCompoundControlPanel extends CompoundControlPanel implements Observer
 {
-    private Color originalBackground;
-
     public AudioCompoundControlPanel(CompoundControl control, int axis,
         	ControlSelector controlSelector, PanelFactory panelFactory, boolean hasBorder, boolean hasHeader) {
         super(control, axis, controlSelector, panelFactory, hasBorder, hasHeader);
-        originalBackground = getBackground();
     }
 
     protected boolean reverseIfYAxis() {

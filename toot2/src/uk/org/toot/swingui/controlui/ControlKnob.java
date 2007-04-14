@@ -178,7 +178,8 @@ public class ControlKnob extends JComponent implements Observer
         }
     }
 
-    private class SpotMouseController extends AbstractMouseController
+    @SuppressWarnings("unused")
+	private class SpotMouseController extends AbstractMouseController
     {
         /**
          * When the mouse button is pressed, the dragging of the spot will be

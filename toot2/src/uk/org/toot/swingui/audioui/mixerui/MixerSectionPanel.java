@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import uk.org.toot.control.*;
-import uk.org.toot.audio.*;
 //import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;

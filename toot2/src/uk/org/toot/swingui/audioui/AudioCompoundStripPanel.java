@@ -6,7 +6,6 @@
 package uk.org.toot.swingui.audioui;
 
 import uk.org.toot.control.*;
-import uk.org.toot.audio.core.*;
 import javax.swing.*;
 //import java.util.Observer;
 //import java.util.Observable;

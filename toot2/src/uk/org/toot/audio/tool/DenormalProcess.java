@@ -6,8 +6,6 @@
 package uk.org.toot.audio.tool;
 
 import uk.org.toot.audio.core.*;
-import org.tritonus.share.sampled.*;
-
 import static uk.org.toot.audio.core.FloatDenormals.*;
 
 /**

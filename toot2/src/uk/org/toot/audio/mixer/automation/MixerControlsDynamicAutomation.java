@@ -7,10 +7,8 @@ package uk.org.toot.audio.mixer.automation;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.List;
 import uk.org.toot.control.Control;
 import uk.org.toot.audio.mixer.MixerControls;
-import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.id.*;
 
 /**

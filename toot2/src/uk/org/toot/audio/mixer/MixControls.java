@@ -7,12 +7,9 @@ package uk.org.toot.audio.mixer;
 
 import java.awt.Color;
 import uk.org.toot.control.EnumControl;
-import java.util.List;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.*;
-import java.util.Observer;
-import java.util.Observable;
 import uk.org.toot.audio.core.*;
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import uk.org.toot.audio.fader.*;

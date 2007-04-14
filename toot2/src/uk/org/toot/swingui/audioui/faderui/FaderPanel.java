@@ -5,7 +5,6 @@
 
 package uk.org.toot.swingui.audioui.faderui;
 
-import java.awt.Color;
 import java.awt.Font;
 import uk.org.toot.control.Control;
 import uk.org.toot.audio.fader.FaderControl;

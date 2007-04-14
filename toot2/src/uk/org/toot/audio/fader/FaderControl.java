@@ -6,7 +6,6 @@
 package uk.org.toot.audio.fader;
 
 import uk.org.toot.control.LawControl;
-import java.awt.Color;
 
 /**
  * A FaderControl extends LawControl and differs from FloatControl in that

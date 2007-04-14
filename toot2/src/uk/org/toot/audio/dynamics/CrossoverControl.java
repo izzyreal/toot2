@@ -2,9 +2,7 @@
 
 package uk.org.toot.audio.dynamics;
 
-import java.util.List;
 import java.awt.Color;
-import uk.org.toot.audio.*;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;

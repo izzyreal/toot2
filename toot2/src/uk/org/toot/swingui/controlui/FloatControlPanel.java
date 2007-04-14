@@ -5,10 +5,7 @@
 
 package uk.org.toot.swingui.controlui;
 
-import java.awt.Color;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.FloatControl;
 import javax.swing.*;

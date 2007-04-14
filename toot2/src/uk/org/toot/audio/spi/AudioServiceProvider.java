@@ -15,8 +15,6 @@ abstract public class AudioServiceProvider extends ServiceProvider
 {
     private List<ServiceDescriptor> controls;
 
-    private List<ServiceDescriptor> processors;
-
     /**
      * Constructs an <code>AudioServiceProvider</code> with a given
      * provider name and version identifier.
@@ -32,7 +30,6 @@ abstract public class AudioServiceProvider extends ServiceProvider
     public AudioServiceProvider(int providerId, String providerName, String description, String version) {
         super(providerId, providerName, description, version);
         controls = service(AudioControls.class);
-        processors = service(AudioProcess.class);
     }
 
     public String lookupName(int moduleId) {

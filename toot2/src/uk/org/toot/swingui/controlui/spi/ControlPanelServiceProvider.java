@@ -15,8 +15,6 @@ import javax.swing.JComponent;
 
 public abstract class ControlPanelServiceProvider extends ServiceProvider
 {
-    private List<ServiceDescriptor> uis;
-
     /**
      * Constructs a <code>ControlPanelServiceProvider</code> with a given
      * provider name, description and version identifier.
@@ -27,7 +25,6 @@ public abstract class ControlPanelServiceProvider extends ServiceProvider
      */
     public ControlPanelServiceProvider(int providerId, String providerName, String description, String version) {
         super(providerId, providerName, description, version);
-        uis = service(JComponent.class);
     }
 
     /**

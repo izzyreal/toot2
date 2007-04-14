@@ -14,10 +14,7 @@ public class TransportLocation extends JLabel
 {
     private Timer timer = null;
     private String seperator1; // avoid continuous instantiation
-    private StringBuilder locationBuilder;
-
     public TransportLocation(final Transport transport) {
-        locationBuilder = new StringBuilder(12);
         ActionListener actionListener = new ActionListener() {
             private long prevus = -1;
             public void actionPerformed(ActionEvent ae) {
@@ -40,9 +37,6 @@ public class TransportLocation extends JLabel
         float ss = sec - 60 * mm;
         seperator1 = ss < 10 ? ":0" : ":";
         return mm + seperator1 + ss;
-/*        locationBuilder.setLength(0);
-        locationBuilder.append(mm).append(seperator1).append(ss);
-        return locationBuilder.toString(); */
     }
 
     public void addNotify() {

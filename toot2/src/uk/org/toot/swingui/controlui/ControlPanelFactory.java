@@ -5,7 +5,6 @@
 
 package uk.org.toot.swingui.controlui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.event.ActionListener;

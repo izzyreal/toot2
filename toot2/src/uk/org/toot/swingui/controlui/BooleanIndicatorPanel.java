@@ -5,17 +5,13 @@
 
 package uk.org.toot.swingui.controlui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 //import java.awt.event.FocusListener;
 import java.util.Observable;
-import java.util.Observer;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.BooleanControl;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JComponent;
 import javax.swing.BorderFactory;
 import javax.swing.border.EtchedBorder;
 

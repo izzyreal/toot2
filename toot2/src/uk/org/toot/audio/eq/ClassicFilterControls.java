@@ -8,7 +8,6 @@ package uk.org.toot.audio.eq;
 import java.util.List;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
-import java.awt.Color;
 import uk.org.toot.audio.filter.*;
 
 import static uk.org.toot.localisation.Localisation.*;

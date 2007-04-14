@@ -5,12 +5,10 @@
 
 package uk.org.toot.swingui.projectui;
 
-import javax.swing.JPanel;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.*;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
