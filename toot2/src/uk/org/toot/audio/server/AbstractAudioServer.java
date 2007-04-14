@@ -5,8 +5,6 @@
 
 package uk.org.toot.audio.server;
 
-import uk.org.toot.audio.core.AudioBuffer;
-
 /**
  * AbstractAudioServer implements AudioServer to control the timing of an
  * AudioClient.
@@ -82,7 +80,7 @@ abstract public class AbstractAudioServer
         Runtime.getRuntime().addShutdownHook(
             new Thread() {
             	public void run() {
-                	stop();
+                	AbstractAudioServer.this.stop();
             	}
         	}
     	);

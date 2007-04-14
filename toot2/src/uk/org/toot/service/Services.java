@@ -6,7 +6,7 @@
 package uk.org.toot.service;
 
 import java.util.Iterator;
-import javax.imageio.spi.IIORegistry; // !!! jse 5/6 compamtible hack
+import javax.imageio.spi.ServiceRegistry;
 
 /**
  * Services encapsulates the platform=specific provision of service lookup and
@@ -14,14 +14,12 @@ import javax.imageio.spi.IIORegistry; // !!! jse 5/6 compamtible hack
  */
 public class Services
 {
-    private static IIORegistry registry = IIORegistry.getDefaultInstance();
-
-	@SuppressWarnings(value={"unchecked"})
+    @SuppressWarnings(value={"unchecked"})
     public static <T extends ServiceProvider> Iterator<T> lookup(Class<T> clazz) {
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
 //      return java.util.ServiceLoader.load(clazz, cl).iterator(); // jse 6
 ///		return (Iterator<T>)sun.misc.Service.providers(clazz, cl); // jse 5 sun
-		return registry.lookupProviders(clazz, cl); // jse version compatibility hack !!!
+		return ServiceRegistry.lookupProviders(clazz, cl); // jse version compatibility hack !!!
     }
 
 /*    public static void accept(ServiceVisitor v, Class<?> clazz) {

@@ -5,7 +5,6 @@ package uk.org.toot.swingui.audioui.mixerui;
 import java.awt.Component;
 import javax.swing.*;
 import uk.org.toot.audio.mixer.MixerControlsSnapshotAutomation;
-import uk.org.toot.control.CompoundControl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

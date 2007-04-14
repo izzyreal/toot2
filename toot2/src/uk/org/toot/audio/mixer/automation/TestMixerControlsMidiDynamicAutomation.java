@@ -6,7 +6,6 @@
 package uk.org.toot.audio.mixer.automation;
 
 import uk.org.toot.audio.mixer.MixerControls;
-import uk.org.toot.project.SingleProject;
 import javax.sound.midi.MidiMessage;
 
 import static uk.org.toot.control.ControlSysexMsg.*;

@@ -8,8 +8,6 @@ package uk.org.toot.swingui.audioui.mixerui;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import uk.org.toot.control.*;
-import uk.org.toot.audio.core.*;
-import uk.org.toot.audio.mixer.*;
 import uk.org.toot.audio.fader.*;
 import uk.org.toot.swingui.audioui.*;
 import uk.org.toot.swingui.audioui.faderui.*;

@@ -5,8 +5,6 @@
 
 package uk.org.toot.control;
 
-import java.util.Hashtable;
-
 /**
  * A <code>FloatControl</code> object provides control over a range of floating-point values.  Float controls are often
  * represented in graphical user interfaces by continuously adjustable objects such as sliders or rotary knobs.  Concrete

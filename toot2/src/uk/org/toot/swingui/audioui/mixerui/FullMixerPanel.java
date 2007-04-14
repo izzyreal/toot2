@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import uk.org.toot.control.*;
-import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.meter.*;
 import uk.org.toot.audio.mixer.*;
 import java.awt.BorderLayout;

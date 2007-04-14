@@ -12,9 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.PrintStream;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
 import javax.swing.UIManager;
 import javax.swing.JFrame;
 import javax.swing.JComponent;
@@ -104,7 +101,7 @@ public class SwingApplication
             // needs to be unbound too
             // key string, name string, action
             // BUT action parameterized by component !!!
-            jcomp.getInputMap(jcomp.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(SHOOT_KEYS), SHOOT);
+            jcomp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(SHOOT_KEYS), SHOOT);
             jcomp.getActionMap().put(SHOOT, new ShootAction(jcomp));
         }
     }
@@ -113,7 +110,7 @@ public class SwingApplication
   		JComponent jcomp;
         if ( comp instanceof JComponent ) {
             jcomp = (JComponent)comp;
-            jcomp.getInputMap(jcomp.WHEN_IN_FOCUSED_WINDOW).remove(KeyStroke.getKeyStroke(SHOOT_KEYS));
+            jcomp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).remove(KeyStroke.getKeyStroke(SHOOT_KEYS));
             jcomp.getActionMap().remove(SHOOT);
         }
     }

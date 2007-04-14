@@ -10,7 +10,6 @@ import java.util.Observable;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.meter.MeterControls;
-import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.control.BooleanControl;
 
 import static uk.org.toot.localisation.Localisation.*;

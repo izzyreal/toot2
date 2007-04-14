@@ -9,7 +9,6 @@ import java.util.Observable;
 import java.util.Observer;
 import uk.org.toot.control.Control;
 import uk.org.toot.audio.mixer.MixerControls;
-import uk.org.toot.audio.id.*;
 
 /**
  * Specifies automation API in terms of Controls and their values.

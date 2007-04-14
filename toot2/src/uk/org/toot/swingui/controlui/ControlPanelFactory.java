@@ -7,7 +7,6 @@ package uk.org.toot.swingui.controlui;
 
 import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Map;
@@ -221,7 +220,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
                 if ( control.canBeDeleted() ) {
 	                add(new DeleteAction(control.getName(), chain));
                 }
-                if ( control.getPersistence() != null && control.hasPresets() ) {
+                if ( CompoundControl.getPersistence() != null && control.hasPresets() ) {
 	                addSeparator();
     	            add(new LoadMenu(control));
         	        add(new SaveAction(control));
@@ -354,7 +353,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             super(getString("Load.Preset"));
             this.control = control;
             CompoundControlPersistence persistence =
-                control.getPersistence();
+                CompoundControl.getPersistence();
             List<String> presets = persistence.getPresets(control);
             for ( String preset : presets ) {
                 add(new LoadAction(preset));
@@ -369,7 +368,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             }
 
         	public void actionPerformed(ActionEvent e) {
-            	control.getPersistence().loadPreset(control, e.getActionCommand());
+            	CompoundControl.getPersistence().loadPreset(control, e.getActionCommand());
             }
         }
     }
@@ -387,7 +386,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             String name = JOptionPane.showInputDialog(
                 						getString("Save.Preset.As"+"..."));
             if ( name != null ) {
-            	control.getPersistence().savePreset(control, name);
+            	CompoundControl.getPersistence().savePreset(control, name);
             }
         }
     }

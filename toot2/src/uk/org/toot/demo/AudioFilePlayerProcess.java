@@ -7,8 +7,6 @@ package uk.org.toot.demo;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
 import java.util.Arrays;
 import javax.sound.sampled.*; // !!!
 import uk.org.toot.audio.core.AudioProcess;

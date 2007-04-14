@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioControlsChain;
-import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.id.ProviderId;
 

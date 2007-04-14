@@ -178,7 +178,7 @@ abstract public class AbstractDemo
 
 			createUI(args);
     	    try {
-        	    Thread.currentThread().sleep(1000);
+        	    Thread.sleep(1000);
 	        } catch ( InterruptedException ie ) {
     	    }
             server.start();

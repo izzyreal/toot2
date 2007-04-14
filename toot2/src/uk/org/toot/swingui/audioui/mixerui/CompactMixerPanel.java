@@ -5,7 +5,6 @@
 
 package uk.org.toot.swingui.audioui.mixerui;
 
-import java.io.File;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -15,8 +14,6 @@ import java.awt.image.BufferedImage;
 import java.awt.event.*;
 import javax.swing.*;
 import uk.org.toot.audio.mixer.*;
-import uk.org.toot.audio.server.*;
-import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 import uk.org.toot.control.*;

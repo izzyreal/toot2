@@ -5,8 +5,6 @@ package uk.org.toot.pitch;
 import java.util.ArrayList;
 import java.util.List;
 
-import static uk.org.toot.pitch.Interval.*;
-
 public class ChordScale extends Key
 {
     protected int poly = 3 ; // default to triads

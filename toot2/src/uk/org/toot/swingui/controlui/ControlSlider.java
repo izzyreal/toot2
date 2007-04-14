@@ -8,13 +8,8 @@ package uk.org.toot.swingui.controlui;
 import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Hashtable;
 import uk.org.toot.control.*;
 import javax.swing.JSlider;
-//import javax.swing.UIManager;
-//import javax.swing.Icon;
-//import javax.swing.SwingConstants;
-import java.awt.Graphics;
 
 public class ControlSlider extends JSlider implements Observer
 {

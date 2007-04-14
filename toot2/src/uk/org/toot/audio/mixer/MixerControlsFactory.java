@@ -6,9 +6,7 @@
 package uk.org.toot.audio.mixer;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
-import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
-import uk.org.toot.audio.meter.MeterControls;
 import java.util.List;
 import static uk.org.toot.localisation.Localisation.*;
 

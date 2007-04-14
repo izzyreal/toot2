@@ -12,8 +12,6 @@ import javax.swing.KeyStroke;
 import javax.swing.Action;
 import java.awt.event.KeyEvent;
 import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-
 import uk.org.toot.audio.server.NonRealTimeAudioServer;
 
 public class SingleTransportProjectPanel extends SingleProjectPanel 
@@ -96,15 +94,15 @@ public class SingleTransportProjectPanel extends SingleProjectPanel
         private void printTyped(KeyEvent e) {
             System.out.println("Typed "+
                 ": char="+e.getKeyChar()+
-                ", mod="+e.getKeyModifiersText(e.getModifiers()));
+                ", mod="+KeyEvent.getKeyModifiersText(e.getModifiers()));
         }
 
         private void println(String prefix, KeyEvent e) {
             System.out.println(prefix+
-                ": text="+e.getKeyText(e.getKeyCode())+
+                ": text="+KeyEvent.getKeyText(e.getKeyCode())+
                 ", code="+e.getKeyCode()+
                 ", loc="+e.getKeyLocation()+
-                ", mod="+e.getKeyModifiersText(e.getModifiers()));
+                ", mod="+KeyEvent.getKeyModifiersText(e.getModifiers()));
         }
     }
 }

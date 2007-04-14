@@ -5,11 +5,9 @@
 
 package uk.org.toot.audio.mixer;
 
-import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.ChannelFormat;
-import static uk.org.toot.audio.mixer.MixerControls.*;
 
 /**
  * A MixProcess mixes a portion of the audio signal that it processes to

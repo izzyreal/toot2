@@ -5,7 +5,6 @@
 
 package uk.org.toot.audio.mixer;
 
-import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.meter.MeterProcess;
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;

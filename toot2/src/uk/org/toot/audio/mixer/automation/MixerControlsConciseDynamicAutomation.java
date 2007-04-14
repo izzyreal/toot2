@@ -7,10 +7,7 @@ package uk.org.toot.audio.mixer.automation;
 
 import uk.org.toot.audio.core.*;
 import uk.org.toot.control.*;
-import uk.org.toot.audio.id.*;
 import uk.org.toot.audio.mixer.MixerControls;
-
-import static uk.org.toot.audio.mixer.MixerControls.*;
 
 /**
  * Converts the superclass Control/value API to individual parameters required

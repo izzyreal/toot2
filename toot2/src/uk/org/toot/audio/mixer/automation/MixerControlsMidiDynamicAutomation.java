@@ -8,11 +8,9 @@ package uk.org.toot.audio.mixer.automation;
 import uk.org.toot.audio.core.AudioControlsChain; // !!!
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.control.*;
-import java.io.*;
 import javax.sound.midi.*;
 
 import static uk.org.toot.control.ControlSysexMsg.*;
-import static uk.org.toot.midi.message.MetaMsg.*;
 
 /**
  * Redefines the API in terms of MidiMessages.

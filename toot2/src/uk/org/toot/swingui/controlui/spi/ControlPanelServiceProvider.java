@@ -5,10 +5,8 @@
 
 package uk.org.toot.swingui.controlui.spi;
 
-import java.util.List;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.service.ServiceProvider;
-import uk.org.toot.service.ServiceDescriptor;
 import uk.org.toot.control.ControlSelector;
 import uk.org.toot.swingui.controlui.PanelFactory;
 import javax.swing.JComponent;

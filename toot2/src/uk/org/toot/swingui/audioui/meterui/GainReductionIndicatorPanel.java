@@ -6,8 +6,6 @@
 package uk.org.toot.swingui.audioui.meterui;
 
 import javax.swing.*;
-import uk.org.toot.swingui.audioui.meterui.KMeterIndicatorPanel;
-import uk.org.toot.audio.meter.MeterControls;
 import uk.org.toot.control.FloatControl;
 import java.awt.Color;
 import java.awt.Dimension;

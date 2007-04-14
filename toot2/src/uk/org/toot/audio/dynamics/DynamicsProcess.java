@@ -5,8 +5,6 @@ package uk.org.toot.audio.dynamics;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 
-import static uk.org.toot.audio.core.FloatDenormals.*;
-
 abstract public class DynamicsProcess implements AudioProcess
 {
     protected float envelope = 0f;

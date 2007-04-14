@@ -2,8 +2,6 @@
 
 package uk.org.toot.audio.filter;
 
-import uk.org.toot.control.FloatControl;
-
 public interface Crossover
 {
     void filter(float[] source, float[] lo, float[] hi, int nsamples, int chan);

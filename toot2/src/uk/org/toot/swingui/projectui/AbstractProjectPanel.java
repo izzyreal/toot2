@@ -11,8 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JFileChooser;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
 import uk.org.toot.project.*;
 import uk.org.toot.swing.DisposablePanel;
 

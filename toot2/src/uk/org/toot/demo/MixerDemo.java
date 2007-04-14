@@ -7,7 +7,6 @@ package uk.org.toot.demo;
 
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.mixer.AudioMixer;
-import uk.org.toot.swingui.audioui.mixerui.*;
 
 /**
  * MixerDemo simply displays the automated mixer and starts the (unstoppable)

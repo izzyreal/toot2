@@ -4,8 +4,6 @@ package uk.org.toot.swingui.transportui;
 
 import uk.org.toot.transport.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import javax.swing.Action;
 
 import uk.org.toot.audio.server.NonRealTimeAudioServer;

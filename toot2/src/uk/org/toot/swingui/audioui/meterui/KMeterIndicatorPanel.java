@@ -9,13 +9,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import uk.org.toot.control.*;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.meter.MeterControls;
 import javax.swing.*;
-import uk.org.toot.swingui.controlui.*;
 
 public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
 {

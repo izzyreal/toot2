@@ -4,9 +4,6 @@ package uk.org.toot.audio.dynamics;
 
 import java.awt.Color;
 import uk.org.toot.control.*;
-import uk.org.toot.audio.core.AudioProcess;
-import uk.org.toot.audio.core.AudioControls;
-import uk.org.toot.audio.filter.*;
 
 public class CrossoverControl extends FloatControl
 {

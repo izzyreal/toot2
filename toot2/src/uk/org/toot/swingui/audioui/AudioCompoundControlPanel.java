@@ -9,7 +9,6 @@ import java.util.Observer;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 
-import java.awt.Color;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import uk.org.toot.swingui.controlui.*;

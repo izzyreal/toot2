@@ -39,7 +39,7 @@ public class AudioServerTest extends AbstractDemo
             server.setClient(new TestClient(server));
 			createUI(args);
     	    try {
-        	    Thread.currentThread().sleep(2000);
+        	    Thread.sleep(2000);
 	        } catch ( InterruptedException ie ) {
     	    }
             server.start();

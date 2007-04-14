@@ -6,7 +6,6 @@
 package uk.org.toot.audio.mixer;
 
 import uk.org.toot.audio.core.ChannelFormat;
-import uk.org.toot.control.EnumControl;
 
 /**
  * MixVariables defines a contract required for mixing to a Mixable.
