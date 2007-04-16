@@ -57,7 +57,8 @@ public class MultiTapDelayProcess implements AudioProcess
             }
             return AUDIO_OK;
         }
-        if ( buffer.getChannelCount() < 2 ) {
+
+        if ( buffer.getChannelCount() < 2 ) { // !!! must be mono
         	buffer.convertTo(ChannelFormat.STEREO);
         }
         float sampleRate = buffer.getSampleRate();
@@ -88,10 +89,15 @@ public class MultiTapDelayProcess implements AudioProcess
     	// tapped from delay
     	tappedBuffer.makeSilence();
         float delayFactor = vars.getDelayFactor();
+        ChannelFormat format = buffer.getChannelFormat();
         for ( int c = 0; c < nc; c++ ) {
-	        for ( DelayTap tap : vars.getTaps(c) ) {
+            int c2; // map buffer channel to control channel
+			if ( format.isLeft(c) ) c2 = ChannelFormat.STEREO.getLeft()[0];
+            else if ( format.isRight(c) ) c2 = ChannelFormat.STEREO.getRight()[0];
+            else continue; // neither left nor right
+	        for ( DelayTap tap : vars.getTaps(c2) ) {
 	            float level = tap.getLevel();
-    	        if ( level < 0.001 ) continue;
+    	        if ( level < 0.001 ) continue; // insignificant optimisation
 				int delay = (int)msToSamples(tap.getDelayMilliseconds()*delayFactor, sampleRate);
             	if ( delay < ns ) continue; // can't evaluate. push down to called method?
     			delayBuffer.tap(c, tappedBuffer, delay, level); // optimised mix

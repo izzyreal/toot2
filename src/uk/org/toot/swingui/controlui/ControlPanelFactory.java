@@ -297,8 +297,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             List<ServiceDescriptor> inserts = parentChain.descriptors();
             Map<String, JMenu> menus = new java.util.HashMap<String, JMenu>();
             for ( ServiceDescriptor d : inserts ) {
-                // add all to flat Insert menu
-//                add(new InsertAction(d.getName(), control.getName()));
+                // if insert isn't compatible, continue
                 // add to Insert category sub menu
                 String category = d.getDescription();
                 JMenu menu = menus.get(category);
@@ -308,7 +307,6 @@ public class ControlPanelFactory extends Observable implements PanelFactory
                     menus.put(category, menu);
                 }
                 menu.add(new InsertAction(d.getName(), control.getName()));
-
             }
         }
 

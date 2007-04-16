@@ -9,6 +9,7 @@ import java.util.List;
 import uk.org.toot.service.*;
 import uk.org.toot.control.CompoundControlChain;
 import uk.org.toot.control.CompoundControl;
+import uk.org.toot.audio.spi.AudioControlServiceDescriptor;
 
 /**
  * An AudioControlsChain extends CompoundControlChain to provide
@@ -17,6 +18,15 @@ import uk.org.toot.control.CompoundControl;
 public class AudioControlsChain extends CompoundControlChain
 {
     private String sourceLabel;
+
+    /**
+     * null means there are no format constraints
+     * so all descriptors are available for insert
+     * if set non-null, only compatible descriptors are returned
+     * @supplierCardinality 0..1
+     * @link aggregation 
+     */
+    private ChannelFormat channelFormat = null;
 
     public AudioControlsChain(int id, String name) {
         super(id, name);
@@ -37,6 +47,14 @@ public class AudioControlsChain extends CompoundControlChain
         return sourceLabel;
     }
 
+    public void setChannelFormat(ChannelFormat format) {
+        channelFormat = format;
+    }
+
+    public ChannelFormat getChannelFormat() {
+        return channelFormat;
+    }
+
     protected CompoundControl createControl(String name) {
         return AudioServices.createControls(name);
     }
@@ -48,6 +66,25 @@ public class AudioControlsChain extends CompoundControlChain
             throw new IllegalArgumentException(getName()+" instance "+index+" > 127!");
     }
 
+    protected boolean isCompatibleDescriptor(ServiceDescriptor d) {
+        if ( channelFormat == null ) return true; // we're not fixed format
+        if ( d instanceof AudioControlServiceDescriptor ) {
+            AudioControlServiceDescriptor acsd =
+                (AudioControlServiceDescriptor)d;
+            ChannelFormat descriptorFormat = acsd.getChannelFormat();
+			if ( descriptorFormat == null ) return true; // plugin can cope
+            if ( descriptorFormat.getCount() > channelFormat.getCount() ) {
+/*                System.out.println(getName()+" ("+channelFormat.getName()+
+                    ") is incompatible with "+acsd.getName()+" ("+
+                    descriptorFormat.getName()+"), "+descriptorFormat.getCount()+
+                    " > "+channelFormat.getCount()); */
+                // plugin requires more channels than allowed
+                return false;
+            }
+        }
+        return true;
+    }
+
     // intended for use by UIs
     // to create a popup menu tree by category from descriptors
 	public List<ServiceDescriptor> descriptors() {
@@ -56,7 +93,9 @@ public class AudioControlsChain extends CompoundControlChain
         AudioServices.accept(
             new ServiceVisitor() {
             	public void visitDescriptor(ServiceDescriptor d) {
-                	descriptors.add(d);
+                	if ( isCompatibleDescriptor(d) ) {
+                		descriptors.add(d);
+                	}
             	}
         	}, AudioControls.class
         );

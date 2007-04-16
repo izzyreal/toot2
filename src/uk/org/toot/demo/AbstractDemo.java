@@ -146,7 +146,7 @@ abstract public class AbstractDemo
 			mixerControls.createFxBusControls("FX#3", null);
 			mixerControls.createAuxBusControls("Aux#1", ChannelFormat.MONO);
 			mixerControls.createAuxBusControls("Aux#2", ChannelFormat.QUAD);
-			MixerControlsFactory.createBusStrips(mixerControls, "L-R",
+			MixerControlsFactory.createBusStrips(mixerControls, "L-R", ChannelFormat.STEREO,
                 intProperty("mixer.returns", 2));
         	MixerControlsFactory.createGroupStrips(mixerControls,
                 intProperty("mixer.groups", 2));

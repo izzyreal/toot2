@@ -10,6 +10,7 @@ import uk.org.toot.service.*;
 import uk.org.toot.control.spi.*;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;
+import uk.org.toot.audio.core.ChannelFormat;
 
 abstract public class AudioServiceProvider extends ServiceProvider
 {
@@ -60,10 +61,21 @@ abstract public class AudioServiceProvider extends ServiceProvider
 
     /**
      * Adds a ControlServiceDescriptor for the matching service.
+     * The service can cope with any channel format.
      */
     protected void addControls(Class clazz, int moduleId, String name, String description, String version) {
-        add(new ControlServiceDescriptor(clazz, moduleId, name, description, version));
+        add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version));
     }
+
+    /**
+     * Adds a ControlServiceDescriptor for the matching service.
+     * The channel format required is specified, otherwise the service
+     * will not require specific channel formats
+     */
+    protected void addControls(Class clazz, int moduleId, String name, String description, String version, ChannelFormat format) {
+        add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version, format));
+    }
+
 
 
     public AudioControls createControls(String name) {

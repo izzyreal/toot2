@@ -50,10 +50,11 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
     public boolean canBypass() { return true; }
 
     public List<DelayTap> getTaps(int chan) {
+        // no validation, called on server thread, time critical
         return perChannelControls.get(chan).getTaps();
     }
 
-    public int getChannelCount() { return 2; }
+    public int getChannelCount() { return 2; } // !!! !!!
 
     public float getDelayFactor() {
 		return delayFactorControl.getValue();

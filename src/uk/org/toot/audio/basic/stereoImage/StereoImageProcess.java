@@ -7,6 +7,7 @@ package uk.org.toot.audio.basic.stereoImage;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
+import uk.org.toot.audio.core.ChannelFormat;
 
 public class StereoImageProcess extends SimpleAudioProcess
 {
@@ -20,22 +21,25 @@ public class StereoImageProcess extends SimpleAudioProcess
 
     public int processAudio(AudioBuffer buffer) {
         int nsamples = buffer.getSampleCount();
-   	    float[] left = buffer.getChannel(0);
-       	float[] right = buffer.getChannel(1);
-        // first we process the L/R width
-        float otherFactor = vars.getWidthFactor();
-   	    for ( int i = 0; i < nsamples; i++ ) {
-    		left[i] += otherFactor * right[i];
-            right[i] += otherFactor * left[i];
-   		}
-   		// then we swap channels if necessary
-        if ( vars.isLRSwapped() )  {
-	        float tmp;
-    	    for ( int i = 0; i < nsamples; i++ ) {
-        	    tmp = left[i];
-            	left[i] = right[i];
-	            right[i] = tmp;
-    	    }
+        if ( buffer.getChannelCount() < 2 ) // mono in
+            buffer.convertTo(ChannelFormat.STEREO);
+        int nc = buffer.getChannelCount(); // now stereo or higher
+   	    float otherFactor = vars.getWidthFactor();
+        boolean swap = vars.isLRSwapped();
+        ChannelFormat format = buffer.getChannelFormat();
+        // get left/right pairs
+        int[] leftChans = format.getLeft();
+        int[] rightChans = format.getRight();
+        for ( int pair = 0; pair < leftChans.length; pair++ ) {
+	   	    float[] left = buffer.getChannel(leftChans[pair]);
+    	   	float[] right = buffer.getChannel(rightChans[pair]);
+	        // first we process the L/R width
+   	    	for ( int i = 0; i < nsamples; i++ ) {
+    			left[i] += otherFactor * right[i];
+	            right[i] += otherFactor * left[i];
+   			}
+   			// then we swap if necessary
+            if ( swap ) buffer.swap(leftChans[pair], rightChans[pair]);
         }
         return AUDIO_OK;
     }

@@ -36,11 +36,15 @@ public class ModulatedDelayProcess implements AudioProcess
      */
     private final ModulatedDelayVariables vars;
 
+    private float[] modulatorPhase;
+    private int[] modulatorMap;
+
     private boolean wasBypassed;
 
     public ModulatedDelayProcess(ModulatedDelayVariables vars) {
         this.vars = vars;
-        modulatorPhase = new float[2]; // !!! !!! STEREO
+        modulatorPhase = new float[2]; // STEREO controls
+        modulatorMap = new int[8]; // !!! !!!
         wasBypassed = !vars.isBypassed(); // force update
     }
 
@@ -89,6 +93,12 @@ public class ModulatedDelayProcess implements AudioProcess
         float timeDelta = 1 / sampleRate; // seconds
         int ns = buffer.getSampleCount();
         int nc = buffer.getChannelCount();
+        ChannelFormat format = buffer.getChannelFormat();
+        for ( int c = 0; c < nc; c++ ) {
+            if ( format.isLeft(c) ) modulatorMap[c] = 0; // !!!
+            else if ( format.isRight(c) ) modulatorMap[c] = 1; // !!!
+            else modulatorMap[c] = -1;
+        }
         float scaledDepth = staticDelay * depth;
         float out;
         float in;
@@ -97,7 +107,8 @@ public class ModulatedDelayProcess implements AudioProcess
         for ( int s = 0; s < ns; s++ ) {
 	        for ( int ch = 0; ch < nc; ch++ ) {
                 buf = buffer.getChannel(ch);
-		        float modulatedDelay = modulation(ch, timeDelta) * scaledDepth;
+		        float modulatedDelay =
+                    modulation(modulatorMap[ch], timeDelta) * scaledDepth;
                 out = wetBuffer.out(ch, staticDelay + modulatedDelay);
                 if ( isDenormal(out) ) out = 0f; // solves internal denormal
                 float fb = feedback * out;
@@ -119,20 +130,21 @@ public class ModulatedDelayProcess implements AudioProcess
         dryBuffer = null;
     }
 
-    private float[] modulatorPhase;
-
     // -1 >=  modulation <= +1
     protected float modulation(int chan, float timeDelta) {
-//        return 0f;
+        if ( chan < 0 ) return 0f;
         double phaseDelta = timeDelta * vars.getRate() * 2 * Math.PI;
+
         if ( chan == 0 ) {
 	        modulatorPhase[chan] += phaseDelta;
     	} else if ( chan == 1 ) {
         	modulatorPhase[chan] = modulatorPhase[0] + vars.getPhaseRadians();
     	}
+
         if ( modulatorPhase[chan] > Math.PI ) {
-            modulatorPhase[chan] -= 2 * Math.PI;
-        }
+   	        modulatorPhase[chan] -= 2 * Math.PI;
+       	}
+
         int shape = vars.getLFOShape();
         float mod = (shape == 0) ? sine(modulatorPhase[chan])
                                  : triangle(modulatorPhase[chan]);

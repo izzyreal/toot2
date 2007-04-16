@@ -8,6 +8,7 @@ package uk.org.toot.audio.basic.stereoImage;
 import uk.org.toot.audio.spi.TootAudioServiceProvider;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;
+import uk.org.toot.audio.core.ChannelFormat;
 
 import static uk.org.toot.localisation.Localisation.*;
 
@@ -16,7 +17,7 @@ public class StereoImageServiceProvider extends TootAudioServiceProvider
     public StereoImageServiceProvider() {
         super(getString("Stereo Image"), "0.1");
         String family = getString("Basic");
-        addControls(StereoImageControls.class, StereoImageControls.STEREO_IMAGE, getString("Stereo.Image"), family, "0.1");
+        addControls(StereoImageControls.class, StereoImageControls.STEREO_IMAGE, getString("Stereo.Image"), family, "0.1", ChannelFormat.STEREO);
         add(StereoImageProcess.class, getString("Stereo.Image"), family, "0.1");
     }
 

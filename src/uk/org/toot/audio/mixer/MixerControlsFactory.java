@@ -46,22 +46,27 @@ public class MixerControlsFactory
     }
 
     public static void createBusStrips(MixerControls mixerControls) {
-        createBusStrips(mixerControls, "L-R", mixerControls.getFxBusControls().size());
+        createBusStrips(mixerControls, "L-R", ChannelFormat.STEREO, mixerControls.getFxBusControls().size());
     }
 
-    public static void createBusStrips(MixerControls mixerControls, String mainStripName, int nreturns) {
-        mixerControls.createStripControls(MAIN_STRIP, 0, mainStripName);
+    public static void createBusStrips(MixerControls mixerControls,
+        	String mainStripName, ChannelFormat mainFormat, int nreturns) {
+        AudioControlsChain controls;
+        controls = mixerControls.createStripControls(MAIN_STRIP, 0, mainStripName);
+        controls.setChannelFormat(mainFormat);
         List<BusControls> busControlsList = mixerControls.getAuxBusControls();
         int naux = busControlsList.size();
         for ( int i = 0; i < naux; i++) {
-        	mixerControls.createStripControls(AUX_STRIP, i,
+        	controls = mixerControls.createStripControls(AUX_STRIP, i,
                 busControlsList.get(i).getName(), false);
+	        controls.setChannelFormat(busControlsList.get(i).getChannelFormat());
         }
         busControlsList = mixerControls.getFxBusControls();
         int nsends = busControlsList.size();
         for ( int i = 0; i < nsends; i++) {
-        	mixerControls.createStripControls(FX_STRIP, i,
+        	controls = mixerControls.createStripControls(FX_STRIP, i,
                 busControlsList.get(i).getName(), i < nreturns);
+	        controls.setChannelFormat(busControlsList.get(i).getChannelFormat());
         }
     }
 
