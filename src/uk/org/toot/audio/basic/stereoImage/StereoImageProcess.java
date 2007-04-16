@@ -23,8 +23,7 @@ public class StereoImageProcess extends SimpleAudioProcess
         int nsamples = buffer.getSampleCount();
         if ( buffer.getChannelCount() < 2 ) // mono in
             buffer.convertTo(ChannelFormat.STEREO);
-        int nc = buffer.getChannelCount(); // now stereo or higher
-   	    float otherFactor = vars.getWidthFactor();
+        float otherFactor = vars.getWidthFactor();
         boolean swap = vars.isLRSwapped();
         ChannelFormat format = buffer.getChannelFormat();
         // get left/right pairs

@@ -27,7 +27,7 @@ public class StereoImageControls extends AudioControls
     private final static ControlLaw WIDTH_LAW = new LinearLaw(0f, 2f, "");
 
     public StereoImageControls() {
-        super(STEREO_IMAGE, getString("Stereo Image"));
+        super(STEREO_IMAGE, getString("Stereo"));
         width = new FloatControl(LR_WIDTH, getString("Width"), WIDTH_LAW, 0.01f, 1f);
         width.setInsertColor(Color.orange);
         add(width);
