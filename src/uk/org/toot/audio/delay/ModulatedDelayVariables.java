@@ -8,7 +8,7 @@ package uk.org.toot.audio.delay;
 public interface ModulatedDelayVariables extends DelayVariables
 {
     float getDelayMilliseconds(); // !!! should be samples for efficiency
-    float getPhaseRadians();
+
     float getRate();
     float getDepth();
     float getFilterFrequency();

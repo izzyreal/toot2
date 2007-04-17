@@ -15,12 +15,10 @@ public class ModulatedDelayControls extends AbstractDelayControls
 {
     private static final ControlLaw delayLaw = new LogLaw(0.1f, 25f, "ms");
     private static final ControlLaw rateLaw = new LogLaw(0.02f, 2f, "Hz");
-    private static final ControlLaw phaseLaw = new LinearLaw(0f, 180f, "degrees");
 // !!! abstract?
 //    private static final ControlLaw filterFreqLaw = new LogLaw(100f, 10000f, "Hz");
     private FloatControl delayControl;
     private BooleanControl tapeControl;
-    private FloatControl phaseControl;
     private FloatControl rateControl;
     private ShapeControl shapeControl;
     private FloatControl depthControl;
@@ -34,24 +32,15 @@ public class ModulatedDelayControls extends AbstractDelayControls
     private static final int SHAPE_ID = 4;
     private static final int DEPTH_ID = 5;
     private static final int LINK_ID = 6;
-    private static final int PHASE_ID = 7;
+    protected static final int PHASE_ID = 7; // !!!
 
     public ModulatedDelayControls() {
-        super(DelayIds.MODULATED_DELAY_ID, getString("Modulated.Delay"));
-        // add columns of boolean (or enum) and float controls
-        // tape, delay
-        tapeControl = new BooleanControl(TAPE_ID, getString("Tape"), false);
-        tapeControl.setStateColor(true, Color.pink);
-        delayControl = new FloatControl(DELAY_ID, getString("Delay"), delayLaw, 0.1f, 2f);
-        delayControl.setInsertColor(Color.red.darker());
-        phaseControl = new FloatControl(PHASE_ID, getString("Phase"), phaseLaw, 1f, 0f);
-        phaseControl.setInsertColor(Color.BLUE.darker());
+        this(DelayIds.MODULATED_DELAY_ID, getString("Modulated.Delay"));
+    }
 
-        ControlColumn g1 = new ControlColumn();
-        g1.add(tapeControl);
-        g1.add(delayControl);
-		g1.add(phaseControl);
-        add(g1);
+    public ModulatedDelayControls(int id, String name) {
+        super(id, name);
+        add(createControlColumn1());
 
         // shape, rate
         shapeControl = new ShapeControl(SHAPE_ID);
@@ -81,13 +70,23 @@ public class ModulatedDelayControls extends AbstractDelayControls
         add(createCommonControlColumn(true)); // no inverts
     }
 
+    protected ControlColumn createControlColumn1() {
+        // tape, delay
+        tapeControl = new BooleanControl(TAPE_ID, getString("Tape"), false);
+        tapeControl.setStateColor(true, Color.pink);
+        delayControl = new FloatControl(DELAY_ID, getString("Delay"), delayLaw, 0.1f, 2f);
+        delayControl.setInsertColor(Color.red.darker());
+
+        ControlColumn g1 = new ControlColumn();
+        g1.add(tapeControl);
+        g1.add(delayControl);
+        return g1;
+    }
+
     public float getMaxDelayMilliseconds() { return 60f; }
 
     public float getDelayMilliseconds() { return delayControl.getValue(); }
 
-    public float getPhaseRadians() {
-        return (float)(phaseControl.getValue() * Math.PI / 90);
-    }
     public float getRate() {
         // tape mode effectively full wave rectifies the effect of the
         // modulation in the frequency domain and consequently sounds

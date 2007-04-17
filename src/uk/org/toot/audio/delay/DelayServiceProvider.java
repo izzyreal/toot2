@@ -20,10 +20,16 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         addControls(
             ModulatedDelayControls.class,
             DelayIds.MODULATED_DELAY_ID,
-            getString("Modulated Delay"),
+            getString("Modulated.Delay"),
+            family,
+            "0.1");
+        addControls(
+            StereoModulatedDelayControls.class,
+            DelayIds.STEREO_MODULATED_DELAY_ID,
+            getString("Stereo.Modulated.Delay"),
             family,
             "0.1",
-            ChannelFormat.STEREO); // shouldn't need to be but is
+            ChannelFormat.STEREO);
         addControls(
             MultiTapDelayStereoControls.class,
             DelayIds.MULTI_TAP_DELAY_ID,
@@ -34,11 +40,14 @@ public class DelayServiceProvider extends TootAudioServiceProvider
 //        addControls(RoomSimulatorControls.class, DelayIds.ROOM_SIMULATOR, "Room Simulator", family, "0.1");
 
         add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.1");
+        add(StereoModulatedDelayProcess.class, getString("Stereo.Modulated.Delay"), family, "0.1");
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
-        if ( c instanceof ModulatedDelayVariables ) {
+        if ( c instanceof StereoModulatedDelayVariables ) {
+            return new StereoModulatedDelayProcess((StereoModulatedDelayVariables)c);
+        } else if ( c instanceof ModulatedDelayVariables ) {
             return new ModulatedDelayProcess((ModulatedDelayVariables)c);
         } else if ( c instanceof MultiTapDelayVariables ) {
             return new MultiTapDelayProcess((MultiTapDelayVariables)c);

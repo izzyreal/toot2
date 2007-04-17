@@ -35,16 +35,16 @@ public class ModulatedDelayProcess implements AudioProcess
      * @supplierCardinality 1 
      */
     private final ModulatedDelayVariables vars;
+    protected int[] modulatorMap;
+    protected float modulatorPhase;
 
-    private float[] modulatorPhase;
-    private int[] modulatorMap;
+    protected ChannelFormat format;
 
     private boolean wasBypassed;
 
     public ModulatedDelayProcess(ModulatedDelayVariables vars) {
         this.vars = vars;
-        modulatorPhase = new float[2]; // STEREO controls
-        modulatorMap = new int[8]; // !!! !!!
+        modulatorMap = new int[8]; // !!! 8 channel max
         wasBypassed = !vars.isBypassed(); // force update
     }
 
@@ -55,19 +55,17 @@ public class ModulatedDelayProcess implements AudioProcess
     // costly algorithm, but typically <1% of 2GHz CPU
     public int processAudio(AudioBuffer buffer) {
         float sampleRate = buffer.getSampleRate();
-        int bchans = buffer.getChannelCount() < 2 ? 2 : buffer.getChannelCount();
+        int ns = buffer.getSampleCount();
+        int nc = buffer.getChannelCount();
         if ( wetBuffer == null ) {
-	        wetBuffer = new DelayBuffer(bchans,
+	        wetBuffer = new DelayBuffer(nc,
                 msToSamples(vars.getMaxDelayMilliseconds(), sampleRate),
                 sampleRate);
         }
         if ( dryBuffer == null ) {
-            dryBuffer = new DelayBuffer(bchans,
+            dryBuffer = new DelayBuffer(nc,
                 msToSamples(vars.getMaxDelayMilliseconds()/2, sampleRate),
                 sampleRate);
-        }
-        if ( buffer.getChannelCount() == 1 ) {
-            buffer.convertTo(ChannelFormat.STEREO);
         }
         // append buffer to conformed dry buffer, anti-denorm when tapped
       	dryBuffer.append(buffer);
@@ -89,26 +87,26 @@ public class ModulatedDelayProcess implements AudioProcess
         int staticDelay = (int)(dryBuffer.msToSamples(vars.getDelayMilliseconds()));
 
 		wetBuffer.conform(buffer);
+
+        ChannelFormat f = buffer.getChannelFormat();
+        if ( format != f ) {
+            format = f;
+	        buildModulatorMap(buffer);
+        }
+
         // calculate delays, including modulation
         float timeDelta = 1 / sampleRate; // seconds
-        int ns = buffer.getSampleCount();
-        int nc = buffer.getChannelCount();
-        ChannelFormat format = buffer.getChannelFormat();
-        for ( int c = 0; c < nc; c++ ) {
-            if ( format.isLeft(c) ) modulatorMap[c] = 0; // !!!
-            else if ( format.isRight(c) ) modulatorMap[c] = 1; // !!!
-            else modulatorMap[c] = -1;
-        }
+//        ChannelFormat format = buffer.getChannelFormat();
         float scaledDepth = staticDelay * depth;
         float out;
         float in;
         float[] buf;
         // evaluate one sample at a time
         for ( int s = 0; s < ns; s++ ) {
+            incrementModulators(timeDelta);
 	        for ( int ch = 0; ch < nc; ch++ ) {
                 buf = buffer.getChannel(ch);
-		        float modulatedDelay =
-                    modulation(modulatorMap[ch], timeDelta) * scaledDepth;
+		        float modulatedDelay = modulation(ch) * scaledDepth;
                 out = wetBuffer.out(ch, staticDelay + modulatedDelay);
                 if ( isDenormal(out) ) out = 0f; // solves internal denormal
                 float fb = feedback * out;
@@ -130,35 +128,37 @@ public class ModulatedDelayProcess implements AudioProcess
         dryBuffer = null;
     }
 
-    // -1 >=  modulation <= +1
-    protected float modulation(int chan, float timeDelta) {
-        if ( chan < 0 ) return 0f;
+    protected void buildModulatorMap(AudioBuffer buffer) {
+        // don't modulate LFE, constructive interference could blow woofers
+       	int nc = buffer.getChannelCount();
+        for ( int ch = 0; ch < nc; ch++ ) {
+   	        if ( format.isLFE(ch) ) modulatorMap[ch] = -1;
+           	else modulatorMap[ch] = 0;
+        }
+    }
+
+    protected void incrementModulators(float timeDelta) {
         double phaseDelta = timeDelta * vars.getRate() * 2 * Math.PI;
-
-        if ( chan == 0 ) {
-	        modulatorPhase[chan] += phaseDelta;
-    	} else if ( chan == 1 ) {
-        	modulatorPhase[chan] = modulatorPhase[0] + vars.getPhaseRadians();
-    	}
-
-        if ( modulatorPhase[chan] > Math.PI ) {
-   	        modulatorPhase[chan] -= 2 * Math.PI;
+        modulatorPhase += phaseDelta;
+        if ( modulatorPhase > Math.PI ) {
+   	        modulatorPhase -= 2 * Math.PI;
        	}
+    }
 
+    // -1 >=  modulation <= +1
+    protected float modulation(int chan) {
+        if ( modulatorMap[chan] < 0 ) return 0f;
         int shape = vars.getLFOShape();
-        float mod = (shape == 0) ? sine(modulatorPhase[chan])
-                                 : triangle(modulatorPhase[chan]);
+        float mod = (shape == 0) ? sine(modulatorPhase) : triangle(modulatorPhase);
         // clamp the cheapo algorithm which goes outside range a little
         if ( mod < -1f ) mod = -1f;
         else if ( mod > 1f ) mod = 1f;
         return mod;
-//        return (float)Math.sin(modulatorPhase[chan]);
     }
 
     // http://www.devmaster.net/forums/showthread.php?t=5784
     private static final float S_B = (float)(4 /  Math.PI);
     private static final float S_C = (float)(-4 / (Math.PI*Math.PI));
-
     // -PI < x < PI
     protected float sine(float x) {
         return S_B * x + S_C * x * Math.abs(x);
