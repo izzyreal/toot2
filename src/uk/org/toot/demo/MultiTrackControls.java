@@ -28,8 +28,8 @@ public class MultiTrackControls extends CompoundControl
 
     public AudioControlsChain createTrackControls(int id, int index) {
         String name = String.valueOf(index+1);
-        AudioControlsChain chain = new AudioControlsChain(id, index, name);
-        chain.add(new MeterControls(ChannelFormat.STEREO, ""));
+        AudioControlsChain chain = new AudioControlsChain(id, index, name, ChannelFormat.STEREO); // !!! !!!
+        chain.add(new MeterControls(ChannelFormat.STEREO, "")); // !!! !!!!
         add(chain);
         return chain;
     }

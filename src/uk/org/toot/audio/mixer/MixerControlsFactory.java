@@ -31,42 +31,44 @@ public class MixerControlsFactory
         }
     }
 
-    public static void createGroupStrips(MixerControls mixerControls, int ngroups) {
-        for ( int i = 0; i < ngroups; i++) {
-        	mixerControls.createStripControls(
-                GROUP_STRIP, i, String.valueOf((char)('A'+i)));
-        }
-    }
-
-    public static void createChannelStrips(MixerControls mixerControls, int nchannels) {
-        for (int i = 0; i < nchannels; i++) {
-            mixerControls.createStripControls(
-                CHANNEL_STRIP, i, String.valueOf(1 + i));
-        }
-    }
-
     public static void createBusStrips(MixerControls mixerControls) {
         createBusStrips(mixerControls, "L-R", ChannelFormat.STEREO, mixerControls.getFxBusControls().size());
     }
 
     public static void createBusStrips(MixerControls mixerControls,
         	String mainStripName, ChannelFormat mainFormat, int nreturns) {
-        AudioControlsChain controls;
-        controls = mixerControls.createStripControls(MAIN_STRIP, 0, mainStripName);
-        controls.setChannelFormat(mainFormat);
+        mixerControls.createStripControls(MAIN_STRIP, 0, mainStripName, mainFormat);
         List<BusControls> busControlsList = mixerControls.getAuxBusControls();
         int naux = busControlsList.size();
         for ( int i = 0; i < naux; i++) {
-        	controls = mixerControls.createStripControls(AUX_STRIP, i,
-                busControlsList.get(i).getName(), false);
-	        controls.setChannelFormat(busControlsList.get(i).getChannelFormat());
+        	mixerControls.createStripControls(AUX_STRIP, i,
+                busControlsList.get(i).getName(), false,
+                busControlsList.get(i).getChannelFormat());
         }
         busControlsList = mixerControls.getFxBusControls();
         int nsends = busControlsList.size();
         for ( int i = 0; i < nsends; i++) {
-        	controls = mixerControls.createStripControls(FX_STRIP, i,
-                busControlsList.get(i).getName(), i < nreturns);
-	        controls.setChannelFormat(busControlsList.get(i).getChannelFormat());
+        	mixerControls.createStripControls(FX_STRIP, i,
+                busControlsList.get(i).getName(), i < nreturns,
+                busControlsList.get(i).getChannelFormat());
+        }
+    }
+
+    public static void createGroupStrips(MixerControls mixerControls, int ngroups) {
+        AudioControlsChain controls;
+        ChannelFormat mainFormat = mixerControls.getMainBusControls().getChannelFormat();
+        for ( int i = 0; i < ngroups; i++) {
+        	controls = mixerControls.createStripControls(
+                GROUP_STRIP, i, String.valueOf((char)('A'+i)), mainFormat);
+        }
+    }
+
+    public static void createChannelStrips(MixerControls mixerControls, int nchannels) {
+        AudioControlsChain controls;
+        ChannelFormat mainFormat = mixerControls.getMainBusControls().getChannelFormat();
+        for (int i = 0; i < nchannels; i++) {
+            controls = mixerControls.createStripControls(
+                CHANNEL_STRIP, i, String.valueOf(1 + i), mainFormat);
         }
     }
 

@@ -126,18 +126,22 @@ public class MixerControls extends CompoundControl //AudioControls
     }
 
     public AudioControlsChain createStripControls(int id, int index, String name) {
-        return createStripControls(id, index, name, true); // has bus mix controls
+        return createStripControls(id, index, name, true, ChannelFormat.STEREO); // has bus mix controls
+    }
+
+    public AudioControlsChain createStripControls(int id, int index, String name, ChannelFormat constraintFormat) {
+        return createStripControls(id, index, name, true, constraintFormat); // has bus mix controls
     }
 
     public AudioControlsChain createStripControls(int id, int index, String name,
-        	boolean hasMixControls) {
+        	boolean hasMixControls, ChannelFormat constraintFormat) {
         if ( name == null ) {
             throw new IllegalArgumentException("null name");
         }
         if ( getStripControls(name) != null ) {
             throw new IllegalArgumentException(name+" already exists");
         }
-        AudioControlsChain chain = new AudioControlsChain(id, index, name);
+        AudioControlsChain chain = new AudioControlsChain(id, index, name, constraintFormat);
        	MixerControlsFactory.addMixControls(this, chain, hasMixControls);
         addStripControls(chain);
         return chain;

@@ -26,14 +26,15 @@ public class AudioControlsChain extends CompoundControlChain
      * @supplierCardinality 0..1
      * @link aggregation 
      */
-    private ChannelFormat channelFormat = null;
+    private ChannelFormat constraintChannelFormat = null;
 
     public AudioControlsChain(int id, String name) {
         super(id, name);
     }
 
-    public AudioControlsChain(int id, int index, String name) {
+    public AudioControlsChain(int id, int index, String name, ChannelFormat constraintFormat) {
         super(id, index, name);
+        constraintChannelFormat = constraintFormat;
     }
 
     public void setSourceLabel(String label) {
@@ -47,12 +48,8 @@ public class AudioControlsChain extends CompoundControlChain
         return sourceLabel;
     }
 
-    public void setChannelFormat(ChannelFormat format) {
-        channelFormat = format;
-    }
-
-    public ChannelFormat getChannelFormat() {
-        return channelFormat;
+    public ChannelFormat getConstraintChannelFormat() {
+        return constraintChannelFormat;
     }
 
     protected CompoundControl createControl(String name) {
@@ -67,13 +64,13 @@ public class AudioControlsChain extends CompoundControlChain
     }
 
     protected boolean isCompatibleDescriptor(ServiceDescriptor d) {
-        if ( channelFormat == null ) return true; // we're not fixed format
+        if ( constraintChannelFormat == null ) return true; // we're not fixed format
         if ( d instanceof AudioControlServiceDescriptor ) {
             AudioControlServiceDescriptor acsd =
                 (AudioControlServiceDescriptor)d;
             ChannelFormat descriptorFormat = acsd.getChannelFormat();
 			if ( descriptorFormat == null ) return true; // plugin can cope
-            if ( descriptorFormat.getCount() > channelFormat.getCount() ) {
+            if ( descriptorFormat.getCount() > constraintChannelFormat.getCount() ) {
 /*                System.out.println(getName()+" ("+channelFormat.getName()+
                     ") is incompatible with "+acsd.getName()+" ("+
                     descriptorFormat.getName()+"), "+descriptorFormat.getCount()+
