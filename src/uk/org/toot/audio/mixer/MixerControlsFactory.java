@@ -55,19 +55,17 @@ public class MixerControlsFactory
     }
 
     public static void createGroupStrips(MixerControls mixerControls, int ngroups) {
-        AudioControlsChain controls;
         ChannelFormat mainFormat = mixerControls.getMainBusControls().getChannelFormat();
         for ( int i = 0; i < ngroups; i++) {
-        	controls = mixerControls.createStripControls(
+        	mixerControls.createStripControls(
                 GROUP_STRIP, i, String.valueOf((char)('A'+i)), mainFormat);
         }
     }
 
     public static void createChannelStrips(MixerControls mixerControls, int nchannels) {
-        AudioControlsChain controls;
         ChannelFormat mainFormat = mixerControls.getMainBusControls().getChannelFormat();
         for (int i = 0; i < nchannels; i++) {
-            controls = mixerControls.createStripControls(
+            mixerControls.createStripControls(
                 CHANNEL_STRIP, i, String.valueOf(1 + i), mainFormat);
         }
     }

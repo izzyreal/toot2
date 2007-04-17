@@ -7,7 +7,6 @@ import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import java.awt.Color;
 
-import static uk.org.toot.audio.delay.DelayIds.STEREO_MODULATED_DELAY_ID;
 import static uk.org.toot.localisation.Localisation.*;
 
 public class StereoModulatedDelayControls extends ModulatedDelayControls implements StereoModulatedDelayVariables
