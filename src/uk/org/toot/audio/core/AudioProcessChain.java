@@ -99,7 +99,7 @@ public class AudioProcessChain implements AudioProcess {
             } catch ( Exception e ) {
                 p.close();
                 processes.set(i, null);
-                System.out.println("DISABLED "+p+"in "+getName()+" due to:");
+                System.out.println("DISABLED "+p+" in "+getName()+" due to:");
                 e.printStackTrace();
             }
         }

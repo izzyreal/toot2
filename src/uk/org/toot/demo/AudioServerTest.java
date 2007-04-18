@@ -67,5 +67,8 @@ public class AudioServerTest extends AbstractDemo
         public void work(int nFrames) {
             output.processAudio(buffer);
         }
+
+        public void setEnabled(boolean enable) {
+        }
     }
 }

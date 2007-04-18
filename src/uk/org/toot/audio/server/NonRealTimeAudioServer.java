@@ -124,6 +124,9 @@ public class NonRealTimeAudioServer
         return realTime ? server.getLoad() : isRunning ? 1.0f : 0.0f;
     }
 
+    public void setEnabled(boolean enable) {
+    }
+
     /**
      * Override this method to synchronise with non-real-time timing
      */

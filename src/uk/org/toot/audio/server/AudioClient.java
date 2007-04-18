@@ -8,4 +8,10 @@ package uk.org.toot.audio.server;
 public interface AudioClient
 {
     void work(int nFrames);
+
+    /**
+     * When not enabled, work() may not be called and should be ignored if it
+     * is called.
+     */
+    void setEnabled(boolean enabled);
 }

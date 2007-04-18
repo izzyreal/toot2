@@ -21,14 +21,23 @@ import java.util.List;
 public class CompoundAudioClient implements AudioClient
 {
     private List<AudioClient> clients;
+    private boolean enabled = true;
 
     public CompoundAudioClient() {
         clients = new java.util.ArrayList<AudioClient>();
     }
 
     public void work(int nFrames) {
+        if ( !enabled ) return;
         for ( AudioClient client : clients ) {
             client.work(nFrames);
+        }
+    }
+
+    public void setEnabled(boolean enable) {
+        enabled = enable;
+        for ( AudioClient client : clients ) {
+            client.setEnabled(enable);
         }
     }
 

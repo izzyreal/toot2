@@ -27,6 +27,7 @@ public class MultiTrackPlayer implements AudioClient
     private boolean playRequest = false;
     private boolean stopRequest = false;
 //    private long locateRequest = -1;
+	private boolean enabled = true;
 
     /**
      * @link aggregation
@@ -38,10 +39,18 @@ public class MultiTrackPlayer implements AudioClient
         transport = t;
 		transportListener = new TransportListener() {
             public void play() {
-                playRequest = true;
+                if ( enabled ) {
+                    playRequest = true;
+                } else {
+                    playing = true;
+                }
             }
 			public void stop() {
-                stopRequest = true;
+                if ( enabled ) {
+	                stopRequest = true;
+                } else {
+                    playing = false;
+                }
             }
 			public void record(boolean rec) {
             }
@@ -65,6 +74,7 @@ public class MultiTrackPlayer implements AudioClient
     }
 
     public void work(int nFrames) {
+        if ( !enabled ) return;
         // sync transport with dsp
         if ( stopRequest ) {
             playing = false;
@@ -73,6 +83,10 @@ public class MultiTrackPlayer implements AudioClient
         }
         stopRequest = false;
         playRequest = false;
+    }
+
+    public void setEnabled(boolean enable) {
+        enabled = enable;
     }
 
     protected void locate(long microseconds) {

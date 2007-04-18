@@ -197,6 +197,7 @@ public class AudioMixer implements AudioClient
     }
 
     public void work(int nFrames) {
+        if ( !enabled ) return;
         processMutations();
         silenceStrips(groupStrips);
         silenceStrips(fxStrips);
