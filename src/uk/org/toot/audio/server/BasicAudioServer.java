@@ -16,18 +16,17 @@ abstract public class BasicAudioServer extends AbstractAudioServer
 {
     private List<AudioBuffer> audioBuffers;
 
-    private float sampleRate;
-    private int channelCount;
+    private float sampleRate = 44100f;
+    protected int channelCount;
     private int bufferFrames;
 
-    public BasicAudioServer(float sampleRate, int channels) {
-        this.sampleRate = sampleRate;
-        channelCount = channels;
+    public BasicAudioServer() {
+        channelCount = 2; // !!! STEREO
         audioBuffers = new java.util.ArrayList<AudioBuffer>();
-        bufferFrames = calculateBufferFrames();
     }
 
     protected AudioBuffer _createAudioBuffer(String name) {
+        bufferFrames = calculateBufferFrames();
         return new AudioBuffer(name, channelCount, bufferFrames, sampleRate);
     }
 
@@ -54,5 +53,13 @@ abstract public class BasicAudioServer extends AbstractAudioServer
 
     protected void work() {
         client.work(bufferFrames);
+    }
+
+    public float getSampleRate() {
+        return sampleRate;
+    }
+
+    public void setSampleRate(float sampleRate) {
+        this.sampleRate = sampleRate;
     }
 }

@@ -183,7 +183,15 @@ public class NonRealTimeAudioServer
         return server.getSampleRate();
     }
 
+    public void setSampleRate(float sampleRate) {
+        server.setSampleRate(sampleRate);
+    }
+
     public int getSampleSizeInBits() {
         return server.getSampleSizeInBits();
+    }
+
+    public void setSampleSizeInBits(int sampleSizeInBits) {
+        server.setSampleSizeInBits(sampleSizeInBits);
     }
 }

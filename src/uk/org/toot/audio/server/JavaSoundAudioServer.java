@@ -18,37 +18,46 @@ public class JavaSoundAudioServer extends BasicAudioServer
 {
     private byte[] sharedByteBuffer;
 
+    private int sampleSizeInBits = 16;
+
     private AudioFormat format;
 
     private List<JavaSoundAudioOutput> outputs;
 
     private List<JavaSoundAudioInput> inputs;
 
-    public JavaSoundAudioServer(AudioFormat format, float outputLatencyMilliseconds, float bufferMilliseconds) {
-        this(format);
-        setLatencyMilliseconds(outputLatencyMilliseconds);
-        setBufferMilliseconds(bufferMilliseconds);
-    }
-
-    public JavaSoundAudioServer(AudioFormat format) {
-        super(format.getSampleRate(), format.getChannels());
-        this.format = format;
-        sharedByteBuffer = createByteBuffer();
+    public JavaSoundAudioServer() {
         outputs = new java.util.ArrayList<JavaSoundAudioOutput>();
         inputs = new java.util.ArrayList<JavaSoundAudioInput>();
-
-/*        Mixer.Info[] infos = AudioSystem.getMixerInfo();
-        for ( int i = 0; i < infos.length; i++ ) {
-            System.out.println(infos[i]);
-        } */
     }
 
-    public float getSampleRate() {
-        return format.getSampleRate();
+    protected void checkFormat() {
+        if ( format != null ) return;
+        format = new AudioFormat(
+        	getSampleRate(),
+            getSampleSizeInBits(),
+            2, // !!! !!! STEREO
+            true,
+            false);	// !!! !!!
+        sharedByteBuffer = createByteBuffer();
     }
 
     public int getSampleSizeInBits() {
-        return format.getSampleSizeInBits();
+        return sampleSizeInBits;
+    }
+
+    public void setSampleSizeInBits(int sampleSizeInBits) {
+        if ( format != null ) {
+            throw new IllegalStateException("too late, format already set");
+        }
+        this.sampleSizeInBits = sampleSizeInBits;
+    }
+
+    public void setSampleRate(float sampleRate) {
+        if ( format != null ) {
+            throw new IllegalStateException("too late, format already set");
+        }
+        super.setSampleRate(sampleRate);
     }
 
     public List<AudioLine> getOutputs() {
@@ -65,6 +74,7 @@ public class JavaSoundAudioServer extends BasicAudioServer
     }
 
     protected byte[] createByteBuffer() {
+        checkFormat();
         byte[] ret = new byte[_createAudioBuffer("hack").getByteArrayBufferSize(format)];
 //        System.out.println("Byte buffer created, "+ret.length+" bytes");
         return ret;
@@ -182,6 +192,7 @@ public class JavaSoundAudioServer extends BasicAudioServer
     		throws Exception {
         JavaSoundAudioOutput output;
         boolean wasRunning = isRunning;
+        checkFormat();
         if ( isRunning ) stop();
         if ( name == null ) {
             // use the first available output if null is passed
@@ -218,6 +229,7 @@ public class JavaSoundAudioServer extends BasicAudioServer
     public IOAudioProcess openAudioInput(String name, String label)
         	throws Exception {
         JavaSoundAudioInput input;
+        checkFormat();
         if ( name == null ) {
             // use the first available output if null is passed
             name = getAvailableInputNames().get(0);
