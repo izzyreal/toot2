@@ -6,7 +6,6 @@
 package uk.org.toot.demo;
 
 import uk.org.toot.audio.core.AudioBuffer;
-import javax.sound.sampled.AudioFormat;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.server.*;
 import uk.org.toot.swingui.audioui.serverui.*;

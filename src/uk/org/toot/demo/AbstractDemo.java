@@ -8,7 +8,6 @@ package uk.org.toot.demo;
 import java.awt.Container;
 import java.io.IOException;
 import java.util.Properties;
-import javax.sound.sampled.AudioFormat;
 import uk.org.toot.control.*;
 import uk.org.toot.swingui.miscui.SwingApplication;
 import uk.org.toot.audio.mixer.*;
