@@ -14,15 +14,18 @@ import uk.org.toot.audio.core.AudioBuffer;
  */
 abstract public class BasicAudioServer extends AbstractAudioServer
 {
-    private List<AudioBuffer> audioBuffers;
+    private List<AudioBuffer> audioBuffers = new java.util.ArrayList<AudioBuffer>();
 
     private float sampleRate = 44100f;
-    protected int channelCount;
+    protected int channelCount = 2;
     private int bufferFrames;
 
     public BasicAudioServer() {
-        channelCount = 2; // !!! STEREO
-        audioBuffers = new java.util.ArrayList<AudioBuffer>();
+    }
+
+    public BasicAudioServer(float sampleRate, int channels) {
+        this.sampleRate = sampleRate;
+        channelCount = channels;
     }
 
     protected AudioBuffer _createAudioBuffer(String name) {
