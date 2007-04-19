@@ -105,8 +105,12 @@ abstract public class AbstractDemo
             // create the audio server
 //            realServer = new JavaSoundAudioServer(format);
             realServer = AudioServerServices.createServer(property("server"));
-            realServer.setSampleRate((float)intProperty("sample.rate", 44100));
-            realServer.setSampleSizeInBits(intProperty("sample.bits", 16));
+/*            try {
+	            realServer.setSampleRate((float)intProperty("sample.rate", 44100));
+    	        realServer.setSampleSizeInBits(intProperty("sample.bits", 16));
+            } catch ( Exception e ) {
+                // e.printStackTrace();
+            } */
             // hook it for non-real-time
             server = new NonRealTimeAudioServer(realServer);
 //            server = extendedServer;
