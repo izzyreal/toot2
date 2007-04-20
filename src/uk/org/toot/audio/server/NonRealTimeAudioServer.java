@@ -124,9 +124,6 @@ public class NonRealTimeAudioServer
         return realTime ? server.getLoad() : isRunning ? 1.0f : 0.0f;
     }
 
-    public void setEnabled(boolean enable) {
-    }
-
     /**
      * Override this method to synchronise with non-real-time timing
      */
@@ -183,15 +180,7 @@ public class NonRealTimeAudioServer
         return server.getSampleRate();
     }
 
-    public void setSampleRate(float sampleRate) {
-//        server.setSampleRate(sampleRate);
-    }
-
     public int getSampleSizeInBits() {
         return server.getSampleSizeInBits();
-    }
-
-    public void setSampleSizeInBits(int sampleSizeInBits) {
-//        server.setSampleSizeInBits(sampleSizeInBits);
     }
 }

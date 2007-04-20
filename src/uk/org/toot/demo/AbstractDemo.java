@@ -8,6 +8,7 @@ package uk.org.toot.demo;
 import java.awt.Container;
 import java.io.IOException;
 import java.util.Properties;
+import javax.sound.sampled.AudioFormat;
 import uk.org.toot.control.*;
 import uk.org.toot.swingui.miscui.SwingApplication;
 import uk.org.toot.audio.mixer.*;
@@ -32,7 +33,7 @@ abstract public class AbstractDemo
     protected SingleTransportProject project;
     protected Properties properties;
 
-    protected AudioServer realServer;
+    protected ExtendedAudioServer extendedServer;
     protected AudioServer server;
 
     /**
@@ -102,17 +103,17 @@ abstract public class AbstractDemo
             project = new SingleTransportProject(transport);
             // load the demo properties
             properties = new DemoProperties(project.getApplicationPath());
+            // create the specified audio format
+            AudioFormat format = new AudioFormat(
+                intProperty("sample.rate", 44100),
+                intProperty("sample.bits", 16),
+                intProperty("sample.chans", 2),
+                true,
+                false);	// !!! !!!
             // create the audio server
-//            realServer = new JavaSoundAudioServer(format);
-            realServer = AudioServerServices.createServer(property("server"));
-/*            try {
-	            realServer.setSampleRate((float)intProperty("sample.rate", 44100));
-    	        realServer.setSampleSizeInBits(intProperty("sample.bits", 16));
-            } catch ( Exception e ) {
-                // e.printStackTrace();
-            } */
-            // hook it for non-real-time
-            server = new NonRealTimeAudioServer(realServer);
+            extendedServer = new JavaSoundAudioServer(format);
+            // hook it for non-real-time although not currently possible
+            server = new NonRealTimeAudioServer(extendedServer);
 //            server = extendedServer;
             // hack the non real time audio server into the project 'manager'
             if ( server instanceof NonRealTimeAudioServer ) {

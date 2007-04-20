@@ -6,9 +6,10 @@
 package uk.org.toot.demo;
 
 import uk.org.toot.audio.core.AudioBuffer;
+import javax.sound.sampled.AudioFormat;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.server.*;
-import uk.org.toot.swingui.audioui.serverui.*;
+import uk.org.toot.swingui.audioui.serverui.AudioServerPanel;
 
 /**
  * TransportProjectDemo displays a full user interface over the underlying
@@ -23,7 +24,7 @@ public class AudioServerTest extends AbstractDemo
 
     protected void createUI(String[] args) {
         super.createUI(args);
-        frame(AudioServerUIServices.createServerUI(realServer), "Audio Server Test");
+        frame(new AudioServerPanel(extendedServer), "Audio Server Test");
     }
 
     public static void main(String[] args) {
@@ -32,7 +33,9 @@ public class AudioServerTest extends AbstractDemo
 
     protected void create(String[] args) {
         try {
-            server = new JavaSoundAudioServer();
+            // 48kHz 16 bit stereo for my SB Live
+            AudioFormat format = new AudioFormat(48000, 16, 2, true, false);
+            server = new JavaSoundAudioServer(format);
             server.setClient(new TestClient(server));
 			createUI(args);
     	    try {
@@ -63,9 +66,6 @@ public class AudioServerTest extends AbstractDemo
 
         public void work(int nFrames) {
             output.processAudio(buffer);
-        }
-
-        public void setEnabled(boolean enable) {
         }
     }
 }
