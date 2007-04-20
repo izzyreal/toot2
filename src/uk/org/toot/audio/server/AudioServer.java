@@ -96,11 +96,7 @@ public interface AudioServer
 
     float getSampleRate();
 
-//    void setSampleRate(float sampleRate);
-
     int getSampleSizeInBits();
-
-//    void setSampleSizeInBits(int sampleSizeInBits);
 
     float getLoad();
 }

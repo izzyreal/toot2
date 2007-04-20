@@ -7,7 +7,7 @@ package uk.org.toot.demo;
 
 import uk.org.toot.swingui.projectui.*;
 import uk.org.toot.swingui.audioui.mixerui.*;
-import uk.org.toot.swingui.audioui.serverui.*;
+import uk.org.toot.swingui.audioui.serverui.AudioServerPanel;
 
 /**
  * TransportProjectDemo displays a full user interface over the underlying
@@ -25,8 +25,7 @@ public class TransportProjectDemo extends AbstractDemo
         SingleTransportProjectPanel panel = new SingleTransportProjectPanel(project);
 //        panel.addTab("MultiTrack", new MultiTrackPanel(multiTrackControls));
         panel.addTab("Audio Mixer", new CompactMixerPanel(mixerControls));
-        // the audio server panel is provided by a service provider
-        panel.addTab("Audio Server", AudioServerUIServices.createServerUI(realServer));
+        panel.addTab("Audio Server", new AudioServerPanel(extendedServer)); // !!! not non-real-time 
        	frame(panel, "Toot Transport Project");
         // add the source demo panel as a separate frame
 //        frame(new DemoSourcePanel(demoSourceControls), "Source Demo");
