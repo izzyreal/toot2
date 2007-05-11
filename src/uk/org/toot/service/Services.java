@@ -9,8 +9,7 @@ import java.util.Iterator;
 import javax.imageio.spi.ServiceRegistry;
 
 /**
- * Services encapsulates the platform=specific provision of service lookup and
- * may require editing for platforms other than Sun's JSE 5.
+ * Services encapsulates the platform=specific provision of service lookup.
  */
 public class Services
 {

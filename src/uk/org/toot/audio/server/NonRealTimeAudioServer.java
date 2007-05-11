@@ -187,11 +187,12 @@ public class NonRealTimeAudioServer
 //        server.setSampleRate(sampleRate);
     }
 
-    public int getSampleSizeInBits() {
-        return server.getSampleSizeInBits();
+    public int getInputLatencyFrames() {
+    	return server.getInputLatencyFrames();
+    }
+    
+    public int getOutputLatencyFrames() {
+    	return server.getOutputLatencyFrames();
     }
 
-    public void setSampleSizeInBits(int sampleSizeInBits) {
-//        server.setSampleSizeInBits(sampleSizeInBits);
-    }
 }

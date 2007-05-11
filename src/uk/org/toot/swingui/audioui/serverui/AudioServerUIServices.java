@@ -6,21 +6,29 @@
 package uk.org.toot.swingui.audioui.serverui;
 
 import java.util.Iterator;
+import java.util.Properties;
 import uk.org.toot.service.*;
 import uk.org.toot.audio.server.*;
 import uk.org.toot.swingui.audioui.serverui.spi.AudioServerUIServiceProvider;
-import javax.swing.JComponent;
+import javax.swing.*;
 
 public class AudioServerUIServices extends Services
 {
     protected AudioServerUIServices() {
     }
 
-    public static JComponent createServerUI(AudioServer server) {
+    /**
+     * Allow changes to server and sample.rate properties
+     */
+    public static JPanel createServerSetupUI(Properties properties) {
+ 		return new AudioServerSetup(properties);
+    }
+
+    public static JComponent createServerUI(AudioServer server, AudioServerConfiguration p) {
         JComponent ui;
         Iterator<AudioServerUIServiceProvider> it = providers();
         while ( it.hasNext() ) {
-            ui = it.next().createServerUI(server);
+            ui = it.next().createServerUI(server, p);
             if ( ui != null ) return ui;
         }
         return null;

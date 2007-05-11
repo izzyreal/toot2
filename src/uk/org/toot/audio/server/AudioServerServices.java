@@ -37,6 +37,17 @@ public class AudioServerServices extends Services
         return null;
     }
 
+    public static AudioServerConfiguration createServerConfiguration(AudioServer server) {
+        AudioServerConfiguration serverProperties;
+		for ( AudioServerServiceProvider provider : providers ) {
+            serverProperties = provider.createServerConfiguration(server);
+            if ( serverProperties != null ) {
+                return serverProperties;
+            }
+        }
+        return null;
+    }
+
     public static void scan() {
         Iterator<AudioServerServiceProvider> it = lookup(AudioServerServiceProvider.class);
         providers.clear();

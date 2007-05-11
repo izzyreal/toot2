@@ -3,10 +3,10 @@
 package uk.org.toot.audio.server.spi;
 
 import uk.org.toot.service.*;
-import uk.org.toot.audio.server.AudioServer;
+import uk.org.toot.audio.server.*;
 import java.util.List;
 
-public class AudioServerServiceProvider extends ServiceProvider
+public abstract class AudioServerServiceProvider extends ServiceProvider
 {
     private List<ServiceDescriptor> servers;
 
@@ -39,4 +39,6 @@ public class AudioServerServiceProvider extends ServiceProvider
         }
         return null;
     }
+
+    public abstract AudioServerConfiguration createServerConfiguration(AudioServer server);
 }

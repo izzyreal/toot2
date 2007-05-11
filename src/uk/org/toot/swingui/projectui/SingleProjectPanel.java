@@ -15,11 +15,10 @@ public class SingleProjectPanel extends AbstractProjectPanel
     protected JToolBar toolBar;
     private JTabbedPane tabbedPane;
 
-    public SingleProjectPanel(SingleProject p) {
+    public SingleProjectPanel(SingleProject p, JToolBar toolBar) {
         super(p);
         setLayout(new BorderLayout());
         // add toolbar open/save/saveAs
-        toolBar = new JToolBar();
         toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
         toolBar.add(openAction);
         toolBar.add(saveAction);
@@ -32,8 +31,8 @@ public class SingleProjectPanel extends AbstractProjectPanel
     }
 
     protected void dispose() {
-        toolBar.removeAll();
-        toolBar = null;
+// !!! !!!       toolBar.removeAll();
+// !!! !!!        toolBar = null;
         tabbedPane.removeAll();
         tabbedPane = null;
         removeAll();

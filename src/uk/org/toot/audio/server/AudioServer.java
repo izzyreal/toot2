@@ -75,7 +75,7 @@ public interface AudioServer
      * start may be deferred until called at least once.
      * May be called multiple times with the same 'name' in which case each
      * returned OutputAudioProcess will be backed by the same hardware audio output
-     * line.
+     * line. Only one of the processes may be used at a time though.
      */
     IOAudioProcess openAudioOutput(String name, String label) throws Exception; // !!!
 
@@ -84,7 +84,7 @@ public interface AudioServer
      * represented by 'name' and labelled 'label'.
      * May be called multiple times with the same 'name' in which case each
      * returned InputAudioProcess will be backed by the same hardware audio
-     * output line.
+     * output line. Only one of the processes may be used at a time though.
      */
     IOAudioProcess openAudioInput(String name, String label) throws Exception; // !!!
 
@@ -96,11 +96,16 @@ public interface AudioServer
 
     float getSampleRate();
 
-//    void setSampleRate(float sampleRate);
-
-    int getSampleSizeInBits();
-
-//    void setSampleSizeInBits(int sampleSizeInBits);
+    /*
+     * Typically this may only be called before any buffers are created, or inputs or 
+     * outputs are opened since they all depend on the sample rate.
+     * An IllegalStateException should be thrown otherwise.
+     */
+    void setSampleRate(float sampleRate);
 
     float getLoad();
+    
+    int getInputLatencyFrames();
+    
+    int getOutputLatencyFrames();
 }

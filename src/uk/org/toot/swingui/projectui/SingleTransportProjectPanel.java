@@ -10,6 +10,7 @@ import uk.org.toot.project.*;
 import uk.org.toot.transport.*;
 import javax.swing.KeyStroke;
 import javax.swing.Action;
+import javax.swing.JToolBar;
 import java.awt.event.KeyEvent;
 import java.awt.KeyEventDispatcher;
 import uk.org.toot.audio.server.NonRealTimeAudioServer;
@@ -21,8 +22,8 @@ public class SingleTransportProjectPanel extends SingleProjectPanel
     @SuppressWarnings("unused")
 	private KeyEventDispatcher transportDispatcher;
 
-    public SingleTransportProjectPanel(SingleTransportProject p) {
-        super(p);
+    public SingleTransportProjectPanel(SingleTransportProject p, JToolBar toolBar) {
+        super(p, toolBar);
         transport = p.getTransport();
         transportActions = new TransportActions(transport); // !!! well something has to instantiate it, and, umm 'close it'
         NonRealTimeAudioServer nonRealTimeAudioServer = p.getNonRealTimeAudioServer();

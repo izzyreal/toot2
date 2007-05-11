@@ -75,7 +75,7 @@ public class SwitchedAudioClient implements AudioClient {
 	/*
 	 * @deprecated - use setEnabled(boolean b) instead
 	 */
-	synchronized void attachServer(boolean yes) {
+	public synchronized void attachServer(boolean yes) {
 		if (yes == attached) return;
 		attached=yes;	
 		
