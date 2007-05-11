@@ -21,6 +21,11 @@ public abstract class AudioServerConfiguration extends Observable
 	 * @return Properties
 	 */
     public abstract Properties getProperties();
+    
+    /**
+     * Apply passed Properties for those keys which are recognized.
+     * @param properties
+     */
     public abstract void applyProperties(Properties properties);
     
     /**
@@ -28,6 +33,10 @@ public abstract class AudioServerConfiguration extends Observable
      * @param properties the properties to be merged into
      */
     public void mergeInto(Properties properties) {
+    	if ( properties == null ) {
+    	   System.err.println("null properties passed to AudioServerConfiguration.mergeInto(...)");
+    	   return;
+    	}
 		Properties scp = getProperties();
 		for ( Enumeration e = scp.propertyNames(); e.hasMoreElements(); ) {
 			String key = (String)e.nextElement();
