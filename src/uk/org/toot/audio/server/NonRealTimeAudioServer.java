@@ -195,4 +195,7 @@ public class NonRealTimeAudioServer
     	return server.getOutputLatencyFrames();
     }
 
+    public int getTotalLatencyFrames() {
+    	return server.getTotalLatencyFrames();
+    }
 }

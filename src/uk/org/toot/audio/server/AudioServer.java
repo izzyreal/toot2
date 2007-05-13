@@ -108,4 +108,6 @@ public interface AudioServer
     int getInputLatencyFrames();
     
     int getOutputLatencyFrames();
+    
+    int getTotalLatencyFrames();
 }
