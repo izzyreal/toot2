@@ -9,7 +9,9 @@ public class SampleRateCombo extends JComboBox
     public SampleRateCombo(String sampleRate) {
         addItem("44100");
         addItem("48000");
+        addItem("88200");
         addItem("96000");
+        addItem("176400");
 		addItem("192000");
 		if ( sampleRate != null ) {
 			setSelectedItem(sampleRate);
