@@ -17,6 +17,7 @@ package uk.org.toot.pitch;
 
 public class PitchClass
 {
+	// doesn't cope with enharmonic spelling !!! !!!
     private static String[] names = {
         "C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B" } ;
 
@@ -25,13 +26,19 @@ public class PitchClass
     }
 
     public static String name(int semi) {
-        return names[semi % 12] ;
+        return names[value(semi)] ;
     }
 
+    public static int value(int semi) {
+    	// !!! should cope with -ve
+    	return semi % 12;
+    }
+    
     public static int value(String note) {
         char qual = ' ', letter = note.charAt(0) ;
         int base = 0, offset = 0 ;
 
+        // should cope with double sharp/flat !!!
         if ( note.length() > 1 )
         	qual = note.charAt(1) ;  // specified quality if available
 
@@ -48,7 +55,7 @@ public class PitchClass
         case 'B': base = 11 ; break ;
         }
 
-        return (base+offset)%12 ;
+        return value(base+offset);
     }
 
     public static boolean isWhite(int val) {
@@ -56,7 +63,7 @@ public class PitchClass
     }
 
     public static boolean isBlack(int val) {
-        int pc = val % 12 ;
+        int pc = value(val);
         return ( pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10 ) ;
     }
 }

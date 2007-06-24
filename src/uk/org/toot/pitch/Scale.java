@@ -2,186 +2,17 @@
 
 package uk.org.toot.pitch;
 
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import static uk.org.toot.pitch.Interval.*;
-
-public class Scale {
-    /**
-     * @supplierCardinality 1..*
-     * @label scales 
-     * @associates <{uk.org.toot.pitch.Scale}>
-     */
-    private static ArrayList<Scale> scales ;
-
-    /**
-     * @label Major
-     * @supplierCardinality 1
-     */
-    public static Scale Major ;
-
-    static { scales = makeScales() ; } ;
-
-    private static ArrayList<Scale> makeScales()
-    {
-        ArrayList<Scale> scales = new ArrayList<Scale>() ;
-
-        int[] major = {
-            UNISON, MAJOR_SECOND, MAJOR_THIRD, PERFECT_FOURTH,
-            	PERFECT_FIFTH, MAJOR_SIXTH, MAJOR_SEVENTH } ;
-        Major =  new Scale("Major", major) ;
-        scales.add(Major) ;
-
-        int[] minorNatural = {
-            UNISON, MAJOR_SECOND, MINOR_THIRD, PERFECT_FOURTH,
-            	PERFECT_FIFTH, MINOR_SIXTH, MINOR_SEVENTH } ;
-        scales.add(new Scale("Natural Minor", minorNatural));
-
-        int[] minorHarmonic = {
-            UNISON, MAJOR_SECOND, MINOR_THIRD, PERFECT_FOURTH,
-            	PERFECT_FIFTH, MINOR_SIXTH, MAJOR_SEVENTH } ;
-        scales.add(new Scale("Harmonic Minor", minorHarmonic)) ;
-
-        // Diminished		R	 	2	b3	 	4	b5	 	b6	6	 	7
-        int[] diminished = {
-            UNISON, MAJOR_SECOND, MINOR_THIRD, PERFECT_FOURTH,
-            	DIMINISHED_FIFTH, MINOR_SIXTH, MAJOR_SIXTH, MAJOR_SEVENTH } ;
-        scales.add(new Scale("Diminished", diminished)) ;
-
-        // Augmented		R	 	 	b3	3	 	 	5	b6	 	 	7
-        int[] augmented = {
-            UNISON, MINOR_THIRD, MAJOR_THIRD, PERFECT_FIFTH,
-                MINOR_SIXTH, MAJOR_SEVENTH } ;
-        scales.add(new Scale("Augmented", augmented)) ;
-
-		// Whole Tone		R	 	2	 	3	 	b5	 	b6	 	b7
-        int[] wholeTone = {
-            UNISON, MAJOR_SECOND, MAJOR_THIRD, DIMINISHED_FIFTH,
-                MINOR_SIXTH, MINOR_SEVENTH } ;
-		scales.add(new Scale("Whole Tone", wholeTone)) ;
-
-		// Lydian Dominant		R	 	2	 	3	 	b5	5	 	6	b7
-        int[] lydianDominant = {
-            UNISON, MAJOR_SECOND, MAJOR_THIRD, DIMINISHED_FIFTH,
-                PERFECT_FIFTH, MAJOR_SIXTH, MINOR_SEVENTH } ;
-        scales.add(new Scale("Lydian Dominant", lydianDominant)) ;
-
-		// Pentatonic Major	R	 	2	 	3	 	 	5	 	6
-        int[] pentatonicMajor = {
-            UNISON, MAJOR_SECOND, MAJOR_THIRD, PERFECT_FIFTH, MAJOR_SIXTH } ;
-        scales.add(new Scale("Pentatonic Major", pentatonicMajor)) ;
-
-		// Pentatonic Minor	R	 	 	b3	 	4	 	5	 	 	b7
-        int[] pentatonicMinor = {
-            UNISON, MINOR_THIRD, DIMINISHED_FIFTH, MAJOR_SEVENTH } ;
-        	scales.add(new Scale("Pentatonic Minor", pentatonicMinor)) ;
-
-		// 3 Semitone		R	 	 	b3	 	 	b5	 	 	6
-        @SuppressWarnings("unused")
-		int[] threeSemitone = {
-            UNISON, MINOR_THIRD, DIMINISHED_FIFTH, MAJOR_SIXTH } ;
-//        scales.add(new Scale("3 Semitone", threeSemitone)) ;
-
-		// 4 Semitone		R	 	 	 	3	 	 	 	b6
-        @SuppressWarnings("unused")
-		int[] fourSemitone= {
-            UNISON, MAJOR_THIRD, MINOR_SIXTH } ;
-//        scales.add(new Scale("4 Semitone", fourSemitone)) ;
-
-		// Blues			R	 	 	b3	 	4	b5	5	 	 	b7
-        int[] blues = {
-            UNISON, MINOR_THIRD, PERFECT_FOURTH,
-                DIMINISHED_FIFTH, PERFECT_FIFTH, MAJOR_SEVENTH } ;
-        scales.add(new Scale("Blues", blues)) ;
-
-		// Bebop			R	 	2	 	3	4	 	5	 	6	b7	7
-        int[] bebop = {
-            UNISON, MAJOR_SECOND, MAJOR_THIRD, PERFECT_FOURTH,
-                PERFECT_FIFTH, MAJOR_SIXTH, MINOR_SEVENTH, MAJOR_SEVENTH } ;
-        scales.add(new Scale("Bebop", bebop)) ;
-
-		// Enigmatic		R	b2	 	 	3	 	b5	 	b6	 	b7	7
-        int[] enigmatic = {
-            UNISON, MINOR_SECOND, MAJOR_THIRD, DIMINISHED_FIFTH,
-                MINOR_SIXTH, MINOR_SEVENTH, MAJOR_SEVENTH } ;
-        scales.add(new Scale("Enigmatic", enigmatic)) ;
-
-        return scales ;
-    }
-
-    static public List getScales() {
-        return scales;
-    }
-
-    static public List<String> getScaleNames() {
-        List<String> scaleNames = new ArrayList<String>();
-        Iterator iterator = scales.iterator();
-        while ( iterator.hasNext() ) {
-            Scale scale = (Scale)iterator.next();
-			scaleNames.add(scale.getName());
-        }
-        return scaleNames;
-    }
-
-    static public Scale getScale(String scaleName) {
-        Iterator iterator = scales.iterator();
-        while ( iterator.hasNext() ) {
-            Scale scale = (Scale)iterator.next();
-            if ( scale.getName().indexOf(scaleName) >= 0 ) {
-                return scale;
-            }
-        }
-        return Scale.Major; // if in doubt, use the Major scale
-    }
-
-    static public List with(String keynotes)
-    {
-        int nargs ;
-        // count arguments
-        StringTokenizer st = new StringTokenizer(keynotes) ;
-        for ( nargs = 0 ; st.hasMoreTokens() ; )
-        {
-            st.nextToken() ;
-            nargs++ ;
-        }
-
-        // allocate space for agruments
-        String[] notes = new String[nargs] ;
-
-        // extract each argument
-        st = new StringTokenizer(keynotes) ;
-		for ( int i = 0 ; i < nargs && st.hasMoreTokens() ; i++ )
-        {
-            notes[i] = st.nextToken() ;
-//            System.out.print(notes[i]+" ") ;
-        }
-//        System.out.println() ;
-
-        return with(notes) ;
-    }
-
-    public static List with(String[] notes)
-    {
-        List<Key> match = new ArrayList<Key>() ;
-        String[] roots = { "G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb" } ;
-
-       	// iterate 12 roots
-        for ( int r = 0 ; r < 12 ; r++ )
-        {
-            int root = PitchClass.value(roots[r]) ;
-
-    	    for ( Scale scale : scales ) {
-                Key key = new Key(root, scale);
-				if ( key.contains(notes) )
-    	            match.add(key) ;
-            }
-        }
-
-        return match ;
-    }
+/**
+ * A Scale is a list of intervals.
+ * Melodies are derived from a scale.
+ * Chords are derived from the modes of a scale.
+ * @author st
+ *
+ */
+public class Scale 
+{
+    private String name ;
+    private int[] interval ;
 
     /**
      * Constructor
@@ -211,6 +42,18 @@ public class Scale {
     }
     public String getName() { return name; }
 
+    /**
+     * Return the Principal Chordmode for the degree
+     * @param degree
+     * @return
+     */
+/*    public int[] getMode(int degree) {
+    	return null;
+    } */
+    
+    // tertiary (chord) intervals from the mode of the degree
+    // triads(3), sevenths(4), ninths(5), elevenths(6) or thirteenths(7)
+    // doesn't return sus4(3), 6(4), add9(4) etc.
     public int[] getTertiaryIntervals(int degree, int poly) {
         int[] intervals = new int[poly-1];
         int accum = 0;
@@ -231,7 +74,4 @@ public class Scale {
         }
         return false;
     }
-
-    private String name ;
-    private int[] interval ;
 }

@@ -5,31 +5,37 @@ package uk.org.toot.pitch;
 import java.util.Observable;
 
 /**
- * A Key has a Root note and a Scale
+ * A Key has a root PitchClass and a Scale
+ * It does not have a register.
  */
 public class Key extends Observable
 {
+	protected String[] names;
+    protected int root;
+
+    /**
+     * @link aggregation 
+     */
+    protected Scale scale;
+
     /**
      * Constructor
      */
     public Key(int root, Scale scale) {
-        this.root = root ;
-        this.scale = scale ;
-    }
-
-    public Key(String root, Scale scale) {
         this.root = PitchClass.value(root) ;
         this.scale = scale ;
     }
 
+    public Key(String root, Scale scale) {
+        this(PitchClass.value(root), scale);
+    }
+
     public Key(int root) {
-        this.root = root ;
-        this.scale = Scale.Major ;
+        this(root, Scales.getInitialScale());
     }
 
     public Key() {
-        this.root = PitchClass.value("C") ;
-        this.scale = Scale.Major ;
+        this("C", Scales.getInitialScale());
     }
 
 	public boolean contains(String[] notes) {
@@ -55,12 +61,12 @@ public class Key extends Observable
 
     public String[] getNames(){ return names; }
 
-    public void setNames(java.lang.String[] names){ this.names = names; }
+    public void setNames(String[] names){ this.names = names; } // !!! !!!
 
     public int getRoot(){ return root; }
 
     public void setRoot(int root) {
-        this.root = root % 12;
+        this.root = PitchClass.value(root);
         setChanged();
         notifyObservers();
 //        System.out.println("Key of "+PitchClass.name(root));
@@ -74,6 +80,11 @@ public class Key extends Observable
         notifyObservers();
     }
 
+    /**
+     * Returns the nearest diatonic pitch, preference to lower
+     * @param pitch
+     * @return
+     */
     public int diatonicPitch(int pitch) {
         if ( diatonic(pitch) ) return pitch;
         for ( int disp = 1; disp < 3; disp++ ) {
@@ -83,7 +94,11 @@ public class Key extends Observable
         return pitch; // oh well, it's still accidental after all!
     }
 
-    public int[] getDiatonicChordNotes(int chordRoot, int poly) {
+    public int getNote(int degree) {
+    	return getRoot() + getScale().interval(degree);
+    }
+    
+   public int[] getDiatonicChordNotes(int chordRoot, int poly) {
         int[] notes = new int[poly];
         // normalise the chord root to force it diatonic
         int diaRoot = diatonicPitch(chordRoot);
@@ -95,27 +110,8 @@ public class Key extends Observable
         return notes;
     }
 
-    /**
-     * Move in the Dominant direction around the Circle of Fifths
-     */
-    public void dominant() {
-        setRoot(getRoot()+scale.interval(5-1));
-    }
-
-    /**
-     * Move in the Sub-Dominant direction around the Circle of Fifths
-     */
-    public void subdominant() {
-        setRoot(getRoot()+scale.interval(4-1));
-    }
-
     public String toString() {
-        String str = "Key of "+names[0]+": " ;
-
-        for ( int i = 0 ; i < names.length ; i++ )
-        	str = str+" "+names[i] ;
-
-        return str ;
+        return name();
     }
 
     public String name() {
@@ -145,12 +141,4 @@ public class Key extends Observable
 
         return str+PitchClass.name(root)+"\t"+scale.name() ;
     }
-
-	protected String[] names;
-    protected int root;
-
-    /**
-     * @link aggregation 
-     */
-    protected Scale scale;
 }
