@@ -38,6 +38,15 @@ public class Key extends Observable
         this("C", Scales.getInitialScale());
     }
 
+	public boolean contains(int[] notes) {
+        // if any note isn't diatonic return false
+        for ( int i = 0 ; i < notes.length ; i++ ) {
+            if ( !diatonic(PitchClass.value(notes[i])) )
+                return false ;
+        }
+        return true ;
+    }
+
 	public boolean contains(String[] notes) {
         // if any note isn't diatonic return false
         for ( int i = 0 ; i < notes.length ; i++ ) {
@@ -61,7 +70,8 @@ public class Key extends Observable
 
     public String[] getNames(){ return names; }
 
-    public void setNames(String[] names){ this.names = names; } // !!! !!!
+    // allows correction of enharmonic spelling!
+    public void setNames(String[] names){ this.names = names; }
 
     public int getRoot(){ return root; }
 
@@ -98,14 +108,13 @@ public class Key extends Observable
     	return getRoot() + getScale().interval(degree);
     }
     
-   public int[] getDiatonicChordNotes(int chordRoot, int poly) {
+   public int[] getChordNotes(int degree, int poly) {
         int[] notes = new int[poly];
-        // normalise the chord root to force it diatonic
-        int diaRoot = diatonicPitch(chordRoot);
-        int[] intervals = getScale().getTertiaryIntervals(degree(diaRoot), poly);
-        notes[0] = diaRoot;
-        for ( int n = 1; n < poly; n++ ) {
-            notes[n] = diaRoot + intervals[n-1];
+        int[] chordMode = getScale().getChordMode(degree);
+        int[] intervals = ChordMode.getIntervals(chordMode, poly, ChordMode.TERTIAN);
+        int base = getNote(degree);
+        for ( int n = 0; n < poly; n++ ) {
+            notes[n] = base + intervals[n];
         }
         return notes;
     }

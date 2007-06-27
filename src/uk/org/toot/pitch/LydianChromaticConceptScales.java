@@ -85,7 +85,7 @@ public class LydianChromaticConceptScales
             UNISON, MAJOR_SECOND, MINOR_THIRD, MAJOR_THIRD, 
             	PERFECT_FOURTH,	AUGMENTED_FOURTH, PERFECT_FIFTH, 
             	MAJOR_SIXTH, MINOR_SEVENTH, MAJOR_SEVENTH } ;
-        Scales.add(new Scale("Major Augmented", africanAmericanBlues)) ;
+        Scales.add(new Scale("African-American Blues", africanAmericanBlues)) ;
     }
 
 }

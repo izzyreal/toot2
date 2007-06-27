@@ -12,64 +12,53 @@ package uk.org.toot.pitch;
 public class Scale 
 {
     private String name ;
-    private int[] interval ;
+    private int[] intervals ;
 
     /**
      * Constructor
      */
-    public Scale(String name, int[] interval)
-    {
+    public Scale(String name, int[] intervals) {
         this.name = name ;
-        this.interval = interval ;
+        this.intervals = intervals ;
     }
 
     public String name() { return name ; }
 
-    public int length() { return interval.length ; }
+    public int length() { return intervals.length ; }
 
-    public int interval(int degree) { return interval[degree%interval.length] ; }
-
-    public int interval(int degree1, int degree2)
-    {
-        int i1 = interval(degree1) ;
-        int i2 = interval(degree2) ;
-
-        if ( i2 < i1 ) i2 += 12;
-        return i2 - i1;
-//        System.out.print("from "+degree1+"("+i1+") to "+degree2+"("+i2+")  ") ;
-
-//        return (i1 < i2) ? (i2 - i1) : (12 - (i1 - i2)) ;
+    public int interval(int degree) { 
+    	return ChordMode.interval(intervals, degree) ; 
     }
+
+    public int interval(int degree1, int degree2) {
+    	return ChordMode.interval(intervals, degree1, degree2);
+    }
+    
     public String getName() { return name; }
 
+    public int[] getIntervals() {
+    	return intervals;
+    }
+    
     /**
-     * Return the Principal Chordmode for the degree
+     * Derive the Chord Mode for the degree
      * @param degree
      * @return
      */
-/*    public int[] getMode(int degree) {
-    	return null;
-    } */
-    
-    // tertiary (chord) intervals from the mode of the degree
-    // triads(3), sevenths(4), ninths(5), elevenths(6) or thirteenths(7)
-    // doesn't return sus4(3), 6(4), add9(4) etc.
-    public int[] getTertiaryIntervals(int degree, int poly) {
-        int[] intervals = new int[poly-1];
-        int accum = 0;
-        for ( int i = 0; i < poly-1; i++, degree+=2 ) {
-            intervals[i] = accum + interval(degree, degree+2);
-            accum = intervals[i];
-        }
-        return intervals;
+    public int[] getChordMode(int degree) {
+    	int[] intervals = new int[length()];
+    	for ( int i = 1; i < length(); i++ ) {
+    		intervals[i] = intervals[i-1] + interval(degree+i-1, degree+i);
+    	}
+    	return intervals;
     }
-
+    
     /**
      * @return true if interval is diatonic from this degree, false otherwise
      */
     public boolean hasInterval(int degree, int val) {
         int i2 = (interval(degree)+val)%12;
-        for ( int i = 0; i < interval.length; i++ ) {
+        for ( int i = 0; i < length(); i++ ) {
 			if ( i2 == interval(i) ) return true;
         }
         return false;

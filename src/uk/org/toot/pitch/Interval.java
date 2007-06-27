@@ -2,7 +2,8 @@
 
 package uk.org.toot.pitch;
 
-public class Interval {
+public class Interval 
+{
     public final static int UNISON = 0 ;
     public final static int MINOR_SECOND = 1 ;
     public final static int MAJOR_SECOND = 2 ;
@@ -102,13 +103,13 @@ public class Interval {
 
     public static String spell(int interval) {
         switch ( interval ) {
-        case UNISON: return "I";
+        case UNISON: return "1";
         case MINOR_SECOND: return "b2";
         case MAJOR_SECOND: return "2";
         case MINOR_THIRD: return "b3";
         case MAJOR_THIRD: return "3";
         case PERFECT_FOURTH: return "4";
-        case DIMINISHED_FIFTH: return "b5";
+        case AUGMENTED_FOURTH: return "#4";
         case PERFECT_FIFTH: return "5";
         case AUGMENTED_FIFTH: return "#5";
 //        case MINOR_SIXTH: return "b6";
@@ -130,5 +131,10 @@ public class Interval {
         case OCTAVE+MAJOR_SEVENTH: return "14";
         }
         return "?"+String.valueOf(interval);
+    }
+    
+    public static int from(int i1, int i2) {
+        if ( i2 < i1 ) i2 += 12;
+        return i2 - i1;    
     }
 }
