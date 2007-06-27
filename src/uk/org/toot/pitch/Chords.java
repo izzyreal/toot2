@@ -5,7 +5,14 @@ import java.util.List;
 public class Chords 
 {
     private static List<Chord> chords = new java.util.ArrayList<Chord>();
+    
+    private static ChordIdentifier chordIdentifier =
+    	new DefaultChordIdentifier();
 
+    public static void setChordIdentifer(ChordIdentifier identifier) {
+    	chordIdentifier = identifier;
+    }
+    
     public static void add(Chord aChord) {
         chords.add(aChord);
     }
@@ -42,6 +49,10 @@ public class Chords
         return null;
     }
 
+    public static List<Chord> withNotes(int[] notes) {
+    	return chordIdentifier.withNotes(notes);
+    }
+    
     public static List<Chord> fromChordMode(int[] chordMode) {
     	List<Chord> chordList = new java.util.ArrayList<Chord>();
         for ( Chord chord : chords ) {
