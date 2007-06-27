@@ -7,13 +7,18 @@ package uk.org.toot.swingui.pitchui;
 
 import java.awt.Dimension;
 import javax.swing.JComboBox;
+import java.util.List;
 import uk.org.toot.pitch.Scales;
 
 public class ScaleCombo extends JComboBox
 {
     public ScaleCombo() {
-        super(Scales.getScaleNames().toArray());
-        setPrototypeDisplayValue("Lydian Dominant ##"); // !!! !!!
-        setMaximumSize(new Dimension(120, 50));
+        this(Scales.getScaleNames());
+    }
+    
+    public ScaleCombo(List<String> scaleNames) {
+    	super(scaleNames.toArray());
+        setPrototypeDisplayValue("Auxiliary Diminished Blues.....");
+        setMaximumSize(new Dimension(200, 50));
     }
 }
