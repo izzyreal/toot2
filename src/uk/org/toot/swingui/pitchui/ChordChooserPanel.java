@@ -6,12 +6,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import uk.org.toot.pitch.*;
 
-public class ChordChooser extends JPanel 
+public class ChordChooserPanel extends JPanel 
 {
 	private ScaleCombo scaleCombo;
-	private ModeChordsView modeChordsView;
+	private ModeChordsPanel modeChordsView;
 	
-	public ChordChooser() {
+	public ChordChooserPanel() {
 		build();
 	}
 	
@@ -19,7 +19,7 @@ public class ChordChooser extends JPanel
 		setLayout(new BorderLayout());
 		scaleCombo = new ScaleCombo();
 		add(scaleCombo, BorderLayout.NORTH);
-		modeChordsView = new ModeChordsView();
+		modeChordsView = new ModeChordsPanel();
 		add(modeChordsView, BorderLayout.CENTER);
 		
 		// update scale when scaleCombo changed
@@ -27,15 +27,20 @@ public class ChordChooser extends JPanel
 			new ActionListener() {
 				public void actionPerformed(ActionEvent ae) {
 					Scale scale = Scales.getScale((String)scaleCombo.getSelectedItem());
-					ChordChooser.this.setScale(scale);
+					ChordChooserPanel.this.setScaleImpl(scale);
 				}
 			}
 		);
 		Scale scale = Scales.getScale((String)scaleCombo.getSelectedItem());
-		setScale(scale);
+		setScaleImpl(scale);
 	}
 	
 	public void setScale(Scale scale) {
+		scaleCombo.setSelectedItem(scale);
+		setScaleImpl(scale);			
+	}
+
+	protected void setScaleImpl(Scale scale) {
 		modeChordsView.setScale(scale);			
 	}
 }

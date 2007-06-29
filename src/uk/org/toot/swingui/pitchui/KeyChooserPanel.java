@@ -8,13 +8,14 @@ import javax.swing.JScrollPane;
 import java.util.List;
 import uk.org.toot.pitch.Keys;
 import uk.org.toot.pitch.Key;
+import uk.org.toot.pitch.PitchClass;
 
-public class KeyChooser extends JPanel 
+public class KeyChooserPanel extends JPanel 
 {
 	private NoteField noteField;
 	private KeyList keyList;
 	
-	public KeyChooser() {
+	public KeyChooserPanel() {
 		build();
 	}
 	
@@ -31,15 +32,24 @@ public class KeyChooser extends JPanel
 			new ActionListener() {
 				public void actionPerformed(ActionEvent ae) {
 					String notes = noteField.getText();
-					System.out.println("Analysing "+notes);
-					List<Key> keys = Keys.withNotes(notes);
-					System.out.println(keys.size()+" Keys match");
-/*					for ( Key key : keys ) {
-						System.out.println(key);
-					} */
-					keyList.setKeys(keys);
+					setNotesImpl(PitchClass.values(notes));
 				}
 			}
 		);
+	}
+
+	public void setNotes(int[] notes) {
+		noteField.setText(PitchClass.names(notes));
+		setNotesImpl(notes);
+	}
+	
+	protected void setNotesImpl(int[] notes) {
+		System.out.println("Analysing "+PitchClass.names(notes));
+		List<Key> keys = Keys.withNotes(notes);
+		System.out.println(keys.size()+" Keys match");
+/*					for ( Key key : keys ) {
+			System.out.println(key);
+		} */
+		keyList.setKeys(keys);
 	}
 }

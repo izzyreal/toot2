@@ -10,12 +10,12 @@ import javax.swing.BoxLayout;
 
 import uk.org.toot.pitch.*;
 
-public class ModeChordsView extends JPanel 
+public class ModeChordsPanel extends JPanel 
 {
 	private Scale scale;
 	private int degrees = 0;
 	
-	public ModeChordsView() {
+	public ModeChordsPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 	}
 	
