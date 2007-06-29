@@ -23,10 +23,12 @@ public class ModeChordsView extends JPanel
 		int d = scale.length();
 		if ( d > degrees) {
 			for ( int i = degrees; i < d; i++) {
+//				System.out.println("Adding degree "+(1+i));
 				add(new DegreeChordsView(i));
 			}
 		} else if ( d < degrees ) {
-			for ( int i = degrees-1; i > d; i--) {
+			for ( int i = degrees-1; i >= d; i--) {
+//				System.out.println("Removing degree "+(1+i));
 				this.remove(i);
 			}
 		}
@@ -35,7 +37,7 @@ public class ModeChordsView extends JPanel
 		
 		System.out.println(scale.getName()+": "+Interval.spell(scale.getIntervals()));
 
-		for ( int i = 0; i < degrees; i++) {
+		for ( int i = 0; i < getComponentCount(); i++) {
 			Component comp = getComponent(i);
 			if ( comp instanceof DegreeChordsView ) {
 				((DegreeChordsView)comp).updateChords();
