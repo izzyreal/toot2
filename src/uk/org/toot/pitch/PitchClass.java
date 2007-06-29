@@ -66,4 +66,63 @@ public class PitchClass
         int pc = value(val);
         return ( pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10 ) ;
     }
+    
+    public static int[] values(String pitches) {
+    	String[] notes = pitches.split("\\s");
+    	int[] values = new int[notes.length];
+    	for ( int i = 0; i < notes.length; i++) {
+    		values[i] = value(notes[i]);
+    	}
+    	return values;
+    }
+    
+    public static String names(int[] pitches) {
+    	StringBuilder sb = new StringBuilder();
+    	for ( int i = 0; i < pitches.length; i++ ) {
+    		sb.append(name(pitches[i]));
+    		if ( i < pitches.length-1 ) {
+    			sb.append(' ');
+    		}
+    	}
+    	return sb.toString();
+    }
+    
+    /**
+     * Count the number of pitch classes
+     * @param pitches
+     * @return
+     */
+    public static int count(int[] pitches) {
+    	int count = 0;
+    	int mask = 0;
+    	for ( int i = 0; i < pitches.length; i++) {
+    		int pc = value(pitches[i]);
+    		int bit = 1 << pc;
+    		if ( (mask & bit) != 0 ) continue;
+    		mask |= bit;
+    		count += 1;
+    	}
+    	return count;
+    }
+    
+    /**
+     * Remove duplicate pitch classes
+     * @param pitches
+     * @return
+     */
+    public static int[] distinct(int[] pitches) {
+    	int count = count(pitches);
+    	if ( count == pitches.length ) return pitches; // all distinct
+    	int[] distinct = new int[count];
+    	count = 0;
+    	int mask = 0;
+    	for ( int i = 0; i < pitches.length; i++) {
+    		int pc = value(pitches[i]);
+    		int bit = 1 << pc;
+    		if ( (mask & bit) != 0 ) continue;
+    		mask |= bit;
+    		distinct[count++] = pitches[i];
+    	}
+    	return distinct;
+    }
 }

@@ -65,4 +65,27 @@ public class Chord
     public String toString() {
     	return getSymbol();
     }
+    
+    public static class AndRoot
+    {
+    	private int root;
+    	private Chord chord;
+    	
+    	public AndRoot(Chord chord, int root) {
+    		this.chord = chord;
+    		this.root = root;
+    	}
+    	
+    	public int getRoot() {
+    		return root;
+    	}
+    	
+    	public Chord getChord() {
+    		return chord;
+    	}
+    	
+    	public String toString() {
+    		return PitchClass.name(root)+chord.getSymbol();
+    	}    	
+    }    
 }

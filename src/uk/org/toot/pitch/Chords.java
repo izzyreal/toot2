@@ -1,15 +1,19 @@
 package uk.org.toot.pitch;
 
+import java.util.Arrays;
 import java.util.List;
+
+import uk.org.toot.pitch.Chord;
+import static uk.org.toot.pitch.Interval.*;
 
 public class Chords 
 {
     private static List<Chord> chords = new java.util.ArrayList<Chord>();
     
-    private static ChordIdentifier chordIdentifier =
-    	new DefaultChordIdentifier();
+    private static Identifier chordIdentifier =
+    	new DefaultIdentifier();
 
-    public static void setChordIdentifer(ChordIdentifier identifier) {
+    public static void setChordIdentifer(Identifier identifier) {
     	chordIdentifier = identifier;
     }
     
@@ -49,7 +53,7 @@ public class Chords
         return null;
     }
 
-    public static List<Chord> withNotes(int[] notes) {
+    public static List<Chord.AndRoot> withNotes(int[] notes) {
     	return chordIdentifier.withNotes(notes);
     }
     
@@ -158,10 +162,8 @@ public class Chords
 		addChord("7+11",		"1 3 5 b7 9 #11",	"seventh augmented eleventh"); //
         addChord("7+11+9",		"1 3 5 b7 #9 #11",	"seventh augmented eleventh augmented ninth");
         addChord("7+11+9+5",	"1 3 #5 b7 #9 #11",	"seventh augmented eleventh augmented ninth augmented fifth");
-        addChord("7+11+9-5",	"1 3 b5 b7 #9 #11",	"seventh augmented eleventh augmented ninth diminished fifth");
         addChord("7+11-9",		"1 3 5 b7 b9 #11",	"seventh augmented eleventh diminished ninth");
         addChord("7+11-9+5",	"1 3 #5 b7 b9 #11",	"seventh augmented eleventh diminished ninth augmented fifth");
-        addChord("7+11-9-5",	"1 3 b5 b7 b9 #11",	"seventh augmented eleventh diminished ninth diminished fifth");
         // seven note
 		addChord("13",			"1 3 5 b7 9 11 13",	"thirteenth");
 		addChord("13+9",		"1 3 5 b7 #9 11 13","thirteenth augmented ninth");
@@ -173,13 +175,137 @@ public class Chords
 		addChord("13+11",		"1 3 5 b7 9 #11 13","thirteenth augmented eleventh");
 		addChord("13+11+9",		"1 3 5 b7 #9 #11 13","thirteenth augmented eleventh augmented ninth");
 		addChord("13+11+9+5",	"1 3 #5 b7 #9 #11 13","thirteenth augmented eleventh augmented ninth augmented fifth");
-		addChord("13+11+9-5",	"1 3 b5 b7 #9 #11 13","thirteenth augmented eleventh augmented ninth diminished fifth");
 		addChord("13+11-9",		"1 3 5 b7 b9 #11 13","thirteenth augmented eleventh diminished ninth");
 		addChord("13+11-9+5",	"1 3 #5 b7 b9 #11 13","thirteenth augmented eleventh diminished ninth augmented fifth");
-		addChord("13+11-9-5",	"1 3 b5 b7 b9 #11 13","thirteenth augmented eleventh diminished ninth diminished fifth");
 		addChord("13sus4",		"1 4 5 b7 9 13",	"thirteenth suspended");
 
+		// oddities :)
+		addChord("sus2",		"1 2 5",			"suspended second");
 		addChord("sus4",		"1 4 5",			"suspended fourth");
+		addChord("5",			"1 5",				"power");
 	}
+
+    public interface Identifier 
+    {
+    	public List<Chord.AndRoot> withNotes(int[] notes);
+    }
+
+    public static class DefaultIdentifier implements Identifier
+    {
+    	public List<Chord.AndRoot> withNotes(int[] notes) {
+    		List<Chord.AndRoot> matches = new java.util.ArrayList<Chord.AndRoot>();
+    		
+    		// first remove duplicate notes (identical pitch classes)
+    		notes = PitchClass.distinct(notes);
+    		int[] intervals = new int[notes.length];
+    		
+    		int root = 0;
+    		// may be a standard chord in root position
+    		root(root, notes, intervals);
+    		Chord chord = Chords.withIntervals(intervals);
+    		if ( chord != null ) { 
+    			matches.add(new Chord.AndRoot(chord, notes[root]));
+    			root += 1;
+    		}
+    		
+    		// try all roots for synonyms
+    		for ( ; root < notes.length; root++) {
+        		root(root, notes, intervals);
+        		compress(intervals);
+        		expand(intervals);
+        		chord = Chords.withIntervals(intervals);
+        		if ( chord != null ) { 
+        			matches.add(new Chord.AndRoot(chord, notes[root]));
+        		}
+    		}
+    		return matches;
+    	}
+
+    	// side-effects
+    	private void root(int root, final int[] notes, int[] intervals) {
+    		int tmp;
+    		for ( int i = 0; i < intervals.length; i++) {
+    			tmp = notes[i] - notes[root];
+        		// ensure within range 0..23?
+    			while ( tmp < 0 ) tmp += 12;
+    			while ( tmp > 23 ) tmp -=12;
+    			intervals[i] = tmp;
+    		}    		
+    		// ensure in order
+     		Arrays.sort(intervals);
+    	}
+    	
+    	// side-effects, requires sorted input
+    	// compresses to one octave
+    	private void compress(int[] intervals) {
+    		for ( int i = 0; i < intervals.length; i++) {
+    			intervals[i] = intervals[i] % 12;
+    		}
+    		// ensure in order
+     		Arrays.sort(intervals);    		
+    	}
+    	
+    	// side-effects, requires sorted input
+    	// expands to nearly two octaves to match Chord intervals
+    	private void expand(int[] intervals) {
+    		int tmp;
+    		int tmp2;
+    		for ( int i = 0; i < intervals.length; i++) {
+    			tmp = intervals[i];
+    			switch ( tmp ) {
+    	        case UNISON: // "1"
+    	        case MAJOR_THIRD: // "3"
+    	        case PERFECT_FIFTH: // "5"
+    	        case AUGMENTED_FIFTH: // "#5"
+    	        case MINOR_SEVENTH: // "b7"
+    	        case MAJOR_SEVENTH: // "7"
+	        		continue; // these always stay in the first octave
+	        		
+    	        case MINOR_SECOND: // "b2"
+    	        	tmp += 12; // always b9, b2 never occurs
+    	        	break;
+    	        	
+    	        case MAJOR_SECOND: // "2"
+    	        	tmp2 = intervals[i+1];
+    	        	if ( tmp2 == MINOR_THIRD || 
+    	        		 tmp2 == MAJOR_THIRD )
+    	        		tmp += 12;
+    	        	break;
+    	        	
+    	        case PERFECT_FOURTH: // "4"
+    	        	// 11 if b3 or 3 present
+    	        	tmp2 = intervals[i-1];
+    	        	if ( tmp2 == MINOR_THIRD || 
+    	        		 tmp2 == MAJOR_THIRD )
+    	        		tmp += 12;
+    	        	break;
+
+    	        case MINOR_THIRD: // "b3"
+    	        	// #9 if 3 present
+    	        	if ( intervals[i+1] == MAJOR_THIRD ) 
+    	        		tmp += 12;
+    	        	break;
+    	        	
+    	        case DIMINISHED_FIFTH: // "b5"
+    	        	// #11 if 5 or #5 present
+    	        	tmp2 = intervals[i+1];
+	        		if ( tmp2 == PERFECT_FIFTH ||
+	        			 tmp2 == AUGMENTED_FIFTH )
+	        			tmp += 12;
+    	        	break;
+    	        	
+    	        case MAJOR_SIXTH: // "6"
+    	        	// 13 requires 7 notes
+    	        	// !!! what about missing notes !!! !!!
+    	        	if ( intervals.length > 6 )
+    	        		tmp += 12;
+    	        	break;
+    			}
+    			intervals[i] = tmp;
+    		}
+    		// ensure in order
+     		Arrays.sort(intervals);    		
+    	}
+    }
 
 }

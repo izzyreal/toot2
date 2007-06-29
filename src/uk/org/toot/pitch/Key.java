@@ -150,4 +150,10 @@ public class Key extends Observable
 
         return str+PitchClass.name(root)+"\t"+scale.name() ;
     }
+    
+    public interface Provider
+    {
+        Key getKey();
+    }
+
 }

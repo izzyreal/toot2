@@ -109,10 +109,9 @@ public class Interval
         case MINOR_THIRD: return "b3";
         case MAJOR_THIRD: return "3";
         case PERFECT_FOURTH: return "4";
-        case AUGMENTED_FOURTH: return "#4";
+        case DIMINISHED_FIFTH: return "b5";
         case PERFECT_FIFTH: return "5";
         case AUGMENTED_FIFTH: return "#5";
-//        case MINOR_SIXTH: return "b6";
         case MAJOR_SIXTH: return "6";
         case MINOR_SEVENTH: return "b7";
         case MAJOR_SEVENTH: return "7";
@@ -125,7 +124,6 @@ public class Interval
         case OCTAVE+DIMINISHED_FIFTH: return "#11";
         case OCTAVE+PERFECT_FIFTH: return "12";
         case OCTAVE+AUGMENTED_FIFTH: return "b13";
-//        case OCTAVE+MINOR_SIXTH: return "b6";
         case OCTAVE+MAJOR_SIXTH: return "13";
         case OCTAVE+MINOR_SEVENTH: return "#13";
         case OCTAVE+MAJOR_SEVENTH: return "14";
