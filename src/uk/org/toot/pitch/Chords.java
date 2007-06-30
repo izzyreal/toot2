@@ -48,12 +48,24 @@ public class Chords
 
     public static Chord withIntervals(int[] someIntervals) {
         for ( Chord chord : chords ) {
-            if ( chord.isDiatonic(someIntervals) ) return chord;
+            if ( chord.matchesIntervals(someIntervals) ) return chord;
         }
         return null;
     }
 
-    public static List<Chord.AndRoot> withNotes(int[] notes) {
+    public static List<Chord.Voicing> withIntervals(int[] someIntervals, int missing) {
+    	int[] missingIndices;
+    	List<Chord.Voicing> voicings = new java.util.ArrayList<Chord.Voicing>();
+        for ( Chord chord : chords ) {
+        	missingIndices = chord.missingIntervals(someIntervals, missing); 
+            if ( missingIndices != null ) {
+            	voicings.add(new Chord.Voicing(chord, missingIndices));
+            }
+        }
+        return voicings;
+    }
+
+    public static List<Chord.PitchedVoicing> withNotes(int[] notes) {
     	return chordIdentifier.withNotes(notes);
     }
     
@@ -65,6 +77,32 @@ public class Chords
         	}
         }	
     	return chordList;
+    }
+    
+    public static void checkIdentifiability() {
+    	List<Chord.PitchedVoicing> matches;
+    	Chord.PitchedVoicing pitchedVoicing;
+    	int[] notes;
+    	boolean found;
+        for ( Chord chord : chords ) {
+        	pitchedVoicing = new Chord.PitchedVoicing(new Chord.Voicing(chord), PitchClass.value("C"));
+        	notes = pitchedVoicing.getNotes();
+        	matches = withNotes(notes);
+        	found = false;
+        	for ( Chord.PitchedVoicing cpv : matches ) {
+        		if ( cpv.getChord() == chord ) {
+//        			System.out.println(chord.getSymbol()+" identified");
+        			found = true;
+        			break;
+        		}
+        	}
+        	if ( !found ) {
+        		System.out.println("C"+chord.getSymbol()+" not identified");
+            	for ( Chord.PitchedVoicing car : matches ) {
+            		System.out.println("matched "+car);
+            	}
+        	}
+        }
     }
     
     static { addChords(); }
@@ -87,7 +125,7 @@ public class Chords
 		addChord("maj7+11",		"1 3 5 7 #11",		"major seventh augmented eleventh");
 		addChord("6/7",			"1 3 5 6 7",		"six seven");
 		addChord("6/9",			"1 3 5 6 9",		"major sixth added ninth");
-		addChord("6/7sus4",		"1 4 5 6 7",		"six seven suspended");
+		addChord("6/7sus4",		"1 4 5 6 7",		"six seven suspended fourth");
         // six note
 		addChord("maj11", 		"1 3 5 7 9 11",		"major eleventh");
 		addChord("maj11+5",		"1 3 #5 7 9 11",	"major eleventh augmented fifth");
@@ -124,9 +162,6 @@ public class Chords
 		addChord("m6/7/11",		"1 b3 5 6 b7 11",	"minor six seven eleven");
 		addChord("m13/11",		"1 b3 5 9 11 13",	"minor thirteen eleven");
 		// seven note
-//		addChord("m11-13?", 	"1 b3 5 b7 9 11 b13",	"minor eleventh flat 13?");
-//		addChord("m11-13-9?", 	"1 b3 5 b7 b9 11 b13",	"minor eleventh flat 13 flast 9?");
-//		addChord("m11-13-9-5?", 	"1 b3 b5 b7 b9 11 b13",	"minor eleventh flat 13 flat 9 diminished fifth?");
 		addChord("m13", 		"1 b3 5 b7 9 11 13","minor thirteenth");
 		addChord("m13-9",		"1 b3 5 b7 b9 11 13","minor thirteenth flat nine");
 		addChord("m13-5",		"1 b3 b5 b7 9 11 13","minor thriteenth diminished fifth");
@@ -177,52 +212,74 @@ public class Chords
 		addChord("13+11+9+5",	"1 3 #5 b7 #9 #11 13","thirteenth augmented eleventh augmented ninth augmented fifth");
 		addChord("13+11-9",		"1 3 5 b7 b9 #11 13","thirteenth augmented eleventh diminished ninth");
 		addChord("13+11-9+5",	"1 3 #5 b7 b9 #11 13","thirteenth augmented eleventh diminished ninth augmented fifth");
-		addChord("13sus4",		"1 4 5 b7 9 13",	"thirteenth suspended");
+		addChord("13sus4",		"1 4 5 b7 9 13",	"thirteenth suspended fourth");
 
 		// oddities :)
 		addChord("sus2",		"1 2 5",			"suspended second");
 		addChord("sus4",		"1 4 5",			"suspended fourth");
+		addChord("add2",		"1 2 3 5",			"added second");
+		addChord("add4",		"1 3 4 5",			"added fourth");
 		addChord("5",			"1 5",				"power");
 	}
 
     public interface Identifier 
     {
-    	public List<Chord.AndRoot> withNotes(int[] notes);
+    	public List<Chord.PitchedVoicing> withNotes(int[] notes);
     }
 
     public static class DefaultIdentifier implements Identifier
     {
-    	public List<Chord.AndRoot> withNotes(int[] notes) {
-    		List<Chord.AndRoot> matches = new java.util.ArrayList<Chord.AndRoot>();
+    	public List<Chord.PitchedVoicing> withNotes(int[] notes) {
+    		List<Chord.PitchedVoicing> matches = new java.util.ArrayList<Chord.PitchedVoicing>();
     		
     		// first remove duplicate notes (identical pitch classes)
     		notes = PitchClass.distinct(notes);
     		int[] intervals = new int[notes.length];
     		
-    		int root = 0;
+    		int rootStart = 0;
     		// may be a standard chord in root position
-    		root(root, notes, intervals);
+    		root(0, notes, intervals);
     		Chord chord = Chords.withIntervals(intervals);
     		if ( chord != null ) { 
-    			matches.add(new Chord.AndRoot(chord, notes[root]));
-    			root += 1;
+    			matches.add(new Chord.PitchedVoicing(new Chord.Voicing(chord), notes[0]));
+    			rootStart += 1;
     		}
     		
-    		// try all roots for synonyms
-    		for ( ; root < notes.length; root++) {
-        		root(root, notes, intervals);
-        		compress(intervals);
-        		expand(intervals);
-        		chord = Chords.withIntervals(intervals);
-        		if ( chord != null ) { 
-        			matches.add(new Chord.AndRoot(chord, notes[root]));
+    		List<Chord.Voicing> voicings;
+    		for ( int missing = 0; missing < 3; missing++ ) {
+//    			if ( missing > 0 ) System.out.println("trying "+missing+" missing");
+        		for ( int root = rootStart; root < notes.length; root++) {
+            		root(root, notes, intervals);
+            		compress(intervals);
+            		boolean sixth = expand(intervals); // 6 -> 13 if present
+            		
+            		voicings = Chords.withIntervals(intervals, missing);      		
+            		if ( !voicings.isEmpty() ) {
+            			for ( int i = 0; i < voicings.size(); i++ ) {
+            				matches.add(new Chord.PitchedVoicing(voicings.get(i), notes[root]));
+            			}
+            			continue; // next root
+            		}
+            		if ( !sixth ) continue; // next root
+        			toggle(intervals, MAJOR_SIXTH); // 13 -> 6
+        			
+        			// is it sane to allow 2 missing with 6 chords? !!! !!!
+            		voicings = Chords.withIntervals(intervals, missing);
+            		if ( !voicings.isEmpty() ) {
+            			for ( int i = 0; i < voicings.size(); i++ ) {
+            				matches.add(new Chord.PitchedVoicing(voicings.get(i), notes[root]));
+            			}
+            			continue; // next root
+            		}
         		}
+        		// don't try more missing notes if already have matches
+        		if ( matches.size() > 0 ) break;
     		}
     		return matches;
     	}
 
     	// side-effects
-    	private void root(int root, final int[] notes, int[] intervals) {
+    	protected void root(int root, final int[] notes, int[] intervals) {
     		int tmp;
     		for ( int i = 0; i < intervals.length; i++) {
     			tmp = notes[i] - notes[root];
@@ -237,7 +294,7 @@ public class Chords
     	
     	// side-effects, requires sorted input
     	// compresses to one octave
-    	private void compress(int[] intervals) {
+    	protected void compress(int[] intervals) {
     		for ( int i = 0; i < intervals.length; i++) {
     			intervals[i] = intervals[i] % 12;
     		}
@@ -247,10 +304,13 @@ public class Chords
     	
     	// side-effects, requires sorted input
     	// expands to nearly two octaves to match Chord intervals
-    	private void expand(int[] intervals) {
+    	// returns true if sixth was promoted to thirteenth
+    	protected boolean expand(int[] intervals) {
     		int tmp;
     		int tmp2;
-    		for ( int i = 0; i < intervals.length; i++) {
+    		int len = intervals.length;
+    		boolean sixth = false;
+    		for ( int i = 0; i < len; i++) {
     			tmp = intervals[i];
     			switch ( tmp ) {
     	        case UNISON: // "1"
@@ -261,33 +321,39 @@ public class Chords
     	        case MAJOR_SEVENTH: // "7"
 	        		continue; // these always stay in the first octave
 	        		
-    	        case MINOR_SECOND: // "b2"
-    	        	tmp += 12; // always b9, b2 never occurs
+    	        case MINOR_SECOND: // "b2", always b9, b2 never occurs
+    	        	tmp += 12;
     	        	break;
     	        	
     	        case MAJOR_SECOND: // "2"
+    	        	if ( i + 1 >= len ) break;
     	        	tmp2 = intervals[i+1];
     	        	if ( tmp2 == MINOR_THIRD || 
-    	        		 tmp2 == MAJOR_THIRD )
+    	        		 tmp2 == MAJOR_THIRD ||
+    	        		 tmp2 == PERFECT_FOURTH ) // for 13sus4
+    	        		tmp += 12;
+    	        	break;
+    	        	
+    	        case MINOR_THIRD: // "b3"
+    	        	// #9 if 3 present
+    	        	if ( i + 1 >= len ) break;
+    	        	tmp2 = intervals[i+1];
+    	        	if ( tmp2 == MAJOR_THIRD ) 
     	        		tmp += 12;
     	        	break;
     	        	
     	        case PERFECT_FOURTH: // "4"
     	        	// 11 if b3 or 3 present
+    	        	if ( i - 1 < 0 ) break;
     	        	tmp2 = intervals[i-1];
     	        	if ( tmp2 == MINOR_THIRD || 
     	        		 tmp2 == MAJOR_THIRD )
     	        		tmp += 12;
     	        	break;
 
-    	        case MINOR_THIRD: // "b3"
-    	        	// #9 if 3 present
-    	        	if ( intervals[i+1] == MAJOR_THIRD ) 
-    	        		tmp += 12;
-    	        	break;
-    	        	
     	        case DIMINISHED_FIFTH: // "b5"
     	        	// #11 if 5 or #5 present
+    	        	if ( i + 1 >= len ) break;
     	        	tmp2 = intervals[i+1];
 	        		if ( tmp2 == PERFECT_FIFTH ||
 	        			 tmp2 == AUGMENTED_FIFTH )
@@ -295,17 +361,29 @@ public class Chords
     	        	break;
     	        	
     	        case MAJOR_SIXTH: // "6"
-    	        	// 13 requires 7 notes
-    	        	// !!! what about missing notes !!! !!!
-    	        	if ( intervals.length > 6 )
-    	        		tmp += 12;
+    	        	// try 13, no way of deciding with potentially missing notes
+   	        		tmp += 12;
+   	        		sixth = true;
     	        	break;
     			}
     			intervals[i] = tmp;
     		}
     		// ensure in order
-     		Arrays.sort(intervals);    		
+     		Arrays.sort(intervals);
+     		return sixth;
     	}
+
+    	protected void toggle(int[] intervals, int value) {
+    		for ( int i = 0; i < intervals.length; i++) {
+    			if ( intervals[i] % 12 == value ) {
+    				// toggle between value and value + 12
+    				intervals[i] = value + value + 12 - intervals[i];
+    				break;
+    			}
+    		}
+    		// ensure in order
+     		Arrays.sort(intervals);
+        }
     }
 
 }

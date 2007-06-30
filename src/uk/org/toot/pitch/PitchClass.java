@@ -35,15 +35,8 @@ public class PitchClass
     }
     
     public static int value(String note) {
-        char qual = ' ', letter = note.charAt(0) ;
+        char qual = ' ', letter = Character.toUpperCase(note.charAt(0)) ;
         int base = 0, offset = 0 ;
-
-        // should cope with double sharp/flat !!!
-        if ( note.length() > 1 )
-        	qual = note.charAt(1) ;  // specified quality if available
-
-        if ( qual == '#' ) offset++ ;
-        else if ( qual == 'b' ) offset-- ;
 
         switch ( letter ) {
         case 'C': base = 0 ;  break ;
@@ -53,7 +46,16 @@ public class PitchClass
         case 'G': base = 7 ;  break ;
         case 'A': base = 9 ;  break ;
         case 'B': base = 11 ; break ;
+        default:
+        	throw new IllegalArgumentException(note+" is not a valid pitch class");
         }
+
+        // should cope with double sharp/flat !!!
+        if ( note.length() > 1 )
+        	qual = note.charAt(1) ;  // specified quality if available
+
+        if ( qual == '#' ) offset++ ;
+        else if ( qual == 'b' ) offset-- ;
 
         return value(base+offset);
     }
@@ -68,12 +70,22 @@ public class PitchClass
     }
     
     public static int[] values(String pitches) {
-    	String[] notes = pitches.split("\\s");
+    	String[] notes = pitches.split("\\s+");
     	int[] values = new int[notes.length];
+    	int j = 0;
     	for ( int i = 0; i < notes.length; i++) {
-    		values[i] = value(notes[i]);
+    		try {
+    			values[j] = value(notes[i]);
+    			j += 1;
+    		} catch ( Exception e) {
+    			// quietly miss out invalid notes
+    		}
     	}
-    	return values;
+		// but have to fill values array to avoid illegal values
+    	for ( ; j < values.length; j++ ) {
+    		values[j] = values[j-1];
+    	}
+    	return distinct(values);
     }
     
     public static String names(int[] pitches) {
