@@ -35,8 +35,6 @@ public class ModeChordsPanel extends JPanel
 		degrees = d;
 		this.scale = scale;
 		
-		System.out.println(scale.getName()+": "+Interval.spell(scale.getIntervals()));
-
 		for ( int i = 0; i < getComponentCount(); i++) {
 			Component comp = getComponent(i);
 			if ( comp instanceof DegreeChordsView ) {
@@ -49,10 +47,12 @@ public class ModeChordsPanel extends JPanel
 	{
 		private ChordList chordList;
 		private int degree;
+		private JLabel label;
 		
 		public DegreeChordsView(int degree) {
 			setLayout(new BorderLayout());
-			add(new JLabel(String.valueOf(degree+1)), BorderLayout.NORTH);
+			label = new JLabel(String.valueOf(degree+1));
+			add(label, BorderLayout.NORTH);
 			chordList = new ChordList();
 			add(chordList, BorderLayout.CENTER);
 			this.degree = degree;
@@ -60,7 +60,7 @@ public class ModeChordsPanel extends JPanel
 		
 		public void updateChords() {
 			int[] chordMode = scale.getChordMode(degree);
-			System.out.println((degree+1)+": "+Interval.spell(chordMode));
+			label.setToolTipText(Interval.spell(chordMode));
 			List<Chord> chords = Chords.fromChordMode(chordMode);
 			chordList.setChords(chords);			
 		}

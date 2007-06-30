@@ -44,12 +44,9 @@ public class KeyChooserPanel extends JPanel
 	}
 	
 	protected void setNotesImpl(int[] notes) {
-		System.out.println("Analysing "+PitchClass.names(notes));
+//		System.out.println("Analysing "+PitchClass.names(notes));
 		List<Key> keys = Keys.withNotes(notes);
-		System.out.println(keys.size()+" Keys match");
-/*					for ( Key key : keys ) {
-			System.out.println(key);
-		} */
+//		System.out.println(keys.size()+" Keys match");
 		keyList.setKeys(keys);
 	}
 }

@@ -16,7 +16,11 @@ public class ChordList extends JList
 		setListData(chords.toArray());
 	}
 
-	public void setChordsAndRoots(List<Chord.AndRoot> chords) {
-		setListData(chords.toArray());
+	public void setChordsVoicings(List<Chord.Voicing> voicings) {
+		setListData(voicings.toArray());
+	}
+
+	public void setChordsPitchedVoicings(List<Chord.PitchedVoicing> pitchedVoicings) {
+		setListData(pitchedVoicings.toArray());
 	}
 }

@@ -44,13 +44,10 @@ public class ChordIdentifierPanel extends JPanel
 	}
 	
 	protected void setNotesImpl(int[] notes) {
-		System.out.println("Analysing "+PitchClass.names(notes));
-		List<Chord.AndRoot> chords = Chords.withNotes(notes);
-		System.out.println(chords.size()+" Chords match");
-/*					for ( Chord chord : chords ) {
-			System.out.println(chord);
-		} */
-		chordList.setChordsAndRoots(chords);
+//		System.out.println("Analysing "+PitchClass.names(notes));
+		List<Chord.PitchedVoicing> voicings = Chords.withNotes(notes);
+//		System.out.println(chords.size()+" Chords match");
+		chordList.setChordsPitchedVoicings(voicings);
 		
 	}
 }
