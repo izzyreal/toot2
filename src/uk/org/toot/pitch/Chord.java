@@ -60,13 +60,19 @@ public class Chord
      * @return int[] the array of missing interval indices or null if no match
      */
     public int[] missingIntervals(int[] someIntervals, int missing) {
+    	// optimise for matching a single note
+    	if ( someIntervals.length < 2 ) return null;
     	// optimise if no missed intervals allowed 
     	if ( missing == 0 ) {
     		return matchesIntervals(someIntervals) ? new int[0] : null;
     	}
-        int misses = 0;
+    	// optimise for required number of misses not possible
+    	if ( intervals.length != someIntervals.length + missing ) {
+    		return null;
+    	}
+        int misses = 0; // actual missing count
         int[] missingIndices = new int[missing];
-        int j = 0;
+        int j = 0; // index into someIntervals
         for ( int i = 0; i < intervals.length; i++ ) {
             if ( j == someIntervals.length || intervals[i] != someIntervals[j] ) {
             	if ( i == 0 ) {
@@ -85,7 +91,7 @@ public class Chord
         }
         
         if ( misses != missing ) {
-        	return null; // wrong number of misses (only too few gets this far?)
+        	return null; // wrong number of misses (shouldn't occur?)
         }
 /*        System.out.print(getSymbol()+", "+Interval.spell(intervals)+" = "+
         	Interval.spell(someIntervals)+" missing "+misses+"/"+missing+": ");
@@ -171,7 +177,7 @@ public class Chord
     		return intervals;
     	}
     	
-    	public String toString() {
+    	public String getMissingString() {
     		String missingString = "";
     		if ( missingIndices != null ) {
     			int[] intervals = getChord().getIntervals();
@@ -179,7 +185,11 @@ public class Chord
     				missingString += " no "+Interval.spell(intervals[missingIndices[i]]);
     			}
     		}
-    		return getChord().getSymbol()+missingString; // !!! (no 5) etc.
+    		return missingString;
+    	}
+    	
+    	public String toString() {
+    		return getChord().getSymbol()+getMissingString(); // !!! (no 5) etc.
     	}    	
     }
     
@@ -192,10 +202,16 @@ public class Chord
     {
     	private Voicing voicing;
     	private int root;
+    	private int slashBass = -1;
     	
     	public PitchedVoicing(Voicing voicing, int root) {
     		this.voicing = voicing;
     		this.root = root;
+    	}
+    	
+    	public PitchedVoicing(Voicing voicing, int root, int slashBass) {
+    		this(voicing, root);
+    		this.slashBass = slashBass;
     	}
     	
     	public Voicing getVoicing() {
@@ -220,8 +236,13 @@ public class Chord
     		
     	}
     	
+    	public String getSlashString() {
+    		if ( slashBass < 0 || slashBass == root ) return "";
+    		return " / "+PitchClass.name(slashBass);
+    	}
+    	
     	public String toString() {
-    		return PitchClass.name(root)+getVoicing().toString(); // !!! !!! TODO
+    		return PitchClass.name(root)+getVoicing().toString()+getSlashString(); // !!! !!! TODO
     	}    	
     }    
 }

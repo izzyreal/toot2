@@ -244,32 +244,56 @@ public class Chords
     			matches.add(new Chord.PitchedVoicing(new Chord.Voicing(chord), notes[0]));
     			rootStart += 1;
     		}
-    		
+
+    		boolean sixth;
     		List<Chord.Voicing> voicings;
     		for ( int missing = 0; missing < 3; missing++ ) {
 //    			if ( missing > 0 ) System.out.println("trying "+missing+" missing");
         		for ( int root = rootStart; root < notes.length; root++) {
+        			int nmatch = 0;
             		root(root, notes, intervals);
             		compress(intervals);
-            		boolean sixth = expand(intervals); // 6 -> 13 if present
-            		
+            		sixth = expand(intervals); // 6 -> 13 if present            		
             		voicings = Chords.withIntervals(intervals, missing);      		
-            		if ( !voicings.isEmpty() ) {
-            			for ( int i = 0; i < voicings.size(); i++ ) {
-            				matches.add(new Chord.PitchedVoicing(voicings.get(i), notes[root]));
-            			}
-            			continue; // next root
+           			for ( int i = 0; i < voicings.size(); i++ ) {
+           				matches.add(new Chord.PitchedVoicing(voicings.get(i), notes[root], notes[0]));
+           				nmatch += 1;
+           			}
+            		if ( sixth ) {
+            			toggle(intervals, MAJOR_SIXTH); // 13 -> 6        			
+            			voicings = Chords.withIntervals(intervals, missing);
+           				for ( int i = 0; i < voicings.size(); i++ ) {
+           					matches.add(new Chord.PitchedVoicing(voicings.get(i), notes[root], notes[0]));
+               				nmatch += 1;
+           				}
             		}
-            		if ( !sixth ) continue; // next root
-        			toggle(intervals, MAJOR_SIXTH); // 13 -> 6
-        			
-        			// is it sane to allow 2 missing with 6 chords? !!! !!!
-            		voicings = Chords.withIntervals(intervals, missing);
-            		if ( !voicings.isEmpty() ) {
-            			for ( int i = 0; i < voicings.size(); i++ ) {
-            				matches.add(new Chord.PitchedVoicing(voicings.get(i), notes[root]));
+            		// try slash chords that don't include the 'bass note'
+            		if ( nmatch == 0 ) {
+            			if ( root == notes.length-1 ) continue;
+            			int[] slashNotes = new int[notes.length -1];
+                		int[] slashIntervals = new int[slashNotes.length];
+            			int bassNote = notes[root];
+            			for ( int i = 0, j = 0; i < notes.length; i++ ) {
+            				int note = notes[i];
+            				if ( note == bassNote ) continue;
+            				slashNotes[j++] = note;
             			}
-            			continue; // next root
+        				root(root, slashNotes, slashIntervals);
+                		compress(slashIntervals);
+                		sixth = expand(slashIntervals); // 6 -> 13 if present            		
+                		voicings = Chords.withIntervals(slashIntervals, missing);
+               			for ( int i = 0; i < voicings.size(); i++ ) {
+               				matches.add(new Chord.PitchedVoicing(voicings.get(i), slashNotes[root], bassNote));
+               				nmatch += 1;
+               			}
+                		if ( sixth ) {
+                			toggle(intervals, MAJOR_SIXTH); // 13 -> 6        			
+                			voicings = Chords.withIntervals(slashIntervals, missing);
+               				for ( int i = 0; i < voicings.size(); i++ ) {
+               					matches.add(new Chord.PitchedVoicing(voicings.get(i), slashNotes[root], bassNote));
+                   				nmatch += 1;
+               				}
+                		}
             		}
         		}
         		// don't try more missing notes if already have matches
