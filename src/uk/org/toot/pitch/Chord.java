@@ -67,27 +67,31 @@ public class Chord
         int misses = 0;
         int[] missingIndices = new int[missing];
         int j = 0;
-        for ( int i = 0; i < intervals.length /*&& j < someIntervals.length*/ ; i++ ) {
-        	if ( j == someIntervals.length ) return null;
-            if ( intervals[i] != someIntervals[j] ) {
-            	// can't miss unison or highest interval
-            	if ( i == 0 || i == intervals.length-1 ) {
-            		return null; // fast false return
-            	}
+        for ( int i = 0; i < intervals.length; i++ ) {
+            if ( j == someIntervals.length || intervals[i] != someIntervals[j] ) {
+            	if ( i == 0 ) {
+            		return null; // missed root 
+            	}            	
             	if ( misses == missingIndices.length ) {
-            		return null;
+            		return null; // too many misses
             	}
             	missingIndices[misses++] = i;
             } else {
             	j += 1; // interval matched
             }
         }
-        if ( j != someIntervals.length ) return null;
-        if ( misses != missing ) return null;
+        if ( j != someIntervals.length ) {
+        	return null; // not enough intervals
+        }
+        
+        if ( misses != missing ) {
+        	return null; // wrong number of misses (only too few gets this far?)
+        }
 /*        System.out.print(getSymbol()+", "+Interval.spell(intervals)+" = "+
         	Interval.spell(someIntervals)+" missing "+misses+"/"+missing+": ");
         for ( int i = 0; i < missingIndices.length; i++ ) {
-        	System.out.print(Interval.spell(intervals[missingIndices[i]])+"["+missingIndices[i]+"], ");
+        	int mi = missingIndices[i];
+        	System.out.print(Interval.spell(intervals[mi])+"["+mi+"], ");
         }
         System.out.println(); */
         return missingIndices;
