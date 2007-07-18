@@ -185,6 +185,10 @@ public class AudioMixer implements AudioClient
 
     public AudioMixerStrip getStrip(String name) {
         waitForMutations();
+        return getStripImpl(name);
+    }
+    
+    public AudioMixerStrip getStripImpl(String name) {
         for ( AudioMixerStrip strip : strips ) {
             if ( strip.getName().equals(name) ) return strip;
         }

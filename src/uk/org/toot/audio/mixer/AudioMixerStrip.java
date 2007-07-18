@@ -118,7 +118,7 @@ public class AudioMixerStrip extends AudioProcessChain {
                 return new MainMixProcess(routedStrip, (MainMixVariables)vars, mixer);
             } else {
 //                System.out.println(getName()+"/"+vars.getName()+" routing to "+vars.getName());
-				routedStrip = mixer.getStrip(vars.getName());
+				routedStrip = mixer.getStripImpl(vars.getName());
 	            return new MixProcess(routedStrip, vars);
             }
         }
