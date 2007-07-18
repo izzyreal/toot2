@@ -30,10 +30,10 @@ public class MainMixProcess extends MixProcess
             // does getStrip() on a user thread
 	        routeObserver = new Observer() {
     	        public void update(Observable obs, Object obj) {
-       				nextRoutedStrip = mixer.getStrip(routeControl.getValueString());
+       				nextRoutedStrip = mixer.getStripImpl(routeControl.getValueString());
        	    	}
 	       	};
-	        routedStrip = mixer.getStrip(routeControl.getValueString());
+	        routedStrip = mixer.getStripImpl(routeControl.getValueString());
         }
 	}
 
