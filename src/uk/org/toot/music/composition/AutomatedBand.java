@@ -118,7 +118,7 @@ public class AutomatedBand
 				keyIndex += Math.random() > 0.5f ? 1 : -1;
 			}
 			key = keyList.get(keyIndex);
-			System.out.println(key+" reused from "+keyIndex);
+//			System.out.println(key+" reused from "+keyIndex);
 			return;
 		}
 /*		if ( Math.random() < scaleDensity ) {
@@ -136,7 +136,7 @@ public class AutomatedBand
 		}
 		keyList.add(key);
 		keyIndex = keyList.size()-1;
-		System.out.println(key+" added at "+keyIndex);
+//		System.out.println(key+" added at "+keyIndex);
 	}
 
 	/**
