@@ -139,6 +139,25 @@ public class Key extends Observable
         return pitch; // oh well, it's still accidental after all!
     }
 
+    public int getRelativePitch(int pitch, int offset) {
+    	pitch = diatonicPitch(pitch);
+    	if ( offset == 0 ) return pitch;
+    	// absent a better algorithm we just move by chromatic semitones
+    	// counting diatonic pitches as we go
+    	// efficiency proportional to the magnitude of offset 
+    	if ( offset < 0 ) {
+    		while ( offset < 0 ) {
+    			if ( contains(--pitch) ) offset += 1;
+    		}
+    		
+    	} else if ( offset > 0 ) {
+    		while ( offset > 0 ) {
+    			if ( contains(++pitch) ) offset -= 1;
+    		}
+    	}
+    	return pitch;
+    }
+    
     /**
      * Return the note derived from the index into the Key.
      * A returned note may no longer be a pitch class, it may extend
@@ -177,6 +196,14 @@ public class Key extends Observable
         return name();
     }
 
+    // TODO PROPERLY
+    public boolean equals(Object o) {
+    	if ( o instanceof Key ) {
+    		return toString().equals(((Key)o).toString());
+    	}
+    	return super.equals(o);
+    }
+    
     /**
      * Return the name of this Key as root note (pitch class) and Scale.
      * @return
