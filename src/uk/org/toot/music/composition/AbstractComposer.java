@@ -1,7 +1,7 @@
-// Copyright (C) 2007 Steve Taylor.
-// Distributed under the Toot Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+//Copyright (C) 2007 Steve Taylor.
+//Distributed under the Toot Software License, Version 1.0. (See
+//accompanying file LICENSE_1_0.txt or copy at
+//http://www.toot.org/LICENSE_1_0.txt)
 
 package uk.org.toot.music.composition;
 
@@ -20,13 +20,8 @@ import uk.org.toot.music.Note;
  */
 public abstract class AbstractComposer extends BarComposer
 {
-	private int level = 64; // default medium level
 	private float swingRatio = 1f; // default no swing
-	private float density = 0.90f;
-	private int minNoteLen = 16;
-	private long jamTiming = 0;
-	private long clearTiming = 0;
-	
+
 	/**
 	 * Create a new AbstractComposer with the specified name, MIDI Program and
 	 * MIDI Channel.
@@ -37,7 +32,7 @@ public abstract class AbstractComposer extends BarComposer
 	public AbstractComposer(String name, int program, int channel) {
 		super(name, program, channel);
 	}
-	
+
 	/**
 	 * Render a bar of notes as MIDI to the specified Track from the
 	 * specified start tick with the specified ticks per bar.
@@ -58,7 +53,7 @@ public abstract class AbstractComposer extends BarComposer
 				int level = Note.getLevel(note);
 				long onTick = (int)(ticksPerBar * timeOn / Timing.COUNT);
 				msg = ChannelMsg.createChannel(
-					ChannelMsg.NOTE_ON, channel, pitch, level);
+						ChannelMsg.NOTE_ON, channel, pitch, level);
 				track.add(new MidiEvent(msg, startTick + onTick));
 				// note off
 				msg = ChannelMsg.createChannel(
@@ -79,7 +74,7 @@ public abstract class AbstractComposer extends BarComposer
 	public float getSwingRatio() {
 		return swingRatio;
 	}
-	
+
 	/**
 	 * Set the ratio of the first eigth note to the second eigth note
 	 * when a quarter note is divied into two with a swing or shuffle rhythm
@@ -88,7 +83,7 @@ public abstract class AbstractComposer extends BarComposer
 	public void setSwingRatio(float ratio) {
 		swingRatio = ratio;
 	}
-	
+
 	/**
 	 * Swing the timing of a sixty-fourth note timing such that when a
 	 * quarter note is divided into two the second eigth note is delayed
@@ -112,74 +107,87 @@ public abstract class AbstractComposer extends BarComposer
 			System.out.println(i+" => "+swing(i));
 		}
 	}
+
+	public Context getContext() {
+		return (Context)super.getContext();
+	}
 	
-	/**
-	 * @return the level
-	 */
-	public int getLevel() {
-		return level;
-	}
+	public static class Context extends BarComposer.Context
+	{
+		private int level = 64; // default medium level
+		private float density = 0.90f;
+		private int minNoteLen = 16;
+		private long jamTiming = 0;
+		private long clearTiming = 0;
 
-	/**
-	 * @param level the level to set
-	 */
-	public void setLevel(int level) {
-		this.level = level;
-	}
+		/**
+		 * @return the level
+		 */
+		public int getLevel() {
+			return level;
+		}
 
-	/**
-	 * @return the density
-	 */
-	public float getDensity() {
-		return density;
-	}
+		/**
+		 * @param level the level to set
+		 */
+		public void setLevel(int level) {
+			this.level = level;
+		}
 
-	/**
-	 * @param density the density to set
-	 */
-	public void setDensity(float density) {
-		this.density = density;
-	}
+		/**
+		 * @return the density
+		 */
+		public float getDensity() {
+			return density;
+		}
 
-	/**
-	 * @return the minnotelen
-	 */
-	public int getMinNoteLen() {
-		return minNoteLen;
-	}
+		/**
+		 * @param density the density to set
+		 */
+		public void setDensity(float density) {
+			this.density = density;
+		}
 
-	/**
-	 * @param minnotelen the minnotelen to set
-	 */
-	public void setMinNoteLen(int minnotelen) {
-		this.minNoteLen = minnotelen;
-	}
+		/**
+		 * @return the minnotelen
+		 */
+		public int getMinNoteLen() {
+			return minNoteLen;
+		}
 
-	/**
-	 * @return the clearTiming
-	 */
-	public long getClearTiming() {
-		return clearTiming;
-	}
+		/**
+		 * @param minnotelen the minnotelen to set
+		 */
+		public void setMinNoteLen(int minnotelen) {
+			this.minNoteLen = minnotelen;
+		}
 
-	/**
-	 * @param clearTiming the clearTiming to set
-	 */
-	public void setClearTiming(long clearTiming) {
-		this.clearTiming = clearTiming;
-	}
+		/**
+		 * @return the clearTiming
+		 */
+		public long getClearTiming() {
+			return clearTiming;
+		}
 
-	/**
-	 * @return the jamTiming
-	 */
-	public long getJamTiming() {
-		return jamTiming;
-	}
+		/**
+		 * @param clearTiming the clearTiming to set
+		 */
+		public void setClearTiming(long clearTiming) {
+			this.clearTiming = clearTiming;
+		}
 
-	/**
-	 * @param jamTiming the jamTiming to set
-	 */
-	public void setJamTiming(long jamTiming) {
-		this.jamTiming = jamTiming;
+		/**
+		 * @return the jamTiming
+		 */
+		public long getJamTiming() {
+			return jamTiming;
+		}
+
+		/**
+		 * @param jamTiming the jamTiming to set
+		 */
+		public void setJamTiming(long jamTiming) {
+			this.jamTiming = jamTiming;
+		}
 	}
 }

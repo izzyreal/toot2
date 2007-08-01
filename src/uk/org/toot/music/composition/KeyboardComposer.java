@@ -30,10 +30,9 @@ public class KeyboardComposer extends CompoundComposer
 	public KeyboardComposer(String name, int program, int channel) {
 		super(name, program, channel);
 		// !!! need anonymous instances to ensure hands don't collide
-		leftHandComposer = new TonalComposer("Left", program, channel, 42, 66);
+		leftHandComposer = new TonalComposer("Left", program, channel);
 		addComposer(leftHandComposer);
-		rightHandComposer = new TonalComposer("Right", program, channel, 67, 80);
-		rightHandComposer.setMelodyProbability(0.9f); // 90% melodic
+		rightHandComposer = new TonalComposer("Right", program, channel);
 		addComposer(rightHandComposer);
 	}
 

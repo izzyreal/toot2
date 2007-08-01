@@ -22,14 +22,14 @@ public class RhythmicComposer extends AbstractComposer
 	}
 	
 	public int[] composeBar(Key key) {
-		long timing = getJamTiming();
-		timing = Timing.subdivide(timing, getDensity(), getMinNoteLen());
-		timing &= ~getClearTiming();
+		long timing = getContext().getJamTiming();
+		timing = Timing.subdivide(timing, getContext().getDensity(), getContext().getMinNoteLen());
+		timing &= ~getContext().getClearTiming();
 		int[] notes = new int[Long.bitCount(timing)];
 		int n = 0;
 		for ( int i = 0; i < Timing.COUNT; i++) {
 			if ( (timing & (1l << i)) == 0 ) continue;
-			notes[n++] = Note.create(i, drum, getLevel());
+			notes[n++] = Note.create(i, drum, getContext().getLevel());
 		}
 		return notes;
 	}

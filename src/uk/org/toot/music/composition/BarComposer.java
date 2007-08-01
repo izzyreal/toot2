@@ -14,6 +14,7 @@ public abstract class BarComposer
 	private String name;
 	private int program;
 	private int channel;
+	private Context context;
 
 	public BarComposer(String name, int program, int channel) {
 		this.name = name;
@@ -59,4 +60,21 @@ public abstract class BarComposer
 		return program;
 	}
 
+	public static class Context
+	{
+	
+	}
+
+	/**
+	 * @return the context
+	 */
+	public Context getContext() {
+		return context;
+	}
+	/**
+	 * @param context the context to set
+	 */
+	public void setContext(Context context) {
+		this.context = context;
+	}
 }

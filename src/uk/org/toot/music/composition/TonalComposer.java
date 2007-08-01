@@ -1,7 +1,7 @@
-// Copyright (C) 2007 Steve Taylor.
-// Distributed under the Toot Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+//Copyright (C) 2007 Steve Taylor.
+//Distributed under the Toot Software License, Version 1.0. (See
+//accompanying file LICENSE_1_0.txt or copy at
+//http://www.toot.org/LICENSE_1_0.txt)
 
 package uk.org.toot.music.composition;
 
@@ -16,32 +16,21 @@ import uk.org.toot.tonality.*;
 public class TonalComposer extends AbstractComposer
 {
 	private int currentPitch;
-	private int minPitch;
-	private int maxPitch;
-	private int maxPitchChange = 3;
-	private int minPoly = 3;
-	private int maxPoly = 5;
-	private float legato = 1.0f;
-	private float melodyProbability = 0f; // probability of melody (single notes)
-	private float repeatPitchProbability = 0.25f;
-	
-	public TonalComposer(String name, int program, int channel, int minPitch, int maxPitch) {
+
+	public TonalComposer(String name, int program, int channel) {
 		super(name, program, channel);
-		this.minPitch = minPitch;
-		this.maxPitch = maxPitch;
-		currentPitch = minPitch + (int)(Math.random() * (1 + maxPitch - minPitch));
 	}
 
 	public int[] composeBar(Key key) {
-		long timing = getJamTiming();
-		timing = Timing.subdivide(timing, getDensity(), getMinNoteLen());
-		timing &= ~getClearTiming();
+		long timing = getContext().getJamTiming();
+		timing = Timing.subdivide(timing, getContext().getDensity(), getContext().getMinNoteLen());
+		timing &= ~getContext().getClearTiming();
 		int n = Long.bitCount(timing);
 		int[] polys = new int[n];
 		int m = 0;
 		for ( int i = 0; i < n; i++) {
-			if ( Math.random() >= getMelodyProbability() ) {
-				polys[i] = getMinPoly() + (int)(Math.random() * (1 + getMaxPoly() - getMinPoly()));
+			if ( Math.random() >= getContext().getMelodyProbability() ) {
+				polys[i] = getContext().getMinPoly() + (int)(Math.random() * (1 + getContext().getMaxPoly() - getContext().getMinPoly()));
 			} else {
 				polys[i] = 1; // a melody
 			}
@@ -59,10 +48,10 @@ public class TonalComposer extends AbstractComposer
 				chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], ChordMode.TERTIAN);
 				offset = currentPitch - chordNotes[0];
 				for ( int p = 0; p < polys[n]; p++ ) {
-					notes[m++] = Note.create(i, chordNotes[p] + offset, getLevel());
+					notes[m++] = Note.create(i, chordNotes[p] + offset, getContext().getLevel());
 				}
 			} else {
-				notes[m++] = Note.create(i, currentPitch, getLevel());
+				notes[m++] = Note.create(i, currentPitch, getContext().getLevel());
 			}
 			n += 1;
 		}
@@ -84,137 +73,152 @@ public class TonalComposer extends AbstractComposer
 					}
 				}
 			}
-			int diff = Math.max(1, (int)(getLegato() * (offTime - onTime)));
+			int diff = Math.max(1, (int)(getContext().getLegato() * (offTime - onTime)));
 			offTime = onTime + diff;
 			notes[i] = Note.setTimeOff(note, offTime);
 		}
 	}
 
 	protected int nextPitch(int pitch, Key key) {
-		if ( Math.random() > repeatPitchProbability ) {
-			int offset = (int)((2 * maxPitchChange + 1) * Math.random() - maxPitchChange);
+		if ( Math.random() > getContext().getRepeatPitchProbability() ) {
+			int offset = (int)((2 * getContext().getMaxPitchChange() + 1) * Math.random() - getContext().getMaxPitchChange());
 			// don't get stuck at min or max pitches
-			if ( pitch == minPitch && offset < 0 || 
-					pitch == maxPitch && offset > 0 ) {
+			if ( pitch == getContext().getMinPitch() && offset < 0 || 
+					pitch == getContext().getMaxPitch() && offset > 0 ) {
 				offset = -offset;
 			}
 			pitch = key.getRelativePitch(pitch, offset);
-			if ( pitch < minPitch ) pitch = minPitch;
-			else if ( pitch > maxPitch ) pitch = maxPitch;
+			if ( pitch < getContext().getMinPitch() ) pitch = getContext().getMinPitch();
+			else if ( pitch > getContext().getMaxPitch() ) pitch = getContext().getMaxPitch();
 		}
 		return key.diatonicPitch(pitch);
 	}
 
-	/**
-	 * @return the minPitch
-	 */
-	public int getMinPitch() {
-		return minPitch;
+	public Context getContext() {
+		return (Context)super.getContext();
 	}
 
-	/**
-	 * @param minPitch the minPitch to set
-	 */
-	public void setMinPitch(int minPitch) {
-		this.minPitch = minPitch;
-	}
+	public static class Context extends AbstractComposer.Context
+	{
+		private int minPitch;
+		private int maxPitch;
+		private int maxPitchChange = 3;
+		private int minPoly = 3;
+		private int maxPoly = 5;
+		private float legato = 1.0f;
+		private float melodyProbability = 0f; // probability of melody (single notes)
+		private float repeatPitchProbability = 0.25f;
+		/**
+		 * @return the minPitch
+		 */
+		public int getMinPitch() {
+			return minPitch;
+		}
 
-	/**
-	 * @return the maxPitch
-	 */
-	public int getMaxPitch() {
-		return maxPitch;
-	}
+		/**
+		 * @param minPitch the minPitch to set
+		 */
+		public void setMinPitch(int minPitch) {
+			this.minPitch = minPitch;
+		}
 
-	/**
-	 * @param maxPitch the maxPitch to set
-	 */
-	public void setMaxPitch(int maxPitch) {
-		this.maxPitch = maxPitch;
-	}
+		/**
+		 * @return the maxPitch
+		 */
+		public int getMaxPitch() {
+			return maxPitch;
+		}
 
-	/**
-	 * @return the maxPitchChange
-	 */
-	public int getMaxPitchChange() {
-		return maxPitchChange;
-	}
+		/**
+		 * @param maxPitch the maxPitch to set
+		 */
+		public void setMaxPitch(int maxPitch) {
+			this.maxPitch = maxPitch;
+		}
 
-	/**
-	 * @param maxPitchChange the maxPitchChange to set
-	 */
-	public void setMaxPitchChange(int maxPitchChange) {
-		this.maxPitchChange = maxPitchChange;
-	}
+		/**
+		 * @return the maxPitchChange
+		 */
+		public int getMaxPitchChange() {
+			return maxPitchChange;
+		}
 
-	/**
-	 * @return the proportion of full legato that a note sustains
-	 */
-	public float getLegato() {
-		return legato;
-	}
+		/**
+		 * @param maxPitchChange the maxPitchChange to set
+		 */
+		public void setMaxPitchChange(int maxPitchChange) {
+			this.maxPitchChange = maxPitchChange;
+		}
 
-	/**
-	 * Set the proportion of full legato that a note should sustain.
-	 * @param legato the proportion of full legato, 0..1f
-	 */
-	public void setLegato(float legato) {
-		this.legato = legato;
-	}
+		/**
+		 * @return the proportion of full legato that a note sustains
+		 */
+		public float getLegato() {
+			return legato;
+		}
 
-	/**
-	 * @return the maxPoly
-	 */
-	public int getMaxPoly() {
-		return maxPoly;
-	}
+		/**
+		 * Set the proportion of full legato that a note should sustain.
+		 * @param legato the proportion of full legato, 0..1f
+		 */
+		public void setLegato(float legato) {
+			this.legato = legato;
+		}
 
-	/**
-	 * @param maxPoly the maxPoly to set
-	 */
-	public void setMaxPoly(int maxPoly) {
-		this.maxPoly = maxPoly;
-	}
+		/**
+		 * @return the maxPoly
+		 */
+		public int getMaxPoly() {
+			return maxPoly;
+		}
 
-	/**
-	 * @return the minPoly
-	 */
-	public int getMinPoly() {
-		return minPoly;
-	}
+		/**
+		 * @param maxPoly the maxPoly to set
+		 */
+		public void setMaxPoly(int maxPoly) {
+			this.maxPoly = maxPoly;
+		}
 
-	/**
-	 * @param minPoly the minPoly to set
-	 */
-	public void setMinPoly(int minPoly) {
-		this.minPoly = minPoly;
-	}
+		/**
+		 * @return the minPoly
+		 */
+		public int getMinPoly() {
+			return minPoly;
+		}
 
-	/**
-	 * @return the melody
-	 */
-	public float getMelodyProbability() {
-		return melodyProbability;
-	}
+		/**
+		 * @param minPoly the minPoly to set
+		 */
+		public void setMinPoly(int minPoly) {
+			this.minPoly = minPoly;
+		}
 
-	/**
-	 * @param melody the melody to set
-	 */
-	public void setMelodyProbability(float melody) {
-		this.melodyProbability = melody;
-	}
+		/**
+		 * @return the melody
+		 */
+		public float getMelodyProbability() {
+			return melodyProbability;
+		}
 
-	/**
-	 * @return the repeatPitchProbability
-	 */
-	public float getRepeatPitchProbability() {
-		return repeatPitchProbability;
-	}
+		/**
+		 * @param melody the melody to set
+		 */
+		public void setMelodyProbability(float melody) {
+			this.melodyProbability = melody;
+		}
 
-	/**
-	 * @param repeatPitchProbability the repeatPitchProbability to set
-	 */
-	public void setRepeatPitchProbability(float repeatPitchProbability) {
-		this.repeatPitchProbability = repeatPitchProbability;
+		/**
+		 * @return the repeatPitchProbability
+		 */
+		public float getRepeatPitchProbability() {
+			return repeatPitchProbability;
+		}
+
+		/**
+		 * @param repeatPitchProbability the repeatPitchProbability to set
+		 */
+		public void setRepeatPitchProbability(float repeatPitchProbability) {
+			this.repeatPitchProbability = repeatPitchProbability;
+		}
 	}
 }
