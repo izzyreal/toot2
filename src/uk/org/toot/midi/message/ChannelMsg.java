@@ -37,6 +37,14 @@ public class ChannelMsg extends ShortMsg
 	}
 
     /**
+     * Create a 2 byte MidiMessage with the specifed channel. 
+     */
+    static public MidiMessage createChannel(int status, int chan, int data1)
+		throws InvalidMidiDataException {
+    	return createChannel(status, chan, data1, 0);
+    }
+    
+    /**
      * Set all 3 bytes of a 3 byte MidiMessage 
      */
 /*    static public MidiMessage setMessage(MidiMessage msg, int status, int chan, int data1, int data2)
