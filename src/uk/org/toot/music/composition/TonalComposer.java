@@ -22,9 +22,7 @@ public class TonalComposer extends AbstractComposer
 	}
 
 	public int[] composeBar(Key key) {
-		long timing = getContext().getJamTiming();
-		timing = Timing.subdivide(timing, getContext().getDensity(), getContext().getMinNoteLen());
-		timing &= ~getContext().getClearTiming();
+		long timing = getContext().createTiming();
 		int n = Long.bitCount(timing);
 		int[] polys = new int[n];
 		int m = 0;
@@ -43,15 +41,15 @@ public class TonalComposer extends AbstractComposer
 		int offset;
 		for ( int i = 0; i < Timing.COUNT; i++) {
 			if ( (timing & (1l << i)) == 0 ) continue;
-			currentPitch = nextPitch(currentPitch, key);
+			currentPitch = getContext().nextPitch(currentPitch, key);
 			if ( polys[n] > 1 ) {
 				chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], ChordMode.TERTIAN);
 				offset = currentPitch - chordNotes[0];
 				for ( int p = 0; p < polys[n]; p++ ) {
-					notes[m++] = Note.create(i, chordNotes[p] + offset, getContext().getLevel());
+					notes[m++] = Note.create(i, chordNotes[p] + offset, getContext().getLevel(i));
 				}
 			} else {
-				notes[m++] = Note.create(i, currentPitch, getContext().getLevel());
+				notes[m++] = Note.create(i, currentPitch, getContext().getLevel(i));
 			}
 			n += 1;
 		}
@@ -79,21 +77,6 @@ public class TonalComposer extends AbstractComposer
 		}
 	}
 
-	protected int nextPitch(int pitch, Key key) {
-		if ( Math.random() > getContext().getRepeatPitchProbability() ) {
-			int offset = (int)((2 * getContext().getMaxPitchChange() + 1) * Math.random() - getContext().getMaxPitchChange());
-			// don't get stuck at min or max pitches
-			if ( pitch == getContext().getMinPitch() && offset < 0 || 
-					pitch == getContext().getMaxPitch() && offset > 0 ) {
-				offset = -offset;
-			}
-			pitch = key.getRelativePitch(pitch, offset);
-			if ( pitch < getContext().getMinPitch() ) pitch = getContext().getMinPitch();
-			else if ( pitch > getContext().getMaxPitch() ) pitch = getContext().getMaxPitch();
-		}
-		return key.diatonicPitch(pitch);
-	}
-
 	public Context getContext() {
 		return (Context)super.getContext();
 	}
@@ -108,6 +91,23 @@ public class TonalComposer extends AbstractComposer
 		private float legato = 1.0f;
 		private float melodyProbability = 0f; // probability of melody (single notes)
 		private float repeatPitchProbability = 0.25f;
+		
+		public int nextPitch(int pitch, Key key) {
+			if ( Math.random() > getRepeatPitchProbability() ) {
+				int offset = (int)((2 * getMaxPitchChange() + 1) * Math.random() - getMaxPitchChange());
+				// don't get stuck at min or max pitches
+				if ( pitch == getMinPitch() && offset < 0 || 
+						pitch == getMaxPitch() && offset > 0 ) {
+					offset = -offset;
+				}
+				pitch = key.getRelativePitch(pitch, offset);
+			}
+			if ( pitch < getMinPitch() || pitch > getMaxPitch() ) {
+				pitch = getMinPitch() + (int)(Math.random() * (getMaxPitch() - getMinPitch()));
+			}
+			return key.diatonicPitch(pitch);
+		}
+
 		/**
 		 * @return the minPitch
 		 */

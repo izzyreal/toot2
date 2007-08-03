@@ -37,7 +37,6 @@ public class AutomatedBand
 	private float keyReturnProbability = 0.5f;
 	private int maxKeys = 5;
 //	private float scaleDensity = 0.1f;
-	private float swingRatio = 1.3f;
 //	private List<String> scaleNames;
 	
 	public AutomatedBand() {
@@ -100,6 +99,7 @@ public class AutomatedBand
 				Track track = tracks.get(c);
 				composer.renderBar(composer.composeBar(key), track, barTick, 4 * ppq);
 			}
+//			System.out.print(bar+"\r");
 		}
 
 		rendering = false;
@@ -165,20 +165,6 @@ public class AutomatedBand
 	 */
 	public void setModulationDensity(float modulationDensity) {
 		this.modulationDensity = modulationDensity;
-	}
-
-	/**
-	 * @return the swingRatio
-	 */
-	public float getSwingRatio() {
-		return swingRatio;
-	}
-
-	/**
-	 * @param swingRatio the swingRatio to set
-	 */
-	public void setSwingRatio(float swingRatio) {
-		this.swingRatio = swingRatio;
 	}
 
 	/**
