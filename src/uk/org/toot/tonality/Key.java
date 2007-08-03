@@ -74,7 +74,7 @@ public class Key extends Observable
 	 */
     public int index(int pitch) {
         for ( int i = 0 ; i < scale.length() ; i++ ) {
-            if ( pitch%12 == getNote(i)%12 )	// !!! literal 12
+            if ( Pitch.classValue(pitch) == Pitch.classValue(getNote(i)) )
                 return i ; // diatonic match
         }
         return -1;
@@ -133,8 +133,8 @@ public class Key extends Observable
     public int diatonicPitch(int pitch) {
         if ( contains(pitch) ) return pitch;
         for ( int disp = 1; disp < 3; disp++ ) {
-            if ( contains(pitch-disp) ) return pitch-disp;
-            if ( contains(pitch+disp) ) return pitch+disp;
+            if ( pitch - disp > 0 && contains(pitch-disp) ) return pitch-disp;
+            if ( pitch + disp < 128 && contains(pitch+disp) ) return pitch+disp;
         }
         return pitch; // oh well, it's still accidental after all!
     }
@@ -146,12 +146,12 @@ public class Key extends Observable
     	// counting diatonic pitches as we go
     	// efficiency proportional to the magnitude of offset 
     	if ( offset < 0 ) {
-    		while ( offset < 0 ) {
+    		while ( offset < 0 && pitch > 0 ) {
     			if ( contains(--pitch) ) offset += 1;
     		}
     		
     	} else if ( offset > 0 ) {
-    		while ( offset > 0 ) {
+    		while ( offset > 0 && pitch < 127 ) {
     			if ( contains(++pitch) ) offset -= 1;
     		}
     	}

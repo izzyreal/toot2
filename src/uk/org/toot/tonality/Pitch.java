@@ -101,7 +101,7 @@ public class Pitch
      * @return the int value of the pitch class for the pitch
      */
     public static int classValue(int pitch) {
-    	if ( pitch < 0 ) throw new IllegalArgumentException();
+    	if ( pitch < 0 ) throw new IllegalArgumentException("pitch < 0");
     	return pitch % 12;
     }
     
