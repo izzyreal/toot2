@@ -17,10 +17,6 @@ import uk.org.toot.tonality.Key;
  */
 public class RhythmicComposer extends AbstractComposer 
 {
-	public RhythmicComposer(String name, int program, int channel) {
-		super(name, program, channel);
-	}
-
 	public int[] composeBar(Key key) {
 		long timing = getContext().createTiming();
 		int[] notes = new int[Long.bitCount(timing)];

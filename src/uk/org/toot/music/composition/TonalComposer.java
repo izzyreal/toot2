@@ -17,10 +17,6 @@ public class TonalComposer extends AbstractComposer
 {
 	private int currentPitch;
 
-	public TonalComposer(String name, int program, int channel) {
-		super(name, program, channel);
-	}
-
 	public int[] composeBar(Key key) {
 		long timing = getContext().createTiming();
 		int n = Long.bitCount(timing);
