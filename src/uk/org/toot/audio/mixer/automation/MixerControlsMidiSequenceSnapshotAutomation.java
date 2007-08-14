@@ -44,7 +44,7 @@ abstract public class MixerControlsMidiSequenceSnapshotAutomation extends BasicS
             // only dynamically create channel and group strips
             // not fx or aux or main strips at this stage
             if ( stripControls == null ) {
-                msg = track.get(0).getMessage();
+                msg = track.get(1).getMessage();
                 if ( !isNote(msg) ) continue;
                 int stripId = getData1(msg);
                 if ( stripId != CHANNEL_STRIP &&
@@ -59,7 +59,7 @@ abstract public class MixerControlsMidiSequenceSnapshotAutomation extends BasicS
 	        // reconstruct control hierarchy !!!
             // make list of needed modules
             List<AutomationIndices> needed = new java.util.ArrayList<AutomationIndices>();
-            for ( int i = 1; i < track.size(); i++ ) {
+            for ( int i = 2; i < track.size(); i++ ) {
                 msg = track.get(i).getMessage();
                 if ( isControl(msg) ) {
                     AutomationIndices triple = new AutomationIndices(getProviderId(msg),
