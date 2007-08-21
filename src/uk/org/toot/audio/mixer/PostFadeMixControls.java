@@ -21,9 +21,12 @@ public class PostFadeMixControls extends MixControls
         this.mainMixControls = mainMixControls;
     }
 
-    // post fade sends are disabled when main is disabled.
+    // post fade sends are disabled when main is not muted.
+    // if they are disabled when main is disabled it causes
+    // fx return solo to fail because its sends are disabled!
+    // thanks to DrPJ for finding that bug.
     public boolean isEnabled() {
-        return super.isEnabled() && mainMixControls.isEnabled();
+        return super.isEnabled() && !mainMixControls.isMute();
     }
 
     // post-fade
