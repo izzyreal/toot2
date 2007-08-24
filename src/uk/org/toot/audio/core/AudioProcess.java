@@ -33,7 +33,7 @@ public interface AudioProcess
     /**
      * Open any resources required by this AudioProcess.
      */
-    void open();
+    void open() throws Exception;
 
     /**
      * Process the supplied buffer
@@ -45,5 +45,5 @@ public interface AudioProcess
     /**
      * Close any resources opened by this AudioProcess.
      */
-    void close();
+    void close() throws Exception;
 }

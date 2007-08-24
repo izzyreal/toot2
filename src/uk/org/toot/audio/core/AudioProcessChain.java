@@ -51,7 +51,7 @@ public class AudioProcessChain implements AudioProcess {
          processes = new ArrayList<AudioProcess>();
     }
 
-    public void open() {
+    public void open() throws Exception {
          for ( Control control : controlChain.getMemberControls() ) {
             if ( control instanceof AudioControls ) {
        	        AudioProcess p = createProcess((AudioControls)control);
@@ -97,7 +97,11 @@ public class AudioProcessChain implements AudioProcess {
             try {
 	            if ( p != null ) p.processAudio(buffer);
             } catch ( Exception e ) {
-                p.close();
+            	try {
+            		p.close();
+            	} catch ( Exception e2 ) {
+            		// nothing we can do here
+            	}
                 processes.set(i, null);
                 System.out.println("DISABLED "+p+" in "+getName()+" due to:");
                 e.printStackTrace();
@@ -126,7 +130,11 @@ public class AudioProcessChain implements AudioProcess {
     public void close() {
 		controlChain.deleteObserver(controlChainObserver);
         for ( AudioProcess p : processes ) {
-            p.close();
+        	try {
+        		p.close();
+        	} catch ( Exception e ) {
+        		// can't do anything useful
+        	}
         }
         processes.clear();
         t = null;

@@ -20,7 +20,7 @@ abstract public class AudioProcessAdapter implements AudioProcess
         this.process = process;
     }
 
-    public void open() {
+    public void open() throws Exception {
         process.open();
     }
 
@@ -28,7 +28,7 @@ abstract public class AudioProcessAdapter implements AudioProcess
         return process.processAudio(buf);
     }
 
-    public void close() {
+    public void close() throws Exception {
         process.close();
     }
 }

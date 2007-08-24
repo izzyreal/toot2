@@ -328,8 +328,12 @@ public class AudioMixer implements AudioClient
             }
             break;
         }
-        strips.add(strip);
-        strip.open();
+        try {
+        	strip.open();
+        	strips.add(strip);
+        } catch ( Exception e ) {
+        	System.err.println("Mixer failed to open strip "+strip.getName());
+        }
         return strip;
     }
 
