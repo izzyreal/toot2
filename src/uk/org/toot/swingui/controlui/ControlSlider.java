@@ -11,7 +11,7 @@ import java.util.Observer;
 import uk.org.toot.control.*;
 import javax.swing.JSlider;
 
-public class ControlSlider extends JSlider implements Observer
+public class ControlSlider extends JSlider implements ControlComponent, Observer
 {
     private final FloatControl control;
 
@@ -22,6 +22,10 @@ public class ControlSlider extends JSlider implements Observer
         setPaintTrack(false);
 	}
 
+	public Control getControl() {
+		return control;
+	}
+	
 	public void addNotify() {
         super.addNotify();
         control.addObserver(this);
