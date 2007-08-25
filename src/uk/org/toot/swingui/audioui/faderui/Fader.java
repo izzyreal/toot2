@@ -10,9 +10,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Hashtable;
 import uk.org.toot.audio.fader.FaderControl;
+import uk.org.toot.control.Control;
+import uk.org.toot.swingui.controlui.ControlComponent;
 import javax.swing.*;
 
-public class Fader extends JSlider implements Observer
+public class Fader extends JSlider implements ControlComponent, Observer
 {
     private final FaderControl control;
 
@@ -28,6 +30,10 @@ public class Fader extends JSlider implements Observer
         setPaintLabels(true);
 	}
 
+	public Control getControl() {
+		return control;
+	}
+	
 	public void addNotify() {
         super.addNotify();
         control.addObserver(this);
