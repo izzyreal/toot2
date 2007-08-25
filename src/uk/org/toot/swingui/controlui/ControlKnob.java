@@ -6,7 +6,6 @@
 package uk.org.toot.swingui.controlui;
 
 import uk.org.toot.control.LawControl;
-import uk.org.toot.control.Control;
 import java.util.Observer;
 import java.util.Observable;
 import java.awt.*;
@@ -18,7 +17,7 @@ import java.awt.event.*;
  * the knob around in a circle.
  * From source by Grant William Braught, Dickinson College, 12/4/2000
  */
-public class ControlKnob extends JComponent implements ControlComponent, Observer
+public class ControlKnob extends JComponent implements Observer
 {
     private static final int radius = 16;
     private static final int spotRadius = 4;
@@ -39,10 +38,6 @@ public class ControlKnob extends JComponent implements ControlComponent, Observe
         setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
     }
 
-    public Control getControl() {
-    	return control;
-    }
-    
 	public void setValue(int value) {
     	theta = (value * 2 * thetaMax) / (control.getLaw().getResolution()-1) - thetaMax;
 //        System.out.println("CK.update: "+control.getControlPath()+": "+control.getValue()+" => "+value+" => "+theta);
