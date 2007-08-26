@@ -329,8 +329,8 @@ public class AudioMixer implements AudioClient
             break;
         }
         try {
-        	strip.open();
         	strips.add(strip);
+        	strip.open();
         } catch ( Exception e ) {
         	System.err.println("Mixer failed to open strip "+strip.getName());
         }
