@@ -31,6 +31,10 @@ import java.util.List;
  * An AudioServer implementation should use a particular audio format,
  * defined in its own terms, to return appropriate AudioBuffers and
  * AudioProcesses.
+ * 
+ * Latency occurs in hardware and software for both input and output.
+ * Total latency from analogue input to analogue output is
+ *  Hardware Input + Software Input + Software Output + Hardware Output
  */
 public interface AudioServer
 {
@@ -105,9 +109,19 @@ public interface AudioServer
 
     float getLoad();
     
+    /**
+     * @return the number of frames input latency due to software.
+     */
     int getInputLatencyFrames();
     
+    /**
+     * @return the number of frames output latency due to software.
+     */
     int getOutputLatencyFrames();
     
+    /**
+     * @return the number of frames latency for inputs and outputs due to
+     * both hardware and software.
+     */
     int getTotalLatencyFrames();
 }
