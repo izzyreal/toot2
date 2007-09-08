@@ -10,7 +10,7 @@ package uk.org.toot.audio.id;
  * services from different providers have their own id-spaces which are portable
  * between installations on different machines.
  * Unknown provider IDs will function but cannot be guaranteed to be
- * poertable.
+ * portable.
  */
 public interface ProviderId
 {
@@ -20,4 +20,10 @@ public interface ProviderId
     static final int USE_PARENT_PROVIDER_ID = 0; // !!! !!! USE CONSTANT !!! !!!
     static final int TOOT_PROVIDER_ID = 1;
     static final int FRINIKA_PROVIDER_ID = 2;
+    
+    // this constant can be used to develop unreleased services.
+    // TootSoftware will be pleased to add a proper provider ID for you to
+    // release services. See toot.org.uk and join the discussion group to
+    // request a proper provider ID. 
+    static final int TEMPORARY_PROVIDER_ID = 127;
 }
