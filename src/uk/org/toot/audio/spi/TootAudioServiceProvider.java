@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.spi;
 
-import uk.org.toot.audio.id.ProviderId;
+import static uk.org.toot.audio.id.ProviderId.TOOT_PROVIDER_ID;
 
 /**
  * The Toot Audio ServiceProvider is implemented so that the
@@ -14,6 +14,6 @@ import uk.org.toot.audio.id.ProviderId;
 abstract public class TootAudioServiceProvider extends AudioServiceProvider
 {
     public TootAudioServiceProvider(String description, String version) {
-        super(ProviderId.TOOT_PROVIDER_ID, "Toot Software", description, version);
+        super(TOOT_PROVIDER_ID, "Toot Software", description, version);
     }
 }
