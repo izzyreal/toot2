@@ -29,13 +29,15 @@ public class StereoImageProcess extends SimpleAudioProcess
         // get left/right pairs
         int[] leftChans = format.getLeft();
         int[] rightChans = format.getRight();
+        float tmp;
         for ( int pair = 0; pair < leftChans.length; pair++ ) {
 	   	    float[] left = buffer.getChannel(leftChans[pair]);
     	   	float[] right = buffer.getChannel(rightChans[pair]);
 	        // first we process the L/R width
    	    	for ( int i = 0; i < nsamples; i++ ) {
+   	    		tmp = left[i];
     			left[i] += otherFactor * right[i];
-	            right[i] += otherFactor * left[i];
+	            right[i] += otherFactor * tmp;
    			}
    			// then we swap if necessary
             if ( swap ) buffer.swap(leftChans[pair], rightChans[pair]);
