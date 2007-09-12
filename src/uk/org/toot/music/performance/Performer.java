@@ -11,6 +11,7 @@ import uk.org.toot.music.composition.Timing;
 
 /**
  * A Performer performs on an Instrument.
+ * It can swing (eigth note) timing.
  * Currently it can only render to a MIDI file, not perform live.
  * @author st
  *
