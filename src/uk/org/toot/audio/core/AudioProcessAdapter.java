@@ -5,6 +5,12 @@
 
 package uk.org.toot.audio.core;
 
+/**
+ * AudioProcessAdapter adapts an AudioProcess instance, hence by making a concrete 
+ * implementation you can override operations of that instance.
+ * @author st
+ *
+ */
 abstract public class AudioProcessAdapter implements AudioProcess
 {
     /**

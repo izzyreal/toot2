@@ -5,6 +5,11 @@
 
 package uk.org.toot.audio.mixer;
 
+/**
+ * Specialises MixControls for post-fade (effects send) use.
+ * @author st
+ *
+ */
 public class PostFadeMixControls extends MixControls
 {
     /**

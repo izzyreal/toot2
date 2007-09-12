@@ -9,10 +9,16 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
 
+/**
+ * Implements the stereo image digital signal processing
+ * @author st
+ *
+ */
 public class StereoImageProcess extends SimpleAudioProcess
 {
     /** @link aggregation
-     * @supplierCardinality 1 */
+     * @supplierCardinality 1 
+     */
     private StereoImageProcessVariables vars;
 
     public StereoImageProcess(StereoImageProcessVariables variables) {

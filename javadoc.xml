@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="javadoc">
+<target name="javadoc">
+<javadoc 
+	access="public" 
+	author="true" 
+	classpath="." 
+	destdir="doc" 
+    includenosourcepackages="true"
+	nodeprecated="false" 
+	nodeprecatedlist="false" 
+	noindex="false" 
+	nonavbar="false" 
+	notree="false" 
+	packagenames="uk.org.toot.*" 
+	source="1.5" 
+	sourcefiles="src/Installer.java" 
+	sourcepath="src" 
+	splitindex="true" 
+	use="true" 
+	version="true">
+    <tag name="todo" scope="all" description="To do:" />
+	<tag name="label" scope="all" description="Label:" />
+    <tag name="supplierCardinality" scope="all" enabled="false" description="Supplier Cardinality:" />
+	<bottom>
+		<![CDATA[<i>Copyright &#169; 2004, 2005, 2006, 2007 Steve Taylor. All Rights Reserved.</i>]]>
+ 	</bottom>
+</javadoc>
+</target>
+</project>

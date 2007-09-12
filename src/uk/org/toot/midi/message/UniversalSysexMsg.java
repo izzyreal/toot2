@@ -4,6 +4,11 @@ package uk.org.toot.midi.message;
 
 import javax.sound.midi.MidiMessage;
 
+/**
+ * This class provides methods to simplify the handling of Universal System Exclusive messages.
+ * @author st
+ *
+ */
 public class UniversalSysexMsg extends SysexMsg
 {
 // !!! !!! not universal !!! !!!

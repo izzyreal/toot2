@@ -13,7 +13,7 @@ import javax.sound.midi.*;
 import static uk.org.toot.control.ControlSysexMsg.*;
 
 /**
- * Redefines the API in terms of MidiMessages.
+ * Redefines the dynamic API in terms of MidiMessages.
  **/
 abstract public class MixerControlsMidiDynamicAutomation
     extends MixerControlsConciseDynamicAutomation

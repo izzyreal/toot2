@@ -12,7 +12,7 @@ import uk.org.toot.control.CompoundControl;
 import uk.org.toot.audio.spi.AudioControlServiceDescriptor;
 
 /**
- * An AudioControlsChain extends CompoundControlChain to provide
+ * AudioControlsChain extends CompoundControlChain to provide
  * information regarding audio control services which may be plugged in.
  */
 public class AudioControlsChain extends CompoundControlChain

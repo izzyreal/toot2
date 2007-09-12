@@ -6,12 +6,12 @@
 package uk.org.toot.audio.core;
 
 /**
- * This class provides ways to deal with FPU denormals, which, if left
+ * Provides ways to deal with FPU denormals, which, if left
  * in audio data tend to cause exceptionally high CPU uage.
- * This tends to happen when audio is not playing, as float values from
- * when it was playing reduce exponentially to zero due to IIR filters
- * or other feedback networks such as delay lines.
- * An exponential decrease to zero eventually latches into denormals.
+ * Floating point denormals typically occur when a feedback
+ * network causes an exponential decay. Eventually the value
+ * becomes so small it cannot be represented efficiently by the
+ * FPU.
  */
 public class FloatDenormals
 {

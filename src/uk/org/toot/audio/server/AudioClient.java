@@ -5,8 +5,18 @@
 
 package uk.org.toot.audio.server;
 
+/**
+ * A single AudioClient plugs into an AudioServer so that it may access 
+ * the server's hardware i/o in real-time.
+ * @author st
+ *
+ */
 public interface AudioClient
 {
+	/**
+	 * Called by an AudioServer to process the specified number of frames.
+	 * @param nFrames the number of frames to be processed
+	 */
     void work(int nFrames);
 
     /**

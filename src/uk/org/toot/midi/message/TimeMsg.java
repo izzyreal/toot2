@@ -231,6 +231,9 @@ Quarter Frame Messages (2 bytes):
     regardless of who it was intended for. Device-specific messages should be
     sent as nibblized MIDI System Exclusive messages.
  */
+/**
+ * This class provides methods to simplify the handling of MIDI Time Code messages.
+ */
 public class TimeMsg extends UniversalSysexMsg
 {
     public static final int MTC_FULL		= 0x01; // after F0 7F cc

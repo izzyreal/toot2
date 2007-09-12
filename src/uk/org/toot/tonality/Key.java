@@ -206,7 +206,6 @@ public class Key extends Observable
     
     /**
      * Return the name of this Key as root note (pitch class) and Scale.
-     * @return
      */
     public String name() {
         return name(0)+" "+scale.getName() ;
@@ -215,7 +214,6 @@ public class Key extends Observable
     /**
      * Return the name of a note indexed into the Key
      * @param index
-     * @return
      */
     public String name(int index) {
         if ( names == null )

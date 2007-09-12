@@ -8,6 +8,11 @@ package uk.org.toot.audio.mixer.automation;
 import uk.org.toot.audio.mixer.MixerControls;
 import javax.sound.midi.MidiMessage;
 
+/**
+ * Currently unused.
+ * @author st
+ *
+ */
 public class DynamicMixerControlsMidiDynamicAutomation
     extends MixerControlsMidiDynamicAutomation
 {

@@ -16,6 +16,7 @@ public class Scale
 {
     private String name ;
     private int[] intervals ;
+    private int intIntervals;
 
     /**
      * Constructor
@@ -23,6 +24,10 @@ public class Scale
     public Scale(String name, int[] intervals) {
         this.name = name ;
         this.intervals = intervals ;
+        // encode intervals as int bitmask, UNISON = 0x01 etc.
+        for ( int i = 0; i < intervals.length; i++) {
+        	intIntervals |= 1 << intervals[i];
+        }
     }
 
     /**
@@ -35,6 +40,16 @@ public class Scale
      */
     public String getName() { return name; }
 
+    /**
+     * @return the intervals of this Scale.
+     */
+    public int[] getIntervals() { return intervals; }
+    
+    /**
+     * @return the intervals of this Scale as a bitmask.
+     */
+    public int getIntervalsAsInt() { return intIntervals; }
+    
     /**
      * Return the interval of the specified index into this Scale.
      * @param index the index into this Scale.

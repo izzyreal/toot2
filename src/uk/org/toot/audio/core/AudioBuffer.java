@@ -8,12 +8,16 @@ package uk.org.toot.audio.core;
 import org.tritonus.share.sampled.FloatSampleBuffer;
 
 /**
- * This class is a simmple extension of Tritonus' FloatSampleBuffer which
- * enables meta information to be attached to buffers.
+ * Encapsulates buffered multi-channel sampled audio.
+ * 
+ * It has a ChannelFormat and enables meta information to be attached to buffers.
+ * It can convert to another ChannelFormat (1->N and N->1 only)
  * 
  * It has a real-time property to allow AudioProcesses to discriminate
  * between real-time and non-real-time for quality purposes etc.
  * @see uk.org.toot.audio.server.NonRealTimeAudioServer
+ * 
+ * It can swap channel pairs.
  */
 public class AudioBuffer extends FloatSampleBuffer
 {
@@ -67,7 +71,7 @@ public class AudioBuffer extends FloatSampleBuffer
     /**
     * This method is intended for use by
     * uk.org.toot.audio.server.NonRealTimeAudioServer
-    * Otherwise, no good will come from you calling it.
+    * No good will come from you calling it.
     */
     public void setRealTime(boolean realTime) {
         this.realTime = realTime;
@@ -138,9 +142,11 @@ public class AudioBuffer extends FloatSampleBuffer
     }
 
     /**
+     * MetaInfo holds meta information for an AudioBuffer.
      * MetaInfo is intentionally immutable.
      * 'observers' will be able to simply detect a different MetaInfo
      * if any information is changed.
+     * TODO It does not scale and should be replaced with a source label property?
      */
     static public class MetaInfo
     {

@@ -5,6 +5,11 @@
 
 package uk.org.toot.audio.core;
 
+/**
+ * An input AudioProcess which provides silence with a specified ChannelFormat
+ * and source label.
+ * @author st
+ */
 public class SilentInputAudioProcess extends SimpleAudioProcess {
     /**
      * @link aggregation

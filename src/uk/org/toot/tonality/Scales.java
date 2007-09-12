@@ -32,8 +32,9 @@ public class Scales
     /**
      * @supplierCardinality 1..*
      * @label scales 
-     * @associates <{uk.org.toot.pitch.Scale}>
+     * @directed
      */
+    /*#Scale lnkScales;*/
     private static List<Scale> scales = new java.util.ArrayList<Scale>();
 
     /**

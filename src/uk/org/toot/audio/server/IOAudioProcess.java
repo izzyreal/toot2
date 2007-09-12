@@ -8,6 +8,11 @@ package uk.org.toot.audio.server;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
 
+/**
+ * An AudioProcess with a ChannelFormat and a name, suitable for hardware i/o.
+ * @author st
+ *
+ */
 public interface IOAudioProcess extends AudioProcess
 {
     ChannelFormat getChannelFormat();

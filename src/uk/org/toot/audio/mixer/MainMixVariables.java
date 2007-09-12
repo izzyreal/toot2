@@ -7,6 +7,11 @@ package uk.org.toot.audio.mixer;
 
 import uk.org.toot.control.EnumControl;
 
+/**
+ * Specialises MixVariables for the main bus which has routing.
+ * @author st
+ *
+ */
 public interface MainMixVariables extends MixVariables
 {
     EnumControl getRouteControl();

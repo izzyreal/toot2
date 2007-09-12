@@ -12,6 +12,11 @@ import uk.org.toot.audio.core.ChannelFormat;
 
 import static uk.org.toot.localisation.Localisation.*;
 
+/**
+ * Exposes stereo image manipulation as a plugin service
+ * @author st
+ *
+ */
 public class StereoImageServiceProvider extends TootAudioServiceProvider
 {
     public StereoImageServiceProvider() {

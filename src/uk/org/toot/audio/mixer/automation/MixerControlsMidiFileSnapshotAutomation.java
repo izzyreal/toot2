@@ -11,12 +11,25 @@ import javax.sound.midi.*;
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.audio.mixer.MixerControlsSnapshotAutomation;
 
+/**
+ * Redefines the snapshot automation API in terms of standard midi files.
+ * @author st
+ *
+ */
 public class MixerControlsMidiFileSnapshotAutomation
     extends MixerControlsMidiSequenceSnapshotAutomation
     implements MixerControlsSnapshotAutomation
 {
     protected File snapshotPath;
+    
+    /**
+     * The sub directory for snapshots
+     */
     public final static String SNAPSHOT_DIR = "snapshots";
+    
+    /**
+     * The file extension for snapshots
+     */
     public final static String SNAPSHOT_EXT = ".snapshot";
 
     public MixerControlsMidiFileSnapshotAutomation(

@@ -11,6 +11,11 @@ import java.awt.Color;
 
 import static uk.org.toot.localisation.Localisation.*;
 
+/**
+ * The relevant controls for snapshot and dynamic automation.
+ * @author st
+ *
+ */
 public class AutomationControls extends AudioControls
 {
     public static final int AUTOMATION_ID = 119; // !!! !!! huh ? !!! !!!

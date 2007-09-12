@@ -8,19 +8,19 @@ package uk.org.toot.audio.core;
 import static uk.org.toot.localisation.Localisation.*;
 
 /**
- * ChannelFormat provides information about AudioProcess channels.
+ * ChannelFormat provides information about AudioBuffer channels.
  *
  * You can find out whether a channel index is left, right, center, front, rear
  * or a low frequency extension (LFE) which is sufficient to describe mono,
  * stereo, quad and 5.1, those formats being predefined as MONO, STEREO, QUAD
  * and FIVE_1.
  *
- * You can also find out which channel indices are left, right, center, front,
+ * You can find out which channel indices are left, right, center, front,
  * rear and LFE.
  *
  * You can get the localised name for a channel index and for the format.
  *
- * You can also mix a format with less channels to a format (upmixing).
+ * You can mix a format with less channels to a format (upmixing).
  *
  * Odd formats like 1.1, 2.1, 3, 3.1 and 4.1 could be provided but are not
  * believed to be significant enough to implement.
@@ -32,24 +32,80 @@ public abstract class ChannelFormat
      */
     public abstract int getCount();
 
-    public abstract int getCenter(); 	// index or -1 if not present
-    public abstract int getLFE();	 	// index or -1 if not present
-    public abstract int[] getLeft();	// do not return null
-    public abstract int[] getRight();	// do not return null
+    /**
+     * Return the index of the center channel, if present, otherwise -1
+     */
+    public abstract int getCenter();
+
+    /**
+     * Return the index of the LFE channel, if present, otherwise -1
+     */
+    public abstract int getLFE();
+
+    /**
+     * Return an array of the indices of the left channels, may be empty but
+     * not null
+     */
+    public abstract int[] getLeft();
+
+    /**
+     * Return an array of the indices of the right channels, may be empty but
+     * not null
+     */
+    public abstract int[] getRight();
+    
+    /**
+     * Return the name of this ChannelFormat
+     */
 	public abstract String getName();
 
-    // following methods need only return valid results for valid channel numbers
+	/**
+	 * Return true if chan is the index is of a center channel, false otherwise, 
+	 * undefined if chan is not a valid index
+	 */
     public abstract boolean isCenter(int chan);
+
+	/**
+	 * Return true if chan is the index is of a lefr channel, false otherwise, 
+	 * undefined if chan is not a valid index
+	 */
     public abstract boolean isLeft(int chan);
+
+	/**
+	 * Return true if chan is the index is of a right channel, false otherwise, 
+	 * undefined if chan is not a valid index
+	 */
     public abstract boolean isRight(int chan);
+
+	/**
+	 * Return true if chan is the index is of a front channel, false otherwise, 
+	 * undefined if chan is not a valid index
+	 */
     public abstract boolean isFront(int chan);
+
+	/**
+	 * Return true if chan is the index is of a rear channel, false otherwise, 
+	 * undefined if chan is not a valid index
+	 */
     public abstract boolean isRear(int chan);
+
+	/**
+	 * Return true if chan is the index is of an LFE channel, false otherwise, 
+	 * undefined if chan is not a valid index
+	 */
     public abstract boolean isLFE(int chan);
+    
+    /**
+     * Return the name of the specified channel
+     * @param chan the index of a channel
+     */
     public abstract String getName(int chan);
 
-    // experimental !!! !!! !!!
-    // valid for destBuffer MONO/STEREO/QUAD
-    // override for other formats (or refactor for extension)
+    /**
+     * Mix a source AudioBuffer into a destination AudioBuffer with
+     * specified weights for each channel.
+     * This implementation is valid for MONO, STEREO and QUAD.
+     */
 	public int mix(AudioBuffer destBuffer, AudioBuffer sourceBuffer, float[] gain) {
         boolean doMix = destBuffer != sourceBuffer;
         int snc = sourceBuffer.getChannelCount();
@@ -78,6 +134,7 @@ public abstract class ChannelFormat
     }
 
     /**
+     * The Mono ChannelFormat
      * @label MONO 
      * @link aggregationByValue
      * @supplierCardinality 1
@@ -100,6 +157,7 @@ public abstract class ChannelFormat
     };
 
     /**
+     * The default Stereo ChannelFormat
      * @label STEREO 
      * @link aggregationByValue
      * @supplierCardinality 1
@@ -129,6 +187,7 @@ public abstract class ChannelFormat
     };
 
     /**
+     * The default Quad ChannelFormat
      * @label QUAD
      * @link aggregationByValue
      * @supplierCardinality 1
@@ -161,6 +220,7 @@ public abstract class ChannelFormat
     };
 
     /**
+     * The default 5.1 ChannelFormat
      * @label 5.1
      * @link aggregationByValue
      * @supplierCardinality 1

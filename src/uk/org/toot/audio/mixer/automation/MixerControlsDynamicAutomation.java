@@ -11,7 +11,7 @@ import uk.org.toot.control.Control;
 import uk.org.toot.audio.mixer.MixerControls;
 
 /**
- * Specifies automation API in terms of Controls and their values.
+ * Specifies the dynamic automation API in terms of Controls and their values.
  * Hooks into specified MixerControls as an Observer to efficiently
  * monitor all Control changes without needing individual listeners.
  * Relies on Control.notifyParent() Chain of Responsibility.

@@ -21,7 +21,7 @@ public interface MixerControlsSnapshotAutomation
 {
     /**
      * Modify the mixer controls structure to suit the named snapshot.
-     * Not inteneded for use by user snapshots, just project snapshots.
+     * Not intended for use by user snapshots, just project snapshots.
      * Add missing Channel and Group strip controls that are required
      * by the named snapshot.
      * Delete, move and insert module controls in strip controls as necessary
@@ -44,5 +44,9 @@ public interface MixerControlsSnapshotAutomation
      */
     void store(String name);
 
+    /**
+     * List stored snapshot names.
+     * @return an array of name Strings
+     */
     String[] list();
 }

@@ -21,6 +21,12 @@ import static uk.org.toot.tonality.Interval.*;
  */
 public class Chords 
 {
+	/**
+     * @supplierCardinality 1..*
+     * @label chords 
+     * @directed
+     */
+    /*#Chord lnkChords;*/
     private static List<Chord> chords = new java.util.ArrayList<Chord>();
     
     static { addChords(); }

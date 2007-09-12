@@ -10,7 +10,8 @@ import uk.org.toot.audio.core.AudioControls;
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 
 /**
- * for Snap/Keep options?
+ * Currently unused.
+ * Eventually for Snap/Keep options?
  */
 // !!! it isn't really an AudioControl is it?
 public class GlobalDynamicAutomationControls extends AudioControls

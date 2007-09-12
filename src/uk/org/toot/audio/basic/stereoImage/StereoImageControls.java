@@ -14,6 +14,11 @@ import uk.org.toot.control.LinearLaw;
 
 import static uk.org.toot.localisation.Localisation.*;
 
+/**
+ * Implements stereo image controls and obeys the process variables contract
+ * @author st
+ *
+ */
 public class StereoImageControls extends AudioControls
     implements StereoImageProcessVariables
 {

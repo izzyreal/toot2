@@ -64,8 +64,8 @@ public class Pitch
      * @param pitch the int value of a pitch
      * @return true if the pitch represents a black key, false otherwise
      */
-    public static boolean isBlack(int val) {
-        int pc = classValue(val);
+    public static boolean isBlack(int pitch) {
+        int pc = classValue(pitch);
         return ( pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10 ) ;
     }
     
