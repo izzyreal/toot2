@@ -7,9 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.util.List;
 
-import uk.org.toot.tonality.Chord;
-import uk.org.toot.tonality.Chords;
-import uk.org.toot.tonality.Pitch;
+import uk.org.toot.music.tonality.Chord;
+import uk.org.toot.music.tonality.Chords;
+import uk.org.toot.music.tonality.Pitch;
 
 public class ChordIdentifierPanel extends JPanel 
 {

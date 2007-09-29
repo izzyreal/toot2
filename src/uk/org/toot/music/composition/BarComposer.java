@@ -5,7 +5,7 @@
 
 package uk.org.toot.music.composition;
 
-import uk.org.toot.tonality.Key;
+import uk.org.toot.music.tonality.Key;
 
 public interface BarComposer 
 {

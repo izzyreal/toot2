@@ -25,19 +25,14 @@ public class SingleTransportProjectPanel extends SingleProjectPanel
     public SingleTransportProjectPanel(SingleTransportProject p, JToolBar toolBar) {
         super(p, toolBar);
         transport = p.getTransport();
-        transportActions = new TransportActions(transport); // !!! well something has to instantiate it, and, umm 'close it'
+        transportActions = new TransportActions(transport);
         NonRealTimeAudioServer nonRealTimeAudioServer = p.getNonRealTimeAudioServer();
         if ( nonRealTimeAudioServer != null ) {
 	        Action realTimeAction = transportActions.getRealTimeAction(nonRealTimeAudioServer);
         	toolBar.addSeparator();
         	toolBar.add(new TransportToggleButton(realTimeAction));
         }
-        toolBar.addSeparator();
-        toolBar.add(new TransportToggleButton(transportActions.getStopAction()));
-        toolBar.add(new TransportToggleButton(transportActions.getPlayAction()));
-        toolBar.add(new TransportToggleButton(transportActions.getRecordAction()));
-        toolBar.addSeparator();
-        toolBar.add(new TransportLocation(transport));
+        TransportActions.addTransportTools(transportActions, toolBar);
 //        transportDispatcher = new TransportKeyEventDispatcher();
     }
 

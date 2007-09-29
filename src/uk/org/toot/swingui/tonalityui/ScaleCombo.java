@@ -9,7 +9,7 @@ import java.awt.Dimension;
 import javax.swing.JComboBox;
 import java.util.List;
 
-import uk.org.toot.tonality.Scales;
+import uk.org.toot.music.tonality.Scales;
 
 public class ScaleCombo extends JComboBox
 {

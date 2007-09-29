@@ -21,6 +21,7 @@ public class AudioCompoundStripPanel extends DisposablePanel
 
     public AudioCompoundStripPanel(CompoundControl controls, PanelFactory panelFactory) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        assert controls != null;
         this.controls = controls;
         this.panelFactory = panelFactory;
     }
@@ -45,6 +46,7 @@ public class AudioCompoundStripPanel extends DisposablePanel
 
     protected void setup() {
         removeAll(); // !!! brute force change
+        if ( controls == null ) return; // !!! !!! bug finding
         for ( Control control : controls.getControls() ) {
 		    setupStrip((CompoundControl)control);
         }

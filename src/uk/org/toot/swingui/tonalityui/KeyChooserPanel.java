@@ -7,9 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.util.List;
 
-import uk.org.toot.tonality.Key;
-import uk.org.toot.tonality.Keys;
-import uk.org.toot.tonality.Pitch;
+import uk.org.toot.music.tonality.Key;
+import uk.org.toot.music.tonality.Keys;
+import uk.org.toot.music.tonality.Pitch;
 
 public class KeyChooserPanel extends JPanel 
 {

@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
-import uk.org.toot.tonality.*;
+import uk.org.toot.music.tonality.*;
 
 public class ChordChooserPanel extends JPanel 
 {

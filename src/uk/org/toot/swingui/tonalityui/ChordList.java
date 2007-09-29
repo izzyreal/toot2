@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.JList;
 
-import uk.org.toot.tonality.Chord;
+import uk.org.toot.music.tonality.Chord;
 
 public class ChordList extends JList 
 {

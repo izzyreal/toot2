@@ -5,7 +5,7 @@
 
 package uk.org.toot.midi.misc;
 
-import uk.org.toot.tonality.Pitch;
+import uk.org.toot.music.tonality.Pitch;
 
 /** Support for General MIDI Instrument Family and Family names. */
 public class GM

@@ -6,7 +6,7 @@
 package uk.org.toot.music.composition;
 
 import uk.org.toot.music.Note;
-import uk.org.toot.tonality.Key;
+import uk.org.toot.music.tonality.Key;
 
 /**
  * This class represents a composer that only composes one drum/cymbal hit at the 

@@ -5,6 +5,7 @@ package uk.org.toot.swingui.transportui;
 import uk.org.toot.transport.*;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
+import javax.swing.JToolBar;
 
 import uk.org.toot.audio.server.NonRealTimeAudioServer;
 
@@ -53,6 +54,15 @@ public class TransportActions
         realTimeAction = null;
     }
 
+    public static void addTransportTools(TransportActions transportActions, JToolBar toolBar) {
+        toolBar.addSeparator();
+        toolBar.add(new TransportToggleButton(transportActions.getStopAction()));
+        toolBar.add(new TransportToggleButton(transportActions.getPlayAction()));
+        toolBar.add(new TransportToggleButton(transportActions.getRecordAction()));
+        toolBar.addSeparator();
+        toolBar.add(new TransportLocation(transportActions.getTransport()));
+    }
+    
     public Transport getTransport() { return transport; }
 
     public Action getLoopAction() { return loopAction; } // !!! !!!
@@ -61,9 +71,7 @@ public class TransportActions
     public Action getRecordAction() { return recordAction; }
 
     public Action getRealTimeAction(NonRealTimeAudioServer server) {
-        realTimeAction = new RealTimeAction(server);
-        return realTimeAction;
-
+        return new RealTimeAction(server);
     }
 
     public void enableActions(boolean enable) {

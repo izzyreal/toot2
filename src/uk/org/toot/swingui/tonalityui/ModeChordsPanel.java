@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 
-import uk.org.toot.tonality.*;
+import uk.org.toot.music.tonality.*;
 
 public class ModeChordsPanel extends JPanel 
 {

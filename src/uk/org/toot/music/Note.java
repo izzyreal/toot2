@@ -7,71 +7,51 @@ package uk.org.toot.music;
 
 /**
  * This class provides static methods to assist in the representation of a note
- * as an int. Such a note encodes on time, pitch, level and off time.
- * The on time is specified as sixty-fourth notes relative to the start of a bar, 0..63.
- * The off time is specified as sixty-fourth notes relative to the start of a bar, 
- * 0..255 such that the off time can be up to 3 bars later than the on time.
+ * as an int. Such a note encodes time, pitch, level and duration.
+ * The time is specified as sixty-fourth notes relative to the start of a bar, 0..127.
+ * The duration is specified as sixty-fourth notes relative to the time, 
+ * 0..255 such that the off time can be up to 4 bars later than the on time.
  * The pitch (or drum) is specified as a MIDI compatible pitch, 0..127
  * The level is specified as a MIDI-compatible velocity, 0..127.
  * The most significant bits represent time so that an array of ints
  * representing notes can be time-ordered by simple sorting.
+ * Such sorting orders notes by time, then duration, then pitch, then level.
  * @author st
  *
+ * Format 0ttttttt dddddddd 0ppppppp 0vvvvvvv
+ * always positive
+ * can be sorted by time (t)
+ * uses 1/4 of positive int values, unused bits 8 and 16 are both zero
+ * 
  */
-public class Note 
+public class Note extends TimedCoding
 {
-	private final static int TIME_ON_SHIFT = 24;
-	private final static int TIME_ON_MASK = 0x3f;
-	private final static int TIME_OFF_SHIFT = 16;
-	private final static int TIME_OFF_MASK = 0xff;
+	private final static int DURATION_SHIFT = 16;
+	private final static int DURATION_MASK = 0xff;	// 8 bits, 0..255
 	private final static int PITCH_SHIFT = 8;
-	private final static int PITCH_MASK = 0x7f;
-	private final static int LEVEL_MASK = 0x7f;
+	private final static int PITCH_MASK = 0x7f;		// 7 bits, 0..127
+	private final static int LEVEL_MASK = 0x7f;		// 7 bits, 0..127
 	
 	public static int create(int timeOn, int pitch, int level) {
-		int note = 0;
-		note = setTimeOn(note, timeOn);
-		note = setTimeOff(note, timeOn+1); // shortest note duration, 1/64th
+		int note = create(timeOn);
+		note = setDuration(note, 1); // shortest note duration, 1/64th
 		note = setPitch(note, pitch);
 		note = setLevel(note, level);
 		return note;
 	}
 	
-	public static int create(int timeOn, int pitch) {
-		return create(timeOn, pitch, 100);
-	}
-	
-	public static int create(int timeOn) {
-		return create(timeOn, 64, 100);
-	}
-	
 	/**
-	 * Return the time on, in sixty-forths, of the specified note.
-	 * @param note the int which contains the time of the note on
-	 * @return the time, in sixty-fourths, of the note on.
+	 * Return the duration, in sixty-forths, of the specified note.
+	 * @param note the int which contains the duration of the note
+	 * @return the time, in sixty-fourths, of the duration.
 	 */
-	public static int getTimeOn(int note) {
-		return (note >> TIME_ON_SHIFT) & TIME_ON_MASK;
+	public static int getDuration(int note) {
+		return (note >> DURATION_SHIFT) & DURATION_MASK;
 	}
 	
-	public static int setTimeOn(int note, int time) {
-		note &= ~(TIME_ON_MASK << TIME_ON_SHIFT);
-		note |= (time & TIME_ON_MASK) << TIME_ON_SHIFT;
-		return note;
-	}
-	
-	/**
-	 * Return the time off, in sixty-forths, of the specified note.
-	 * @param note the int which contains the time off of the note
-	 * @return the time, in sixty-fourths, of the note off.
-	 */
-	public static int getTimeOff(int note) {
-		return (note >> TIME_OFF_SHIFT) & TIME_OFF_MASK;
-	}
-	
-	public static int setTimeOff(int note, int time) {
-		note &= ~(TIME_OFF_MASK << TIME_OFF_SHIFT);
-		note |= (time & TIME_OFF_MASK) << TIME_OFF_SHIFT;
+	public static int setDuration(int note, int time) {
+		note &= ~(DURATION_MASK << DURATION_SHIFT);
+		note |= (time & DURATION_MASK) << DURATION_SHIFT;
 		return note;
 	}
 	

@@ -10,8 +10,8 @@ import javax.swing.JComboBox;
 import java.util.Observer;
 import java.util.Observable;
 
-import uk.org.toot.tonality.Key;
-import uk.org.toot.tonality.Pitch;
+import uk.org.toot.music.tonality.Key;
+import uk.org.toot.music.tonality.Pitch;
 
 public class RootCombo extends JComboBox implements Observer
 {

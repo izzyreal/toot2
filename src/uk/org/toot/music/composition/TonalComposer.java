@@ -6,7 +6,7 @@
 package uk.org.toot.music.composition;
 
 import uk.org.toot.music.Note;
-import uk.org.toot.tonality.*;
+import uk.org.toot.music.tonality.*;
 
 /**
  * This class composes melodies, one bar at a time.
@@ -57,19 +57,18 @@ public class TonalComposer extends AbstractComposer
 		for ( int i = 0; i < notes.length; i++ ) {
 			// off up until next note at later time on or end of bar
 			int note = notes[i];
-			int onTime = Note.getTimeOn(note);
+			int onTime = Note.getTime(note);
 			int offTime = Timing.COUNT; // default end of bar
 			if ( i < notes.length - 1 ) { // not final note in bar
 				for ( int j = i + 1; j < notes.length; j++) {
-					if ( Note.getTimeOn(notes[j]) > onTime ) {
-						offTime = Note.getTimeOn(notes[j]);
+					if ( Note.getTime(notes[j]) > onTime ) {
+						offTime = Note.getTime(notes[j]);
 						break; // found a later note
 					}
 				}
 			}
-			int diff = Math.max(1, (int)(getContext().getLegato() * (offTime - onTime)));
-			offTime = onTime + diff;
-			notes[i] = Note.setTimeOff(note, offTime);
+			int duration = Math.max(1, (int)(getContext().getLegato() * (offTime - onTime)));
+			notes[i] = Note.setDuration(note, duration);
 		}
 	}
 

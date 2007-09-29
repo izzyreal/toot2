@@ -47,7 +47,7 @@ public class Performer
 		MidiMessage msg;
 		for ( int i = 0; i < notes.length; i++) {
 			int note = notes[i];
-			float timeOn = swing(Note.getTimeOn(note));
+			float timeOn = swing(Note.getTime(note));
 			int pitch = Note.getPitch(note);
 			int level = Note.getLevel(note);
 			long onTick = (int)(ticksPerBar * timeOn / Timing.COUNT);
@@ -57,7 +57,7 @@ public class Performer
 			// note off
 			msg = ChannelMsg.createChannel(
 					ChannelMsg.NOTE_OFF, channel, pitch, 0);
-			float timeOff = swing(Note.getTimeOff(note));
+			float timeOff = swing(Note.getTime(note)+Note.getDuration(note));
 			long offTick = (int)(ticksPerBar * timeOff / Timing.COUNT);
 			track.add(new MidiEvent(msg, startTick + offTick));
 		}			
