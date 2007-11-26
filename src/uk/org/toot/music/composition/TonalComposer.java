@@ -42,10 +42,10 @@ public class TonalComposer extends AbstractComposer
 				chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], ChordMode.TERTIAN);
 				offset = currentPitch - chordNotes[0];
 				for ( int p = 0; p < polys[n]; p++ ) {
-					notes[m++] = Note.create(i, chordNotes[p] + offset, getContext().getLevel(i));
+					notes[m++] = Note.createNote(i, chordNotes[p] + offset, getContext().getLevel(i));
 				}
 			} else {
-				notes[m++] = Note.create(i, currentPitch, getContext().getLevel(i));
+				notes[m++] = Note.createNote(i, currentPitch, getContext().getLevel(i));
 			}
 			n += 1;
 		}

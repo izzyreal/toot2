@@ -23,7 +23,7 @@ public class RhythmicComposer extends AbstractComposer
 		int n = 0;
 		for ( int i = 0; i < Timing.COUNT; i++) {
 			if ( (timing & (1L << i)) == 0 ) continue;
-			notes[n++] = Note.create(i, getContext().nextDrum(), getContext().getLevel(i));
+			notes[n++] = Note.createNote(i, getContext().nextDrum(), getContext().getLevel(i));
 		}
 		return notes;
 	}
