@@ -20,6 +20,8 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
 
     private boolean wasBypassed;
 
+    private int sampleRate = 0;
+    
     public DynamicsProcess(ProcessVariables vars) {
         this(vars, false);
         wasBypassed = !vars.isBypassed(); // force update
@@ -60,7 +62,11 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
             wasBypassed = true;
             return AUDIO_OK;
         }
-        vars.update(buffer.getSampleRate()); // rederives attack, release
+        int sr = (int)buffer.getSampleRate();
+        if ( sr != sampleRate ) {
+        	sampleRate = sr;
+        	vars.update(sr); // rederives attack, release
+        }
         cacheProcessVariables();
         int nc = buffer.getChannelCount();
         int len = buffer.getSampleCount();
