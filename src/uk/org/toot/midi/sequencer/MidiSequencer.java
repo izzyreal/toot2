@@ -1,7 +1,4 @@
 /*
- * Copyright 2007 Steve Taylor
- */
-/*
  * Copyright 2003-2007 Sun Microsystems, Inc.  All Rights Reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -25,19 +22,24 @@
  * CA 95054 USA or visit www.sun.com if you need additional information or
  * have any questions.
  */
+/*
+ * Copyright 2007 Steve Taylor
+ */
 
 package uk.org.toot.midi.sequencer;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import javax.sound.midi.*;
 
 import uk.org.toot.midi.core.*;
 import uk.org.toot.transport.TransportListener;
+import uk.org.toot.midi.sequence.MidiSequence;
+import uk.org.toot.midi.sequence.MidiTrack;
 
 
 /**
@@ -49,14 +51,14 @@ import uk.org.toot.transport.TransportListener;
  */
 
 /* TODO:
- * - test playback
+ * DONE - test playback
  * - test recording
- * - mute/solo to SequencerTrack
+ * DONE - mute/solo to SequencerTrack
  * - recording?
  * 		how many inputs?
  * 		recordEnable()/recordDisable() to SequencerTrack
  * - generalise DefaultSequencerTrack.pump()
- * - expose SequencerTracks
+ * DONE - expose SequencerTracks
  * - add/remove SequencerTracks?
  */
 public class MidiSequencer extends AbstractMidiDevice implements TransportListener
@@ -84,7 +86,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 	/**
 	 * Sequence on which this sequencer is operating.
 	 */
-	private Sequence sequence = null;
+	private MidiSequence sequence = null;
 
 	// caches
 
@@ -101,11 +103,6 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 	 */
 	private float cacheTempoFactor = -1;
 
-
-	/** if a particular track is muted */
-	private boolean[] trackMuted = null;
-	/** if a particular track is solo */
-	private boolean[] trackSolo = null;
 
 	/** tempo cache for getMicrosecondPosition */
 	private MidiUtils.TempoCache tempoCache = new MidiUtils.TempoCache();
@@ -139,7 +136,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 
 	/* ****************************** SEQUENCER METHODS ******************** */
 
-	public synchronized void setSequence(Sequence sequence)
+	public synchronized void setMidiSequence(MidiSequence sequence)
 	throws InvalidMidiDataException {
 		if (Printer.trace) Printer.trace(">> RealTimeSequencer: setSequence(" + sequence +")");
 
@@ -148,8 +145,6 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 				setCaches();
 				stop();
 				// initialize some non-cached values
-				trackMuted = null;
-				trackSolo = null;
 				if (getDataPump() != null) {
 					getDataPump().setTickPos(0);
 				}
@@ -182,7 +177,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 	}
 
 
-	public synchronized void setSequence(InputStream stream) throws IOException, InvalidMidiDataException {
+/*	public synchronized void setSequence(InputStream stream) throws IOException, InvalidMidiDataException {
 
 		if (Printer.trace) Printer.trace(">> RealTimeSequencer: setSequence(" + stream +")");
 
@@ -197,10 +192,10 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 
 		if (Printer.trace) Printer.trace("<< RealTimeSequencer: setSequence(" + stream +") completed");
 
-	}
+	} */
 
 
-	public Sequence getSequence() {
+	public MidiSequence getMidiSequence() {
 		return sequence;
 	}
 
@@ -213,9 +208,9 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			throw new IllegalStateException("sequencer not open");
 		}
 
-		// sequence not available: throw an exception
+		// sequence not available
 		if (sequence == null) {
-			throw new IllegalStateException("sequence not set");
+			return;
 		}
 
 		// already running: return quietly
@@ -506,7 +501,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 	}
 
 	protected int getTrackCount() {
-		Sequence seq = getSequence();
+		MidiSequence seq = getMidiSequence();
 		if (seq != null) {
 			// $$fb wish there was a nicer way to get the number of tracks...
 			return sequence.getTracks().length;
@@ -515,45 +510,20 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 	}
 
 
+	// note that the returned List is not necessarily ordered
+	// the same as MidiSequence.getMidiTracks()
+	public List<TrackControls> getTrackControls() {
+		return getDataPump().getTrackControls();
+	}
 
-	public synchronized void setTrackMute(int track, boolean mute) {
-		int trackCount = getTrackCount();
-		if (track < 0 || track >= getTrackCount()) return;
-		trackMuted = ensureBoolArraySize(trackMuted, trackCount);
-		trackMuted[track] = mute;
-		if (getDataPump() != null) {
-			getDataPump().muteSoloChanged();
+	public TrackControls getTrackControls(MidiTrack t) {
+		for ( TrackControls tc : getTrackControls() ) {
+			if ( !(tc instanceof DataPump.DefaultSequencerTrack) ) return null;
+			DataPump.DefaultSequencerTrack dst = (DataPump.DefaultSequencerTrack)tc;
+			if ( dst.getMidiTrack() == t ) return tc;
 		}
+		return null;
 	}
-
-
-	public synchronized boolean getTrackMute(int track) {
-		if (track < 0 || track >= getTrackCount()) return false;
-		if (trackMuted == null || trackMuted.length <= track) return false;
-		return trackMuted[track];
-	}
-
-
-	public synchronized void setTrackSolo(int track, boolean solo) {
-		int trackCount = getTrackCount();
-		if (track < 0 || track >= getTrackCount()) return;
-		trackSolo = ensureBoolArraySize(trackSolo, trackCount);
-		trackSolo[track] = solo;
-		if (getDataPump() != null) {
-			getDataPump().muteSoloChanged();
-		}
-	}
-
-
-	public synchronized boolean getTrackSolo(int track) {
-		if (track < 0 || track >= getTrackCount()) return false;
-		if (trackSolo == null || trackSolo.length <= track) return false;
-		return trackSolo[track];
-	}
-
-
-
-
 	/* *********************************** play control ************************* */
 
 	/*
@@ -618,8 +588,6 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 		running = false;
 		cacheTempoMPQ = -1;
 		cacheTempoFactor = -1;
-		trackMuted = null;
-		trackSolo = null;
 
 		if (Printer.trace) Printer.trace("<< RealTimeSequencer: implClose() completed");
 	}
@@ -679,19 +647,6 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 		return tempoCache;
 	}
 
-	private static boolean[] ensureBoolArraySize(boolean[] array, int desiredSize) {
-		if (array == null) {
-			return new boolean[desiredSize];
-		}
-		if (array.length < desiredSize) {
-			boolean[] newArray = new boolean[desiredSize];
-			System.arraycopy(array, 0, newArray, 0, array.length);
-			return newArray;
-		}
-		return array;
-	}
-
-
 	// INNER CLASSES
 
 	class PlayEngine implements Runnable {
@@ -720,7 +675,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			return dataPump;
 		}
 
-		synchronized void setSequence(Sequence seq) {
+		synchronized void setSequence(MidiSequence seq) {
 			dataPump.setSequence(seq);
 		}
 
@@ -871,9 +826,9 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 		private long checkPointMillis;   // microseconds at checkoint
 		private long checkPointTick;     // ticks at checkpoint
 		private List<SequencerTrack> seqTracks = new ArrayList<SequencerTrack>();
-		private boolean[] trackDisabled; // if true, do not play this track
 		private long lastTick;
 		private boolean needReindex = false;
+		private int soloCount;		// ST
 
 		DataPump() {
 			init();
@@ -883,7 +838,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			ignoreTempoEventAt = -1;
 			tempoFactor = 1.0f;
 			inverseTempoFactor = 1.0f;
-			trackDisabled = null;
+			soloCount = 0;
 		}
 
 		synchronized void setTickPos(long tickPos) {
@@ -946,30 +901,27 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			return tempoFactor;
 		}
 
-		synchronized void muteSoloChanged() {
-			boolean[] newDisabled = makeDisabledArray();
-			if (running) {
-				applyDisabledTracks(trackDisabled, newDisabled);
-			}
-			trackDisabled = newDisabled;
+		// ST replacement for muteSoloChanged()
+		synchronized void muteSoloChanged(int soloChange) {
+			soloCount += soloChange;
+			updateTrackEnables(soloCount != 0); // pass hasSolo
 		}
 
 
-
-		synchronized void setSequence(Sequence seq) {
+		synchronized void setSequence(MidiSequence seq) {
 			if (seq == null) {
 				init();
 				return;
 			}
-			Track[] tracks = seq.getTracks();
 			seqTracks.clear(); // !!!
 			removeAllMidiOutputs(); // !!!
 			removeAllMidiInputs(); // !!!
-			for ( int i = 0; i < tracks.length; i++ ) {
-				// TODO don't pass index i
-				seqTracks.add(new DefaultSequencerTrack(tracks[i], i));
+			// !!! !!! need to follow sequence track add/remove !!! !!!
+			for ( int i = 0; i < seq.getMidiTrackCount(); i++ ) {
+				seqTracks.add(new DefaultSequencerTrack(seq.getMidiTrack(i)));
 			}
-			muteSoloChanged();
+//			muteSoloChanged(0);
+			soloCount = 0;
 			resolution = seq.getResolution();
 			divisionType = seq.getDivisionType();
 			// trigger re-initialization
@@ -977,6 +929,15 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			needReindex = true;
 		}
 
+		synchronized void syncTracks() {
+			// if track added
+			// if running?
+			// chaseEvents for added tracks
+			// chaseEvents(0, lastTick, true, tempArray);
+			// notesOff for deleted tracks
+			// notesOff(false);
+		}
+		
 		void clearNoteOnCache() {
 			for ( SequencerTrack t : seqTracks ) {
 				t.clearNoteOnCache();
@@ -990,88 +951,33 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 		}
 
 
-		private boolean[] makeDisabledArray() {
-			if (seqTracks.isEmpty()) {
-				return null;
-			}
-			boolean[] newTrackDisabled = new boolean[seqTracks.size()];
-			boolean[] solo;
-			boolean[] mute;
-			synchronized(MidiSequencer.this) {
-				mute = trackMuted;
-				solo = trackSolo;
-			}
-			// if one track is solo, then only play solo
-			boolean hasSolo = false;
-			if (solo != null) {
-				for (int i = 0; i < solo.length; i++) {
-					if (solo[i]) {
-						hasSolo = true;
-						break;
-					}
-				}
-			}
-			if (hasSolo) {
-				// only the channels with solo play, regardless of mute
-				for (int i = 0; i < newTrackDisabled.length; i++) {
-					newTrackDisabled[i] = (i >= solo.length) || (!solo[i]);
-				}
-			} else {
-				// mute the selected channels
-				for (int i = 0; i < newTrackDisabled.length; i++) {
-					newTrackDisabled[i] = (mute != null) && (i < mute.length) && (mute[i]);
-				}
-			}
-			return newTrackDisabled;
+		List<TrackControls> getTrackControls() {
+			return Collections.<TrackControls>unmodifiableList(seqTracks);
 		}
-
+		
+		// ST replacement for applyDisabledTracks(...)
 		/**
-		 * Runtime application of mute/solo:
-		 * if a track is muted that was previously playing, send
-		 *    note off events for all currently playing notes
+		 * Runtime application of mute/solo
+		 * Called from muteSoloChanged() which is synchronised so we are called
+		 * inbetween pump()s.
 		 */
-		private void applyDisabledTracks(boolean[] oldDisabled, boolean[] newDisabled) {
-			byte[][] tempArray = null;
-			synchronized(MidiSequencer.this) {
-				for (int i = 0; i < newDisabled.length; i++) {
-					if (((oldDisabled == null)
-							|| (i >= oldDisabled.length)
-							|| !oldDisabled[i])
-							&& newDisabled[i]) {
-						// case that a track gets muted: need to
-						// send appropriate note off events to prevent
-						// hanging notes
-
-						if (seqTracks.size() > i) {
-							seqTracks.get(i).notesOff(false);
-						}
-					}
-					else if ((oldDisabled != null)
-							&& (i < oldDisabled.length)
-							&& oldDisabled[i]
-							               && !newDisabled[i]) {
-						// case that a track was muted and is now unmuted
-						// need to chase events and re-index this track
-						if (tempArray == null) {
-							tempArray = new byte[128][16];
-						}
-						seqTracks.get(i).chaseEvents(0, lastTick, true, tempArray);
-					}
-				}
+		private void updateTrackEnables(boolean hasSolo) {
+			byte[][] tempArray = new byte[128][16]; // !!! TODO
+			for ( SequencerTrack t : seqTracks ) {
+				t.updateEnable(hasSolo, tempArray);
 			}
+			tempArray = null;
 		}
-
-
+		
 		/** chase controllers and program for all tracks */
 		synchronized void chaseEvents(long startTick, long endTick) {
 			if (DEBUG_PUMP) Printer.println(">> chaseEvents from tick "+startTick+".."+(endTick-1));
 			byte[][] tempArray = new byte[128][16];
 			for (int t = 0; t < seqTracks.size(); t++) {
-				if ((trackDisabled == null)
-						|| (trackDisabled.length <= t)
-						|| (!trackDisabled[t])) {
+				SequencerTrack st = seqTracks.get(t);
+				if ( st.isEnabled() ) {
 					// if track is not disabled, chase the events for it
-					seqTracks.get(t).chaseEvents(startTick, endTick, true, tempArray);
+					st.chaseEvents(startTick, endTick, true, tempArray);
 				}
 			}
 			if (DEBUG_PUMP) Printer.println("<< chaseEvents");
@@ -1158,8 +1064,8 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 				for (int t = 0; t < seqTracks.size(); t++) {
 					SequencerTrack seqTrack = seqTracks.get(t);
 					try {
-						boolean disabled = trackDisabled[t];
-						changesPending = seqTrack.pump(targetTick, disabled, t == 0);
+//						boolean disabled = trackDisabled[t];
+						changesPending = seqTrack.pump(targetTick, t == 0);
 						if (seqTrack.isFinished()) {
 							finishedTracks++;
 						}
@@ -1183,9 +1089,11 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 
 		public abstract class AbstractSequencerTrack implements SequencerTrack 
 		{
-			private DefaultMidiOutput outPort;
+			protected DefaultMidiOutput outPort;
 			private int[] noteOnCache = new int[128]; // bit-mask of notes that are currently on
 			protected boolean finished = false;
+			protected boolean mute = false;
+			protected boolean solo = false;
 
 			/**
 			 * Meta event listeners
@@ -1201,6 +1109,10 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 				}
 			}
 
+			protected void removePorts() {
+				removeMidiOutput(outPort);
+			}
+			
 			/* (non-Javadoc)
 			 * @see uk.org.toot.midi.sequencer.SequencerTrack#isFinished()
 			 */
@@ -1333,7 +1245,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			/* (non-Javadoc)
 			 * @see uk.org.toot.midi.sequencer.SequencerTrack#pump(long, boolean, boolean)
 			 */
-			public abstract boolean pump(long targetTick, boolean disabled, boolean masterTrack);
+			public abstract boolean pump(long targetTick, boolean masterTrack);
 
 			public boolean addMetaEventListener(MetaEventListener listener) {
 				synchronized(metaEventListeners) {
@@ -1366,7 +1278,27 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 				eventDispatcher.sendAudioEvents(message, metaEventListeners);
 			}
 
-
+			public boolean isMute() {
+				return mute;
+			}
+			
+			public void setMute(boolean mute) {
+				if ( this.mute != mute ) {
+					this.mute = mute;
+					muteSoloChanged(0);
+				}
+			}
+			
+			public boolean isSolo() {
+				return solo;
+			}
+			
+			public void setSolo(boolean solo) {
+				if ( this.solo != solo ) {
+					this.solo = solo;
+					muteSoloChanged(solo ? 1 : -1);
+				}
+			}
 		}
 
 		/**
@@ -1375,17 +1307,44 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 		 */
 		private class DefaultSequencerTrack extends AbstractSequencerTrack
 		{
+			private MidiTrack midiTrack;
 			private Track track;
 			private int trackReadPos;        // read index
-			private MidiInput inPort;
+			private RecordingInput inPort;
+			private boolean enable = true;
 			private boolean record = false;
+			private PropertyChangeListener listener;
 
-			DefaultSequencerTrack(Track t, int i) {
-				track = t;
-				// TODO extract track name for port name
-				createPorts(String.valueOf(i));
+			DefaultSequencerTrack(MidiTrack t) {
+				midiTrack = t;
+				track = t.getTrack();
+				// TODO follow track name changes
+				createPorts(t.getTrackName());
+				listener = new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent arg0) {
+						// TODO move to renamePorts() and override
+						outPort.setName("Sequencer: "+midiTrack.getTrackName());
+						inPort.setName("Sequencer: "+midiTrack.getTrackName());
+						// notify device because port name changes don't by themselves !!!
+						setChanged();
+						notifyObservers();
+					}
+					
+				};
+				midiTrack.getPropertyChangeSupport().
+					addPropertyChangeListener("trackName", listener);
 			}
 
+			public void close() {
+				midiTrack.getPropertyChangeSupport().
+					removePropertyChangeListener("trackName", listener);
+				// TODO remove ports, connections
+			}
+			
+			public MidiTrack getMidiTrack() {
+				return midiTrack;
+			}
+			
 			/** Must be called once before pump() */
 			protected void createPorts(String name) {
 				super.createPorts(name);
@@ -1395,6 +1354,32 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 				}
 			}
 
+			protected void removePorts() {
+				removeMidiInput(inPort);
+				super.removePorts();
+			}
+			
+			public boolean isEnabled() {
+				return enable;
+			}
+			
+			public void updateEnable(boolean hasSolo, byte[][] tempArray) {
+				boolean newEnable = hasSolo ? solo : !mute;
+				if ( running ) {
+					if ( enable && !newEnable ) {
+						// case that a track gets muted: need to
+						// send appropriate note off events to prevent
+						// hanging notes
+						notesOff(false);
+					} else if ( !enable && newEnable ) {
+						// case that a track was muted and is now unmuted
+						// need to chase events and re-index this track
+						chaseEvents(0, lastTick, true, tempArray);
+					}
+				}
+				enable = newEnable;
+			}
+			
 			/* (non-Javadoc)
 			 * @see uk.org.toot.midi.sequencer.SequencerTrack#chaseEvents(long, long, boolean, byte[][])
 			 */
@@ -1486,9 +1471,9 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 			}
 
 			/* (non-Javadoc)
-			 * @see uk.org.toot.midi.sequencer.SequencerTrack#pump(long, boolean, boolean)
+			 * @see uk.org.toot.midi.sequencer.SequencerTrack#pump(long, boolean)
 			 */
-			public boolean pump(long targetTick, boolean disabled, boolean masterTrack) {
+			public boolean pump(long targetTick, boolean masterTrack) {
 				MidiEvent currEvent;
 				boolean changesPending = false;
 				int readPos = trackReadPos;
@@ -1510,7 +1495,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 					// or if it is a tempo message on track 0
 					// Note: cannot put this check outside
 					//       this inner loop in order to detect end of file
-					if (!disabled ||
+					if (enable ||
 							((masterTrack) && (MidiUtils.isMetaTempo(currEvent.getMessage())))) {
 						changesPending = dispatchMessage(masterTrack, currEvent);
 					}
@@ -1538,6 +1523,10 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 				private String name;
 				
 				public RecordingInput(String name) {
+					this.name = name;
+				}
+				
+				public void setName(String name) {
 					this.name = name;
 				}
 				
@@ -1573,8 +1562,10 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 							track.add(me);
 						}
 					}
-
 				}				
+
+				public String toString() { return name; }
+
 			} // class RecordingInput
 		} // class DefaultSeqencerTrack
 

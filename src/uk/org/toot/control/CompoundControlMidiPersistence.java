@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.control;
 
@@ -25,7 +25,7 @@ public class CompoundControlMidiPersistence implements CompoundControlPersistenc
 
     /*#public List getPresets(CompoundControl c);*/
     public List<String> getPresets(CompoundControl c) {
-        File dir = new File(root, path(c.getProviderId(), c.getId()));
+        File dir = new File(root, path(c));
         List<String> names = new java.util.ArrayList<String>();
         if ( !dir.exists() || !dir.isDirectory() ) return names;
         File[] files = dir.listFiles();
@@ -39,7 +39,7 @@ public class CompoundControlMidiPersistence implements CompoundControlPersistenc
     public void loadPreset(CompoundControl c, String name) {
         int providerId = c.getProviderId();
         int moduleId = c.getId();
-   	    File path = new File(root, path(providerId, moduleId));
+   	    File path = new File(root, path(c));
         File file = new File(path, name);
         if ( !file.exists() ) return;
         try {
@@ -70,7 +70,7 @@ public class CompoundControlMidiPersistence implements CompoundControlPersistenc
 	        Sequence sequence = new Sequence(Sequence.PPQ, 1);
     	    Track track = sequence.createTrack();
         	MidiPersistence.store(providerId, moduleId, 0, c, track);
-    	    File path = new File(root, path(providerId, moduleId));
+    	    File path = new File(root, path(c));
             path.mkdirs();
         	MidiSystem.write(sequence, 0, new File(path, name));
         } catch ( IOException ioe ) {
@@ -80,14 +80,14 @@ public class CompoundControlMidiPersistence implements CompoundControlPersistenc
         }
     }
 
-	protected String path(int providerId, int moduleId) {
-        // <providerId>/<moduleId>
-        return providerId+File.separator+moduleId;
+	protected String path(CompoundControl c) {
+        // <domain>/<providerId>/<moduleId> e.g. audio/1/27
+        return c.getPersistenceDomain()+File.separator+c.getProviderId()+File.separator+c.getId();
     }
 
-	protected String path(int providerId, int moduleId, String name) {
+/*	protected String path(int providerId, int moduleId, String name) {
         // <providerId>/<moduleId>/name
         return path(providerId, moduleId)+File.separator+name;
-    }
+    } */
 
 }

@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.music.tonality;
 
@@ -233,6 +233,28 @@ public class Chord
     	}    	
     }
     
+    public static class RelativeVoicing extends Voicing
+    {
+    	private int offset;
+    	
+		public RelativeVoicing(int offset, Chord chord) {
+			super(chord);
+			this.offset = offset;
+		}
+    	
+		public RelativeVoicing(int offset, Chord chord, int[] missingIndices) {
+			super(chord, missingIndices);
+			this.offset = offset;
+		}
+
+		/**
+		 * @return the offset
+		 */
+		public int getOffset() {
+			return offset;
+		}
+    	
+    }
     /**
      * A PitchedVoicing is an aggregation of a Voicing and a root pitch.
      * @author st
@@ -318,5 +340,167 @@ public class Chord
     	public String toString() {
     		return Pitch.className(root)+getVoicing().toString()+getSlashString();
     	}    	
-    }    
+    }   
+    
+    /**
+     * A Progression is a list of chords, each with their offset to a nominal root.
+     * Typically relative to the tonic chord of a key center.
+     */
+    public static interface Progression
+    {
+    	int getBarCount();
+    	int getStepCount();
+    	
+    	/**
+    	 * @param bar
+    	 * @param chord
+    	 * @return a RelativeVoicing or null
+    	 */
+    	RelativeVoicing getRelativeVoicing(int bar, int step);
+    	
+    	/**
+    	 * @param bar - the bar within the progression
+    	 * @param step - the step within the bar
+    	 * @param root - the root of the relative voicing
+    	 * @return int[] of pitches
+    	 */
+    	int[] getPitches(int bar, int step, int root);
+    }
+    
+    public static abstract class AbstractProgression implements Progression
+    {
+    	private int barCount;
+    	private int stepCount;
+    	private RelativeVoicing[][] relativeVoicings;
+    	    	
+    	public AbstractProgression(int barCount, int stepCount) {
+    		this.barCount = barCount;
+    		this.stepCount = stepCount;
+			relativeVoicings = new RelativeVoicing[barCount][stepCount];
+    	}
+
+		public int getBarCount() {
+			return barCount;
+		}
+
+		public int getStepCount() {
+			return stepCount;
+		}
+
+		public RelativeVoicing getRelativeVoicing(int bar, int step) {
+			return relativeVoicings[bar][step];
+		}
+		
+		public int[] getPitches(int bar, int step, int root) {
+			RelativeVoicing voicing = getRelativeVoicing(bar, step);
+			int offset = voicing.getOffset();
+			int[] pitches = voicing.getChord().getIntervals();
+			for ( int i = 0; i < pitches.length; i++) {
+				pitches[i] += root + offset;
+			}
+			return pitches;
+		}
+
+		/**
+		 * @param bar - the bar
+		 * @param step - the step within the bar
+		 * @param voicing - the RelativeVoicing to be added at this position
+		 */
+		protected void add(int bar, int step, int offset, String symbol) {
+			Chord chord = Chords.withSymbol(symbol);
+			relativeVoicings[bar][step] = new RelativeVoicing(offset, chord);
+		}
+    }
+    
+    /*
+     * String symbol would typically be "maj", "maj7" or "7"
+     */
+    public static class I_bIII_bVI_bII_TurnAround extends AbstractProgression 
+    {
+		public I_bIII_bVI_bII_TurnAround(String symbol) {
+			super(2, 2); // 2 bars, 2 chords per bar
+			add(0, 0, 0, symbol); // I
+			add(0, 1, 3, symbol); // bIII
+			add(1, 0, 8, symbol); // bVI
+			add(1, 1, 1, symbol); // bII
+		}
+    }
+    
+    public static class ii_V7_I_I_Progression extends AbstractProgression
+    {
+     	public ii_V7_I_I_Progression() {
+    		super(4, 1); // 4 bars, 1 chord per bar
+			add(0, 0, 2, "min"); 		// ii
+			add(1, 0, 7, "7"); 	// V7
+			add(2, 0, 0, "maj"); 		// I
+			add(3, 0, 0, "maj"); 		// I
+    	}
+    }
+
+    /*
+     * from http://www.lucaspickford.com/transsubs.htm
+     * Extending the Coltrane Changes by David Baker
+     * TODO substitutions and alterations
+     */
+    public static class CountdownProgression extends AbstractProgression
+    {
+    	private float expansionProbability;
+    	private float transpositionProbability;
+    	
+		public CountdownProgression(float expansionProbability, 
+									float transpositionProbability) {
+			super(4, 4); // 4 bars, 4 chords per bar
+			this.expansionProbability = expansionProbability;
+			this.transpositionProbability = transpositionProbability;
+			
+			// all except first and last chords may be transposed by 3, 6 or 9 semitones
+			
+			// first bar, first chord isn't transposed
+			add(0, 0, 2, "min");	// ii, sub dim7
+			// chance of V7 on step 1
+			if ( expand() ) {
+				add(0, 1, transpose(7), "7");
+			}
+			// steps 2 and 3 either bIII7/null or bVII/bIII7
+			if ( expand() ) {
+				add(0, 2, transpose(10), "maj");
+				add(0, 3, transpose(3), "7"); // sub 7+9+5
+			} else {
+				add(0, 2, transpose(3), "7"); // sub 7+9+5
+			}
+			
+			// second bar
+			add(1, 0, transpose(8), "maj");	// bVI
+			// steps 2 and 3 either VII7/null or bV/VII7
+			if ( expand() ) {
+				add(0, 2, transpose(6), "maj");
+				add(0, 3, transpose(11), "7"); // sub 7+11
+			} else {
+				add(0, 2, transpose(11), "7"); // sub 7+11
+			}
+			
+			// third bar
+			add(2, 0, transpose(4), "maj");	// III
+			// steps 2 and 3 either V7/null or ii/V7
+			if ( expand() ) {
+				add(0, 2, transpose(2), "min");
+				add(0, 3, transpose(7), "7"); // sub 7-5
+			} else {
+				add(0, 2, transpose(7), "7"); // sub 7-5
+			}
+			
+			// fourth bar, last chord isn't transposed
+			add(3, 0, 0, "maj"); 	// I, sub #11
+		}   	
+		
+		protected boolean expand() {
+			return Math.random() < expansionProbability;
+		}
+		
+		protected int transpose(int degree) {
+			if ( Math.random() > transpositionProbability ) return degree;
+			int offset = 3 * (int)(Math.random() * 4);
+			return (degree+offset) % 12;
+		}
+    }
 }

@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.music.tonality;
 
@@ -190,10 +190,17 @@ public class Key extends Observable
     }
 
     /**
-     * Return the name of this Key, e.g. "C Major"
+     * Return the name of this Key, e.g. "C Major" and it's notes
      */
     public String toString() {
-        return name();
+    	StringBuilder sb = new StringBuilder(80);
+    	sb.append(name());
+    	sb.append(":  ");
+    	for ( int i = 0; i < scale.length(); i++ ) {
+    		sb.append(Pitch.className(getNote(i)));
+    		sb.append(' ');
+    	}
+        return sb.toString();
     }
 
     // TODO PROPERLY

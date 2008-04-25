@@ -1,12 +1,11 @@
 // Copyright (C) 2005 - 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.swingui.midiui;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.awt.BorderLayout;
@@ -53,18 +52,8 @@ public class MidiConnectionMap extends JPanel implements Observer
     }
 
     protected <T extends MidiPort> JList createJList(boolean isOut) {
-        List<String> nameList = new ArrayList<String>();
-        for ( MidiDevice device : system.getMidiDevices() ) {
-        	List<? extends MidiPort> ports = isOut ? device.getMidiOutputs() : device.getMidiInputs();
-    		for ( MidiPort port : ports ) {
-    			String name = port.getName();
-/*    			if ( device.getName().length() > 0 ) {
-    				name = device.getName()+" "+port.getName();
-    			} */
-               	nameList.add(name);
-    		}        	
-        }
-        JList list = new JList(nameList.toArray());
+        List<? extends MidiPort> ports = isOut ? system.getMidiOutputs() : system.getMidiInputs();
+        JList list = new JList(ports.toArray());
         list.setFixedCellHeight(16);
         return list;
 	}
@@ -79,24 +68,24 @@ public class MidiConnectionMap extends JPanel implements Observer
     	
         public void paint(Graphics g) {
         	for ( MidiConnection connection : system.getMidiConnections() ) {
-            	String txName = connection.getMidiOutput().getName();
-	            String rxName = connection.getMidiInput().getName();
+            	MidiPort txPort = connection.getMidiOutput();
+	            MidiPort rxPort = connection.getMidiInput();
 	            //System.out.println("wiring for Connection from "+txName+" to "+rxName);
     	        int txpos = -1, rxpos = -1;
         	    for ( int i = 0 ; i < outPorts.getModel().getSize(); i++ ) {
-            	    if ( txName.equals((String)outPorts.getModel().getElementAt(i)) ) {
+            	    if ( txPort.equals((MidiPort)outPorts.getModel().getElementAt(i)) ) {
 	                    txpos = i;
     	                break;
         	        }
             	}
         	    for ( int i = 0 ; i < inPorts.getModel().getSize(); i++ ) {
-            	    if ( rxName.equals((String)inPorts.getModel().getElementAt(i)) ) {
+            	    if ( rxPort.equals((MidiPort)inPorts.getModel().getElementAt(i)) ) {
 	                    rxpos = i;
     	                break;
         	        }
             	}
         		if ( txpos < 0 || rxpos < 0 ) {
-            		System.err.println("Can't paint Wiring for Connection from "+txName+"("+txpos+") to "+rxName+"("+rxpos+")");
+            		System.err.println("Can't paint Wiring for Connection from "+txPort+"("+txpos+") to "+rxPort+"("+rxpos+")");
             		continue; // can't draw
         		}
                 Point txpoint = outPorts.indexToLocation(txpos);
@@ -130,8 +119,8 @@ public class MidiConnectionMap extends JPanel implements Observer
      * to the currently selected MidiSink.
      */
     protected void connect() {
-        String txName = (String)outPorts.getSelectedValue();
-        String rxName = (String)inPorts.getSelectedValue();
+        String txName = outPorts.getSelectedValue().toString();
+        String rxName = inPorts.getSelectedValue().toString();
         if ( txName == null || rxName == null ) return; // should be disabled at control too
         try {
         	system.createMidiConnection(txName, rxName, 0);
@@ -142,8 +131,8 @@ public class MidiConnectionMap extends JPanel implements Observer
     }
 
     protected void disconnect() {
-        String txName = (String)outPorts.getSelectedValue();
-        String rxName = (String)inPorts.getSelectedValue();
+        String txName = outPorts.getSelectedValue().toString();
+        String rxName = inPorts.getSelectedValue().toString();
         if ( txName == null || rxName == null ) return; // should be disabled at control too
         try {
             system.closeMidiConnection(txName, rxName);

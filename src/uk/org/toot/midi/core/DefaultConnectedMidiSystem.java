@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.midi.core;
 
@@ -21,6 +21,29 @@ public class DefaultConnectedMidiSystem extends DefaultMidiSystem
         connections = new java.util.ArrayList<MidiConnection>();
     }
 
+    public void notifyObservers() {
+    	checkConnections();
+    	super.notifyObservers();
+    }
+    
+    // called when the system has changed
+    // if a port has been removed, remove it's connections
+    protected void checkConnections() {
+    	List<MidiInput> inputs = getMidiInputs();
+    	List<MidiOutput> outputs = getMidiOutputs();
+    	List<MidiConnection> remove = new java.util.ArrayList<MidiConnection>();
+    	for ( MidiConnection connection : connections ) {
+    		MidiInput input = connection.getMidiInput();
+    		MidiOutput output = connection.getMidiOutput();
+    		if ( inputs.contains(input) && outputs.contains(output) ) continue;
+    		remove.add(connection);
+    	}
+    	for ( MidiConnection connection : remove ) {
+    		connections.remove(connection); // avoid notification reentrancy
+    	}
+    	
+    }
+    
     public List<MidiConnection> getMidiConnections() {
         return Collections.unmodifiableList(connections);
     }

@@ -2,8 +2,10 @@ package uk.org.toot.midi.sequencer;
 
 import javax.sound.midi.MetaEventListener;
 
-interface SequencerTrack 
+public interface SequencerTrack extends TrackControls 
 {
+	public void close();
+	
 	/**
 	 * Return whether no more messages can be pumped because track contents
 	 * known a priori are completely finished. Just not having anything to pump
@@ -12,9 +14,21 @@ interface SequencerTrack
 	 * @return true if pumping has completely finished
 	 */
 	public boolean isFinished();
+	
+	/**
+	 * @return whether mute/solo cause track to be enabled
+	 */
+	public boolean isEnabled();
 
 	public void clearNoteOnCache();
 
+	/**
+	 * Update the enabled state based on mute/solo and hasSolo
+	 * @param hasSolo
+	 * @param tempArray
+	 */
+	public void updateEnable(boolean hasSolo, byte[][] tempArray);
+	
 	/**
 	 * send note off for notes that are on
 	 */
@@ -47,11 +61,10 @@ interface SequencerTrack
 	 * reenabled and so that we can detect finishing.
 	 * We are passed masterTrack so that we can decode tempo changes if appropriate.
 	 * @param targetTick the tick to pump until
-	 * @param disabled whether this sequencer track is disabled
 	 * @param masterTrack whether this sequencer track is the master track
 	 * @return true if changes are pending
 	 */
-	public boolean pump(long targetTick, boolean disabled, boolean masterTrack);
+	public boolean pump(long targetTick, boolean masterTrack);
 
 	public boolean addMetaEventListener(MetaEventListener listener);
 	public void removeMetaEventListener(MetaEventListener listener);

@@ -1,7 +1,7 @@
 // Copyright (C) 2006 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.control;
 
@@ -17,6 +17,7 @@ import java.util.Hashtable;
 public abstract class CompoundControl extends Control
 {
     public static final int MAX_INSTANCES = 8;
+    public static final int USE_PARENT_PROVIDER_ID = 0;
 
     /**
      * @link aggregation
@@ -35,13 +36,10 @@ public abstract class CompoundControl extends Control
 
     private Hashtable<Object, Object> properties;
 
+	protected int providerId = USE_PARENT_PROVIDER_ID;
+
     protected CompoundControl(int id, String name) {
         this(id, deriveInstanceIndex(name), name);
-        // if name ends with #n, instanceIndex = n-1;
-/*        int hash = name.lastIndexOf('#');
-        if ( hash > 0 ) {
-            instanceIndex = Integer.parseInt(name.substring(hash+1)) - 1;
-        } */
     }
 
     protected CompoundControl(int id, int instanceIndex, String name) {
@@ -63,6 +61,11 @@ public abstract class CompoundControl extends Control
             throw new IllegalArgumentException(getName()+" instance "+index+" > 7!");
     }
 
+	/*
+	 * a subclass should provide a public add() method
+	 * which accepts a specific subtype of Control.
+	 * That's why this method is protected.
+	 */
     protected void add(Control control) {
         if ( control == null ) return;
         if ( controls == null ) {
@@ -72,6 +75,11 @@ public abstract class CompoundControl extends Control
         control.parent = this;
     }
 
+	/*
+	 * a subclass should provide a public remove() method
+	 * which accepts a specific subtype of Control.
+	 * That's why this method is protected.
+	 */
     protected void remove(Control control) {
         if ( control == null ) return;
         controls.remove(control);
@@ -119,10 +127,6 @@ public abstract class CompoundControl extends Control
 
     // override for tab
     public String getAlternate() { return null; }
-
-    public int getProviderId() {
-        return getParent().getProviderId(); // CoR
-    }
 
     public int getInstanceIndex() { return instanceIndex; }
 
@@ -203,9 +207,31 @@ public abstract class CompoundControl extends Control
 
     public boolean canBeDeleted() { return true; }
 
+    public boolean canBeMinimized() { return false; }
+    
     public boolean hasPresets() { return true; }
 
-    /**
+    // return a domain specific string for preset organisation
+    // i.e. audio, synth
+    public String getPersistenceDomain() {
+    	return parent.getPersistenceDomain();
+    }
+    
+    // one level of the hierarchy should override and return true
+    public boolean isPluginParent() { return false; }
+    
+    public int getProviderId() {
+	    if ( providerId == USE_PARENT_PROVIDER_ID ) {
+	        return getParent().getProviderId(); // CoR
+	    }
+	    return providerId;
+	}
+
+	public void setProviderId(int id) {
+	    providerId = id;
+	}
+
+	/**
      * A ControlColumn groups certain Controls vertically.
      * It is always vertical and never bordered.
      */

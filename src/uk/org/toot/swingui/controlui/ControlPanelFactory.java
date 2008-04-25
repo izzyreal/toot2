@@ -1,7 +1,7 @@
 // Copyright (C) 2006 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.swingui.controlui;
 
@@ -162,7 +162,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             isShort = true;
         }
         // !!! !!! we need vertical label if axis == X_AXIS and isMinimised(control)
-        if ( canEdit() && control.getParent() instanceof CompoundControlChain ) {
+        if ( canEdit() && control.getParent().isPluginParent() ) {
         	JButton button = new JButton(title) { // !!! just for popup menu !!!
                	public Dimension getMaximumSize() {
                 	Dimension d = super.getPreferredSize();
@@ -209,26 +209,26 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             String name = control.getName();
             removeAll();
             // if top level
-            if ( parentControl instanceof CompoundControlChain ) {
-                CompoundControlChain chain = (CompoundControlChain)parentControl;
-                if ( control.canBeInsertedBefore() ) {
-                	add(new InsertMenu(control, chain));
-                }
-                if ( control.canBeMoved() ) {
-            		add(new MoveMenu(control, chain));
-                }
-                if ( control.canBeDeleted() ) {
-	                add(new DeleteAction(control.getName(), chain));
-                }
-                if ( CompoundControl.getPersistence() != null && control.hasPresets() ) {
-	                addSeparator();
-    	            add(new LoadMenu(control));
-        	        add(new SaveAction(control));
-                }
-            } else {
-                System.out.println(parentControl);
+            if ( parentControl.isPluginParent() ) {
+            	if ( parentControl instanceof CompoundControlChain ) {
+            		CompoundControlChain chain = (CompoundControlChain)parentControl;
+            		if ( control.canBeInsertedBefore() ) {
+            			add(new InsertMenu(control, chain));
+            		}
+            		if ( control.canBeMoved() ) {
+            			add(new MoveMenu(control, chain));
+            		}
+            		if ( control.canBeDeleted() ) {
+            			add(new DeleteAction(control.getName(), chain));
+            		}
+            	}
+        		if ( CompoundControl.getPersistence() != null && control.hasPresets() ) {
+        			addSeparator();
+        			add(new LoadMenu(control));
+        			add(new SaveAction(control));
+        		}
             }
-            if ( !control.isAlwaysVertical() ) {
+            if ( control.canBeMinimized() && !control.isAlwaysVertical() ) {
             	String minOrMax = isMinimised(name) ?
                     getString("Maximise") : getString("Minimise");
                 addSeparator();

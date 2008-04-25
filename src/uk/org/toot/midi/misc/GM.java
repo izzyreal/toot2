@@ -1,7 +1,7 @@
 // Copyright (C) 2005 - 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.midi.misc;
 
@@ -10,6 +10,17 @@ import uk.org.toot.music.tonality.Pitch;
 /** Support for General MIDI Instrument Family and Family names. */
 public class GM
 {
+	// GM Level 2
+    public final static int HIGH_Q = 27;
+    public final static int SLAP = 28;
+    public final static int SCRATCH = 29;
+    public final static int SCRATCH_2 = 30;
+    public final static int STICKS = 31;
+    public final static int SQUARE = 32;
+    public final static int METRONOME = 33;
+    public final static int METRONOME_2 = 34;
+
+    // GM Level 1
     public final static int ACOUSTIC_BASS_DRUM = 35;
     public final static int BASS_DRUM_1 = 36;
     public final static int SIDE_STICK = 37;
@@ -58,6 +69,14 @@ public class GM
     public final static int MUTE_TRIANGLE = 80;
     public final static int OPEN_TRIANGLE = 81;
 
+    // GM Level 2
+    public final static int SHAKER = 82;
+    public final static int JINGLE_BELL = 83;
+    public final static int BELL_TREE = 84;
+    public final static int CASTANETS = 85;
+    public final static int MUTE_SURDO = 86;
+    public final static int OPEN_SURDO = 87;
+
     static public String melodicFamilyName(int family) {
         switch (family) {
             case 0:
@@ -96,7 +115,7 @@ public class GM
         return family + "?";
     }
 
-    static public String melodicName(int program) {
+    static public String melodicProgramName(int program) {
         switch (program) {
             case 0:
                 return "Acoustic Grand Piano";
@@ -430,11 +449,67 @@ public class GM
         }
     }
 
+    static public String drumProgramName(int program) {
+        switch (program) {
+        case 0: return "Standard Kit";
+        case 1: return "Standard Kit 1";
+        case 2: return "Standard Kit 2";
+        case 3: return "Standard Kit 3";
+        case 4: return "Standard Kit 4";
+        case 5: return "Standard Kit 5";
+        case 6: return "Standard Kit 6";
+        case 7: return "Standard Kit 7";
+        case 8: return "Room Kit";
+        case 9: return "Room Kit 1";
+        case 10: return "Room Kit 2";
+        case 11: return "Room Kit 3";
+        case 12: return "Room Kit 4";
+        case 13: return "Room Kit 5";
+        case 14: return "Room Kit 6";
+        case 15: return "Room Kit 7";
+        case 16: return "Power Kit";
+        case 17: return "Power Kit 1";
+        case 18: return "Power Kit 2";
+        case 24: return "Electronic Kit";
+        case 25: return "TR-808 Kit";
+        case 32: return "Jazz Kit";
+        case 33: return "Jazz Kit 1";
+        case 34: return "Jazz Kit 2";
+        case 35: return "Jazz Kit 3";
+        case 36: return "Jazz Kit 4";
+        case 40: return "Brush Kit";
+        case 41: return "Brush Kit 1";
+        case 42: return "Brush Kit 2";
+        case 48: return "Orchestra Kit";
+        case 56: return "Sound FX Kit";
+        case 127: return "CM-64/CM-32L Kit";
+        }
+        return String.valueOf(program);
+    }
+
     static public String drumName(int drum) {
-        if (drum < ACOUSTIC_BASS_DRUM || drum > OPEN_TRIANGLE) {
+        if (drum < HIGH_Q || drum > OPEN_SURDO) {
             return Pitch.name(drum);
         }
         switch (drum) {
+        	// Level 2
+        	case HIGH_Q:
+        		return "High Q";
+        	case SLAP:
+        		return "Slap";
+        	case SCRATCH:
+        		return "Scratch";
+        	case SCRATCH_2:
+        		return "Scratch 2";
+        	case STICKS:
+        		return "Sticks";
+        	case SQUARE:
+        		return "Square";
+        	case METRONOME:
+        		return "Metronome";
+        	case METRONOME_2:
+        		return "Metronome 2";
+    		// Level 1
             case ACOUSTIC_BASS_DRUM:
                 return "Acoustic Bass Drum";
             case BASS_DRUM_1:
@@ -529,6 +604,19 @@ public class GM
                 return "Mute Triangle";
             case OPEN_TRIANGLE:
                 return "Open Triangle";
+            // Level 2
+            case SHAKER:
+            	return "Shaker";
+            case JINGLE_BELL:
+            	return "Jingle Bell";
+            case BELL_TREE:
+            	return "Bell Tree";
+            case CASTANETS:
+            	return "Castanets";
+            case MUTE_SURDO:
+            	return "Mute Surdo";
+            case OPEN_SURDO:
+            	return "Open Surdo";
         }
         return drum + "?";
     }

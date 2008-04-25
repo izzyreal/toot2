@@ -1,29 +1,15 @@
 // Copyright (C) 2006 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.audio.id;
 
 /**
- * ProviderId defines known provider IDs and should be used to ensure
- * services from different providers have their own id-spaces which are portable
- * between installations on different machines.
- * Unknown provider IDs will function but cannot be guaranteed to be
- * portable.
+ * This interface is kept for backwards compatibility but all provider ids
+ * are now maintained in uk.org.toot.control.id.ProviderId such that ids
+ * can be used across all domains, not just audio.
  */
-public interface ProviderId
+public interface ProviderId extends uk.org.toot.control.id.ProviderId
 {
-    // these constant values MUST NEVER CHANGE, only add new constants
-    // to ensure persistent id use remains valid
-    // best practice is to import static the single constant you need
-    static final int USE_PARENT_PROVIDER_ID = 0; // !!! !!! USE CONSTANT !!! !!!
-    static final int TOOT_PROVIDER_ID = 1;
-    static final int FRINIKA_PROVIDER_ID = 2;
-    
-    // this constant can be used to develop unreleased services.
-    // TootSoftware will be pleased to add a proper provider ID for you to
-    // release services. See toot.org.uk and join the discussion group to
-    // request a proper provider ID. 
-    static final int TEMPORARY_PROVIDER_ID = 127;
 }

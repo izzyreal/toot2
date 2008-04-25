@@ -1,7 +1,7 @@
 // Copyright (C) 2005 - 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.swingui.midixui.controlui.neckui;
 
@@ -141,7 +141,7 @@ public class GMNeckView extends JPanel
             offset = family * 8;
             removeAllItems();
             for ( int i = 0; i < 8; i++ ) {
-                addItem(GM.melodicName(i+offset));
+                addItem(GM.melodicProgramName(i+offset));
             }
             setSelectedIndex(0);
             addActionListener(this);

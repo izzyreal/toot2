@@ -1,9 +1,11 @@
 //Copyright (C) 2007 Steve Taylor.
 //Distributed under the Toot Software License, Version 1.0. (See
 //accompanying file LICENSE_1_0.txt or copy at
-//http://www.toot.org/LICENSE_1_0.txt)
+//http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.music.composition;
+
+import java.util.BitSet;
 
 import uk.org.toot.music.Note;
 import uk.org.toot.music.tonality.*;
@@ -16,15 +18,32 @@ import uk.org.toot.music.tonality.*;
 public class TonalComposer extends AbstractComposer
 {
 	private int currentPitch;
+	private Key key = null;
+	private BitSet timing = null;
 
-	public int[] composeBar(Key key) {
-		long timing = getContext().createTiming();
-		int n = Long.bitCount(timing);
+	public int[] composeBar(BarContext barContext) {
+		Key[] keys = barContext.getKeys();
+		int[] times = barContext.getKeyTimes();
+		assert keys.length == times.length;
+		int keyCount = keys.length;
+		int nkey = 0;
+		if ( key == null ) key = keys[0];
+		if ( timing == null || getContext().getRepeatTimingProbability() < Math.random() ) {
+			timing = getContext().getTimingStrategy().createTiming(barContext.getMeter());
+		}
+		// jam key change times into timing
+		// to force existing notes to end
+		for ( int i = 0; i < times.length; i++ ) {
+			timing.set(times[i]);
+		}
+		int n = timing.cardinality();
 		int[] polys = new int[n];
 		int m = 0;
 		for ( int i = 0; i < n; i++) {
 			if ( Math.random() >= getContext().getMelodyProbability() ) {
-				polys[i] = getContext().getMinPoly() + (int)(Math.random() * (1 + getContext().getMaxPoly() - getContext().getMinPoly()));
+				polys[i] = getContext().getMinPoly() + 
+					(int)(Math.random() * 
+							(1 + getContext().getMaxPoly() - getContext().getMinPoly()));
 			} else {
 				polys[i] = 1; // a melody
 			}
@@ -35,11 +54,19 @@ public class TonalComposer extends AbstractComposer
 		m = 0;
 		int[] chordNotes;
 		int offset;
-		for ( int i = 0; i < Timing.COUNT; i++) {
-			if ( (timing & (1l << i)) == 0 ) continue;
+		for ( int i = 0; i < timing.size(); i++) {
+			if ( !timing.get(i) ) continue;
+			if ( nkey < keyCount && times[nkey] == i ) {
+				key = keys[nkey];
+				nkey += 1;
+			}
 			currentPitch = getContext().nextPitch(currentPitch, key);
 			if ( polys[n] > 1 ) {
-				chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], ChordMode.TERTIAN);
+				int chordInterval = ChordMode.TERTIAN;
+				if ( Math.random() > getContext().getTertianProbability() ) {
+					chordInterval = ChordMode.QUARTAL;
+				}
+				chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], chordInterval);
 				offset = currentPitch - chordNotes[0];
 				for ( int p = 0; p < polys[n]; p++ ) {
 					notes[m++] = Note.createNote(i, chordNotes[p] + offset, getContext().getLevel(i));
@@ -49,21 +76,21 @@ public class TonalComposer extends AbstractComposer
 			}
 			n += 1;
 		}
-		fixupOffTimes(notes);
+		fixupOffTimes(notes, barContext.getMeter());
 		return notes;
 	}
 
-	protected void fixupOffTimes(int[] notes) {
+	protected void fixupOffTimes(int[] notes, int meter) {
 		for ( int i = 0; i < notes.length; i++ ) {
 			// off up until next note at later time on or end of bar
 			int note = notes[i];
 			int onTime = Note.getTime(note);
-			int offTime = Timing.COUNT; // default end of bar
-			if ( i < notes.length - 1 ) { // not final note in bar
+			int offTime = meter; 			// default end of bar
+			if ( i < notes.length - 1 ) { 	// not final note in bar
 				for ( int j = i + 1; j < notes.length; j++) {
 					if ( Note.getTime(notes[j]) > onTime ) {
 						offTime = Note.getTime(notes[j]);
-						break; // found a later note
+						break; 				// found a later note
 					}
 				}
 			}
@@ -86,6 +113,7 @@ public class TonalComposer extends AbstractComposer
 		private float legato = 1.0f;
 		private float melodyProbability = 0f; // probability of melody (single notes)
 		private float repeatPitchProbability = 0.25f;
+		private float tertianProbability = 1f;
 		
 		public int nextPitch(int pitch, Key key) {
 			if ( Math.random() > getRepeatPitchProbability() ) {
@@ -214,6 +242,20 @@ public class TonalComposer extends AbstractComposer
 		 */
 		public void setRepeatPitchProbability(float repeatPitchProbability) {
 			this.repeatPitchProbability = repeatPitchProbability;
+		}
+
+		/**
+		 * @return the tertianProbability
+		 */
+		public float getTertianProbability() {
+			return tertianProbability;
+		}
+
+		/**
+		 * @param tertianProbability the tertianProbability to set
+		 */
+		public void setTertianProbability(float tertianProbability) {
+			this.tertianProbability = tertianProbability;
 		}
 	}
 }

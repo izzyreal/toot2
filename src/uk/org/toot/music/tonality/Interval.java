@@ -1,7 +1,7 @@
 // Copyright (C) 2007 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
-// http://www.toot.org/LICENSE_1_0.txt)
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.music.tonality;
 
@@ -66,30 +66,6 @@ public class Interval
         case MAJOR_SIXTH: return "Major sixth";
         case MINOR_SEVENTH: return "Minor seventh";
         case MAJOR_SEVENTH: return "Major seventh";
-        }
-        return "{"+String.valueOf(interval)+"}";
-    }
-
-    /**
-     * Return the roman numeral type representation of an interval.
-     * @param interval
-     * @return the roman numeral representation from I to VII
-     */
-    public static String numeral(int interval) {
-        switch ( classValue(interval) ) {
-        case UNISON: return "I";
-        case MINOR_SECOND: return "ii";
-        case MAJOR_SECOND: return "II";
-        case MINOR_THIRD: return "iii";
-        case MAJOR_THIRD: return "III";
-        case PERFECT_FOURTH: return "IV";
-        case DIMINISHED_FIFTH: return "vo";
-        case PERFECT_FIFTH: return "V";
-        case AUGMENTED_FIFTH: return "V+";
-//        case MINOR_SIXTH: return "vi";
-        case MAJOR_SIXTH: return "VI";
-        case MINOR_SEVENTH: return "vii";
-        case MAJOR_SEVENTH: return "VII";
         }
         return "{"+String.valueOf(interval)+"}";
     }

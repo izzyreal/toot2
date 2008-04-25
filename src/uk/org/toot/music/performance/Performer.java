@@ -7,7 +7,7 @@ import javax.sound.midi.Track;
 
 import uk.org.toot.midi.message.ChannelMsg;
 import uk.org.toot.music.Note;
-import uk.org.toot.music.composition.Timing;
+import uk.org.toot.music.timing.Timing;
 
 /**
  * A Performer performs on an Instrument.
@@ -32,6 +32,10 @@ public class Performer
 		return name;
 	}
 	
+	protected long ticks2MidiTicks(float tick, int ppqn) {
+		return (long)(ppqn * tick / Timing.QUARTER_NOTE);
+	}
+	
 	/**
 	 * Render a bar of notes as MIDI to the specified Track from the
 	 * specified start tick with the specified ticks per bar.
@@ -41,7 +45,7 @@ public class Performer
 	 * @param ticksPerBar the number of ticks per bar
 	 */
 	public void renderBar(int[] notes, Track track, 
-			long startTick, int ticksPerBar)
+			long startTick, int ppqn)
 		throws InvalidMidiDataException	{
 		final int channel = getInstrument().getChannel();
 		MidiMessage msg;
@@ -50,7 +54,7 @@ public class Performer
 			float timeOn = swing(Note.getTime(note));
 			int pitch = Note.getPitch(note);
 			int level = Note.getLevel(note);
-			long onTick = (int)(ticksPerBar * timeOn / Timing.COUNT);
+			long onTick = ticks2MidiTicks(timeOn, ppqn);
 			msg = ChannelMsg.createChannel(
 					ChannelMsg.NOTE_ON, channel, pitch, level);
 			track.add(new MidiEvent(msg, startTick + onTick));
@@ -58,7 +62,7 @@ public class Performer
 			msg = ChannelMsg.createChannel(
 					ChannelMsg.NOTE_OFF, channel, pitch, 0);
 			float timeOff = swing(Note.getTime(note)+Note.getDuration(note));
-			long offTick = (int)(ticksPerBar * timeOff / Timing.COUNT);
+			long offTick = ticks2MidiTicks(timeOff, ppqn);
 			track.add(new MidiEvent(msg, startTick + offTick));
 		}			
 	}
@@ -92,16 +96,6 @@ public class Performer
 		float swingFactor = swingRatio - 1;
 		double angle = -Math.PI/2 + 2*Math.PI*(time%16)/16;
 		return (float)(time + 4 * swingFactor * (Math.sin(angle)+1)/2);
-	}
-
-	/**
-	 * Print a list of swing conversions for all sixty-fourth note
-	 * timing indices.
-	 */
-	public void checkSwing() {
-		for ( int i = 0; i < Timing.COUNT; i++) {
-			System.out.println(i+" => "+swing(i));
-		}
 	}
 
 	/**
