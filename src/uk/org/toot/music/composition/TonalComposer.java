@@ -20,7 +20,14 @@ public class TonalComposer extends AbstractComposer
 	private int currentPitch;
 	private Key key = null;
 	private BitSet timing = null;
+	private String name;
 
+	public TonalComposer(String name) {
+		this.name = name;
+	}
+	
+	public String getName() { return name; }
+	
 	public int[] composeBar(BarContext barContext) {
 		Key[] keys = barContext.getKeys();
 		int[] times = barContext.getKeyTimes();
@@ -60,45 +67,88 @@ public class TonalComposer extends AbstractComposer
 				key = keys[nkey];
 				nkey += 1;
 			}
+			// calculate duration
+			int iOff = timing.nextSetBit(i+1);
+			if ( iOff < 0 ) iOff = barContext.getMeter();
+			int duration = Math.max(1, (int)(getContext().getLegato() * (iOff - i)));
+			// calculate pitches
 			currentPitch = getContext().nextPitch(currentPitch, key);
-			if ( polys[n] > 1 ) {
-				int chordInterval = ChordMode.TERTIAN;
-				if ( Math.random() > getContext().getTertianProbability() ) {
-					chordInterval = ChordMode.QUARTAL;
+			int mm = m;
+			do {
+				if ( mm != m ) {
+					currentPitch -= 1; // shouldn't be an avoid note by definition
+//					System.out.println(getName()+" trying "+Pitch.className(currentPitch));
+					m = mm;
 				}
-				chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], chordInterval);
-				offset = currentPitch - chordNotes[0];
-				for ( int p = 0; p < polys[n]; p++ ) {
-					notes[m++] = Note.createNote(i, chordNotes[p] + offset, getContext().getLevel(i));
+				if ( polys[n] > 1 ) {
+					int chordInterval = ChordMode.TERTIAN;
+					if ( Math.random() > getContext().getTertianProbability() ) {
+						chordInterval = ChordMode.QUARTAL;
+					}
+					chordNotes = key.getChordNotes(key.index(currentPitch), polys[n], chordInterval);
+					offset = currentPitch - chordNotes[0];
+					for ( int p = 0; p < polys[n]; p++ ) {
+						notes[m++] = Note.createNote(i, chordNotes[p] + offset, getContext().getLevel(i), duration);
+					}
+				} else {
+					notes[m++] = Note.createNote(i, currentPitch, getContext().getLevel(i), duration);
 				}
-			} else {
-				notes[m++] = Note.createNote(i, currentPitch, getContext().getLevel(i));
-			}
+			} while ( avoid(notes[mm], barContext.getAvoidNotes()));
 			n += 1;
 		}
-		fixupOffTimes(notes, barContext.getMeter());
+		// create avoid notes if first chord composer !!!
+		if ( barContext.getAvoidNotes() == null && getContext().getMelodyProbability() < 0.5f ) {
+			barContext.setAvoidNotes(createAvoidNotes(notes, key));
+		}
 		return notes;
 	}
 
-	protected void fixupOffTimes(int[] notes, int meter) {
-		for ( int i = 0; i < notes.length; i++ ) {
-			// off up until next note at later time on or end of bar
-			int note = notes[i];
-			int onTime = Note.getTime(note);
-			int offTime = meter; 			// default end of bar
-			if ( i < notes.length - 1 ) { 	// not final note in bar
-				for ( int j = i + 1; j < notes.length; j++) {
-					if ( Note.getTime(notes[j]) > onTime ) {
-						offTime = Note.getTime(notes[j]);
-						break; 				// found a later note
-					}
-				}
-			}
-			int duration = Math.max(1, (int)(getContext().getLegato() * (offTime - onTime)));
-			notes[i] = Note.setDuration(note, duration);
+	// do we avoid any avoid note
+	protected boolean avoid(int note, int[] avoidNotes) {
+		if ( avoidNotes == null ) return false;
+		for ( int i = 0; i < avoidNotes.length; i++ ) {
+			if ( avoid(note, avoidNotes[i]) ) return true;
 		}
+		return false;
 	}
-
+	
+	// do we avoid this avoid note
+	// i.e. do times overlap and same pitch class
+	protected boolean avoid(int note, int avoidNote) {
+		int notePC = Pitch.classValue(Note.getPitch(note));
+		int avoidPC = Pitch.classValue(Note.getPitch(avoidNote));
+		if ( notePC != avoidPC ) return false; // different pitch class
+		int noteOn = Note.getTime(note);
+		int noteOff = noteOn + Note.getDuration(note);
+		int avoidOn = Note.getTime(avoidNote);
+		int avoidOff = avoidOn + Note.getDuration(avoidNote);
+		if ( noteOff <= avoidOn ) return false; // note is before avoid note
+		if ( noteOn >= avoidOff ) return false; // note is after avoid note
+		// TODO possibly accept short duration passing notes
+//		System.out.println(getName()+" avoiding "+Pitch.className(notePC)+" at "+noteOn);
+		return true; // note overlaps avoid note
+	}
+	
+	// we create all avoid notes, whether diatonic or not
+	// we keep as pitches, relative register may affect avoid probability
+	protected int[] createAvoidNotes(int[] notes, Key key) {
+		int[] avoidNotes = new int[notes.length];
+		for ( int i = 0; i < notes.length; i++) {
+			int note = notes[i];
+//			System.out.print(getName()+" "+Pitch.className(Note.getPitch(note)));
+//			System.out.print(" from "+Note.getTime(note)+" to "+(Note.getDuration(note)+Note.getTime(note)));
+			note = Note.setPitch(note, Note.getPitch(note)+1); // one semitone above
+			avoidNotes[i] = note;
+//			System.out.println(" so avoid "+Pitch.className(Note.getPitch(note)));
+		}
+/*		System.out.print("Avoid notes: ");
+		for ( int i = 0; i < avoidNotes.length; i++ ) {
+			System.out.print(Pitch.className(Note.getPitch(avoidNotes[i]))+' ');
+		}
+		System.out.println(); */
+		return avoidNotes;
+	}
+	
 	public Context getContext() {
 		return (Context)super.getContext();
 	}

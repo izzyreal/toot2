@@ -25,6 +25,13 @@ public class BarContext
 	// the key immediately before this bar
 	private Key previousKey;
 	
+	private int[] avoidNotes;
+	
+	// reset anything that can't persist into next bar
+	public void reset() {
+		avoidNotes = null;
+	}
+	
 	public int getMeter() {
 		return meter;
 	}
@@ -72,5 +79,13 @@ public class BarContext
 	 */
 	public void setKeyTimes(int[] keyTimes) {
 		this.keyTimes = keyTimes;
+	}
+	
+	public void setAvoidNotes(int[] avoidNotes) {
+		this.avoidNotes = avoidNotes;
+	}
+	
+	public int[] getAvoidNotes() {
+		return avoidNotes;
 	}
 }

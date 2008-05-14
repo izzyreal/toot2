@@ -41,7 +41,7 @@ public class Note extends TimedCoding
 		return note;
 	}
 	
-	public static int create(int timeOn, int pitch, int level, int duration) {
+	public static int createNote(int timeOn, int pitch, int level, int duration) {
 		int note = createNote(timeOn, pitch, level);
 		note = setDuration(note, duration);
 		return note;
