@@ -162,19 +162,23 @@ public class TonalComposer extends AbstractComposer
 		private int maxPoly = 5;
 		private float legato = 1.0f;
 		private float melodyProbability = 0f; // probability of melody (single notes)
-		private float repeatPitchProbability = 0.25f;
 		private float tertianProbability = 1f;
+		private float leapProbability = 0.5f;
 		
 		public int nextPitch(int pitch, Key key) {
-			if ( Math.random() > getRepeatPitchProbability() ) {
-				int offset = (int)((2 * getMaxPitchChange() + 1) * Math.random() - getMaxPitchChange());
+//			if ( Math.random() > getRepeatPitchProbability() ) {
+				int maxPitchChange = getMaxPitchChange();
+				if ( maxPitchChange > 2 && Math.random() > getLeapProbability() ) {
+					maxPitchChange = 2; // force a step or skip rather than a leap
+				}
+				int offset = (int)((2 * maxPitchChange + 1) * Math.random() - maxPitchChange);
 				// don't get stuck at min or max pitches
 				if ( pitch == getMinPitch() && offset < 0 || 
 						pitch == getMaxPitch() && offset > 0 ) {
 					offset = -offset;
 				}
 				pitch = key.getRelativePitch(pitch, offset);
-			}
+//			}
 			if ( pitch < getMinPitch() || pitch > getMaxPitch() ) {
 				pitch = getMinPitch() + (int)(Math.random() * (getMaxPitch() - getMinPitch()));
 			}
@@ -281,20 +285,6 @@ public class TonalComposer extends AbstractComposer
 		}
 
 		/**
-		 * @return the repeatPitchProbability
-		 */
-		public float getRepeatPitchProbability() {
-			return repeatPitchProbability;
-		}
-
-		/**
-		 * @param repeatPitchProbability the repeatPitchProbability to set
-		 */
-		public void setRepeatPitchProbability(float repeatPitchProbability) {
-			this.repeatPitchProbability = repeatPitchProbability;
-		}
-
-		/**
 		 * @return the tertianProbability
 		 */
 		public float getTertianProbability() {
@@ -306,6 +296,20 @@ public class TonalComposer extends AbstractComposer
 		 */
 		public void setTertianProbability(float tertianProbability) {
 			this.tertianProbability = tertianProbability;
+		}
+
+		/**
+		 * @return the stepProbability
+		 */
+		public float getLeapProbability() {
+			return leapProbability;
+		}
+
+		/**
+		 * @param stepProbability the stepProbability to set
+		 */
+		public void setLeapProbability(float stepProbability) {
+			this.leapProbability = stepProbability;
 		}
 	}
 }

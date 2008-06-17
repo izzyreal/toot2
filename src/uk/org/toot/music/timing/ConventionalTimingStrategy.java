@@ -69,7 +69,7 @@ public class ConventionalTimingStrategy extends AbstractTimingStrategy
 					endTick += len;
 					break;
 				}
-				d *= d; // each smaller division is less likely, since d < 1
+//				d *= d; // each smaller division is less likely, since d < 1
 			}
 			// a heuristic to prevent rigid timing of serial subdivisions
 			// e.g. won't always get 5 in 5/4
