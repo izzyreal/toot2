@@ -103,11 +103,6 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 					return;
 				}
 			}
-			System.out.print('!'+pitch+" not found in ");
-			for ( Voice voice : voices ) {
-				System.out.print(voice.getPitch()+", ");
-			}
-			System.out.println();
 		}
 	}
 

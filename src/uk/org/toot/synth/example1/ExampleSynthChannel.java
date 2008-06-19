@@ -2,14 +2,9 @@ package uk.org.toot.synth.example1;
 
 import uk.org.toot.synth.SynthChannel;
 //import uk.org.toot.midi.synth.delay.SingleTapDelay;
-import uk.org.toot.synth.envelope.EnvelopeGenerator;
-import uk.org.toot.synth.envelope.EnvelopeVariables;
-import uk.org.toot.synth.filter.Filter;
-import uk.org.toot.synth.filter.FilterVariables;
-import uk.org.toot.synth.filter.MoogFilter2;
-import uk.org.toot.synth.oscillator.ClassicWaveforms;
-import uk.org.toot.synth.oscillator.Oscillator;
-import uk.org.toot.synth.oscillator.WaveOscillator;
+import uk.org.toot.synth.envelope.*;
+import uk.org.toot.synth.oscillator.*;
+import uk.org.toot.synth.filter.*;
 
 /**
  * This class provides an example SynthChannel producing Voices which use a 
@@ -23,21 +18,14 @@ import uk.org.toot.synth.oscillator.WaveOscillator;
  */
 public class ExampleSynthChannel extends SynthChannel
 {
-	private final static int WAVE_SIZE = 512;
-	
-	private float[] wave; // TODO selection
-	private float[] squareWave;
-	private float[] sawtoothWave;
-	private float[] triangleWave;
-	private float[] sineWave;
-	
+	private WaveOscillatorVariables oscillatorVariables;
 	private EnvelopeVariables envelope1Vars; // TODO supply
 	private EnvelopeVariables envelope2Vars; // TODO supply
 	private FilterVariables filterVars; // TODO supply
 	
 	public ExampleSynthChannel(ExampleSynthControls controls) {
 		super(controls.getName());
-		wave = initWaves(); // TODO selection
+		oscillatorVariables = controls.getOscillatorVariables();
 		envelope1Vars = controls.getEnvelopeVariables(0);
 		envelope2Vars = controls.getEnvelopeVariables(1);
 		filterVars = controls.getFilterVariables(0);
@@ -54,14 +42,6 @@ public class ExampleSynthChannel extends SynthChannel
 		if ( filterVars != null ) {
 			filterVars.setSampleRate(rate);
 		}
-	}
-	
-	protected float[] initWaves() {
-		squareWave = ClassicWaveforms.createSquareWave(WAVE_SIZE);
-		sawtoothWave = ClassicWaveforms.createSawtoothWave(WAVE_SIZE);
-		triangleWave = ClassicWaveforms.createTriangleWave(WAVE_SIZE);
-		sineWave = ClassicWaveforms.createSineWave(WAVE_SIZE);
-		return squareWave;
 	}
 	
 	@Override
@@ -85,7 +65,7 @@ public class ExampleSynthChannel extends SynthChannel
 		public ExampleVoice(int pitch, int velocity, int sampleRate) {
 			super(pitch, velocity);
 			amplitude = (float)velocity / 128;
-			oscillator = new WaveOscillator(wave, pitch);
+			oscillator = new WaveOscillator(oscillatorVariables, pitch);
 			envelope1 = new EnvelopeGenerator(envelope1Vars);
 			envelope2 = new EnvelopeGenerator(envelope2Vars);
 			filter = new MoogFilter2();

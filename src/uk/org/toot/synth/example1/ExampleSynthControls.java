@@ -4,10 +4,12 @@ import static uk.org.toot.localisation.Localisation.getString;
 import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.envelope.*;
 import uk.org.toot.synth.filter.*;
+import uk.org.toot.synth.oscillator.*;
 import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_1_SYNTH_ID;
 
 public class ExampleSynthControls extends SynthControls
 {
+	private WaveOscillatorControls oscillatorControls;
 	private FilterControls[] filterControls;
 	private EnvelopeControls[] envelopeControls;
 	
@@ -18,6 +20,8 @@ public class ExampleSynthControls extends SynthControls
 		envelopeControls = new EnvelopeControls[2];
 		
 		ControlRow row1 = new ControlRow();
+		oscillatorControls = new WaveOscillatorControls(0, "Oscillator", 0x00);
+		row1.add(oscillatorControls);
 		filterControls[0] = new FilterControls(0, "Low Pass Filter", 0x20);
 		row1.add(filterControls[0]);
 		add(row1);
@@ -39,6 +43,10 @@ public class ExampleSynthControls extends SynthControls
 		
 	}
 
+	public WaveOscillatorVariables getOscillatorVariables() {
+		return oscillatorControls;
+	}
+	
 	public FilterVariables getFilterVariables(int instance) {
 		return filterControls[instance];
 	}

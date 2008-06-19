@@ -5,10 +5,13 @@ public class WaveOscillator implements Oscillator
 	private float index = 0f;
 	private float increment = 1f;
 	private float[] wave;
+	private float wavePeriod;
 	private float frequency;
 	
-	public WaveOscillator(float[] wave, int pitch) {
-		this.wave = wave;
+	public WaveOscillator(WaveOscillatorVariables oscillatorVariables, int pitch) {
+		Wave wave = oscillatorVariables.getWave();
+		this.wave = wave.getData();
+		this.wavePeriod = wave.getPeriod();
 		frequency = midiFreq(pitch);
 	}
 	
@@ -19,7 +22,7 @@ public class WaveOscillator implements Oscillator
 	 
 	public void setSampleRate(int rate) {
 		float period = rate / frequency; // period in samples
-		increment = wave.length / period;
+		increment = wavePeriod / period;
 //		System.out.print("["+(int)frequency+"/"+increment+"]");
 	}
 	
@@ -27,6 +30,6 @@ public class WaveOscillator implements Oscillator
 		float sample = wave[(int)(index + 0.5f) % wave.length]; // TODO interpolate?
 		index += increment;
 		if ( index >= wave.length ) index -= wave.length;
-		return sample / 10f; // -20dBFS (K-20)
+		return sample ;// / 10f; // -20dBFS (K-20)
 	}
 }

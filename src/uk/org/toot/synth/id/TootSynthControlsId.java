@@ -16,9 +16,4 @@ public interface TootSynthControlsId
 	final static int OSCILLATOR_BASE_ID = 0x00; // 32 oscillators
     final static int FILTER_BASE_ID = 0x20;		// 32 filters
     final static int ENVELOPE_BASE_ID = 0x40;
-//    final static int BASIC_BASE_ID = 0x30;
-
-//    final static int TOOL_BASE_ID = 0xE0;
-    // AUTOMATION_ID = 119
-//    final static int MIXER_BASE_ID = 120;
 }
