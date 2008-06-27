@@ -38,12 +38,18 @@ public class ClassicWaves
 		return null;
 	}
 	
+	/**
+	 * The actual size is likely to be slightly larger than the requested size
+	 * to allow for efficient linear interpolation. The requested size is actually
+	 * the size of the loopable data.
+	 * @param aSize
+	 */
 	public static void setSize(int aSize) {
 		size = aSize;
 	}
 	
 	public static Wave createSquareWave(int nsamples) {
-		float[] wave = new float[nsamples];
+		float[] wave = new float[nsamples+1];
 		int waveHalf = nsamples / 2;
 		for ( int i = 0; i < waveHalf; i++) {
 			wave[i] = 1f;
@@ -51,21 +57,23 @@ public class ClassicWaves
 		for ( int i = waveHalf; i < nsamples; i++) {
 			wave[i] = -1f;
 		}
-		return new Wave(wave, wave.length);
+		wave[nsamples] = wave[0];
+		return new Wave(wave, wave.length-1);
 	}
 
 	public static Wave createSawtoothWave(int nsamples) {
-		float[] wave = new float[nsamples];
+		float[] wave = new float[nsamples+1];
 		int waveHalf = nsamples / 2;
 		for ( int i = 0; i < waveHalf; i++) {
 			wave[i] = i / waveHalf;
 			wave[i+waveHalf] = wave[i] - 1f;
 		}
-		return new Wave(wave, wave.length);
+		wave[nsamples] = wave[0];
+		return new Wave(wave, wave.length-1);
 	}
 
 	public static Wave createTriangleWave(int nsamples) {
-		float[] wave = new float[nsamples];
+		float[] wave = new float[nsamples+1];
 		int waveHalf = nsamples / 2;
 		int waveQtr = waveHalf / 2;
 		for ( int i = 0; i < waveQtr; i++) {
@@ -75,15 +83,17 @@ public class ClassicWaves
 			wave[i+waveHalf] = -v;
 			wave[i+waveHalf+waveQtr] = v - 1f;
 		}
-		return new Wave(wave, wave.length);
+		wave[nsamples] = wave[0];
+		return new Wave(wave, wave.length-1);
 	}
 	
 	public static Wave createSineWave(int nsamples) {
-		float[] wave = new float[nsamples];
+		float[] wave = new float[nsamples+1];
 		for ( int i = 0; i < nsamples; i++) {
 			wave[i] = (float)Math.sin(Math.PI * 2 * i / nsamples);
 		}
-		return new Wave(wave, wave.length);
+		wave[nsamples] = wave[0];
+		return new Wave(wave, wave.length-1);
 	}
 	
 }

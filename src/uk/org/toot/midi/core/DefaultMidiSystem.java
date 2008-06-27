@@ -58,4 +58,10 @@ public class DefaultMidiSystem extends Observable implements MidiSystem
     	}
     	return outputs;
     }
+    
+    public void close() {
+    	for ( MidiDevice device : devices ) {
+    		device.close();
+    	}
+    }
 }

@@ -34,4 +34,6 @@ public interface MidiDevice extends IObservable
      */
     /*#MidiOutput lnkMidiOutput;*/
     List<MidiOutput> getMidiOutputs();
+    
+    void close();
 }

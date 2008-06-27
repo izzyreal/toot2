@@ -74,9 +74,11 @@ public class LegacyDevices
             this.device = device;
             if (device.getMaxReceivers() != 0) {
                 addMidiInput(new DeviceMidiInput(device));
+            	System.out.println("Opening MIDI Input "+simpleName(device.getDeviceInfo().getName()));
             }
             if (device.getMaxTransmitters() != 0) {
                 addMidiOutput(new DeviceMidiOutput(device));
+            	System.out.println("Opening MIDI Output "+simpleName(device.getDeviceInfo().getName()));
             }
             open();
         }
@@ -101,6 +103,7 @@ public class LegacyDevices
         }
 
         public void close() {
+        	System.out.println("Closing "+simpleName(device.getDeviceInfo().getName()));
             device.close();
         }
 
@@ -112,7 +115,7 @@ public class LegacyDevices
 
         public String getDescription() { return device.getDeviceInfo().getDescription(); }
 
-        public static class DeviceMidiInput implements MidiInput
+        public /*static*/ class DeviceMidiInput implements MidiInput
         {
             private Receiver receiver;
             private javax.sound.midi.MidiDevice device;
@@ -139,7 +142,7 @@ public class LegacyDevices
         }
 
 
-        static public class DeviceMidiOutput extends DefaultMidiOutput
+        /*static*/ public class DeviceMidiOutput extends DefaultMidiOutput
         {
             Transmitter tx;
 

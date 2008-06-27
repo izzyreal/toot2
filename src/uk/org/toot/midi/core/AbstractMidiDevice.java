@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Collections;
 import java.util.Observable;
 
-public class AbstractMidiDevice extends Observable implements MidiDevice
+public abstract class AbstractMidiDevice extends Observable implements MidiDevice
 {
     protected List<MidiInput> inputs;
     protected List<MidiOutput> outputs;

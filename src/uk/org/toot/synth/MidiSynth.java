@@ -40,4 +40,8 @@ public class MidiSynth extends AbstractMidiDevice implements MidiInput
 			}
 		}
 	}
+	
+	public void close() {
+		
+	}
 }

@@ -27,4 +27,9 @@ public interface MidiSystem extends IObservable
     List<MidiInput> getMidiInputs();
 
     List<MidiOutput> getMidiOutputs();
+    
+    /**
+     * Close all MidiDevices
+     */
+    void close();
 }

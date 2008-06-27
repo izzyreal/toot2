@@ -2,6 +2,8 @@ package uk.org.toot.synth.oscillator;
 
 /**
  * This class represents the wave for WaveOScillator.
+ * The data shiuld have the first sample repeated at the end to
+ * allow for efficient linear interpolation.
  * @author st
  *
  */
