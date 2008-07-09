@@ -1,5 +1,6 @@
 package uk.org.toot.synth.example1;
 
+import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.synth.SynthChannel;
 //import uk.org.toot.midi.synth.delay.SingleTapDelay;
 import uk.org.toot.synth.envelope.*;
@@ -65,7 +66,7 @@ public class ExampleSynthChannel extends SynthChannel
 		public ExampleVoice(int pitch, int velocity, int sampleRate) {
 			super(pitch, velocity);
 			amplitude = (float)velocity / 128;
-			oscillator = new WaveOscillator(oscillatorVariables, pitch);
+			oscillator = new WaveOscillator(ExampleSynthChannel.this, oscillatorVariables, pitch);
 			envelope1 = new EnvelopeGenerator(envelope1Vars);
 			envelope2 = new EnvelopeGenerator(envelope2Vars);
 			filter = new MoogFilter2();
@@ -86,6 +87,11 @@ public class ExampleSynthChannel extends SynthChannel
 				filterFreq = filterVars.getFrequency();
 				filterRes  = filterVars.getResonance();
 			}
+		}
+		
+		public boolean mix(AudioBuffer buffer) {
+			oscillator.update();
+			return super.mix(buffer);
 		}
 		
 		protected float getSample() {

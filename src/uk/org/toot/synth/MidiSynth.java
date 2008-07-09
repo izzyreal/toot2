@@ -37,6 +37,12 @@ public class MidiSynth extends AbstractMidiDevice implements MidiInput
 				} else {
 					synthChannel.noteOff(pitch, velocity);
 				}
+			} else {
+				int cmd = ChannelMsg.getCommand(msg);
+				switch ( cmd ) {
+				case ChannelMsg.PITCH_BEND:
+					synthChannel.setPitchBend(ChannelMsg.getData1and2(msg));
+				}
 			}
 		}
 	}
