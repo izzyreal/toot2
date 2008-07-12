@@ -149,7 +149,7 @@ public class EnvelopeControls extends CompoundControl
 
 	protected FloatControl createSustainControl() {
         ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl sustainControl = new FloatControl(SUSTAIN+idOffset, getString("Sustain"), law, 1f, -40);
+        FloatControl sustainControl = new FloatControl(SUSTAIN+idOffset, getString("Sustain"), law, 0.01f, 0.5f);
         sustainControl.setInsertColor(Color.lightGray);
         return sustainControl;
 	}
