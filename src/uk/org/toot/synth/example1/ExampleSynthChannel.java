@@ -56,6 +56,7 @@ public class ExampleSynthChannel extends SynthChannel
 		private Filter filter;
 		private EnvelopeGenerator envelope1;
 		private EnvelopeGenerator envelope2;
+		private Oscillator lfo;
 //		private SingleTapDelay delay;
 		private float amplitude = 1;
 		private float filterFreq = 0.001f;
@@ -69,6 +70,7 @@ public class ExampleSynthChannel extends SynthChannel
 			oscillator = new WaveOscillator(ExampleSynthChannel.this, oscillatorVariables, pitch);
 			envelope1 = new EnvelopeGenerator(envelope1Vars);
 			envelope2 = new EnvelopeGenerator(envelope2Vars);
+			lfo = new LFOscillator();
 			filter = new MoogFilter2();
 			if ( filterVars != null ) {
 				float fEnvDepth = filterVars.getEvelopeDepth();
@@ -82,6 +84,7 @@ public class ExampleSynthChannel extends SynthChannel
 
 		public void setSampleRate(int rate) {
 			oscillator.setSampleRate(rate);
+			lfo.setSampleRate(rate);
 			// update sample rate dependent filter vars
 			if ( filterVars != null ) {
 				filterFreq = filterVars.getFrequency();
@@ -98,8 +101,12 @@ public class ExampleSynthChannel extends SynthChannel
 			// the envelopes
 			float env1 = envelope1.getEnvelope(release); 		// 0..1 - amplitude
 			float env2 = envelope2.getEnvelope(release); 		// 0..1 - filter fc
+			// modulation
+			float mod = lfo.getSample(0f, 0f);					// -1..1
+			float modWheel = (float)getController(1) / 128;		// 0..1
+			float vibrato = modWheel * (mod/50);  				// 2% freq change max
 			// an oscillator sample
-			float sample = oscillator.getSample(0f, 0f); 		// no fm, pm or env
+			float sample = oscillator.getSample(vibrato+1, 0f); // -1..1
 //			sample += fb;										// delay feedback
 			// filter it, optionally with envelope2 modulation
 			float fc = filterFreq + filterEnvDepth * env2;		// 0..1

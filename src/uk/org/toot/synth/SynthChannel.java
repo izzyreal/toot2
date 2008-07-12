@@ -25,8 +25,10 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	
 	private int rawBend = 8192;
 	private int bendRange = 2; 		// max bend in semitones
-	private float bendFactor = 0;	// current bend factor
+	private float bendFactor = 1;	// current bend factor
 	private final static double ONE_SEMITONE = 1.0594630943592952645618252949463;
+	
+	private byte[] controller = new byte[128];
 	
 	private AudioBuffer.MetaInfo info;
 	
@@ -132,16 +134,16 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	}
 
 	public void controlChange(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public int getChannelPressure() {
-		// TODO Auto-generated method stub
-		return 0;
+		controller[arg0] = (byte)arg1;
+		// reset the LSB if a MSB is set
+		if ( arg0 < 0x20 ) controller[arg0+0x20] = 0;
 	}
 
 	public int getController(int arg0) {
+		return controller[arg0];
+	}
+
+	public int getChannelPressure() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -156,10 +158,6 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 
 	public boolean getOmni() {
 		return false;
-	}
-
-	public int getPitchBend() {
-		return rawBend;
 	}
 
 	public int getPolyPressure(int arg0) {
@@ -224,18 +222,22 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 		bendFactor = (float)Math.pow(ONE_SEMITONE, b);
 	}
 
-	public void setPolyPressure(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setSolo(boolean arg0) {
+	public int getPitchBend() {
+		return rawBend;
 	}
 
 	// return the bend factor, the factor that should be applied
 	// to the current frequency
 	public float getBendFactor() {
 		return bendFactor;
+	}
+
+	public void setPolyPressure(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setSolo(boolean arg0) {
 	}
 
 	public interface Voice

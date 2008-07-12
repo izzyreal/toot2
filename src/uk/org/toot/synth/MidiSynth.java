@@ -42,6 +42,10 @@ public class MidiSynth extends AbstractMidiDevice implements MidiInput
 				switch ( cmd ) {
 				case ChannelMsg.PITCH_BEND:
 					synthChannel.setPitchBend(ChannelMsg.getData1and2(msg));
+					break;
+				case ChannelMsg.CONTROL_CHANGE:
+					synthChannel.controlChange(ChannelMsg.getData1(msg), ChannelMsg.getData2(msg));
+					break;
 				}
 			}
 		}
