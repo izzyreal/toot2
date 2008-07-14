@@ -6,4 +6,5 @@ public interface FilterVariables
 	float getFrequency(); 		//  0..1
 	float getResonance(); 		//  0..1
 	float getEvelopeDepth();	// -1..1
+	float getVelocityTrack();   //  0..5?
 }

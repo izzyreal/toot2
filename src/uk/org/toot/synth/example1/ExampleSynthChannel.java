@@ -79,12 +79,6 @@ public class ExampleSynthChannel extends SynthChannel
 			envelope3 = new EnvelopeGenerator(envelope3Vars);
 			lfo = new LFOscillator();
 			filter = new MoogFilter2();
-			if ( filterVars != null ) {
-				float fEnvDepth = filterVars.getEvelopeDepth();
-				// normalise the filter env depth to ensure 0 < fc < 1
-				filterEnvDepth = fEnvDepth * ((fEnvDepth < 0) ?  filterFreq : (1 - filterFreq));
-//				System.out.println("fED="+fEnvDepth+" => "+filterEnvDepth);
-			}
 //			delay = new SingleTapDelay(4410);
 			setSampleRate(sampleRate);
 		}
@@ -94,8 +88,13 @@ public class ExampleSynthChannel extends SynthChannel
 			lfo.setSampleRate(rate);
 			// update sample rate dependent filter vars
 			if ( filterVars != null ) {
-				filterFreq = filterVars.getFrequency();
 				filterRes  = filterVars.getResonance();
+				filterFreq = filterVars.getFrequency();
+				filterFreq *= 1 + filterVars.getVelocityTrack() * amplitude;
+				if ( filterFreq >= 1 ) filterFreq = 0.99f;
+				// normalise the filter env depth to ensure 0 < fc < 1
+				filterEnvDepth = filterVars.getEvelopeDepth() * (1 - filterFreq);
+//				System.out.println("fED="+fEnvDepth+" => "+filterEnvDepth);
 			}
 		}
 		

@@ -20,8 +20,9 @@ public class FilterControls extends SynthControls
 	private FloatControl frequencyControl;
 	private FloatControl resonanceControl;
 	private FloatControl envelopeDepthControl;
+	private FloatControl velocityTrackControl;
 	
-	private float frequency, resonance, envelopeDepth;
+	private float frequency, resonance, envelopeDepth, velocityTrack;
 	
 	private int idOffset = 0;
 	
@@ -44,7 +45,8 @@ public class FilterControls extends SynthControls
 				switch (c.getId()-idOffset) {
 				case FREQUENCY: frequency = deriveFrequency(); break;
 				case RESONANCE: resonance = deriveResonance(); break;
-				case ENV_DEPTH: envelopeDepth = deriveEnvelopeDepth(); break; 
+				case ENV_DEPTH: envelopeDepth = deriveEnvelopeDepth(); break;
+				case VEL_TRACK: velocityTrack = deriveVelocityTrack() ; break;
 				}
 			}
 		});
@@ -52,6 +54,7 @@ public class FilterControls extends SynthControls
 
 	protected void createControls() {
 		add(envelopeDepthControl = createEnvelopeDepthControl());
+		add(velocityTrackControl = createVelocityTrackControl());
 		add(frequencyControl = createFrequencyControl());
 		add(resonanceControl = createResonanceControl());
 	}
@@ -66,6 +69,9 @@ public class FilterControls extends SynthControls
 		return envelopeDepthControl.getValue();		
 	}
 
+	protected float deriveVelocityTrack() {
+		return velocityTrackControl.getValue();
+	}
 	protected float deriveResonance() {
 		return resonanceControl.getValue() * 4;
 	}
@@ -93,8 +99,15 @@ public class FilterControls extends SynthControls
 	}
 
 	protected FloatControl createEnvelopeDepthControl() {
-        ControlLaw law = new LinearLaw(-1f, 1f, "");
+        ControlLaw law = new LinearLaw(0f, 1f, "");
         FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0.5f);
+        control.setInsertColor(Color.black);
+        return control;				
+	}
+
+	protected FloatControl createVelocityTrackControl() {
+        ControlLaw law = new LinearLaw(0f, 5f, "");
+        FloatControl control = new FloatControl(VEL_TRACK+idOffset, getString("Velocity"), law, 0.01f, 2f);
         control.setInsertColor(Color.black);
         return control;				
 	}
@@ -111,6 +124,10 @@ public class FilterControls extends SynthControls
 		return envelopeDepth;
 	}
 
+	public float getVelocityTrack() {
+		return velocityTrack;
+	}
+	
 	public void setSampleRate(int rate) {
 		if ( sampleRate != rate ) {
 			sampleRate = rate;
