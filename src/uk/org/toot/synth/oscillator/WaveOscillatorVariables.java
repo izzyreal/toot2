@@ -4,4 +4,5 @@ public interface WaveOscillatorVariables
 {
 	Wave getWave();
 	float getEnvelopeDepth();
+	float getSubLevel();
 }

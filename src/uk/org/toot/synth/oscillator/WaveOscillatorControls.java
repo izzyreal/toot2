@@ -18,9 +18,11 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 {
 	public final static int WAVE = 1; // TODO move to OscillatorControlIds.java
 	public final static int ENV_DEPTH = 2;
+	public final static int SUB_LEVEL = 3;
 	
 	private EnumControl waveControl;
 	private FloatControl envDepthControl;
+	private FloatControl subLevelControl;
 	private int idOffset = 0;
 	private Wave wave;
 	
@@ -47,12 +49,20 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	
 	private void createControls() {
 		add(envDepthControl = createEnvelopeDepthControl());
+		add(subLevelControl = createSubLevelControl());
 		add(waveControl = createWaveControl());
 	}
 
 	protected FloatControl createEnvelopeDepthControl() {
         ControlLaw law = new LinearLaw(0f, 4f, "");
-        FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 2f);
+        FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0f);
+        control.setInsertColor(Color.black);
+        return control;				
+	}
+
+	protected FloatControl createSubLevelControl() {
+        ControlLaw law = new LinearLaw(0f, 1f, "");
+        FloatControl control = new FloatControl(SUB_LEVEL+idOffset, getString("Sub Level"), law, 0.01f, 1f);
         control.setInsertColor(Color.black);
         return control;				
 	}
@@ -84,5 +94,9 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 
 	public float getEnvelopeDepth() {
 		return envDepthControl.getValue();
+	}
+	
+	public float getSubLevel() {
+		return subLevelControl.getValue();
 	}
 }

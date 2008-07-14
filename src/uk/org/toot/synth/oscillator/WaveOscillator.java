@@ -7,8 +7,10 @@ public class WaveOscillator implements Oscillator
 	private WaveOscillatorVariables vars;
 	private float index = 0f;
 	private float increment = 1f;
-	private boolean sync = true;
-	private float syncIndex = 0f;
+	private boolean sub; 		// sub-oscillator using same wave
+	private boolean sync;		// hard sync of sub-oscillator
+	private float subIndex = 0f;
+	private float subLevel = 1f;
 	private float[] wave;
 	private int waveSize;
 	private SynthChannel channel;
@@ -37,7 +39,9 @@ public class WaveOscillator implements Oscillator
 	public void update() {
 		bendFactor = channel.getBendFactor();
 		syncEnvDepth = vars.getEnvelopeDepth();
-		sync = syncEnvDepth > 0.1f;
+		sync = syncEnvDepth > 0.01f;
+		subLevel = vars.getSubLevel();
+		sub = subLevel > 0.01f;
 	}
 	
 	public float getSample(float vibratoFactor, float syncEnv) {
@@ -46,21 +50,21 @@ public class WaveOscillator implements Oscillator
 		float frac = index - ix;
 		float sample = (1f - frac) * wave[ix] + frac * wave[ix+1];
 		// lookup sync with linear interpolation
-		if ( sync ) {
-			ix = (int)syncIndex;
-			frac = syncIndex - ix;
-			sample += (1f - frac) * wave[ix] + frac * wave[ix+1];
+		if ( sub ) {
+			ix = (int)subIndex;
+			frac = subIndex - ix;
+			sample += subLevel * ((1f - frac) * wave[ix] + frac * wave[ix+1]);
 		}
 		// prepare next lookup index
 		float factor = bendFactor * vibratoFactor;
 		index += increment * factor;
 		if ( index >= waveSize ) {
 			index -= waveSize;
-			syncIndex = 0f;
-		} else if ( sync ) {
-			syncIndex += increment * (2 + (syncEnvDepth * syncEnv)) * factor;
-			if ( syncIndex >= waveSize ) {
-				syncIndex -= waveSize;
+			if ( sync ) subIndex = 0f; // hard sync
+		} else if ( sub ) {
+			subIndex += increment * factor * (sync ? (2 + (syncEnvDepth * syncEnv)) : 1.003f);
+			if ( subIndex >= waveSize ) {
+				subIndex -= waveSize;
 			}
 		}
 
