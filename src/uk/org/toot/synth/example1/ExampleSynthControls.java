@@ -17,28 +17,36 @@ public class ExampleSynthControls extends SynthControls
 		super(EXAMPLE_1_SYNTH_ID, name);
 		
 		filterControls = new FilterControls[1];
-		envelopeControls = new EnvelopeControls[2];
+		envelopeControls = new EnvelopeControls[3];
 		
 		ControlRow row1 = new ControlRow();
+		envelopeControls[2] = 
+			new EnvelopeControls(2, getString("Sync")+" "+getString("Envelope"), 0x50, 5) {
+				protected boolean hasDelay() { return false; }
+			}
+		; 
+		row1.add(envelopeControls[2]);
 		oscillatorControls = new WaveOscillatorControls(0, "Oscillator", 0x00);
 		row1.add(oscillatorControls);
-		filterControls[0] = new FilterControls(0, "Low Pass Filter", 0x20);
-		row1.add(filterControls[0]);
 		add(row1);
 		
 		ControlRow row2 = new ControlRow();		
+		envelopeControls[1] = 
+			new EnvelopeControls(1, getString("Filter")+" "+getString("Envelope"), 0x48) {
+				protected boolean hasDelay() { return false; }
+			};
+		row2.add(envelopeControls[1]);
+		filterControls[0] = new FilterControls(0, "Low Pass Filter", 0x20);
+		row2.add(filterControls[0]);
+		add(row2);
+
+		ControlRow row3 = new ControlRow();
 		envelopeControls[0] = 
 			new EnvelopeControls(0, getString("Amplitude")+" "+getString("Envelope"), 0x40) {
 				protected boolean hasDelay() { return false; }
 			}
 		; 
-		row2.add(envelopeControls[0]);
-		add(row2);
-
-		ControlRow row3 = new ControlRow();
-		envelopeControls[1] = 
-			new EnvelopeControls(1, getString("Filter")+" "+getString("Envelope"), 0x48);
-		row3.add(envelopeControls[1]);
+		row3.add(envelopeControls[0]);
 		add(row3);
 		
 	}

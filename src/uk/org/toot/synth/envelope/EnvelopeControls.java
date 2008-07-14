@@ -31,13 +31,21 @@ public class EnvelopeControls extends CompoundControl
 
 	private int idOffset = 0;
 	
+	// mutiplies the max attack, decay and release times
+	private float timeMultiplier;
+	
 	public EnvelopeControls(int instanceIndex, String name, int idOffset) {
-		this(EnvelopeIds.DAHDSR_ENVELOPE_ID, instanceIndex, name, idOffset);
+		this(instanceIndex, name, idOffset, 1f);
 	}
 		
-	public EnvelopeControls(int id, int instanceIndex, String name, final int idOffset) {
+	public EnvelopeControls(int instanceIndex, String name, int idOffset, float timeMultiplier) {
+		this(EnvelopeIds.DAHDSR_ENVELOPE_ID, instanceIndex, name, idOffset, timeMultiplier);
+	}
+		
+	public EnvelopeControls(int id, int instanceIndex, String name, final int idOffset, float timeMultiplier) {
 		super(id, name);
 		this.idOffset = idOffset;
+		this.timeMultiplier = timeMultiplier;
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
@@ -62,14 +70,15 @@ public class EnvelopeControls extends CompoundControl
 	}
 	
 	protected void createControls() {
+		float m = timeMultiplier;
 		if ( hasDelay() ) {
 			add(delayControl = createDelayControl(0f, 1000f, 0f));		// ms
 		}
-		add(attackControl = createAttackControl(0.1f, 1000f, 1f)); 	// ms
+		add(attackControl = createAttackControl(0.1f, 1000f*m, 1f)); 	// ms
 		add(holdControl = createHoldControl(0, 1000, 10)); 			// ms
-		add(decayControl = createDecayControl(10f, 10000f, 100f));	// (ms)
+		add(decayControl = createDecayControl(10f, 10000f*m, 100f));	// (ms)
 		add(sustainControl = createSustainControl());
-		add(releaseControl = createReleaseControl(2, 2000, 200));	// ms
+		add(releaseControl = createReleaseControl(2, 2000*m, 200));	// ms
 	}
 
     protected void deriveSampleRateIndependentVariables() {

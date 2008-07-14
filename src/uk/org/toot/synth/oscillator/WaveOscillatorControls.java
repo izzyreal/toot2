@@ -1,18 +1,26 @@
 package uk.org.toot.synth.oscillator;
 
+import static uk.org.toot.localisation.Localisation.getString;
+
+import java.awt.Color;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
+import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.EnumControl;
+import uk.org.toot.control.FloatControl;
+import uk.org.toot.control.LinearLaw;
 
 public class WaveOscillatorControls extends CompoundControl implements WaveOscillatorVariables 
 {
 	public final static int WAVE = 1; // TODO move to OscillatorControlIds.java
+	public final static int ENV_DEPTH = 2;
 	
 	private EnumControl waveControl;
+	private FloatControl envDepthControl;
 	private int idOffset = 0;
 	private Wave wave;
 	
@@ -38,10 +46,18 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	}
 	
 	private void createControls() {
+		add(envDepthControl = createEnvelopeDepthControl());
 		add(waveControl = createWaveControl());
 	}
 
-	private EnumControl createWaveControl() {
+	protected FloatControl createEnvelopeDepthControl() {
+        ControlLaw law = new LinearLaw(0f, 4f, "");
+        FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 2f);
+        control.setInsertColor(Color.black);
+        return control;				
+	}
+
+	protected EnumControl createWaveControl() {
 		return new EnumControl(WAVE+idOffset, "Wave", "Square") {
 			public List getValues() {
 				return ClassicWaves.getNames();
@@ -66,4 +82,7 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 		return wave;
 	}
 
+	public float getEnvelopeDepth() {
+		return envDepthControl.getValue();
+	}
 }

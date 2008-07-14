@@ -51,9 +51,9 @@ public class FilterControls extends SynthControls
 	}
 
 	protected void createControls() {
+		add(envelopeDepthControl = createEnvelopeDepthControl());
 		add(frequencyControl = createFrequencyControl());
 		add(resonanceControl = createResonanceControl());
-		add(envelopeDepthControl = createEnvelopeDepthControl());
 	}
 
 	protected void deriveSampleRateIndependentVariables() {
