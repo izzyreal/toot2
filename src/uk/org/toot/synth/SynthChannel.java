@@ -8,6 +8,8 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
 
+import static uk.org.toot.midi.misc.Controller.*;
+
 /**
  * A SynthChannel is a MidiChannel that generates audio as an AudioProcess.
  * It is polyphonic, supporting multiple Voices.
@@ -148,7 +150,22 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	}
 
 	public void resetAllControllers() {
-		// TODO Auto-generated method stub
+		for ( int i = 0; i < controller.length; i++) {
+			controller[i] = 0;
+		}
+		// expression 127, 127
+		controller[EXPRESSION] = 127;
+		controller[EXPRESSION+0x20] = 127;
+		// volume 100
+		controller[VOLUME] = 100;
+		// pan 64, 64
+		controller[PAN] = 64;
+		controller[PAN+0x20] = 64;
+		
+		// channel pressure 0
+		pressure = 0;
+		// pitch wheel centre
+		setPitchBend(8192);
 		
 	}
 
