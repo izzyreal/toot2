@@ -31,6 +31,7 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	private final static double ONE_SEMITONE = 1.0594630943592952645618252949463;
 	
 	private int pressure = 0;
+	private byte[] polyPressure = new byte[128];
 	
 	private byte[] controller = new byte[128];
 	
@@ -191,13 +192,11 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	}
 
 	public int getPolyPressure(int arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+		return polyPressure[arg0];
 	}
 
 	public void setPolyPressure(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
+		polyPressure[arg0] = (byte)arg1;
 	}
 
 	public boolean getSolo() {
@@ -283,12 +282,10 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 		}
 
 		public void release() {
-//			System.out.print('r');
 			release = true;			
 		}
 
 		public void stop() {
-//			System.out.print('s');
 			stop = true;
 		}
 
