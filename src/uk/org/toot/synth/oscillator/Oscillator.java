@@ -4,5 +4,5 @@ public interface Oscillator
 {
 	void setSampleRate(int rate);
 	void update(); // called once per buffer
-	float getSample(float fm, float pm);
+	float getSample(float mod, float env);
 }

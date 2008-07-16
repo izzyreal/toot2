@@ -31,4 +31,14 @@ public class Wave
 	public float getPeriod() {
 		return period;
 	}
+
+	/**
+	 * @param index the floating point index
+	 * @return a linearly interpolated sample of the wave
+	 */
+	public float get(float index) {
+		int ix = (int)index;
+		float frac = index - ix;
+		return (1f - frac) * data[ix] + frac * data[ix+1];
+	}
 }

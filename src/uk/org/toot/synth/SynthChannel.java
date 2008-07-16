@@ -28,14 +28,22 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	private float bendFactor = 1;	// current bend factor
 	private final static double ONE_SEMITONE = 1.0594630943592952645618252949463;
 	
+	private int pressure = 0;
+	
 	private byte[] controller = new byte[128];
 	
 	private AudioBuffer.MetaInfo info;
 	
+	private List<Voice> finished = new java.util.ArrayList<Voice>();
+
 	public SynthChannel(String name) {
         info = new AudioBuffer.MetaInfo(name);
 	}
 	
+	public static float midiFreq(int pitch) { 
+		return (float)(440.0 * Math.pow( 2.0, ((double)pitch - 69.0) / 12.0 )); 
+	}
+	 
 	// implement AudioProcess ---------------------------------- 
 	
 	public void open() {
@@ -43,15 +51,13 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	}
 	
 	public int processAudio(AudioBuffer buffer) {
-        // attach source name meta info so our mixer strip shows our name
         buffer.setMetaInfo(info);
-        buffer.setChannelFormat(ChannelFormat.MONO); // a mono input
+        buffer.setChannelFormat(ChannelFormat.MONO);
 		buffer.makeSilence();
-		List<Voice> finished = new java.util.ArrayList<Voice>(); // !!!
+		finished.clear();
 		synchronized ( voices ) {
 			if ( buffer.getSampleRate() != sampleRate ) {
 				setSampleRate((int)buffer.getSampleRate());
-				// change the sample rate of existing voices
 				for ( Voice voice : voices ) {
 					voice.setSampleRate(sampleRate);
 				}
@@ -61,10 +67,9 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 					finished.add(voice);
 				}
 			}
-		}
-		for ( Voice voice : finished ) {
-//			System.out.print('f');
-			voices.remove(voice);
+			for ( Voice voice : finished ) {
+				voices.remove(voice);
+			}
 		}
 		return AudioProcess.AUDIO_OK;
 	}
@@ -97,7 +102,6 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 				steal.stop();
 				voices.remove(steal);
 			}
-//			System.out.print("\n"+voices.size());
 			voices.add(createVoice(pitch, velocity, sampleRate));
 		}
 	}
@@ -143,26 +147,9 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 		return controller[arg0];
 	}
 
-	public int getChannelPressure() {
+	public void resetAllControllers() {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public boolean getMono() {
-		return polyphony == 1; // ???
-	}
-
-	public boolean getMute() {
-		return false;
-	}
-
-	public boolean getOmni() {
-		return false;
-	}
-
-	public int getPolyPressure(int arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+		
 	}
 
 	public int getProgram() {
@@ -170,33 +157,52 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 		return 0;
 	}
 
+	public void programChange(int arg0) {
+		// TODO Auto-generated method stub		
+	}
+
+	public void programChange(int arg0, int arg1) {
+		// TODO Auto-generated method stub		
+	}
+
+	public int getChannelPressure() {
+		return pressure;
+	}
+
+	public void setChannelPressure(int arg0) {
+		pressure = arg0;
+	}
+
+	public int getPolyPressure(int arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setPolyPressure(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public boolean getSolo() {
 		return false;
 	}
 
-	public boolean localControl(boolean arg0) {
-		// TODO Auto-generated method stub
+	public boolean getMute() {
 		return false;
 	}
 
-	public void programChange(int arg0) {
-		// TODO Auto-generated method stub
-		
+	public boolean getMono() {
+		return polyphony == 1; // ???
 	}
 
-	public void programChange(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
+	public boolean getOmni() {
+		return false;
 	}
 
-	public void resetAllControllers() {
-		// TODO Auto-generated method stub
-		
+	public void setSolo(boolean arg0) {
 	}
 
-	public void setChannelPressure(int arg0) {
-		// TODO Auto-generated method stub
-		
+	public void setMute(boolean arg0) {
 	}
 
 	public void setMono(boolean mono) {
@@ -209,10 +215,12 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 		
 	}
 
-	public void setMute(boolean arg0) {
+	public void setOmni(boolean arg0) {
 	}
 
-	public void setOmni(boolean arg0) {
+	public boolean localControl(boolean arg0) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	public void setPitchBend(int bend) {
@@ -230,14 +238,6 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	// to the current frequency
 	public float getBendFactor() {
 		return bendFactor;
-	}
-
-	public void setPolyPressure(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setSolo(boolean arg0) {
 	}
 
 	public interface Voice

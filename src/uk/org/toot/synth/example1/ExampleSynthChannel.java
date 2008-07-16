@@ -64,7 +64,7 @@ public class ExampleSynthChannel extends SynthChannel
 		private EnvelopeGenerator envelope3;
 		private Oscillator lfo;
 //		private SingleTapDelay delay;
-		private float amplitude = 1;
+		private float amplitude;
 		private float filterFreq = 0.001f;
 		private float filterRes = 2f;
 		private float filterEnvDepth = 1f;
@@ -94,7 +94,6 @@ public class ExampleSynthChannel extends SynthChannel
 				if ( filterFreq >= 1 ) filterFreq = 0.99f;
 				// normalise the filter env depth to ensure 0 < fc < 1
 				filterEnvDepth = filterVars.getEvelopeDepth() * (1 - filterFreq);
-//				System.out.println("fED="+fEnvDepth+" => "+filterEnvDepth);
 			}
 		}
 		
@@ -113,7 +112,7 @@ public class ExampleSynthChannel extends SynthChannel
 			float modWheel = (float)getController(1) / 128;		// 0..1
 			float vibrato = modWheel * (mod/50);  				// 2% freq change max
 			// an oscillator sample
-			float sample = oscillator.getSample(vibrato+1, env3);
+			float sample = oscillator.getSample(vibrato, env3);
 //			sample += fb;										// delay feedback
 			// filter it, optionally with envelope2 modulation
 			float fc = filterFreq + filterEnvDepth * env2;		// 0..1
