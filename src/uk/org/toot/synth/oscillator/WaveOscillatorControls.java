@@ -17,22 +17,30 @@ import uk.org.toot.control.LinearLaw;
 public class WaveOscillatorControls extends CompoundControl implements WaveOscillatorVariables 
 {
 	public final static int WAVE = 1; // TODO move to OscillatorControlIds.java
-	public final static int ENV_DEPTH = 2;
-	public final static int SUB_LEVEL = 3;
+	public final static int LEVEL = 2;
+	public final static int ENV_DEPTH = 3;
+	public final static int DETUNE = 4;
 	
 	private EnumControl waveControl;
+	private FloatControl levelControl;
 	private FloatControl envDepthControl;
-	private FloatControl subLevelControl;
+	private FloatControl detuneControl;
 	private int idOffset = 0;
 	private Wave wave;
+	private float level;
+	private float envDepth;
+	private float detuneFactor;
+
+	private boolean master;
 	
-	public WaveOscillatorControls(int instanceIndex, String name, int idOffset) {
-		this(OscillatorIds.WAVE_OSCILLATOR_ID, instanceIndex, name, idOffset);
+	public WaveOscillatorControls(int instanceIndex, String name, int idOffset, boolean master) {
+		this(OscillatorIds.WAVE_OSCILLATOR_ID, instanceIndex, name, idOffset, master);
 	}
 
-	public WaveOscillatorControls(int id, int instanceIndex, String name, final int idOffset) {
+	public WaveOscillatorControls(int id, int instanceIndex, String name, final int idOffset, boolean master) {
 		super(id, name);
 		this.idOffset = idOffset;
+		this.master = master;
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
@@ -41,16 +49,22 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 				Control c = (Control) obj;
 //				if (c.isIndicator()) return;
 				switch (c.getId()-idOffset) {
-				case WAVE:	wave = deriveWave(); break;
+				case WAVE:		wave = deriveWave(); 					break;
+				case LEVEL: 	level = deriveLevel(); 					break;
+				case ENV_DEPTH: envDepth = deriveEnvDepth(); 			break;
+				case DETUNE:	detuneFactor = deriveDetuneFactor(); 	break;
 				}
 			}
 		});
 	}
 	
 	private void createControls() {
-		add(envDepthControl = createEnvelopeDepthControl());
-		add(subLevelControl = createSubLevelControl());
+		if ( !master ) {
+			add(envDepthControl = createEnvelopeDepthControl());
+			add(detuneControl = createDetuneControl());
+		}
 		add(waveControl = createWaveControl());
+		add(levelControl = createLevelControl());
 	}
 
 	protected FloatControl createEnvelopeDepthControl() {
@@ -60,9 +74,9 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
         return control;				
 	}
 
-	protected FloatControl createSubLevelControl() {
+	protected FloatControl createLevelControl() {
         ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(SUB_LEVEL+idOffset, getString("Sub Level"), law, 0.01f, 1f);
+        FloatControl control = new FloatControl(LEVEL+idOffset, getString("Level"), law, 0.01f, 1f);
         control.setInsertColor(Color.black);
         return control;				
 	}
@@ -76,8 +90,19 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 		};
 	}
 
+	protected FloatControl createDetuneControl() {
+        ControlLaw law = new LinearLaw(0.99f, 1.01f, "");
+        FloatControl control = new FloatControl(DETUNE+idOffset, getString("Detune"), law, 0.0001f, 1f);
+        control.setInsertColor(Color.BLUE);
+        return control;				
+		
+	}
+	
 	private void deriveSampleRateIndependentVariables() {
-		wave = deriveWave();		
+		wave = deriveWave();
+		level = deriveLevel();
+		envDepth = deriveEnvDepth();
+		detuneFactor = deriveDetuneFactor();
 	}
 
 	private void deriveSampleRateDependentVariables() {
@@ -88,15 +113,43 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 		return ClassicWaves.create(name);
 	}
 	
+	protected float deriveLevel() {
+		if ( levelControl == null ) return 1f;
+		return levelControl.getValue();
+	}
+	
+	protected float deriveEnvDepth() {
+		if ( envDepthControl == null ) return 0f;
+		return envDepthControl.getValue();
+	}
+	
+	protected float deriveDetuneFactor() {
+		if ( detuneControl == null ) return 1f;
+		return detuneControl.getValue();
+	}
+	
 	public Wave getWave() {
 		return wave;
 	}
 
+	public float getLevel() {
+		return level;
+	}
+
 	public float getEnvelopeDepth() {
-		return envDepthControl.getValue();
+		return envDepth;
 	}
 	
-	public float getSubLevel() {
-		return subLevelControl.getValue();
+	public float getSyncThreshold() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public float getDetuneFactor() {
+		return detuneFactor;
+	}
+	
+	public boolean isMaster() {
+		return master;
 	}
 }

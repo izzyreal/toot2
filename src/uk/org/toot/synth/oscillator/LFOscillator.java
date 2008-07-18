@@ -7,7 +7,7 @@ public class LFOscillator implements Oscillator
     private float rate = 6;
     private float timeDelta = 1f / 44100;
 
-	public float getSample(float fm, float pm) {
+	public float getSample(float fm, float pm, OscillatorControl ctl) {
 		incrementModulator();
         float mod = (shape == 0) ? sine(modulatorPhase) : triangle(modulatorPhase);
         // clamp the cheapo algorithm which goes outside range a little

@@ -9,13 +9,14 @@ import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_1_SYNTH_ID;
 
 public class ExampleSynthControls extends SynthControls
 {
-	private WaveOscillatorControls oscillatorControls;
+	private WaveOscillatorControls[] oscillatorControls;
 	private FilterControls[] filterControls;
 	private EnvelopeControls[] envelopeControls;
 	
 	public ExampleSynthControls(String name) {
 		super(EXAMPLE_1_SYNTH_ID, name);
 		
+		oscillatorControls = new WaveOscillatorControls[4];
 		filterControls = new FilterControls[1];
 		envelopeControls = new EnvelopeControls[3];
 		
@@ -26,8 +27,10 @@ public class ExampleSynthControls extends SynthControls
 			}
 		; 
 		row1.add(envelopeControls[2]);
-		oscillatorControls = new WaveOscillatorControls(0, "Oscillator", 0x00);
-		row1.add(oscillatorControls);
+		oscillatorControls[0] = new WaveOscillatorControls(0, "Oscillator 1", 0x00, true);
+		oscillatorControls[1] = new WaveOscillatorControls(1, "Oscillator 2", 0x08, false);
+		row1.add(oscillatorControls[0]);
+		row1.add(oscillatorControls[1]);
 		add(row1);
 		
 		ControlRow row2 = new ControlRow();		
@@ -51,8 +54,8 @@ public class ExampleSynthControls extends SynthControls
 		
 	}
 
-	public WaveOscillatorVariables getOscillatorVariables() {
-		return oscillatorControls;
+	public WaveOscillatorVariables getOscillatorVariables(int instance) {
+		return oscillatorControls[instance];
 	}
 	
 	public FilterVariables getFilterVariables(int instance) {

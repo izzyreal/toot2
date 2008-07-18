@@ -6,24 +6,25 @@ public class WaveOscillator implements Oscillator
 {
 	private SynthChannel channel;
 	private WaveOscillatorVariables vars;
+	private boolean master;
+	private float level;
 	private Wave wave;
 	private int waveSize;
 	private float k;				// product of period in samples * frequency in Hz
 	private float increment = 1f;	// wave increment for the nominal pitch
 	private float bentIncrement;
-	private float subLevel;
 	private float syncEnvDepth;
-	private boolean sub; 			// sub-oscillator using same wave
-	private boolean sync;			// hard sync of sub-oscillator
+	private boolean sync;
+	private float detuneFactor;
 	private float index = 0f;
-	private float subIndex = 0f;
 	
-	public WaveOscillator(SynthChannel channel, WaveOscillatorVariables oscillatorVariables, int pitch) {
+	public WaveOscillator(SynthChannel channel, WaveOscillatorVariables oscillatorVariables, float frequency) {
 		this.channel = channel;
 		vars = oscillatorVariables;
+		master = vars.isMaster();
 		wave = vars.getWave();
 		waveSize = wave.getData().length - 1;
-		k = wave.getPeriod() * SynthChannel.midiFreq(pitch);
+		k = wave.getPeriod() * frequency;
 	}
 	
 	public void setSampleRate(int sampleRate) {
@@ -32,28 +33,27 @@ public class WaveOscillator implements Oscillator
 	
 	public void update() {
 		bentIncrement = increment * channel.getBendFactor();
-		subLevel = vars.getSubLevel();
+		level = vars.getLevel();
 		syncEnvDepth = vars.getEnvelopeDepth();
-		sub = subLevel > 0.01f;
 		sync = syncEnvDepth > 0.01f;
+		detuneFactor = vars.getDetuneFactor();
 	}
 	
-	public float getSample(float mod, float env) {
+	public float getSample(float mod, float env, OscillatorControl control) {
 		float inc = bentIncrement * (mod + 1);
-		float sample = wave.get(index);
+		if ( !master ) {
+			if ( sync ) {
+				if ( control.sync ) index = 0; // hard sync
+				inc *= (2 + (syncEnvDepth * env));
+			}
+			inc *= detuneFactor;
+		}
+		float sample = level * wave.get(index);
 		index += inc;
 		if ( index >= waveSize ) {
 			index -= waveSize;
-			if ( sync ) subIndex = 0f; // hard sync
+			if ( master ) control.sync = true;
 		} 
-		if ( sub ) {
-			sample += subLevel * wave.get(subIndex);
-			subIndex += inc * ( sync ? (2 + (syncEnvDepth * env)) : 1.003f );
-			if ( subIndex >= waveSize ) {
-				subIndex -= waveSize;
-			}
-		}
-
 		return sample;
 	}
 }
