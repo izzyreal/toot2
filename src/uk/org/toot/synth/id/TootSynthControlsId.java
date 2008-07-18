@@ -16,5 +16,6 @@ public interface TootSynthControlsId
     // THESE CONSTANTS MUST NEVER BE CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	final static int OSCILLATOR_BASE_ID = 0x00; // 32 oscillators
     final static int FILTER_BASE_ID = 0x20;		// 32 filters
-    final static int ENVELOPE_BASE_ID = 0x40;
+    final static int ENVELOPE_BASE_ID = 0x40;	// 32 envelopes
+    final static int AMPLIFIER_BASE_ID = 0x60;
 }

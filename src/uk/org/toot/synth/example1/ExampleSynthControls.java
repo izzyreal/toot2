@@ -2,6 +2,8 @@ package uk.org.toot.synth.example1;
 
 import static uk.org.toot.localisation.Localisation.getString;
 import uk.org.toot.synth.SynthControls;
+import uk.org.toot.synth.amplifier.AmplifierControls;
+import uk.org.toot.synth.amplifier.AmplifierVariables;
 import uk.org.toot.synth.envelope.*;
 import uk.org.toot.synth.filter.*;
 import uk.org.toot.synth.oscillator.*;
@@ -12,6 +14,7 @@ public class ExampleSynthControls extends SynthControls
 	private WaveOscillatorControls[] oscillatorControls;
 	private FilterControls[] filterControls;
 	private EnvelopeControls[] envelopeControls;
+	private AmplifierControls amplifierControls;
 	
 	public ExampleSynthControls(String name) {
 		super(EXAMPLE_1_SYNTH_ID, name);
@@ -50,6 +53,8 @@ public class ExampleSynthControls extends SynthControls
 			}
 		; 
 		row3.add(envelopeControls[0]);
+		amplifierControls = new AmplifierControls(0, getString("Amplifier"), 0x60);
+		row3.add(amplifierControls);
 		add(row3);
 		
 	}
@@ -64,5 +69,9 @@ public class ExampleSynthControls extends SynthControls
 	
 	public EnvelopeVariables getEnvelopeVariables(int instance) {
 		return envelopeControls[instance];
+	}
+	
+	public AmplifierVariables getAmplifierVariables() {
+		return amplifierControls;
 	}
 }

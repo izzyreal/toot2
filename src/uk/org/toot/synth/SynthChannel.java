@@ -269,12 +269,16 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	{
 		protected int pitch;
 		protected int velocity;
+		protected float amplitude;
+		protected float frequency;
 		protected boolean release = false;
 		protected boolean stop = false;
 
 		public AbstractVoice(int pitch, int velocity) {
 			this.pitch = pitch;
 			this.velocity = velocity;
+			amplitude = (float)velocity / 128;
+			frequency = midiFreq(pitch);
 		}
 
 		public int getPitch() {

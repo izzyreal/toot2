@@ -62,7 +62,7 @@ public class FilterControls extends SynthControls
 	protected void deriveSampleRateIndependentVariables() {
 		resonance = deriveResonance();
 		envelopeDepth = deriveEnvelopeDepth();
-		
+		velocityTrack = deriveVelocityTrack();
 	}
 
 	protected float deriveEnvelopeDepth() {
@@ -101,14 +101,14 @@ public class FilterControls extends SynthControls
 	protected FloatControl createEnvelopeDepthControl() {
         ControlLaw law = new LinearLaw(0f, 1f, "");
         FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0.5f);
-        control.setInsertColor(Color.black);
+        control.setInsertColor(Color.LIGHT_GRAY);
         return control;				
 	}
 
 	protected FloatControl createVelocityTrackControl() {
-        ControlLaw law = new LinearLaw(0f, 5f, "");
-        FloatControl control = new FloatControl(VEL_TRACK+idOffset, getString("Velocity"), law, 0.01f, 2f);
-        control.setInsertColor(Color.black);
+        ControlLaw law = new LinearLaw(0f, 1f, "");
+        FloatControl control = new FloatControl(VEL_TRACK+idOffset, getString("Velocity"), law, 0.01f, 0.5f);
+        control.setInsertColor(Color.BLUE);
         return control;				
 	}
 

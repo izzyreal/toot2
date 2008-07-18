@@ -70,7 +70,7 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	protected FloatControl createEnvelopeDepthControl() {
         ControlLaw law = new LinearLaw(0f, 4f, "");
         FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0f);
-        control.setInsertColor(Color.black);
+        control.setInsertColor(Color.LIGHT_GRAY);
         return control;				
 	}
 
@@ -93,7 +93,7 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	protected FloatControl createDetuneControl() {
         ControlLaw law = new LinearLaw(0.99f, 1.01f, "");
         FloatControl control = new FloatControl(DETUNE+idOffset, getString("Detune"), law, 0.0001f, 1f);
-        control.setInsertColor(Color.BLUE);
+        control.setInsertColor(Color.MAGENTA);
         return control;				
 		
 	}

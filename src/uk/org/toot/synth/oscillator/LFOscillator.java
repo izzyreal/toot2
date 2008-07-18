@@ -4,10 +4,18 @@ public class LFOscillator implements Oscillator
 {
 	private int shape = 0;
     protected float modulatorPhase = 0f;
-    private float rate = 6;
+    private float rate;
     private float timeDelta = 1f / 44100;
 
-	public float getSample(float fm, float pm, OscillatorControl ctl) {
+    public LFOscillator() {
+    	this(4 + 3 * (float)Math.random()); // random rate 4..7Hz
+    }
+    
+    public LFOscillator(float rate) {
+    	this.rate = rate;
+    }
+    
+	public float getSample(float nowt, float env, OscillatorControl ctl) {
 		incrementModulator();
         float mod = (shape == 0) ? sine(modulatorPhase) : triangle(modulatorPhase);
         // clamp the cheapo algorithm which goes outside range a little
