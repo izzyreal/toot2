@@ -112,7 +112,7 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	public void noteOff(int pitch) {
 		synchronized ( voices ) {
 			for ( Voice voice : voices ) {
-				if ( voice.getPitch() == pitch ) {
+				if ( voice.getPitch() == pitch && !voice.isReleased() ) {
 					voice.release();
 					return;
 				}
@@ -260,6 +260,7 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	{
 		int getPitch();
 		void release(); // begin amplitude release phase
+		boolean isReleased();
 		void stop();    // sound off immediately
 		void setSampleRate(int sr);
 		boolean mix(AudioBuffer buffer); // return false when finished
@@ -289,6 +290,10 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 			release = true;			
 		}
 
+		public boolean isReleased() {
+			return release;
+		}
+		
 		public void stop() {
 			stop = true;
 		}
