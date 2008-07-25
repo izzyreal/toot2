@@ -74,7 +74,7 @@ public class EnvelopeControls extends CompoundControl
 		if ( hasDelay() ) {
 			add(delayControl = createDelayControl(0f, 1000f, 0f));		// ms
 		}
-		add(attackControl = createAttackControl(0.1f, 1000f*m, 1f)); 	// ms
+		add(attackControl = createAttackControl(0.1f, 10000f*m, 1f)); 	// ms
 		add(holdControl = createHoldControl(0, 1000, 10)); 			// ms
 		add(decayControl = createDecayControl(10f, 10000f*m, 100f));	// (ms)
 		add(sustainControl = createSustainControl());

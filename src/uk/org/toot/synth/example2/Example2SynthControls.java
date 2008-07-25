@@ -1,4 +1,4 @@
-package uk.org.toot.synth.example1;
+package uk.org.toot.synth.example2;
 
 import static uk.org.toot.localisation.Localisation.getString;
 import uk.org.toot.synth.SynthControls;
@@ -7,19 +7,19 @@ import uk.org.toot.synth.amplifier.AmplifierVariables;
 import uk.org.toot.synth.envelope.*;
 import uk.org.toot.synth.filter.*;
 import uk.org.toot.synth.oscillator.*;
-import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_1_SYNTH_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_SYNTH_ID;
 
-public class ExampleSynthControls extends SynthControls
+public class Example2SynthControls extends SynthControls
 {
-	private SingleWaveOscillatorControls[] oscillatorControls;
+	private MultiWaveOscillatorControls[] oscillatorControls;
 	private FilterControls[] filterControls;
 	private EnvelopeControls[] envelopeControls;
 	private AmplifierControls amplifierControls;
 	
-	public ExampleSynthControls(String name) {
-		super(EXAMPLE_1_SYNTH_ID, name);
+	public Example2SynthControls(String name) {
+		super(EXAMPLE_2_SYNTH_ID, name);
 		
-		oscillatorControls = new SingleWaveOscillatorControls[4];
+		oscillatorControls = new MultiWaveOscillatorControls[4];
 		filterControls = new FilterControls[1];
 		envelopeControls = new EnvelopeControls[3];
 		
@@ -30,8 +30,8 @@ public class ExampleSynthControls extends SynthControls
 			}
 		; 
 		row1.add(envelopeControls[2]);
-		oscillatorControls[0] = new SingleWaveOscillatorControls(0, "Oscillator 1", 0x00, true);
-		oscillatorControls[1] = new SingleWaveOscillatorControls(1, "Oscillator 2", 0x08, false);
+		oscillatorControls[0] = new MultiWaveOscillatorControls(0, "Oscillator 1", 0x00, true);
+		oscillatorControls[1] = new MultiWaveOscillatorControls(1, "Oscillator 2", 0x08, false);
 		row1.add(oscillatorControls[0]);
 		row1.add(oscillatorControls[1]);
 		add(row1);
@@ -59,7 +59,7 @@ public class ExampleSynthControls extends SynthControls
 		
 	}
 
-	public SingleWaveOscillatorVariables getOscillatorVariables(int instance) {
+	public MultiWaveOscillatorVariables getOscillatorVariables(int instance) {
 		return oscillatorControls[instance];
 	}
 	

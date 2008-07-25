@@ -1,9 +1,8 @@
 package uk.org.toot.synth.oscillator;
 
-public interface WaveOscillatorVariables 
+public interface OscillatorVariables 
 {
 	boolean isMaster();
-	Wave getWave();
 	float getLevel();
 	float getDetuneFactor();
 	float getEnvelopeDepth();

@@ -3,7 +3,13 @@ package uk.org.toot.synth.oscillator;
 import java.util.List;
 import java.util.Collections;
 
-public class ClassicWaves 
+/**
+ * Naive implementations of classic waves.
+ * These waves are not band-limited so except for sine they alias.
+ * @author st
+ *
+ */
+public class SingleWaves 
 {
 	private static String SINE = "Sine";
 	private static String SQUARE = "Square";
@@ -15,7 +21,7 @@ public class ClassicWaves
 	private static List<String> names = new java.util.ArrayList<String>();
 	
 	static {
-		names.add(SINE);		// no harmonics
+		names.add(SINE);		// no harmonics, so no aliasing
 		names.add(TRIANGLE);	// no even harmonics, -12dB/Octave odd harmonic rolloff
 		names.add(SQUARE);		// no even harmonics, -6dB/Octave odd harmonic rolloff
 		names.add(SAW);			// even and odd harmonics, -6dB/Octave rolloff
@@ -58,7 +64,7 @@ public class ClassicWaves
 			wave[i] = -1f;
 		}
 		wave[nsamples] = wave[0];
-		return new Wave(wave, wave.length-1);
+		return new SingleWave(wave, wave.length-1);
 	}
 
 	public static Wave createSawtoothWave(int nsamples) {
@@ -69,7 +75,7 @@ public class ClassicWaves
 			wave[i+waveHalf] = wave[i] - 1f;
 		}
 		wave[nsamples] = wave[0];
-		return new Wave(wave, wave.length-1);
+		return new SingleWave(wave, wave.length-1);
 	}
 
 	public static Wave createTriangleWave(int nsamples) {
@@ -84,7 +90,7 @@ public class ClassicWaves
 			wave[i+waveHalf+waveQtr] = v - 1f;
 		}
 		wave[nsamples] = wave[0];
-		return new Wave(wave, wave.length-1);
+		return new SingleWave(wave, wave.length-1);
 	}
 	
 	public static Wave createSineWave(int nsamples) {
@@ -93,7 +99,7 @@ public class ClassicWaves
 			wave[i] = (float)Math.sin(Math.PI * 2 * i / nsamples);
 		}
 		wave[nsamples] = wave[0];
-		return new Wave(wave, wave.length-1);
+		return new SingleWave(wave, wave.length-1);
 	}
 	
 }

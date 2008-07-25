@@ -1,4 +1,4 @@
-package uk.org.toot.synth.example1;
+package uk.org.toot.synth.example2;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.synth.SynthChannel;
@@ -20,17 +20,17 @@ import uk.org.toot.synth.filter.*;
  * @author st
  *
  */
-public class ExampleSynthChannel extends SynthChannel
+public class Example2SynthChannel extends SynthChannel
 {
-	private SingleWaveOscillatorVariables oscillator1Variables;
-	private SingleWaveOscillatorVariables oscillator2Variables;
+	private MultiWaveOscillatorVariables oscillator1Variables;
+	private MultiWaveOscillatorVariables oscillator2Variables;
 	private EnvelopeVariables envelopeAVars;
 	private EnvelopeVariables envelopeFVars;
 	private EnvelopeVariables envelopeOVars;
 	private FilterVariables filterVars;
 	private AmplifierVariables amplifierVariables;
 	
-	public ExampleSynthChannel(ExampleSynthControls controls) {
+	public Example2SynthChannel(Example2SynthControls controls) {
 		super(controls.getName());
 		oscillator1Variables = controls.getOscillatorVariables(1-1);
 		oscillator2Variables = controls.getOscillatorVariables(2-1);
@@ -73,8 +73,8 @@ public class ExampleSynthChannel extends SynthChannel
 		
 		public ExampleVoice(int pitch, int velocity, int sampleRate) {
 			super(pitch, velocity);
-			oscillator1 = new SingleWaveOscillator(ExampleSynthChannel.this, oscillator1Variables, frequency);
-			oscillator2 = new SingleWaveOscillator(ExampleSynthChannel.this, oscillator2Variables, frequency);
+			oscillator1 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator1Variables, frequency);
+			oscillator2 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator2Variables, frequency);
 			envelopeA = new EnvelopeGenerator(envelopeAVars);
 			envelopeF = new EnvelopeGenerator(envelopeFVars);
 			envelopeO = new EnvelopeGenerator(envelopeOVars);
@@ -99,7 +99,7 @@ public class ExampleSynthChannel extends SynthChannel
 				float f = frequency * 2 / rate;
 				filterFreq = f + filterVars.getFrequency();
 				filterFreq *= 1 - filterVars.getVelocityTrack() * (1f - amplitude); // !!! TODO
-				if ( filterFreq >= 1 ) filterFreq = 0.99f;
+				if ( filterFreq >= 1 ) filterFreq = 1f;
 				// normalise the filter env depth to ensure 0 < fc < 1
 				filterEnvDepth = filterVars.getEvelopeDepth() * (1 - filterFreq) * amplitude;
 			}

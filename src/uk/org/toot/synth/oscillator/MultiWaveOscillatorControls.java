@@ -14,30 +14,33 @@ import uk.org.toot.control.EnumControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 
-public class WaveOscillatorControls extends CompoundControl implements WaveOscillatorVariables 
+public class MultiWaveOscillatorControls extends CompoundControl implements MultiWaveOscillatorVariables 
 {
 	public final static int WAVE = 1; // TODO move to OscillatorControlIds.java
 	public final static int LEVEL = 2;
 	public final static int ENV_DEPTH = 3;
 	public final static int DETUNE = 4;
+	public final static int WIDTH = 5;
 	
 	private EnumControl waveControl;
+	private FloatControl widthControl;
 	private FloatControl levelControl;
 	private FloatControl envDepthControl;
 	private FloatControl detuneControl;
 	private int idOffset = 0;
-	private Wave wave;
+	private MultiWave multiWave;
+	private float width;
 	private float level;
 	private float envDepth;
 	private float detuneFactor;
 
 	private boolean master;
 	
-	public WaveOscillatorControls(int instanceIndex, String name, int idOffset, boolean master) {
-		this(OscillatorIds.WAVE_OSCILLATOR_ID, instanceIndex, name, idOffset, master);
+	public MultiWaveOscillatorControls(int instanceIndex, String name, int idOffset, boolean master) {
+		this(OscillatorIds.MULTI_WAVE_OSCILLATOR_ID, instanceIndex, name, idOffset, master);
 	}
 
-	public WaveOscillatorControls(int id, int instanceIndex, String name, final int idOffset, boolean master) {
+	public MultiWaveOscillatorControls(int id, int instanceIndex, String name, final int idOffset, boolean master) {
 		super(id, name);
 		this.idOffset = idOffset;
 		this.master = master;
@@ -49,10 +52,11 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 				Control c = (Control) obj;
 //				if (c.isIndicator()) return;
 				switch (c.getId()-idOffset) {
-				case WAVE:		wave = deriveWave(); 					break;
+				case WAVE:		multiWave = deriveMultiWave(); 			break;
 				case LEVEL: 	level = deriveLevel(); 					break;
 				case ENV_DEPTH: envDepth = deriveEnvDepth(); 			break;
 				case DETUNE:	detuneFactor = deriveDetuneFactor(); 	break;
+				case WIDTH:		width = deriveWidth();					break;
 				}
 			}
 		});
@@ -64,6 +68,7 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 			add(detuneControl = createDetuneControl());
 		}
 		add(waveControl = createWaveControl());
+		add(widthControl = createWidthControl());
 		add(levelControl = createLevelControl());
 	}
 
@@ -84,10 +89,18 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	protected EnumControl createWaveControl() {
 		return new EnumControl(WAVE+idOffset, "Wave", "Square") {
 			public List getValues() {
-				return ClassicWaves.getNames();
+				return MultiWaves.getNames();
 			}
 //		    public boolean isWidthLimited() { return false; }
 		};
+	}
+
+	
+	protected FloatControl createWidthControl() {
+        ControlLaw law = new LinearLaw(0.01f, 0.99f, "");
+        FloatControl control = new FloatControl(WIDTH+idOffset, getString("Width"), law, 0.01f, 0.5f);
+        control.setInsertColor(Color.GREEN);
+        return control;				
 	}
 
 	protected FloatControl createDetuneControl() {
@@ -99,7 +112,8 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	}
 	
 	private void deriveSampleRateIndependentVariables() {
-		wave = deriveWave();
+		multiWave = deriveMultiWave();
+		width = deriveWidth();
 		level = deriveLevel();
 		envDepth = deriveEnvDepth();
 		detuneFactor = deriveDetuneFactor();
@@ -108,9 +122,14 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 	private void deriveSampleRateDependentVariables() {
 	}
 
-	protected Wave deriveWave() {
+	protected MultiWave deriveMultiWave() {
 		String name = (String)waveControl.getValue();
-		return ClassicWaves.create(name);
+		return MultiWaves.get(name); // TODO takes a long time on Swing thread
+	}
+	
+	protected float deriveWidth() {
+		if ( widthControl == null ) return 0.5f; // !!!
+		return widthControl.getValue();
 	}
 	
 	protected float deriveLevel() {
@@ -128,10 +147,14 @@ public class WaveOscillatorControls extends CompoundControl implements WaveOscil
 		return detuneControl.getValue();
 	}
 	
-	public Wave getWave() {
-		return wave;
+	public MultiWave getMultiWave() {
+		return multiWave;
 	}
 
+	public float getWidth() {
+		return width;
+	}
+	
 	public float getLevel() {
 		return level;
 	}
