@@ -33,6 +33,8 @@ public class LawControl extends Control
         this.law = law;
         this.precision = precision;
         this.value = initialValue;
+        assert initialValue >= law.getMinimum();
+        assert initialValue <= law.getMaximum();
         valueFormat = "%1$."+calculateDecimalPlaces()+"f %2$s";
     }
 

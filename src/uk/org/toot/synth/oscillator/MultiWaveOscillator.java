@@ -7,7 +7,6 @@ public class MultiWaveOscillator implements Oscillator
 	private SynthChannel channel;
 	private MultiWaveOscillatorVariables vars;
 	private boolean master;
-	private float level;
 	private MultiWave multiWave;
 	private Wave wave;
 	private int waveSize;
@@ -21,6 +20,7 @@ public class MultiWaveOscillator implements Oscillator
 	private float scalar = 1f;
 	private float offset = 0f;
 	private float frequency;
+	private float width;
 	private float shift = 0;
 	
 	public MultiWaveOscillator(SynthChannel channel, MultiWaveOscillatorVariables oscillatorVariables, float frequency) {
@@ -41,37 +41,38 @@ public class MultiWaveOscillator implements Oscillator
 	
 	public void update() {
 		bentIncrement = increment * channel.getBendFactor();
-		level = vars.getLevel();
 		syncEnvDepth = vars.getEnvelopeDepth();
 		sync = syncEnvDepth > 0.01f;
 		detuneFactor = vars.getDetuneFactor();
-		float width = vars.getWidth();
+		width = vars.getWidth();
 		scalar = multiWave.getWidthScalar(width);
 		offset = multiWave.getWidthOffset(width);
 		shift = width * waveSize;
 	}
 	
-	public float getSample(float mod, float env, OscillatorControl control) {
-		if ( level < 0.02 ) return 0; // TESTING ONLY
-		float inc = bentIncrement * (mod + 1); // !!! 0 .. 2 instead of 0.5 .. 2 !!!
+	public float getSample(float mod, float env, float lfo, OscillatorControl control) {
+		float inc = bentIncrement * (mod + 1); 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
 		if ( !master ) {
 			if ( sync ) {
-				if ( control.sync ) index = 0; // hard sync - aliases
+				if ( control.sync ) index = 0; 	// hard sync - aliases
 				inc *= (2 + (syncEnvDepth * env));
 			}
 			inc *= detuneFactor;
 		}
 		float sample = wave.get(index);
+		float w = Math.abs(width + vars.getWidthLFODepth() * lfo / 2.002f);
+		if ( w > 0.99f ) w = 0.99f;
+		shift = waveSize * w;
 		float ixShift = index + shift;
 		if ( ixShift >= waveSize ) ixShift -= waveSize;
-		sample -= wave.get(ixShift);  // inverted phase shifted for PWM etc.
+		sample -= wave.get(ixShift);  			// inverted phase shifted for PWM etc.
 		index += inc;
 		if ( index >= waveSize ) {
 			index -= waveSize;
 			wave = getWave(frequency * inc / increment);
 			if ( master ) control.sync = true;
 		} 
-		return level * (sample * scalar + offset);
+		return sample * scalar + offset;
 	}
 
 	protected Wave getWave(float freq) {

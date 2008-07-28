@@ -54,9 +54,9 @@ public class FilterControls extends SynthControls
 
 	protected void createControls() {
 		add(envelopeDepthControl = createEnvelopeDepthControl());
-		add(velocityTrackControl = createVelocityTrackControl());
 		add(frequencyControl = createFrequencyControl());
 		add(resonanceControl = createResonanceControl());
+		add(velocityTrackControl = createVelocityTrackControl());
 	}
 
 	protected void deriveSampleRateIndependentVariables() {
@@ -72,6 +72,7 @@ public class FilterControls extends SynthControls
 	protected float deriveVelocityTrack() {
 		return velocityTrackControl.getValue();
 	}
+	
 	protected float deriveResonance() {
 		return resonanceControl.getValue() * 4;
 	}
@@ -99,8 +100,20 @@ public class FilterControls extends SynthControls
 	}
 
 	protected FloatControl createEnvelopeDepthControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0.5f);
+        ControlLaw law = new LinearLaw(-1f, 1f, "");
+        FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0.5f) {
+            private final String[] presetNames = { getString("Off") };
+
+            public String[] getPresetNames() {
+                return presetNames;
+            }
+
+            public void applyPreset(String presetName) {
+                if ( presetName.equals(getString("Off")) ) {
+                    setValue(0f);
+                }
+            }        	
+        };
         control.setInsertColor(Color.LIGHT_GRAY);
         return control;				
 	}

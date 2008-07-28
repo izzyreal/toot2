@@ -17,6 +17,8 @@ public class LogLaw extends AbstractLaw
 
     public LogLaw(float min, float max, String units) {
         super(min, max, units);
+        assert min != 0f;
+        assert max != 0f;
         logMin = Math.log10(min); // error on zero min
         logMax = Math.log10(max); // error zero max
         logSpan = logMax - logMin;

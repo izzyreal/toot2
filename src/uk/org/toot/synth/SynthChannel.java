@@ -59,8 +59,9 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 		buffer.makeSilence();
 		finished.clear();
 		synchronized ( voices ) {
-			if ( buffer.getSampleRate() != sampleRate ) {
-				setSampleRate((int)buffer.getSampleRate());
+			int sr = (int)buffer.getSampleRate(); 
+			if ( sr != sampleRate ) {
+				setSampleRate(sr); // method call allows overriding
 				for ( Voice voice : voices ) {
 					voice.setSampleRate(sampleRate);
 				}
