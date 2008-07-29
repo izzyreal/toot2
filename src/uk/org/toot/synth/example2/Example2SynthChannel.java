@@ -27,16 +27,19 @@ public class Example2SynthChannel extends SynthChannel
 	private MultiWaveOscillatorVariables oscillator2Vars;
 	private MultiWaveOscillatorVariables oscillator3Vars;
 	private EnvelopeVariables envelopeAVars;
-	private EnvelopeVariables envelopeFVars;
+	private EnvelopeVariables envelopeLPFVars;
+	private EnvelopeVariables envelopeSVFVars;
 	private EnvelopeVariables envelopeO1Vars;
 	private EnvelopeVariables envelopeO2Vars;
-	private FilterVariables filterVars;
+	private FilterVariables lpFilterVars;
+	private FilterVariables svFilterVars;
 	private AmplifierVariables amplifierVars;
 	private DelayedLFOVariables vibratoVars;
 	private DelayedLFOVariables lfoO1Vars;
 	private DelayedLFOVariables lfoO2Vars;
 	private DelayedLFOVariables lfoO3Vars;
-	private MixerVariables filterMixerVars;
+	private MixerVariables lpFilterMixerVars;
+	private MixerVariables svFilterMixerVars;
 
 	public Example2SynthChannel(Example2SynthControls controls) {
 		super(controls.getName());
@@ -44,25 +47,29 @@ public class Example2SynthChannel extends SynthChannel
 		oscillator2Vars = controls.getOscillatorVariables(2-1);
 		oscillator3Vars = controls.getOscillatorVariables(3-1);
 		envelopeAVars = controls.getEnvelopeVariables(1-1);
-		envelopeFVars = controls.getEnvelopeVariables(2-1);
+		envelopeLPFVars = controls.getEnvelopeVariables(2-1);
 		envelopeO1Vars = controls.getEnvelopeVariables(3-1);
 		envelopeO2Vars = controls.getEnvelopeVariables(4-1);
-		filterVars = controls.getFilterVariables(0);
+		envelopeSVFVars = controls.getEnvelopeVariables(5-1);
+		lpFilterVars = controls.getFilterVariables(1-1);
+		svFilterVars = controls.getFilterVariables(2-1);
 		amplifierVars = controls.getAmplifierVariables();
 		vibratoVars = controls.getLFOVariables(0);
 		lfoO1Vars = controls.getLFOVariables(1);
 		lfoO2Vars = controls.getLFOVariables(2);
 		lfoO3Vars = controls.getLFOVariables(3);
-		filterMixerVars = controls.getMixervariables();
+		lpFilterMixerVars = controls.getMixerVariables(1-1);
+		svFilterMixerVars = controls.getMixerVariables(2-1);
 	}
 
 	protected void setSampleRate(int rate) {
 		super.setSampleRate(rate);
 		envelopeAVars.setSampleRate(rate);
-		envelopeFVars.setSampleRate(rate);
+		envelopeLPFVars.setSampleRate(rate);
 		envelopeO1Vars.setSampleRate(rate);
 		envelopeO2Vars.setSampleRate(rate);
-		filterVars.setSampleRate(rate);
+		lpFilterVars.setSampleRate(rate);
+		svFilterVars.setSampleRate(rate);
 	}
 	
 	@Override
@@ -75,9 +82,11 @@ public class Example2SynthChannel extends SynthChannel
 		private Oscillator oscillator1;
 		private Oscillator oscillator2;
 		private Oscillator oscillator3;
-		private Filter filter;
+		private Filter lpFilter;
+		private Filter svFilter;
 		private EnvelopeGenerator envelopeA;
-		private EnvelopeGenerator envelopeF;
+		private EnvelopeGenerator envelopeLPF;
+		private EnvelopeGenerator envelopeSVF;
 		private EnvelopeGenerator envelopeO1;
 		private EnvelopeGenerator envelopeO2;
 		private DelayedLFO vibratoLFO;
@@ -86,14 +95,14 @@ public class Example2SynthChannel extends SynthChannel
 		private DelayedLFO widthO3LFO;
 		private OscillatorControl oscControl;
 //		private SingleTapDelay delay;
-		private float filterFreq = 0.001f;
-		private float filterRes = 2f;
-		private float filterEnvDepth = 1f;
 //		private float fb = 0;
 		private float ampTracking;
 		private float lpfOsc1Level;
 		private float lpfOsc2Level;
 		private float lpfOsc3Level;
+		private float svfOsc1Level;
+		private float svfOsc2Level;
+		private float svfOsc3Level;
 		
 		public Example2Voice(int pitch, int velocity, int sampleRate) {
 			super(pitch, velocity);
@@ -101,14 +110,16 @@ public class Example2SynthChannel extends SynthChannel
 			oscillator2 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator2Vars, frequency);
 			oscillator3 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator3Vars, frequency);
 			envelopeA = new EnvelopeGenerator(envelopeAVars);
-			envelopeF = new EnvelopeGenerator(envelopeFVars);
+			envelopeLPF = new EnvelopeGenerator(envelopeLPFVars);
+			envelopeSVF = new EnvelopeGenerator(envelopeSVFVars);
 			envelopeO1 = new EnvelopeGenerator(envelopeO1Vars);
 			envelopeO2 = new EnvelopeGenerator(envelopeO2Vars);
 			vibratoLFO = new DelayedLFO(vibratoVars);
 			widthO1LFO = new DelayedLFO(lfoO1Vars);
 			widthO2LFO = new DelayedLFO(lfoO2Vars);
 			widthO3LFO = new DelayedLFO(lfoO3Vars);
-			filter = new MoogFilter2();
+			lpFilter = new MoogFilter2(lpFilterVars, frequency, amplitude);
+			svFilter = new StateVariableFilter(svFilterVars, frequency, amplitude);
 			oscControl = new OscillatorControl();
 //			delay = new SingleTapDelay(4410);
 			setSampleRate(sampleRate);
@@ -120,25 +131,15 @@ public class Example2SynthChannel extends SynthChannel
 			oscillator2.setSampleRate(rate);
 			oscillator3.setSampleRate(rate);
 			envelopeAVars.setSampleRate(rate);
-			envelopeFVars.setSampleRate(rate);
+			envelopeLPFVars.setSampleRate(rate);
 			envelopeO1Vars.setSampleRate(rate);
 			envelopeO2Vars.setSampleRate(rate);
 			vibratoLFO.setSampleRate(rate);
 			widthO1LFO.setSampleRate(rate);
 			widthO2LFO.setSampleRate(rate);
 			widthO3LFO.setSampleRate(rate);
-			// update sample rate dependent filter vars
-			if ( filterVars != null ) {
-				filterRes  = filterVars.getResonance();
-				float f = frequency * 2 / rate;
-				filterFreq = f + filterVars.getFrequency();
-				filterFreq *= 1 - filterVars.getVelocityTrack() * (1f - amplitude); // !!! TODO
-				if ( filterFreq >= 1 ) filterFreq = 1f;
-				float fED = filterVars.getEvelopeDepth();
-				float fERange = fED < 0 ? filterFreq - 0.0025f : 1 - filterFreq;
-				// normalise the filter env depth to ensure 0 < fc < 1
-				filterEnvDepth = fED * fERange * amplitude;
-			}
+			lpFilter.setSampleRate(rate);
+			svFilter.setSampleRate(rate);
 		}
 		
 		public boolean mix(AudioBuffer buffer) {
@@ -149,39 +150,48 @@ public class Example2SynthChannel extends SynthChannel
 			widthO1LFO.update();
 			widthO2LFO.update();
 			widthO3LFO.update();
-			lpfOsc1Level = filterMixerVars.getLevel(0);
-			lpfOsc2Level = filterMixerVars.getLevel(1);
-			lpfOsc3Level = filterMixerVars.getLevel(2);
+			lpFilter.update();
+			svFilter.update();
+			lpfOsc1Level = lpFilterMixerVars.getLevel(0);
+			lpfOsc2Level = lpFilterMixerVars.getLevel(1);
+			lpfOsc3Level = lpFilterMixerVars.getLevel(2);
+			svfOsc1Level = svFilterMixerVars.getLevel(0);
+			svfOsc2Level = svFilterMixerVars.getLevel(1);
+			svfOsc3Level = svFilterMixerVars.getLevel(2);
 			return super.mix(buffer);
 		}
 		
 		protected float getSample() {
-			float env;
-			float lfo;
 			// modulation
 			float mod = vibratoLFO.getSample();						// -1..1
 //			float modWheel = (float)getController(1) / 128;			// 0..1
 			float vibrato = (mod/50);  								// 2% freq change max
 			// oscillators
-			lfo = widthO1LFO.getSample();
+			float lfo = widthO1LFO.getSample();						// -1..1
 			float osc1sample = oscillator1.getSample(vibrato, 0, lfo, oscControl);
-			env = envelopeO1.getEnvelope(release); 					// 0..1 - sync osc
-			lfo = widthO2LFO.getSample();
+			float env = envelopeO1.getEnvelope(release); 			// 0..1
+			lfo = widthO2LFO.getSample();							// -1..1
 			float osc2sample = oscillator2.getSample(vibrato, env*env, lfo, oscControl);
-			env = envelopeO2.getEnvelope(release); 					// 0..1 - sync osc
-			lfo = widthO3LFO.getSample();
+			env = envelopeO2.getEnvelope(release); 					// 0..1
+			lfo = widthO3LFO.getSample();							// -1..1
 			float osc3sample = oscillator3.getSample(vibrato, env*env, lfo, oscControl);
-			oscControl.sync = false; 						// clear sync
-			// mix oscillators for filter
+			oscControl.sync = false; 								// clear sync
+			// mix oscillators for low pass filter
 			float sample = osc1sample * lpfOsc1Level
 						 + osc2sample * lpfOsc2Level
 						 + osc3sample * lpfOsc3Level;
-			// filter it, optionally with envelope2 modulation
-			env = envelopeF.getEnvelope(release); 					// 0..1 - filter fc
-			float fc = filterFreq + filterEnvDepth * env;			// 0..1
-			sample = filter.filter(sample, fc, filterRes);
+			// low pass filter it with envelope modulation
+			env = envelopeLPF.getEnvelope(release); 				// 0..1
+			sample = lpFilter.filter(sample, env);
+			// mix oscillators for state variable filter
+			float sample2 = osc1sample * svfOsc1Level
+						  + osc2sample * svfOsc2Level
+						  + osc3sample * svfOsc3Level;
+			// State Variable Filter it wih envelope modulation
+			env = envelopeSVF.getEnvelope(release);					// 0..1
+			sample += svFilter.filter(sample2, env);
 			// scale for velocity with envelope1 modulation
-			env = envelopeA.getEnvelope(release); 					// 0..1 - amplitude
+			env = envelopeA.getEnvelope(release); 					// 0..1
 			sample *= env * ( 1 - ampTracking * (1 - amplitude));	// -1..1 
 			return sample / 4; // TODO level control
 		}

@@ -42,7 +42,7 @@ public class ExampleSynthControls extends SynthControls
 				protected boolean hasDelay() { return false; }
 			};
 		row2.add(envelopeControls[1]);
-		filterControls[0] = new FilterControls(0, "Low Pass Filter", 0x20);
+		filterControls[0] = new MoogFilterControls(0, "Low Pass Filter", 0x20);
 		row2.add(filterControls[0]);
 		add(row2);
 

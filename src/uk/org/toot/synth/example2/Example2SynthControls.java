@@ -18,17 +18,19 @@ import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_SYNTH_ID;
  * 0x10 Oscillator 3
  * 0x18 Vibrato LFO
  * 0x20 Low Pass Filter
- * 0x28 ? filter 2 ?
- * 0x30
- * 0x38
+ * 0x28 	
+ * 			0x2d Low Pass Filter Mixer
+ * 0x30 State Variable Filter
+ * 0x38	State Variable Filter Mixer
+ * 0x3d Amplifier Mixer
  * 0x40 Amplifier Envelope
  * 0x48 Low Pass Filter Envelope
  * 0x50 Oscillator 2 Sync Envelope
  * 0x58 Oscillator 3 Sync Envelope
- * 0x60 ? filter 2 envelope ?
- * 0x68 ? Oscillator 1 Width LFO ?
- * 0x70 ? Oscillator 2 Width LFO ?
- * 0x78 ? Oscillator 3 Width LFO ?
+ * 0x60 State Variable Filter envelope ?
+ * 0x68 Oscillator 1 Width LFO
+ * 0x70 Oscillator 2 Width LFO
+ * 0x78 Oscillator 3 Width LFO
  * @author st
  *
  */
@@ -39,15 +41,16 @@ public class Example2SynthControls extends SynthControls
 	private EnvelopeControls[] envelopeControls;
 	private AmplifierControls amplifierControls;
 	private DelayedLFOControls[] lfoControls;
-	private MixerControls mixerControls;
+	private MixerControls[] mixerControls;
 	
 	public Example2SynthControls(String name) {
 		super(EXAMPLE_2_SYNTH_ID, name);
 		
 		oscillatorControls = new MultiWaveOscillatorControls[4];
-		filterControls = new FilterControls[1];
-		envelopeControls = new EnvelopeControls[4];
+		filterControls = new FilterControls[2];
+		envelopeControls = new EnvelopeControls[5];
 		lfoControls = new DelayedLFOControls[4];
+		mixerControls = new MixerControls[3];
 		
 		LFOConfig widthLFOConfig = new LFOConfig();
 		LFOConfig vibratoConfig = new LFOConfig();
@@ -93,16 +96,28 @@ public class Example2SynthControls extends SynthControls
 		osc2row.add(lfoControls[3]);
 		add(osc2row);
 		
+		ControlRow lpf1row = new ControlRow();		
+		envelopeControls[4] = 
+			new EnvelopeControls(4, "State Variable "+getString("Filter")+" "+getString("Envelope"), 0x60) {
+				protected boolean hasDelay() { return false; }
+			};
+		lpf1row.add(envelopeControls[4]);
+		filterControls[1] = new StateVariableFilterControls(0, "State Variable Filter", 0x30);
+		lpf1row.add(filterControls[1]);
+		mixerControls[1] = new MixerControls(1, "SVF Oscillator Mix", 0x38, 3);
+		lpf1row.add(mixerControls[1]);
+		add(lpf1row);
+
 		ControlRow lpf0row = new ControlRow();		
 		envelopeControls[1] = 
-			new EnvelopeControls(1, getString("Filter")+" "+getString("Envelope"), 0x48) {
+			new EnvelopeControls(1, "Low Pass "+getString("Filter")+" "+getString("Envelope"), 0x48) {
 				protected boolean hasDelay() { return false; }
 			};
 		lpf0row.add(envelopeControls[1]);
-		filterControls[0] = new FilterControls(0, "Low Pass Filter", 0x20);
+		filterControls[0] = new MoogFilterControls(0, "Low Pass Filter", 0x20);
 		lpf0row.add(filterControls[0]);
-		mixerControls = new MixerControls(0, "Oscillator Mix", 0x2d, 3);
-		lpf0row.add(mixerControls);
+		mixerControls[0] = new MixerControls(0, "LPF Oscillator Mix", 0x2d, 3);
+		lpf0row.add(mixerControls[0]);
 		add(lpf0row);
 
 		ControlRow amprow = new ControlRow();
@@ -138,7 +153,7 @@ public class Example2SynthControls extends SynthControls
 		return lfoControls[instance];
 	}
 	
-	public MixerVariables getMixervariables() {
-		return mixerControls;
+	public MixerVariables getMixerVariables(int instance) {
+		return mixerControls[instance];
 	}
 }

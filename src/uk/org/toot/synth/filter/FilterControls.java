@@ -28,10 +28,6 @@ public class FilterControls extends SynthControls
 	
 	private int sampleRate = 44100;
 	
-	public FilterControls(int instanceIndex, String name, int idOffset) {
-		this(FilterIds.MOOG_LPF_ID , instanceIndex, name, idOffset);
-	}
-	
 	public FilterControls(int id, int instanceIndex, String name, final int idOffset) {
 		super(id, instanceIndex, name);
 		this.idOffset = idOffset;
@@ -74,7 +70,7 @@ public class FilterControls extends SynthControls
 	}
 	
 	protected float deriveResonance() {
-		return resonanceControl.getValue() * 4;
+		return resonanceControl.getValue();
 	}
 
 	protected void deriveSampleRateDependentVariables() {

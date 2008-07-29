@@ -7,6 +7,7 @@ package uk.org.toot.audio.delay;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.dsp.FastMath;
 
 public class StereoModulatedDelayProcess extends ModulatedDelayProcess
 {
@@ -55,7 +56,7 @@ public class StereoModulatedDelayProcess extends ModulatedDelayProcess
         else if ( modulatorMap[chan] == 1 ) phase = modulatorPhaseRight;
         else return 0f; // !!! !!! center, LFE no modulation, static delay
         int shape = vars.getLFOShape();
-        float mod = (shape == 0) ? sine(phase) : triangle(phase);
+        float mod = (shape == 0) ? FastMath.sin(phase) : FastMath.triangle(phase);
         // clamp the cheapo algorithm which goes outside range a little
         if ( mod < -1f ) mod = -1f;
         else if ( mod > 1f ) mod = 1f;

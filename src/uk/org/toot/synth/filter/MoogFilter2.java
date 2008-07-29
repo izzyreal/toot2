@@ -1,9 +1,23 @@
 package uk.org.toot.synth.filter;
 
 // http://musicdsp.org/archive.php?classid=3#26
-public class MoogFilter2 implements Filter
+public class MoogFilter2 extends AbstractFilter
 {
 	private double in1, in2, in3, in4, out1, out2, out3, out4;
+	private float res;
+
+	public MoogFilter2(FilterVariables variables, float freq, float amp) {
+		super(variables, freq, amp);
+	}
+	
+	public void update() {
+		res  = vars.getResonance();
+	}
+
+	public float filter(float sample, float env) {
+		float f = fc + envDepth * env;			// 0..1
+		return filter(sample, f, res);
+	}
 
 	public float filter(float input, float fc, float res) {
 		double f = fc * 1.16;
@@ -20,5 +34,4 @@ public class MoogFilter2 implements Filter
 		in4  = out3;
 		return (float)out4;	
 	}
-
 }

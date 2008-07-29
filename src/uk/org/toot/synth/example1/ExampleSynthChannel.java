@@ -79,7 +79,7 @@ public class ExampleSynthChannel extends SynthChannel
 			envelopeF = new EnvelopeGenerator(envelopeFVars);
 			envelopeO = new EnvelopeGenerator(envelopeOVars);
 			lfo = new LFO();
-			filter = new MoogFilter2();
+			filter = new MoogFilter2(filterVars, frequency, amplitude);
 			oscillatorControl = new OscillatorControl();
 //			delay = new SingleTapDelay(4410);
 			setSampleRate(sampleRate);

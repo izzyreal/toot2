@@ -8,6 +8,7 @@ package uk.org.toot.audio.delay;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.dsp.FastMath;
 
 import static uk.org.toot.audio.core.FloatDenormals.*;
 /**
@@ -149,30 +150,13 @@ public class ModulatedDelayProcess implements AudioProcess
     protected float modulation(int chan) {
         if ( modulatorMap[chan] < 0 ) return 0f;
         int shape = vars.getLFOShape();
-        float mod = (shape == 0) ? sine(modulatorPhase) : triangle(modulatorPhase);
+        float mod = (shape == 0) ? 
+        		FastMath.sin(modulatorPhase) : 
+        		FastMath.triangle(modulatorPhase);
         // clamp the cheapo algorithm which goes outside range a little
         if ( mod < -1f ) mod = -1f;
         else if ( mod > 1f ) mod = 1f;
         return mod;
-    }
-
-    // http://www.devmaster.net/forums/showthread.php?t=5784
-    private static final float S_B = (float)(4 /  Math.PI);
-    private static final float S_C = (float)(-4 / (Math.PI*Math.PI));
-    // -PI < x < PI
-    protected float sine(float x) {
-        return S_B * x + S_C * x * Math.abs(x);
-    }
-
-    // -PI < x < PI
-    // thanks scoofy[AT]inf[DOT]elte[DOT]hu
-    // for musicdsp.org pseudo-code improvement
-    protected float triangle(float x) {
-        x += Math.PI;		// 0 < x < 2*PI
-        x /= Math.PI / 2;   // 0 < x < 4
-        x -= 1;				// -1 < x < 3
-        if ( x > 1 ) x -= 4f;
-        return Math.abs(-(Math.abs(x)-2)) - 1;
     }
 
     protected int msToSamples(float ms, float sr) {
