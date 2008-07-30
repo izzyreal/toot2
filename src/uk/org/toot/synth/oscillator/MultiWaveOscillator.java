@@ -1,11 +1,14 @@
 package uk.org.toot.synth.oscillator;
 
 import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.envelope.EnvelopeGenerator;
 
 public class MultiWaveOscillator implements Oscillator
 {
 	private SynthChannel channel;
 	private MultiWaveOscillatorVariables vars;
+	private EnvelopeGenerator syncEnv;
+	private LFO lfo;
 	private boolean master;
 	private MultiWave multiWave;
 	private Wave wave;
@@ -21,11 +24,19 @@ public class MultiWaveOscillator implements Oscillator
 	private float offset = 0f;
 	private float frequency;
 	private float width;
-	private float shift = 0;
+	private float lfoDepth;
+	private boolean widthMod;
 	
-	public MultiWaveOscillator(SynthChannel channel, MultiWaveOscillatorVariables oscillatorVariables, float frequency) {
+	public MultiWaveOscillator(
+			SynthChannel channel, 
+			MultiWaveOscillatorVariables oscillatorVariables, 
+			EnvelopeGenerator env,
+			LFO lfo,
+			float frequency) {
 		this.channel = channel;
 		vars = oscillatorVariables;
+		syncEnv = env;
+		this.lfo = lfo;
 		master = vars.isMaster();
 		multiWave = vars.getMultiWave();
 		this.frequency = frequency;
@@ -42,27 +53,35 @@ public class MultiWaveOscillator implements Oscillator
 	public void update() {
 		bentIncrement = increment * channel.getBendFactor();
 		syncEnvDepth = vars.getEnvelopeDepth();
-		sync = syncEnvDepth > 0.01f;
+		sync = syncEnv != null && syncEnvDepth > 0.01f;
 		detuneFactor = vars.getDetuneFactor();
 		width = vars.getWidth();
+		lfoDepth = vars.getWidthLFODepth() / 2.002f;
+		widthMod = lfoDepth > 0.01f;
+		if ( widthMod ) lfo.update();
 		scalar = multiWave.getWidthScalar(width);
 		offset = multiWave.getWidthOffset(width);
 	}
 	
-	public float getSample(float mod, float env, float lfo, OscillatorControl control) {
+	public float getSample(float mod, OscillatorControl control, boolean release) {
 		float inc = bentIncrement * (mod + 1); 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
 		if ( !master ) {
 			if ( sync ) {
 				if ( control.sync ) index = 0; 	// hard sync - aliases
-				inc *= (2 + (syncEnvDepth * env));
+				float env = syncEnv.getEnvelope(release);
+				inc *= (2 + (syncEnvDepth * env * env));
 			}
 			inc *= detuneFactor;
 		}
 		float sample = wave.get(index);
-		float w = Math.abs(width + vars.getWidthLFODepth() * lfo / 2.002f);
-		if ( w > 0.99f ) w = 0.99f;
-		shift = waveSize * w;
-		float ixShift = index + shift;
+		float w = width;
+		if ( widthMod ) {
+			w += lfoDepth * lfo.getSample();
+			w = Math.abs(w);
+			if ( w > 0.99f ) w = 0.99f;
+			else if ( w < 0.01f ) w = 0.01f;
+		}
+		float ixShift = index + waveSize*w;
 		if ( ixShift >= waveSize ) ixShift -= waveSize;
 		sample -= wave.get(ixShift);  			// inverted phase shifted for PWM etc.
 		index += inc;
