@@ -50,7 +50,9 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	// implement AudioProcess ---------------------------------- 
 	
 	public void open() {
-		
+		// load voice classes
+		noteOn(40, 0);
+		noteOff(40, 0);
 	}
 	
 	public int processAudio(AudioBuffer buffer) {

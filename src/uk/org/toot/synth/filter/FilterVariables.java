@@ -7,4 +7,5 @@ public interface FilterVariables
 	float getResonance();		// filter dependent meaning
 	float getEvelopeDepth();	// -1..1
 	float getVelocityTrack();   //  0..5?
+	float getKeyTrack();
 }

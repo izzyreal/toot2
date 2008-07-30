@@ -18,6 +18,7 @@ public abstract class AbstractFilter implements Filter
 	public void setSampleRate(int rate) {
 		fs = rate;
 		float f = freq * 2 / fs;
+		f *= vars.getKeyTrack();
 		fc = f + vars.getFrequency();
 		fc *= 1 - vars.getVelocityTrack() * (1f - amp); // !!! TODO
 		if ( fc >= 1 ) fc = 1f;

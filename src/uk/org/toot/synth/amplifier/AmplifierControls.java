@@ -11,14 +11,17 @@ import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
+import uk.org.toot.control.LogLaw;
 import uk.org.toot.synth.SynthControls;
 
 public class AmplifierControls extends SynthControls 
 	implements AmplifierVariables
 {
 	private FloatControl velocityTrackControl;
+	private FloatControl levelControl;
 	
 	private float velocityTrack;
+	private float level;
 	
 	private int idOffset = 0;
 	
@@ -40,6 +43,7 @@ public class AmplifierControls extends SynthControls
 //				if (c.isIndicator()) return;
 				switch (c.getId()-idOffset) {
 				case VEL_TRACK: velocityTrack = deriveVelocityTrack() ; break;
+				case LEVEL: level = deriveLevel(); break;
 				}
 			}
 		});
@@ -47,16 +51,22 @@ public class AmplifierControls extends SynthControls
 
 	protected void createControls() {
 		add(velocityTrackControl = createVelocityTrackControl());
+		add(levelControl = createLevelControl());
 	}
 
 	protected void deriveSampleRateIndependentVariables() {
 		velocityTrack = deriveVelocityTrack();
+		level = deriveLevel();
 	}
 
 	protected float deriveVelocityTrack() {
 		return velocityTrackControl.getValue();
 	}
 
+	protected float deriveLevel() {
+		return levelControl.getValue();
+	}
+	
 	protected void deriveSampleRateDependentVariables() {
 	}
 
@@ -67,8 +77,19 @@ public class AmplifierControls extends SynthControls
         return control;				
 	}
 
+	protected FloatControl createLevelControl() {
+		ControlLaw law = new LogLaw(0.01f, 1f, "");
+        FloatControl control = new FloatControl(LEVEL+idOffset, getString("Level"), law, 0.01f, 0.1f);
+        control.setInsertColor(Color.BLACK);
+        return control;						
+	}
+	
 	public float getVelocityTrack() {
 		return velocityTrack;
+	}
+	
+	public float getLevel() {
+		return level;
 	}
 	
 	public void setSampleRate(int rate) {

@@ -122,7 +122,7 @@ public class Example2SynthControls extends SynthControls
 
 		ControlRow amprow = new ControlRow();
 		envelopeControls[0] = 
-			new EnvelopeControls(0, getString("Amplitude")+" "+getString("Envelope"), 0x40) {
+			new EnvelopeControls(0, getString("Amplifier")+" "+getString("Envelope"), 0x40) {
 				protected boolean hasDelay() { return false; }
 			}
 		; 

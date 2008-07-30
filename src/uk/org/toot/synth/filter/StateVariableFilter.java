@@ -6,13 +6,17 @@ public class StateVariableFilter extends AbstractFilter
 {
 	private float prev = 0f;
 	private float damp;
+	private float mix;
+	private boolean bp;
 	private float low, high, band, notch;
 
-	public StateVariableFilter(FilterVariables variables, float freq, float amp) {
+	public StateVariableFilter(StateVariableFilterVariables variables, float freq, float amp) {
 		super(variables, freq, amp);
 	}
 	
 	public void update() {
+		mix = ((StateVariableFilterVariables)vars).getModeMix();
+		bp = ((StateVariableFilterVariables)vars).isBandMode();		
 	}
 
 	/*
@@ -40,6 +44,6 @@ public class StateVariableFilter extends AbstractFilter
 		low   = low + freq * band;								
 		high  = notch - low;									
 		band  = freq * high + band; // - drive*band*band*band;	
-		return low;					// TODO proper decimation
+		return bp ? band : (1f-mix)*low + mix*high;					
 	}
 }

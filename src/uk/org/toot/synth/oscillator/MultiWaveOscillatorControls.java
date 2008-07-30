@@ -112,7 +112,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
             }        	
 
         };
-        control.setInsertColor(Color.GREEN);
+        control.setInsertColor(Color.WHITE);
         return control;				
 	}
 
