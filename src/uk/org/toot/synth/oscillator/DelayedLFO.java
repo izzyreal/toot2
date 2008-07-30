@@ -10,7 +10,7 @@ package uk.org.toot.synth.oscillator;
 public class DelayedLFO extends LFO
 {
 	private DelayedLFOVariables vars;
-	private float level = 1f;
+	private float level;
 	private float env = 0f;
 	private int delay;
 	private float attack;
@@ -29,13 +29,6 @@ public class DelayedLFO extends LFO
 	public void update() {
 		super.update();
 		level = vars.getLevel();
-		if ( env < 0 ) {
-			System.out.println("DLFO env "+env);
-			env = 0;
-		} else if ( env > 2 ) {
-			System.out.println("DLFO env "+env);
-			env = 1;			
-		}
 	}
 	
 	public float getSample() {
@@ -46,7 +39,6 @@ public class DelayedLFO extends LFO
 				env += attack;
 			}
 		}
-		float amp = level * env;
-		return amp * super.getSample();
+		return level * env * super.getSample();
 	}
 }

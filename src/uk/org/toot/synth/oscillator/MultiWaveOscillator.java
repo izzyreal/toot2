@@ -47,7 +47,6 @@ public class MultiWaveOscillator implements Oscillator
 		width = vars.getWidth();
 		scalar = multiWave.getWidthScalar(width);
 		offset = multiWave.getWidthOffset(width);
-		shift = width * waveSize;
 	}
 	
 	public float getSample(float mod, float env, float lfo, OscillatorControl control) {

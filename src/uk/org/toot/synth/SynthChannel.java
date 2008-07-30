@@ -101,6 +101,8 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	protected abstract Voice createVoice(int pitch, int velocity, int sampleRate);
 	
 	public void noteOn(int pitch, int velocity) {
+		// create expensive Voice prior to synchronisation to minimise locking
+		Voice v = createVoice(pitch, velocity, sampleRate);
 		synchronized ( voices ) {
 			if ( voices.size() >= polyphony ) {
 				// oldest note stealing
@@ -108,7 +110,7 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 				steal.stop();
 				voices.remove(steal);
 			}
-			voices.add(createVoice(pitch, velocity, sampleRate));
+			voices.add(v);
 		}
 	}
 
