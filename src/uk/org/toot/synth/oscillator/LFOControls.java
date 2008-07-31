@@ -17,9 +17,9 @@ import uk.org.toot.control.LogLaw;
 
 public class LFOControls extends CompoundControl implements LFOVariables
 {
-	public final static int FREQUENCY = 1;
-	public final static int DEVIATION = 2;
-	public final static int SHAPE = 3;
+	public final static int FREQUENCY = 0;
+	public final static int DEVIATION = 1;
+	public final static int SHAPE = 2;
 
 	private FloatControl frequencyControl;
 	private FloatControl deviationControl;

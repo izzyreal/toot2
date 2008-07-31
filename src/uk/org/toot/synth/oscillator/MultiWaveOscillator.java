@@ -64,7 +64,7 @@ public class MultiWaveOscillator implements Oscillator
 	}
 	
 	public float getSample(float mod, OscillatorControl control, boolean release) {
-		float inc = bentIncrement * (mod + 1); 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
+		float inc = bentIncrement * mod; 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
 		if ( !master ) {
 			if ( sync ) {
 				if ( control.sync ) index = 0; 	// hard sync - aliases

@@ -12,7 +12,7 @@ import uk.org.toot.synth.SynthControls;
 
 public class MixerControls extends SynthControls implements MixerVariables
 {
-	public final static int LEVEL = 1;
+	public final static int LEVEL = 0;
 	
 	private FloatControl[] levelControl;
 	private float[] level;

@@ -1,21 +1,26 @@
 package uk.org.toot.synth.filter;
 
+import uk.org.toot.synth.envelope.EnvelopeGenerator;
+
 // http://musicdsp.org/archive.php?classid=3#26
 public class MoogFilter2 extends AbstractFilter
 {
 	private double in1, in2, in3, in4, out1, out2, out3, out4;
 	private float res;
 
-	public MoogFilter2(FilterVariables variables, float freq, float amp) {
-		super(variables, freq, amp);
+	public MoogFilter2(FilterVariables variables, EnvelopeGenerator eg, float freq, float amp) {
+		super(variables, eg, freq, amp);
 	}
 	
 	public void update() {
 		res  = vars.getResonance();
 	}
 
-	public float filter(float sample, float env) {
-		float f = fc + envDepth * env;			// 0..1
+	public float filter(float sample, boolean release) {
+		float f = fc;
+		if ( envDepth != 0f ) {
+			f += envDepth * cutoffEnv.getEnvelope(release);
+		}
 		return filter(sample, f, res);
 	}
 

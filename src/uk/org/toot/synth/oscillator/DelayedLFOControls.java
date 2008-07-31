@@ -11,9 +11,9 @@ import uk.org.toot.control.LogLaw;
 
 public class DelayedLFOControls extends LFOControls implements DelayedLFOVariables
 {
-	public final static int DELAY = 5;
-	public final static int ATTACK = 6;
-	public final static int LEVEL = 7;
+	public final static int DELAY = 3;
+	public final static int ATTACK = 4;
+	public final static int LEVEL = 5;
 	
 	private FloatControl delayControl;
 	private FloatControl attackControl;

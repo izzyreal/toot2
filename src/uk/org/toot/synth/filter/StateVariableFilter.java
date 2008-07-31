@@ -1,20 +1,22 @@
 package uk.org.toot.synth.filter;
 
 import uk.org.toot.dsp.FastMath;
+import uk.org.toot.synth.envelope.EnvelopeGenerator;
 
 public class StateVariableFilter extends AbstractFilter
 {
 	private float prev = 0f;
-	private float damp;
+	private float res;
 	private float mix;
 	private boolean bp;
 	private float low, high, band, notch;
 
-	public StateVariableFilter(StateVariableFilterVariables variables, float freq, float amp) {
-		super(variables, freq, amp);
+	public StateVariableFilter(StateVariableFilterVariables variables, EnvelopeGenerator eg, float freq, float amp) {
+		super(variables, eg, freq, amp);
 	}
 	
 	public void update() {
+		res = vars.getResonance();
 		mix = ((StateVariableFilterVariables)vars).getModeMix();
 		bp = ((StateVariableFilterVariables)vars).isBandMode();		
 	}
@@ -25,12 +27,15 @@ public class StateVariableFilter extends AbstractFilter
 	 * freq   = 2.0*sin(PI*MIN(0.25, fc/(fs*2)));  // the fs*2 is because it's double sampled
 	 * damp   = MIN(2.0*(1.0 - pow(res, 0.25)), MIN(2.0, 2.0/freq - freq*0.5)); 
 	 */
-	public float filter(float sample, float env) {
-		float f1 = fc + envDepth * env;			// 0..1 (1 at Nyquist)
-		float fc = 2f * FastMath.sin((float)(Math.PI * Math.min(0.24f, f1/4)));  // the /4 is because it's double sampled
+	public float filter(float sample, boolean release) {
+		float f1 = fc;
+		if ( envDepth != 0f ) {
+			f1 += envDepth * cutoffEnv.getEnvelope(release);
+		}
+		// the /4 is because it's double sampled
+		float fc = 2f * FastMath.sin((float)(Math.PI * Math.min(0.24f, f1/4)));  
 		// Thanks to Laurent de Soras for the stability limit
-		damp = Math.min(vars.getResonance(), (float)Math.min(1.9f, 2f/fc - fc*0.5));		
-		return filter(sample, fc, damp);
+		return filter(sample, fc, Math.min(res, (float)Math.min(1.9f, 2f/fc - fc*0.5)));
 	}
 
 	public float filter(float in, float freq, float damp) {

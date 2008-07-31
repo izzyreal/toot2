@@ -16,11 +16,11 @@ import uk.org.toot.control.LinearLaw;
 
 public class MultiWaveOscillatorControls extends CompoundControl implements MultiWaveOscillatorVariables 
 {
-	public final static int WAVE = 1; // TODO move to OscillatorControlIds.java
-	public final static int WIDTH = 2;
+	public final static int WAVE = 0; // TODO move to OscillatorControlIds.java
+	public final static int WIDTH = 1;
+	public final static int DETUNE = 2;
 	public final static int ENV_DEPTH = 3;
-	public final static int DETUNE = 4;
-	public final static int LFO_DEPTH = 5;
+	public final static int LFO_DEPTH = 4;
 	
 	private FloatControl envDepthControl;
 	private FloatControl detuneControl;

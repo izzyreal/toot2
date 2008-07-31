@@ -74,11 +74,11 @@ public class EnvelopeControls extends CompoundControl
 		if ( hasDelay() ) {
 			add(delayControl = createDelayControl(0f, 1000f, 0f));		// ms
 		}
-		add(attackControl = createAttackControl(0.1f, 10000f*m, 1f)); 	// ms
-		add(holdControl = createHoldControl(0, 1000, 10)); 			// ms
-		add(decayControl = createDecayControl(10f, 10000f*m, 100f));	// (ms)
+		add(attackControl = createAttackControl(1f, 10000f*m, 1f)); 	// ms
+		add(holdControl = createHoldControl(0, 1000, 10)); 				// ms
+		add(decayControl = createDecayControl(20f, 20000f*m, 200f));	// ms
 		add(sustainControl = createSustainControl());
-		add(releaseControl = createReleaseControl(2, 2000*m, 200));	// ms
+		add(releaseControl = createReleaseControl(20, 2000*m, 200f));		// ms
 	}
 
     protected void deriveSampleRateIndependentVariables() {
