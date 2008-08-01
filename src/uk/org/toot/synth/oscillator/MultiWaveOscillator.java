@@ -39,6 +39,13 @@ public class MultiWaveOscillator implements Oscillator
 		this.lfo = lfo;
 		master = vars.isMaster();
 		multiWave = vars.getMultiWave();
+		int octave = vars.getOctave();
+		switch ( octave ) {
+		case -2: frequency /= 4; break;
+		case -1: frequency /= 2; break;
+		case +1: frequency *= 2; break;
+		case +2: frequency *= 4; break;
+		}
 		this.frequency = frequency;
 		wave = getWave(frequency);
 		waveSize = wave.getData().length - 1;
@@ -69,7 +76,7 @@ public class MultiWaveOscillator implements Oscillator
 			if ( sync ) {
 				if ( control.sync ) index = 0; 	// hard sync - aliases
 				float env = syncEnv.getEnvelope(release);
-				inc *= (2 + (syncEnvDepth * env * env));
+				inc *= (1 + syncEnvDepth * env * env);
 			}
 			inc *= detuneFactor;
 		}

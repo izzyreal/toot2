@@ -125,6 +125,8 @@ public abstract class CompoundControl extends Control
 
     public boolean isNeverBordered() { return false; }
 
+    public float getAlignmentY() { return -1f; } // -ve values are ignored
+    
     // override for tab
     public String getAlternate() { return null; }
 

@@ -180,6 +180,7 @@ public class Example2SynthChannel extends SynthChannel
 				s3 = oscillator3.getSample(vibrato, oscControl, release);
 			}
 			oscControl.sync = false; // clear sync for next iteration
+			// filters
 			if ( lpfEnabled ) {
 				sample = s1 * lpfOsc1Level + s2 * lpfOsc2Level + s3 * lpfOsc3Level;
 				sample = lpFilter.filter(sample, release);
@@ -189,7 +190,7 @@ public class Example2SynthChannel extends SynthChannel
 				sample2 = s1 * svfOsc1Level + s2 * svfOsc2Level + s3 * svfOsc3Level;
 				sample += svFilter.filter(sample2, release);
 			}
-			// scale for velocity with envelope modulation
+			// amplifier
 			return sample * ampLevel * envelopeA.getEnvelope(release);				   
 		}
 

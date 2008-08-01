@@ -33,7 +33,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
         if ( hasBorder && !control.isNeverBordered() ) {
       	    parent.setBorder(new TitledBorder("")); // !!!
-        }
+        } 
         // prepare the header
         if ( hasHeader ) {
         	JComponent header = createHeader(control, axis);
@@ -54,6 +54,10 @@ public class ControlPanelFactory extends Observable implements PanelFactory
 		// now prepare the content pane
         final JPanel target = new JPanel();
         target.setLayout(new BoxLayout(target, axis));
+        float ay = control.getAlignmentY();
+        if ( ay >= 0f ) {
+           	parent.setAlignmentY(ay);           	
+        }
         parent.add(target);
         return target;
 	}

@@ -66,7 +66,7 @@ public class StateVariableFilterControls extends FilterControls
 
 	protected BooleanControl createBandModeControl() {
 		BooleanControl control = new BooleanControl(BAND_MODE+idOffset, "Band Pass", bandMode);
-		control.setAnnotation("BP");
+		control.setAnnotation("B");
 		control.setStateColor(true, Color.PINK);
 		return control;
 	}
