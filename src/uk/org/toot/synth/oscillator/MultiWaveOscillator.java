@@ -13,16 +13,17 @@ public class MultiWaveOscillator implements Oscillator
 	private MultiWave multiWave;
 	private Wave wave;
 	private int waveSize;
+	private int waveIndex;			// index of the Wave in the MultiWave
 	private float k;				// product of period in samples * frequency in Hz
+	private float k2;				// frequency / increment
 	private float increment = 1f;	// wave increment for the nominal pitch
-	private float bentIncrement;
+	private float currentIncrement;
 	private float syncEnvDepth;
 	private boolean sync;
-	private float detuneFactor;
-	private float index = 0f;
+	private float index = 0f;		// index of the sample within the Wave
 	private float scalar = 1f;
 	private float offset = 0f;
-	private float frequency;
+	private float frequency;		// nominal (start) frequency
 	private float width;
 	private float lfoDepth;
 	private boolean widthMod;
@@ -47,7 +48,8 @@ public class MultiWaveOscillator implements Oscillator
 		case +2: frequency *= 4; break;
 		}
 		this.frequency = frequency;
-		wave = getWave(frequency);
+		waveIndex = multiWave.getIndex(frequency);
+		wave = multiWave.getWave(waveIndex);
 		waveSize = wave.getData().length - 1;
 		k = wave.getPeriod() * frequency;
 		index = waveSize * multiWave.getWidthStartFactor(vars.getWidth());
@@ -55,15 +57,15 @@ public class MultiWaveOscillator implements Oscillator
 	
 	public void setSampleRate(int sampleRate) {
 		increment = k / sampleRate;
+		k2 = frequency / increment;
 	}
 	
 	public void update() {
-		bentIncrement = increment * channel.getBendFactor();
+		currentIncrement = increment * channel.getBendFactor() * vars.getDetuneFactor();
 		syncEnvDepth = vars.getEnvelopeDepth();
-		sync = syncEnv != null && syncEnvDepth > 0.01f;
-		detuneFactor = vars.getDetuneFactor();
+		sync = syncEnv != null && syncEnvDepth > 0.01f && !master;
 		width = vars.getWidth();
-		lfoDepth = vars.getWidthLFODepth() / 2.002f;
+		lfoDepth = Math.min(width, 1f-width) * vars.getWidthLFODepth();
 		widthMod = lfoDepth > 0.01f;
 		if ( widthMod ) lfo.update();
 		scalar = multiWave.getWidthScalar(width);
@@ -71,37 +73,28 @@ public class MultiWaveOscillator implements Oscillator
 	}
 	
 	public float getSample(float mod, OscillatorControl control, boolean release) {
-		float inc = bentIncrement * mod; 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
-		if ( !master ) {
-			if ( sync ) {
-				if ( control.sync ) index = 0; 	// hard sync - aliases
-				float env = syncEnv.getEnvelope(release);
-				inc *= (1 + syncEnvDepth * env * env);
-			}
-			inc *= detuneFactor;
+		float inc = currentIncrement * mod; 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
+		if ( sync ) {
+			if ( control.sync ) index = 0; 		// hard sync - aliases
+			float env = syncEnv.getEnvelope(release);
+			inc *= (1 + syncEnvDepth * env * env);
 		}
 		float sample = wave.get(index);
 		float w = width;
-		if ( widthMod ) {
-			w += lfoDepth * lfo.getSample();
-			w = Math.abs(w);
-			if ( w > 0.99f ) w = 0.99f;
-			else if ( w < 0.01f ) w = 0.01f;
-		}
-		float ixShift = index + waveSize*w;
+		if ( widthMod ) w += lfoDepth * lfo.getSample();
+		float ixShift = index + waveSize * w;
 		if ( ixShift >= waveSize ) ixShift -= waveSize;
 		sample -= wave.get(ixShift);  			// inverted phase shifted for PWM etc.
 		index += inc;
-		if ( index >= waveSize ) {
-			index -= waveSize;
-			wave = getWave(frequency * inc / increment);
+		if ( index >= waveSize ) {				// once per wave cycle
+			index -= waveSize;					// glitches shifted sample!
+			int wi = multiWave.getIndex(k2 * inc);
+			if ( wi != waveIndex ) {
+				wave = multiWave.getWave(wi);
+				waveIndex = wi;
+			}
 			if ( master ) control.sync = true;
 		} 
 		return sample * scalar + offset;
 	}
-
-	protected Wave getWave(float freq) {
-		return multiWave.getWave(multiWave.getIndex(freq));
-	}
-
 }

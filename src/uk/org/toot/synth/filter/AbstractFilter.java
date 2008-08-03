@@ -27,7 +27,8 @@ public abstract class AbstractFilter implements Filter
 		fc *= 1 - vars.getVelocityTrack() * (1f - amp); // !!! TODO
 		if ( fc >= 1 ) fc = 1f;
 		float fED = vars.getEvelopeDepth();
-		float fERange = fED < 0 ? fc - 0.0025f : 1 - fc;
+		float fMin = 2f * 20f / rate;
+		float fERange = fED < 0 ? fc - fMin : 1 - fc;
 		// normalise the filter env depth to ensure 0 < fc < 1
 		envDepth = fED * fERange * amp;		
 	}
