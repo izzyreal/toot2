@@ -44,8 +44,8 @@ public class Example2SynthControls extends SynthControls
 	private DelayedLFOControls[] lfoControls;
 	private MixerControls[] mixerControls;
 	
-	public Example2SynthControls(String name) {
-		super(EXAMPLE_2_SYNTH_ID, name);
+	public Example2SynthControls() {
+		super(EXAMPLE_2_SYNTH_ID, "ExSyn2");
 		
 		oscillatorControls = new MultiWaveOscillatorControls[4];
 		filterControls = new FilterControls[2];

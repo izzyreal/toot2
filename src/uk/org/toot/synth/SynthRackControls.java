@@ -32,7 +32,7 @@ public class SynthRackControls extends CompoundControl
 		return synthControls[midisynth][chan];
 	}
 	
-	public void add(int synth, int chan, SynthControls controls) {
+	public void set(int synth, int chan, SynthControls controls) {
 		List<MidiSynth> synths = synthRack.getMidiSynths();
 		if ( synth >= synths.size() ) {
 			throw new IllegalArgumentException("Illegal MidiSynth "+synth);
@@ -40,15 +40,32 @@ public class SynthRackControls extends CompoundControl
 		if ( chan < 0 || chan > 15 ) {
 			throw new IllegalArgumentException("Illegal MIDI channel "+chan);
 		}
-		// SPI lookup plugin SynthChannel for these controls
-		SynthChannel synthChannel = SynthServices.createSynthChannel(controls);
-		if ( synthChannel == null ) {
-			throw new IllegalArgumentException("No SynthChannel for SynthControls");
+		
+		SynthChannel old = synths.get(synth).getChannels()[chan];
+		if ( old != null ) disconnect(synth, chan, old);
+		
+		if ( controls != null ) {
+			// SPI lookup plugin SynthChannel for these controls
+			SynthChannel synthChannel = SynthServices.createSynthChannel(controls);
+			if ( synthChannel == null ) {
+				throw new IllegalArgumentException("No SynthChannel for SynthControls");
+			}
+			// add SynthChannel to MidiSynth in synthRack
+			synths.get(synth).setChannel(chan, synthChannel);
+			synthControls[synth][chan] = controls;
+			super.add(controls);
+			connect(synth, chan, synthChannel);
+		} else {
+			synths.get(synth).setChannel(chan, null);
+			super.remove(synthControls[synth][chan]);
+			synthControls[synth][chan] = null;
 		}
-		// add SynthChannel to MidiSynth in synthRack
-		synths.get(synth).setChannel(chan, synthChannel);
-		synthControls[synth][chan] = controls;
-		super.add(controls);
+	}
+
+	protected void connect(int synth, int chan, SynthChannel channel) {	
+	}
+	
+	protected void disconnect(int synth, int chan, SynthChannel channel) {
 	}
 	
 	public int getProviderId() {
