@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import uk.org.toot.control.*;
+import uk.org.toot.control.automation.SnapshotAutomation;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.id.ProviderId;
@@ -51,7 +52,7 @@ public class MixerControls extends CompoundControl //AudioControls
      * @link aggregation
      * @supplierCardinality 0..1 
      */
-    private MixerControlsSnapshotAutomation snapshotAutomation;
+    private SnapshotAutomation snapshotAutomation;
 
     public MixerControls(String name) {
         this(name, getString("Main"), ChannelFormat.STEREO);
@@ -198,11 +199,11 @@ public class MixerControls extends CompoundControl //AudioControls
         return null;
     }
 
-    public MixerControlsSnapshotAutomation getSnapshotAutomation() {
+    public SnapshotAutomation getSnapshotAutomation() {
         return snapshotAutomation;
     }
 
-    public void setSnapshotAutomation(MixerControlsSnapshotAutomation automation) {
+    public void setSnapshotAutomation(SnapshotAutomation automation) {
         snapshotAutomation = automation;
     }
 

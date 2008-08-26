@@ -13,13 +13,13 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
 import javax.swing.*;
-import uk.org.toot.audio.mixer.*;
 import java.util.Observable;
 import java.util.Observer;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.audio.mixer.automation.AutomationControls;
 import uk.org.toot.control.ControlSelector;
+import uk.org.toot.control.automation.SnapshotAutomation;
 import uk.org.toot.swingui.audioui.AudioCompoundControlPanel;
 import uk.org.toot.swingui.controlui.PanelFactory;
 import uk.org.toot.swing.DisposablePanel;
@@ -138,7 +138,7 @@ public class CompactMixerPanel extends DisposablePanel
         };
         channelButton.addActionListener(actionListener); // !!! !!! remove?
         bar.add(channelButton);
-        MixerControlsSnapshotAutomation snapshotAutomation =
+        SnapshotAutomation snapshotAutomation =
             mixerControls.getSnapshotAutomation();
         if ( snapshotAutomation != null ) {
 	        JPopupMenu snapshotPopup = new SnapshotAutomationPopupMenu(snapshotAutomation);

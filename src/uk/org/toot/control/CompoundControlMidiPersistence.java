@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.sound.midi.*;
+
+import uk.org.toot.control.automation.MidiPersistence;
 // !!! !!!
-import static uk.org.toot.control.ControlSysexMsg.*; // !!! !!!
+import static uk.org.toot.control.automation.ControlSysexMsg.*;
 
 public class CompoundControlMidiPersistence implements CompoundControlPersistence
 {

@@ -7,12 +7,14 @@ package uk.org.toot.audio.mixer.automation;
 
 import javax.sound.midi.*;
 import uk.org.toot.control.*;
+import uk.org.toot.control.automation.MidiPersistence;
+import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
 import uk.org.toot.audio.core.*;
 import java.util.List;
 import uk.org.toot.audio.mixer.MixerControls;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
-import static uk.org.toot.control.ControlSysexMsg.*;
+import static uk.org.toot.control.automation.ControlSysexMsg.*;
 import static uk.org.toot.midi.message.MetaMsg.*;
 import static uk.org.toot.midi.message.NoteMsg.*;
 
@@ -23,13 +25,15 @@ import static uk.org.toot.midi.message.NoteMsg.*;
  *  Implement recall(String name) to call recallSequence(Sequence s)
  *  Implement store(String name) to call storeSequence(String name)
  */
-abstract public class MixerControlsMidiSequenceSnapshotAutomation extends BasicSnapshotAutomation 
+public class MixerControlsMidiSequenceSnapshotAutomation 
+	extends BasicSnapshotAutomation
+	implements MidiSequenceSnapshotAutomation
 {
     public MixerControlsMidiSequenceSnapshotAutomation(MixerControls controls) {
         super(controls);
     }
 
-    protected void configureSequence(Sequence snapshot) {
+    public void configureSequence(Sequence snapshot) {
         Track[] tracks = snapshot.getTracks();
         Track track;
         String stripName;
@@ -163,7 +167,7 @@ abstract public class MixerControlsMidiSequenceSnapshotAutomation extends BasicS
         }
     }
 
-    protected void recallSequence(Sequence snapshot) {
+    public void recallSequence(Sequence snapshot) {
         Track[] tracks = snapshot.getTracks();
         Track track;
         int providerId = 0;
@@ -229,7 +233,7 @@ abstract public class MixerControlsMidiSequenceSnapshotAutomation extends BasicS
         // should be able to use a template of which strips/modules to recall
     }
 
-    protected Sequence storeSequence(String name) {
+    public Sequence storeSequence(String name) {
         // all events are at zero tick so sequence resolution is pointless
         // also, events waste space because tick is always zero !!!
         Sequence snapshot;

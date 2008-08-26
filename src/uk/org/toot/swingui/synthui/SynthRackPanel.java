@@ -3,7 +3,6 @@ package uk.org.toot.swingui.synthui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,12 +47,33 @@ public class SynthRackPanel extends JTabbedPane
 		for ( int i = 0; i < controls.getMidiSynthCount(); i++ ) {
 			addTab(String.valueOf((char)('A'+i)), createSynthSelectorPane(i));
 		}
+		rackControls.addSynthControlsListener(
+			new SynthRackControls.SynthControlsListener() {
+				public void synthControlsSet(int synth, int chan, SynthControls controls) {
+					viewSynthControls(synth, chan, controls);
+				}
+			}
+		);
 	}
 
 	protected Component createSynthSelectorPane(int synth) {
 		return new SynthSelectionPanel(synth);
 	}
 
+	protected void setSynthControls(int synth, int chan, SynthControls controls) {
+		try {
+			rackControls.setSynthControls(synth, chan, controls);
+//			viewSynthControls(synth, chan, controls); // TODO MVC
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void viewSynthControls(int synth, int chan, SynthControls controls) {
+		SynthSelectionPanel panel = (SynthSelectionPanel)getComponentAt(synth);
+		panel.viewSynthControls(chan, controls);
+	}
+	
 	public class SynthSelectionPanel extends JPanel
 	{
 		private ButtonGroup buttonGroup = new ButtonGroup();
@@ -61,11 +81,23 @@ public class SynthRackPanel extends JTabbedPane
 		private JPanel westPanel;
 		private JPanel centerPanel;
 		private CardLayout cardLayout = new CardLayout();
+		private int synth;
 
 		public SynthSelectionPanel(int synth) {
 			setLayout(new BorderLayout());
 			add(westPanel = createLeftComponent(synth), BorderLayout.WEST);
 			add(centerPanel = createCenterComponent(), BorderLayout.CENTER);
+			this.synth = synth;
+		}
+		
+		protected void setSynthControls(int chan, SynthControls controls) {
+			SynthRackPanel.this.setSynthControls(synth, chan, controls);
+		}
+
+		public void viewSynthControls(int chan, SynthControls controls) {
+			Component[] comps = westPanel.getComponents();
+			SynthChannelSelector selector = (SynthChannelSelector)comps[chan];
+			selector.viewSynthControls(controls);
 		}
 		
 		protected JPanel createLeftComponent(int synth) {
@@ -98,12 +130,16 @@ public class SynthRackPanel extends JTabbedPane
 		{
 			private int N = 48;
 			private final JToggleButton button;
+			private JComboBox combo;
 			private boolean available = false;
 			private JPanel ui;
+			private int chan;
 			private String cardId;
+			private boolean disableCombo = false;
 
 			public SynthChannelSelector(final int synth, final int chan) {
 				setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+				this.chan = chan;
 				cardId = String.valueOf(synth)+"/"+String.valueOf(chan);
 				
 				button = new JToggleButton(String.valueOf(1+chan), false);
@@ -114,7 +150,7 @@ public class SynthRackPanel extends JTabbedPane
 				button.setMinimumSize(maxSize);
 				button.setPreferredSize(maxSize);
 
-				final JComboBox combo = new JComboBox(synthNames);
+				combo = new JComboBox(synthNames);
 				Dimension comboMaxSize = combo.getMaximumSize();
 				comboMaxSize.height = maxSize.height;
 				combo.setMaximumSize(comboMaxSize);
@@ -128,27 +164,10 @@ public class SynthRackPanel extends JTabbedPane
 
 				ActionListener comboActionListener = new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if ( disableCombo ) return;
 						String s = (String)combo.getSelectedItem();
-						boolean none = s.equals(NONE);
-						button.setEnabled(!none);
-						button.setSelected(!none);
-						available = !none;
-						if ( none ) {
-							rackControls.set(synth, chan, null);
-							if ( ui != null ) {
-								centerPanel.remove(ui);
-							}
-							checkSelection(); // select something else or dummy button
-						} else {
-							SynthControls controls = SynthServices.createControls(s);
-							rackControls.set(synth, chan, controls);
-							ui = new CompoundControlPanel(controls, 1, null,
-									new ControlPanelFactory() {
-								protected boolean canEdit() { return true; }
-							}, true, true);
-							centerPanel.add(ui, cardId);
-							showSynth();
-						}
+						setSynthControls(
+							s.equals(NONE) ? null : SynthServices.createControls(s));
 					}
 				};
 
@@ -163,6 +182,34 @@ public class SynthRackPanel extends JTabbedPane
 				button.addActionListener(buttonActionListener);
 			}
 
+			protected void setSynthControls(SynthControls controls) {
+				SynthSelectionPanel.this.setSynthControls(chan, controls);
+			}
+			
+			public void viewSynthControls(SynthControls controls) {
+				available = controls != null;
+				button.setEnabled(available);
+				button.setSelected(available);
+				if ( ui != null ) {
+					centerPanel.remove(ui);
+					ui = null;
+					System.out.println("Removed "+cardId);
+				}
+				if ( available ) {
+					disableCombo = true;
+					combo.setSelectedItem(controls.getName()); // goes recursive!!!
+					disableCombo = false;
+					ui = new CompoundControlPanel(controls, 1, null,
+							new ControlPanelFactory() {
+						protected boolean canEdit() { return true; }
+					}, true, true);
+					centerPanel.add(ui, cardId);
+					showSynth();					
+				} else {
+					checkSelection(); // select something else or dummy button		
+				}
+			}
+			
 			public boolean isAvailable() {
 				return available;
 			}

@@ -3,51 +3,50 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org.uk/LICENSE_1_0.txt)
 
-package uk.org.toot.audio.mixer.automation;
+package uk.org.toot.control.automation;
 
 import java.io.File;
 import java.io.IOException;
 import javax.sound.midi.*;
-import uk.org.toot.audio.mixer.MixerControls;
-import uk.org.toot.audio.mixer.MixerControlsSnapshotAutomation;
+import uk.org.toot.control.automation.SnapshotAutomation;
 
 /**
- * Redefines the snapshot automation API in terms of standard midi files.
+ * Implements the snapshot automation API in terms of standard midi files.
  * @author st
  *
  */
-public class MixerControlsMidiFileSnapshotAutomation
-    extends MixerControlsMidiSequenceSnapshotAutomation
-    implements MixerControlsSnapshotAutomation
+public class MidiFileSnapshotAutomation implements SnapshotAutomation
 {
+	private MidiSequenceSnapshotAutomation auto;
     protected File snapshotPath;
-    
-    /**
-     * The sub directory for snapshots
-     */
-    public final static String SNAPSHOT_DIR = "snapshots";
     
     /**
      * The file extension for snapshots
      */
-    public final static String SNAPSHOT_EXT = ".snapshot";
+    private String extension;
 
-    public MixerControlsMidiFileSnapshotAutomation(
-        MixerControls controls, File path) {
-        super(controls);
-        snapshotPath = path;
+    public MidiFileSnapshotAutomation(MidiSequenceSnapshotAutomation auto, String ext) {
+    	this.auto = auto;
+    	extension = ext;
     }
 
+    public void setPath(File path) {
+        snapshotPath = path;
+        if ( path != null ) {
+        	snapshotPath.mkdirs();
+        }
+    }
+    
     public void configure(String name) {
         File file = getSnapshotFile(name);
         if ( file == null ) return;
         if ( !file.exists() ) return;
         try {
-            configureSequence(MidiSystem.getSequence(file));
+            auto.configureSequence(MidiSystem.getSequence(file));
         } catch ( InvalidMidiDataException imde ) {
             System.err.println("Failed to configure Snapshot "+name);
         } catch ( IOException ioe ) {
-            System.err.println("Failed to congigure or read Snapshot file "+file.getPath());
+            System.err.println("Failed to configure or read Snapshot file "+file.getPath());
         }
     }
 
@@ -56,7 +55,7 @@ public class MixerControlsMidiFileSnapshotAutomation
         if ( file == null ) return;
         if ( !file.exists() ) return;
         try {
-            recallSequence(MidiSystem.getSequence(file));
+            auto.recallSequence(MidiSystem.getSequence(file));
         } catch ( InvalidMidiDataException imde ) {
             System.err.println("Failed to recall Snapshot "+name);
         } catch ( IOException ioe ) {
@@ -72,12 +71,9 @@ public class MixerControlsMidiFileSnapshotAutomation
         }
         Sequence snapshot = null;
         try {
-            snapshot = storeSequence(name);
+            snapshot = auto.storeSequence(name);
 	        file.createNewFile();
 	        MidiSystem.write(snapshot, 1, file);
-//            System.out.println("Stored Snapshot "+file.getCanonicalPath());
-//        } catch ( InvalidMidiDataException imde ) {
-//            System.err.println("Failed to create Snapshot "+name);
         } catch ( IOException ioe ) {
             System.err.println("Failed to create or write Snapshot file "+file.getPath());
         }
@@ -90,7 +86,7 @@ public class MixerControlsMidiFileSnapshotAutomation
 
     protected File getSnapshotFile(String name) {
         if ( snapshotPath == null ) return null;
-        return new File(snapshotPath, name+SNAPSHOT_EXT);
+        return new File(snapshotPath, name+extension);
     }
 
 }

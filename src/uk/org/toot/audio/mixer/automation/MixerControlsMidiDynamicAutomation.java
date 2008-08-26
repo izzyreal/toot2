@@ -10,7 +10,7 @@ import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.control.*;
 import javax.sound.midi.*;
 
-import static uk.org.toot.control.ControlSysexMsg.*;
+import static uk.org.toot.control.automation.ControlSysexMsg.*;
 
 /**
  * Redefines the dynamic API in terms of MidiMessages.

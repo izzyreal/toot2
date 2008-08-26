@@ -3,11 +3,14 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org.uk/LICENSE_1_0.txt)
 
-package uk.org.toot.control;
+package uk.org.toot.control.automation;
 
 import javax.sound.midi.*;
 
-import static uk.org.toot.control.ControlSysexMsg.*; // !!! !!!
+import uk.org.toot.control.CompoundControl;
+import uk.org.toot.control.Control;
+
+import static uk.org.toot.control.automation.ControlSysexMsg.*;
 
 // used by CompoundControlMidiPersistence and AbstractMixerControlMidiAiutomation
 public class MidiPersistence

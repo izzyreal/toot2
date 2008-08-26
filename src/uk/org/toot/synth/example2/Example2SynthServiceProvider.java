@@ -10,8 +10,9 @@ public class Example2SynthServiceProvider extends TootSynthServiceProvider
 
 	public Example2SynthServiceProvider() {
 		super("Example Synth 2", "0.1");
-		addControls(Example2SynthControls.class, EXAMPLE_2_SYNTH_ID, "Ex2Synth", "", "0.1");
-		add(Example2SynthChannel.class, "Ex2Synth", "Example Synth 2", "0.1");
+		String name = Example2SynthControls.NAME;
+		addControls(Example2SynthControls.class, EXAMPLE_2_SYNTH_ID, name, "", "0.2");
+		add(Example2SynthChannel.class, name, "Example Synth 2", "0.2");
 	}
 
 	public SynthChannel createSynthChannel(SynthControls c) {

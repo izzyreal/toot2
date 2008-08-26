@@ -32,7 +32,7 @@ public class SynthRackControls extends CompoundControl
 		return synthControls[midisynth][chan];
 	}
 	
-	public void set(int synth, int chan, SynthControls controls) {
+	public void setSynthControls(int synth, int chan, SynthControls controls) {
 		List<MidiSynth> synths = synthRack.getMidiSynths();
 		if ( synth >= synths.size() ) {
 			throw new IllegalArgumentException("Illegal MidiSynth "+synth);
@@ -60,6 +60,7 @@ public class SynthRackControls extends CompoundControl
 			super.remove(synthControls[synth][chan]);
 			synthControls[synth][chan] = null;
 		}
+		synthControlsSet(synth, chan, synthControls[synth][chan]);
 	}
 
 	protected void connect(int synth, int chan, SynthChannel channel) {	
@@ -74,5 +75,26 @@ public class SynthRackControls extends CompoundControl
 	// causes plugins to show Preset menu
 	public boolean isPluginParent() { 
 		return true; 
-	}	
+	}
+	
+	private List<SynthControlsListener> listeners = new java.util.ArrayList<SynthControlsListener>();
+	
+	protected void synthControlsSet(int synth, int chan, SynthControls controls) {
+		for ( SynthControlsListener l : listeners ) {
+			l.synthControlsSet(synth, chan, controls);
+		}
+	}
+	
+	public void addSynthControlsListener(SynthControlsListener l) {
+		listeners.add(l);
+	}
+	
+	public void removeSynthControlsListener(SynthControlsListener l) {
+		listeners.remove(l);
+	}
+	
+	public interface SynthControlsListener
+	{
+		void synthControlsSet(int synth, int chan, SynthControls controls);
+	}
 }

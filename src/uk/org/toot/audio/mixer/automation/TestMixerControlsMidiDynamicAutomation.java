@@ -8,7 +8,7 @@ package uk.org.toot.audio.mixer.automation;
 import uk.org.toot.audio.mixer.MixerControls;
 import javax.sound.midi.MidiMessage;
 
-import static uk.org.toot.control.ControlSysexMsg.*;
+import static uk.org.toot.control.automation.ControlSysexMsg.*;
 
 /**
  * Writes MIDI automation data to System.out for testing purposes

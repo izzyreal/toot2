@@ -17,6 +17,8 @@ import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_SYNTH_ID;
  */
 public class Example2SynthControls extends SynthControls
 {
+	public static String NAME = "Ex2Syn";
+	
 	// OFFSETS MUST NOT BE CHANGED TO PRESERVE PERSISTENCE PORTABILITY
 	// OFFSETS ARE SLIGHTLY SPARSE TO ALLOW EXTENSION OF EXISTING MODULES
 	private final static int OSC1_OFFSET 	= 0x00;
@@ -45,7 +47,7 @@ public class Example2SynthControls extends SynthControls
 	private MixerControls[] mixerControls;
 	
 	public Example2SynthControls() {
-		super(EXAMPLE_2_SYNTH_ID, "ExSyn2");
+		super(EXAMPLE_2_SYNTH_ID, NAME);
 		
 		oscillatorControls = new MultiWaveOscillatorControls[4];
 		filterControls = new FilterControls[2];
