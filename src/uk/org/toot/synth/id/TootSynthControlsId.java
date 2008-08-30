@@ -10,6 +10,7 @@ public interface TootSynthControlsId
 	// ids of the plugin synths
 	final static int EXAMPLE_1_SYNTH_ID = 1;
 	final static int EXAMPLE_2_SYNTH_ID = 2;
+	final static int EXAMPLE_3_SYNTH_ID = 3;
 	
 	// ids of the synth module categories
     // allow for 16 in each category

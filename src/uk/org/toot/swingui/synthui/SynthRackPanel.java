@@ -193,7 +193,6 @@ public class SynthRackPanel extends JTabbedPane
 				if ( ui != null ) {
 					centerPanel.remove(ui);
 					ui = null;
-					System.out.println("Removed "+cardId);
 				}
 				if ( available ) {
 					disableCombo = true;
