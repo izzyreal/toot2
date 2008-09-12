@@ -33,10 +33,13 @@ public class Example3SynthChannel extends SynthChannel
 		private int railLength;
 		private int pickupSample;
 		private float filterState = 0f;
-		private float lossFactor = 0.999f;
+		private float loopGain;
 				
 		private float pickup;
 		private float pick;
+		
+		private float ampT;
+		private float level;
 		
 		public Example3Voice(int pitch, int velocity, int sampleRate) {
 			super(pitch, velocity);
@@ -47,13 +50,16 @@ public class Example3SynthChannel extends SynthChannel
 			pickup = controls.getPickup();
 			pick = controls.getPick();
 
+			float ampTracking = controls.getVelocityTrack();
+			ampT = velocity == 0 ? 0f : (1 - ampTracking * (1 - amplitude));
+
 			/* 
 			 * Round pick position to nearest spatial sample.
 			 * A pick position at x = 0 is not allowed. 
 			 */
 		    int pickSample = (int)Math.max(pick * railLength, 1); 
-			float upslope = amplitude / pickSample;
-		    float downslope = amplitude / (railLength - pickSample - 1);
+			float upslope = ampT / pickSample;
+		    float downslope = ampT / (railLength - pickSample - 1);
 		    float initialShape[] = new float[railLength];
 		    for ( int i = 0; i < pickSample; i++ )
 		    	initialShape[i] = upslope * i;
@@ -69,6 +75,8 @@ public class Example3SynthChannel extends SynthChannel
 		    
 		    pickupSample = (int)(pickup * railLength);
 			setSampleRate(sampleRate);
+			
+			loopGain = Math.min(0.995f + (frequency * 0.000005f), 0.99999f);
 		}
 
 		public void setSampleRate(int rate) {
@@ -79,24 +87,24 @@ public class Example3SynthChannel extends SynthChannel
 		}
 		
 		public boolean mix(AudioBuffer buffer) {
-			if ( release ) lossFactor *= 0.995f;
+			if ( release ) loopGain *= 0.995f;
+			level = controls.getLevel() * 4f;
 			return super.mix(buffer);
 		}
 		
 		private float bridgeReflection(float insamp) {
 		    /* Implement a one-pole lowpass with feedback coefficient = 0.5 */
 		    filterState = 0.5f * filterState + 0.5f * insamp;
-		    return filterState * lossFactor; 	/* ensure useful LF loss? */
+		    return filterState * loopGain; 	/* ensure useful LF loss? */
 		}
 
 		protected float getSample() {
 		    float yp0,ym0,ypM,ymM;
-		    float outsamp, outsamp1;
+		    float outsamp;
 
 		    /* Output at pickup location */
-		    outsamp  = upperDelay.access(pickupSample);
-		    outsamp1 = lowerDelay.access(pickupSample);
-			outsamp += outsamp1;
+		    outsamp  = upperDelay.access(pickupSample)
+		    		 + lowerDelay.access(pickupSample);
 
 		    ym0 = lowerDelay.access(1);     /* Sample traveling into "bridge" */
 		    ypM = upperDelay.access(upperDelay.length - 2); /* Sample to "nut" */
@@ -109,11 +117,11 @@ public class Example3SynthChannel extends SynthChannel
 		    upperDelay.update(yp0); 		/* Decrement pointer and then update */
 		    lowerDelay.update(ymM); 		/* Update and then increment pointer */
 
-		    return outsamp / 4; // TODO
+		    return level * outsamp;
 		}
 
 		protected boolean isComplete() {
-			return lossFactor < 0.1f; // ??? might be well too late TODO
+			return loopGain < 0.1f; // ??? might be well too late TODO
 		}
 	}
 	

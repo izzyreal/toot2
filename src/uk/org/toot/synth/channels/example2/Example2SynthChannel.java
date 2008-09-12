@@ -129,7 +129,7 @@ public class Example2SynthChannel extends SynthChannel
 			oscControl = new OscillatorControl();
 //			delay = new SingleTapDelay(4410);
 			float ampTracking = amplifierVars.getVelocityTrack();
-			ampT = (1 - ampTracking * (1 - amplitude));
+			ampT = velocity == 0 ? 0f : (1 - ampTracking * (1 - amplitude));
 			setSampleRate(sampleRate);
 		}
 

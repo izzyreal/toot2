@@ -21,7 +21,7 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 {
 	private List<Voice> voices = new java.util.ArrayList<Voice>();
 	
-	private int sampleRate;
+	protected int sampleRate = 44100; // for open()
 	private int polyphony = 8;
 	private int lastPolyphony = polyphony;
 	
@@ -60,8 +60,8 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
         buffer.setChannelFormat(ChannelFormat.MONO);
 		buffer.makeSilence();
 		finished.clear();
+		int sr = (int)buffer.getSampleRate(); 
 		synchronized ( voices ) {
-			int sr = (int)buffer.getSampleRate(); 
 			if ( sr != sampleRate ) {
 				setSampleRate(sr); // method call allows overriding
 				for ( Voice voice : voices ) {

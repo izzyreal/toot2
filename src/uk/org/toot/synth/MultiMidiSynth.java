@@ -6,11 +6,11 @@ import uk.org.toot.midi.core.AbstractMidiDevice;
 import uk.org.toot.midi.core.MidiInput;
 import uk.org.toot.midi.message.*;
 
-public class MidiSynth extends AbstractMidiDevice implements MidiInput
+public class MultiMidiSynth extends AbstractMidiDevice implements MidiInput
 {
 	private SynthChannel[] synthChannels = new SynthChannel[16];
 	
-	public MidiSynth(String name) {
+	public MultiMidiSynth(String name) {
 		super(name);
 		addMidiInput(this);
 	}

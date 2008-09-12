@@ -11,6 +11,7 @@ public interface TootSynthControlsId
 	final static int EXAMPLE_1_SYNTH_ID = 1;
 	final static int EXAMPLE_2_SYNTH_ID = 2;
 	final static int EXAMPLE_3_SYNTH_ID = 3;
+	final static int PLUCKED_STRING_2_ID = 4;
 	
 	// ids of the synth module categories
     // allow for 16 in each category

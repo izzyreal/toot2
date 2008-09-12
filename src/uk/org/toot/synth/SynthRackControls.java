@@ -33,7 +33,7 @@ public class SynthRackControls extends CompoundControl
 	}
 	
 	public void setSynthControls(int synth, int chan, SynthControls controls) {
-		List<MidiSynth> synths = synthRack.getMidiSynths();
+		List<MultiMidiSynth> synths = synthRack.getMidiSynths();
 		if ( synth >= synths.size() ) {
 			throw new IllegalArgumentException("Illegal MidiSynth "+synth);
 		}

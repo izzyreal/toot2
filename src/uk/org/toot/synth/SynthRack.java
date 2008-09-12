@@ -15,28 +15,28 @@ import uk.org.toot.midi.core.MidiSystem;
 public class SynthRack extends Observable
 {
 	private MidiSystem midiSystem;
-	private List<MidiSynth> synths;
+	private List<MultiMidiSynth> synths;
 	
 	public SynthRack(MidiSystem midiSystem) {
 		this.midiSystem = midiSystem;
-		synths = new java.util.ArrayList<MidiSynth>();
+		synths = new java.util.ArrayList<MultiMidiSynth>();
 	}
 	
-	public void addMidiSynth(MidiSynth synth) {
+	public void addMidiSynth(MultiMidiSynth synth) {
 		synths.add(synth);
 		midiSystem.addMidiDevice(synth);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public void removeMidiSynth(MidiSynth synth) {
+	public void removeMidiSynth(MultiMidiSynth synth) {
 		midiSystem.removeMidiDevice(synth);
 		synths.remove(synth);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public List<MidiSynth> getMidiSynths() {
+	public List<MultiMidiSynth> getMidiSynths() {
 		return Collections.unmodifiableList(synths);
 	}
 }
