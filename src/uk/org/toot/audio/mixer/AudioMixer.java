@@ -200,6 +200,18 @@ public class AudioMixer implements AudioClient
         return Collections.unmodifiableList(strips);
     }
 
+    /**
+     * Return a channel strip which does not have an input.
+     * @return the unused AudioMixerStrip. 
+     */
+    public AudioMixerStrip getUnusedChannelStrip() {
+        for ( AudioMixerStrip strip : channelStrips ) {
+            if ( strip.getInputProcess() == null ) return strip;
+        }
+        return null; // !!!
+    	
+    }
+    
     public void work(int nFrames) {
         if ( !enabled ) return;
         processMutations();
