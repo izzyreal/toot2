@@ -50,6 +50,10 @@ public class AudioMixerStrip extends AudioProcessChain {
 		channelFormat = buffer.getChannelFormat();
     }
 
+    public AudioProcess getInputProcess() {
+    	return input;
+    }
+    
     public void setInputProcess(AudioProcess input) throws Exception {
         if ( controlChain.getId() != CHANNEL_STRIP ) {
             throw new Exception("No external input to this Strip type");
@@ -64,6 +68,10 @@ public class AudioMixerStrip extends AudioProcessChain {
 //        System.out.println(getName()+" input process is "+this.input);
     }
 
+    public AudioProcess getDirectOutputProcess() {
+    	return directOutput;
+    }
+    
     public void setDirectOutputProcess(AudioProcess output) throws Exception {
         this.directOutput = output;
     }
