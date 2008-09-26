@@ -57,7 +57,7 @@ public class ControlSysexMsg extends SysexMsg
         data[1] = ID_NON_COMMERCIAL;
         data[2] = (byte)(providerId & 0x7f);
         data[3] = (byte)(moduleId & 0x7f);
-        data[4] = (byte)(instanceIndex & 0x07); // only use 3 bits, 4 spare
+        data[4] = (byte)(instanceIndex & 0x1f); // only use 5 bits, 2 spare
         data[5] = (byte)(controlId & 0x7f);
         data[6] = (byte)(value & 0x7f);
         data[7] = (byte)((value >> 7) & 0x7f); 	// could borrow 2 bits here

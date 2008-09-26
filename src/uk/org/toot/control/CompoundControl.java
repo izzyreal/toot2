@@ -16,7 +16,6 @@ import java.util.Hashtable;
  */
 public abstract class CompoundControl extends Control
 {
-    public static final int MAX_INSTANCES = 8;
     public static final int USE_PARENT_PROVIDER_ID = 0;
 
     /**
@@ -54,11 +53,12 @@ public abstract class CompoundControl extends Control
         return ( hash > 0 ) ? Integer.parseInt(name.substring(hash+1)) - 1 : 0;
     }
 
+    // overridden by some subclasses
 	protected void checkInstanceIndex(int index) {
         if ( index < 0 )
             throw new IllegalArgumentException(getName()+" instance "+index+" < 0!");
-        if ( index > 7 )
-            throw new IllegalArgumentException(getName()+" instance "+index+" > 7!");
+        if ( index > 31 )
+            throw new IllegalArgumentException(getName()+" instance "+index+" > 31!");
     }
 
 	/*

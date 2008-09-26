@@ -74,7 +74,7 @@ public class CompoundControlChain extends CompoundControl
         } while ( find(str) != null ) ;
         c.setName(str);
         c.instanceIndex = --index;
-        assert index < MAX_INSTANCES;
+//        assert index < MAX_INSTANCES;
 //   	    System.out.println("Need to Disambiguate "+original+" to "+str);
     }
 
