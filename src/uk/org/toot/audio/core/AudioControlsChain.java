@@ -59,8 +59,8 @@ public class AudioControlsChain extends CompoundControlChain
 	protected void checkInstanceIndex(int index) {
         if ( index < 0 )
             throw new IllegalArgumentException(getName()+" instance "+index+" < 0!");
-        if ( index > 127 )
-            throw new IllegalArgumentException(getName()+" instance "+index+" > 127!");
+//        if ( index > 127 )
+//            throw new IllegalArgumentException(getName()+" instance "+index+" > 127!");
     }
 
     protected boolean isCompatibleDescriptor(ServiceDescriptor d) {
