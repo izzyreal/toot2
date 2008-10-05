@@ -6,17 +6,16 @@ import java.awt.Color;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
-import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 //import uk.org.toot.synth.oscillator.*;
 import static uk.org.toot.localisation.Localisation.getString;
-import static uk.org.toot.synth.id.TootSynthControlsId.PLUCKED_STRING_2_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.PLUCKED_STRING_2_CHANNEL_ID;
 
 /**
  * @author st
  *
  */
-public class PluckedString2SynthControls extends SynthControls
+public class PluckedString2SynthControls extends CompoundControl
 {
 	public static String NAME = "Pluck2";
 	
@@ -32,7 +31,7 @@ public class PluckedString2SynthControls extends SynthControls
 //	private DelayedLFOControls[] lfoControls;
 	
 	public PluckedString2SynthControls() {
-		super(PLUCKED_STRING_2_ID, NAME);
+		super(PLUCKED_STRING_2_CHANNEL_ID, NAME);
 		
 /*		lfoControls = new DelayedLFOControls[1];
 		

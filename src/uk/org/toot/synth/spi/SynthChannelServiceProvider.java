@@ -7,10 +7,11 @@ package uk.org.toot.synth.spi;
 
 import java.util.List;
 import uk.org.toot.service.*;
+import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.spi.*;
 import uk.org.toot.synth.*;
 
-abstract public class SynthServiceProvider extends ServiceProvider
+abstract public class SynthChannelServiceProvider extends ServiceProvider
 {
     private List<ServiceDescriptor> controls;
 
@@ -26,9 +27,9 @@ abstract public class SynthServiceProvider extends ServiceProvider
      * @exception IllegalArgumentException if <code>version</code>
      * is <code>null</code>.
      */
-    public SynthServiceProvider(int providerId, String providerName, String description, String version) {
+    public SynthChannelServiceProvider(int providerId, String providerName, String description, String version) {
         super(providerId, providerName, description, version);
-        controls = service(SynthControls.class);
+        controls = service(CompoundControl.class);
     }
 
     public String lookupName(int moduleId) {
@@ -44,11 +45,11 @@ abstract public class SynthServiceProvider extends ServiceProvider
         return null;
     }
 
-    public SynthControls createControls(int moduleId) {
+    public CompoundControl createControls(int moduleId) {
         for ( ServiceDescriptor d : controls ) {
             try {
 	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
-    	            return (SynthControls)d.getServiceClass().newInstance();
+    	            return (CompoundControl)d.getServiceClass().newInstance();
         	    }
             } catch ( Exception e ) {
                 e.printStackTrace();
@@ -65,11 +66,11 @@ abstract public class SynthServiceProvider extends ServiceProvider
         add(new SynthControlServiceDescriptor(clazz, moduleId, name, description, version));
     }
 
-    public SynthControls createControls(String name) {
+    public CompoundControl createControls(String name) {
         for ( ServiceDescriptor d : controls ) {
             try {
 	            if ( d.getName().equals(name) ) {
-    	            return (SynthControls)d.getServiceClass().newInstance();
+    	            return (CompoundControl)d.getServiceClass().newInstance();
         	    }
             } catch ( Exception e ) {
                 e.printStackTrace();
@@ -78,7 +79,7 @@ abstract public class SynthServiceProvider extends ServiceProvider
         return null;
     }
 
-	public abstract SynthChannel createSynthChannel(SynthControls controls2);
+	public abstract SynthChannel createSynthChannel(CompoundControl controls2);
 
 /*    public Iterator<ServiceDescriptor> controlsDescriptors() {
         return controls.iterator();

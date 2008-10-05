@@ -2,13 +2,13 @@ package uk.org.toot.synth.channels.example3;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.FloatDenormals;
-import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.PolyphonicSynthChannel;
 
 /**
  * from pluck.c - elementary waveguide simulation of plucked strings - JOS 6/6/92
  * @author st
  */
-public class Example3SynthChannel extends SynthChannel
+public class Example3SynthChannel extends PolyphonicSynthChannel
 {
 	private Example3SynthControls controls;
 

@@ -1,29 +1,18 @@
 package uk.org.toot.synth;
 
-import java.util.List;
-
 import javax.sound.midi.MidiChannel;
-
-import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.audio.core.AudioProcess;
-import uk.org.toot.audio.core.ChannelFormat;
 
 import static uk.org.toot.midi.misc.Controller.*;
 
 /**
- * A SynthChannel is a MidiChannel that generates audio as an AudioProcess.
- * It is polyphonic, supporting multiple Voices.
+ * A SynthChannel is a MidiChannel.
  * 
  * @author st
  *
  */
-public abstract class SynthChannel implements MidiChannel, AudioProcess
+public abstract class SynthChannel implements MidiChannel
 {
-	private List<Voice> voices = new java.util.ArrayList<Voice>();
-	
 	protected int sampleRate = 44100; // for open()
-	private int polyphony = 8;
-	private int lastPolyphony = polyphony;
 	
 	private int rawBend = 8192;
 	private int bendRange = 2; 		// max bend in semitones
@@ -35,115 +24,30 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	
 	private byte[] controller = new byte[128];
 	
-	private AudioBuffer.MetaInfo info;
-	
-	private List<Voice> finished = new java.util.ArrayList<Voice>();
-
 	public SynthChannel(String name) {
-        info = new AudioBuffer.MetaInfo(name);
 	}
 	
 	public static float midiFreq(int pitch) { 
 		return (float)(440.0 * Math.pow( 2.0, ((double)pitch - 69.0) / 12.0 )); 
 	}
 	 
-	// implement AudioProcess ---------------------------------- 
-	
-	public void open() {
-		// load voice classes
-		noteOn(40, 0);
-		noteOff(40, 0);
-	}
-	
-	public int processAudio(AudioBuffer buffer) {
-        buffer.setMetaInfo(info);
-        buffer.setChannelFormat(ChannelFormat.MONO);
-		buffer.makeSilence();
-		finished.clear();
-		int sr = (int)buffer.getSampleRate(); 
-		synchronized ( voices ) {
-			if ( sr != sampleRate ) {
-				setSampleRate(sr); // method call allows overriding
-				for ( Voice voice : voices ) {
-					voice.setSampleRate(sampleRate);
-				}
-			}
-			for ( Voice voice : voices ) {
-				if ( !voice.mix(buffer) ) {
-					finished.add(voice);
-				}
-			}
-			for ( Voice voice : finished ) {
-				voices.remove(voice);
-			}
-		}
-		return AudioProcess.AUDIO_OK;
-	}
-	
 	protected void setSampleRate(int rate) {
 		sampleRate = rate;
 	}
 	
-	public void close() {
-		
-	}
-	
-	public void setPolyphony(int p) {
-		polyphony = p;
-	}
-	
-	public int getPolyphony() {
-		return polyphony;
-	}
-	
 	// implement MidiChannel ------------------------------------
 	
-	protected abstract Voice createVoice(int pitch, int velocity, int sampleRate);
-	
-	public void noteOn(int pitch, int velocity) {
-		// create expensive Voice prior to synchronisation to minimise locking
-		Voice v = createVoice(pitch, velocity, sampleRate);
-		synchronized ( voices ) {
-			if ( voices.size() >= polyphony ) {
-				// oldest note stealing
-				Voice steal = voices.get(0);
-				steal.stop();
-				voices.remove(steal);
-			}
-			voices.add(v);
-		}
-	}
+	abstract public void noteOn(int pitch, int velocity);
 
-	public void noteOff(int pitch) {
-		synchronized ( voices ) {
-			for ( Voice voice : voices ) {
-				if ( voice.getPitch() == pitch && !voice.isReleased() ) {
-					voice.release();
-					return;
-				}
-			}
-		}
-	}
+	abstract public void noteOff(int pitch);
 
 	public void noteOff(int pitch, int velocity) {
 		noteOff(pitch);			
 	}
 
-	public void allNotesOff() {
-		synchronized ( voices ) {
-			for ( Voice voice : voices ) {
-				voice.release();
-			}
-		}
-	}
+	abstract public void allNotesOff();
 
-	public void allSoundOff() {
-		synchronized ( voices ) {
-			for ( Voice voice : voices ) {
-				voice.stop();
-			}
-		}
-	}
+	abstract public void allSoundOff();
 
 	public void controlChange(int arg0, int arg1) {
 		controller[arg0] = (byte)arg1;
@@ -213,7 +117,7 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	}
 
 	public boolean getMono() {
-		return polyphony == 1; // ???
+		return false;
 	}
 
 	public boolean getOmni() {
@@ -227,13 +131,6 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	}
 
 	public void setMono(boolean mono) {
-		if ( mono ) {
-			lastPolyphony = polyphony;
-			polyphony = 1;
-		} else {
-			polyphony = lastPolyphony;
-		}
-		
 	}
 
 	public void setOmni(boolean arg0) {
@@ -259,64 +156,6 @@ public abstract class SynthChannel implements MidiChannel, AudioProcess
 	// to the current frequency
 	public float getBendFactor() {
 		return bendFactor;
-	}
-
-	public interface Voice
-	{
-		int getPitch();
-		void release(); // begin amplitude release phase
-		boolean isReleased();
-		void stop();    // sound off immediately
-		void setSampleRate(int sr);
-		boolean mix(AudioBuffer buffer); // return false when finished
-	}
-	
-	public abstract class AbstractVoice implements Voice
-	{
-		protected int pitch;
-		protected int velocity;
-		protected float amplitude;
-		protected float frequency;
-		protected boolean release = false;
-		protected boolean stop = false;
-
-		public AbstractVoice(int pitch, int velocity) {
-			this.pitch = pitch;
-			this.velocity = velocity;
-			amplitude = (float)velocity / 128;
-			frequency = midiFreq(pitch);
-		}
-
-		public int getPitch() {
-			return pitch;
-		}
-
-		public void release() {
-			release = true;			
-		}
-
-		public boolean isReleased() {
-			return release;
-		}
-		
-		public void stop() {
-			stop = true;
-		}
-
-		public boolean mix(AudioBuffer buffer) {
-			if ( stop ) return false;
-			float[] samples = buffer.getChannel(0);
-			int nsamples = buffer.getSampleCount();
-			for ( int i = 0; i < nsamples; i++ ) {
-				samples[i] += getSample();
-			}
-			return !isComplete();
-		}
-		
-		protected abstract float getSample();
-		
-		protected abstract boolean isComplete();
-		
 	}
 
 }

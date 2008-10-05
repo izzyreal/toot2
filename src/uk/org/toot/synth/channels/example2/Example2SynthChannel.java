@@ -1,7 +1,7 @@
 package uk.org.toot.synth.channels.example2;
 
 import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.PolyphonicSynthChannel;
 //import uk.org.toot.midi.synth.delay.SingleTapDelay;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.*;
@@ -20,7 +20,7 @@ import uk.org.toot.synth.modules.oscillator.*;
  * 
  * @author st
  */
-public class Example2SynthChannel extends SynthChannel
+public class Example2SynthChannel extends PolyphonicSynthChannel
 {
 	private MultiWaveOscillatorVariables oscillator1Vars;
 	private MultiWaveOscillatorVariables oscillator2Vars;

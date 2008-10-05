@@ -1,7 +1,7 @@
 package uk.org.toot.synth.channels.example2;
 
 import static uk.org.toot.localisation.Localisation.getString;
-import uk.org.toot.synth.SynthControls;
+import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.*;
@@ -9,13 +9,13 @@ import uk.org.toot.synth.modules.filter.*;
 import uk.org.toot.synth.modules.mixer.MixerControls;
 import uk.org.toot.synth.modules.mixer.MixerVariables;
 import uk.org.toot.synth.modules.oscillator.*;
-import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_SYNTH_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_CHANNEL_ID;
 
 /**
  * @author st
  *
  */
-public class Example2SynthControls extends SynthControls
+public class Example2SynthControls extends CompoundControl
 {
 	public static String NAME = "Ex2Syn";
 	
@@ -47,7 +47,7 @@ public class Example2SynthControls extends SynthControls
 	private MixerControls[] mixerControls;
 	
 	public Example2SynthControls() {
-		super(EXAMPLE_2_SYNTH_ID, NAME);
+		super(EXAMPLE_2_CHANNEL_ID, NAME);
 		
 		oscillatorControls = new MultiWaveOscillatorControls[4];
 		filterControls = new FilterControls[2];

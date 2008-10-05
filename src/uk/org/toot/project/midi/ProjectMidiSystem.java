@@ -19,21 +19,20 @@ public class ProjectMidiSystem extends DefaultConnectedMidiSystem
         project = p;
         projectListener = new ProjectListener() {
             public void open() {
+            	File connfile = getConnectionFile();
             	try {
-            		File connfile = getConnectionFile();
             		if ( !connfile.exists() ) return;
             		openConnections(connfile);
             	} catch ( Exception e) {
-            		System.err.println("Failed to load project midi connections");
+            		System.err.println("Failed to load project midi connections: "+connfile.getPath());
             	}
             }
             public void save() {
+            	File connfile = getConnectionFile();
             	try {
-            		File connfile = getConnectionFile();
-//            		if ( connfile.exists() ) return;
             		saveConnections(connfile);
             	} catch ( Exception e) {
-            		System.err.println("Failed to save project midi connections");
+            		System.err.println("Failed to save project midi connections: "+connfile.getPath());
             	}
             }
         };
@@ -51,7 +50,13 @@ public class ProjectMidiSystem extends DefaultConnectedMidiSystem
         while ((line = br.readLine()) != null) {
             String[] ports = line.split(">>");
             if ( ports.length > 1 ) {
-                createMidiConnection(ports[0].trim(), ports[1].trim(), 0);
+            	String src = ports[0].trim();
+            	String dest = ports[1].trim();
+            	try {
+            		createMidiConnection(src, dest, 0);
+            	} catch ( Exception e ) {
+            		System.err.println("Failed to connect :'"+src+"' to '"+dest+"'");
+            	}
             }
         }
         br.close();    	

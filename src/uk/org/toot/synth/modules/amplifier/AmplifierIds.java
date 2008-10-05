@@ -5,9 +5,9 @@
 
 package uk.org.toot.synth.modules.amplifier;
 
-import static uk.org.toot.synth.id.TootSynthControlsId.AMPLIFIER_BASE_ID;
-
 class AmplifierIds
 {
+    final static int AMPLIFIER_BASE_ID = 0x60;
+
     final static int AMPLIFIER_ID = AMPLIFIER_BASE_ID + 1;
 }

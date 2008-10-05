@@ -5,9 +5,9 @@
 
 package uk.org.toot.synth.modules.envelope;
 
-import static uk.org.toot.synth.id.TootSynthControlsId.ENVELOPE_BASE_ID;
-
 class EnvelopeIds
 {
+    final static int ENVELOPE_BASE_ID = 0x40;	// 32 envelopes
+
     final static int DAHDSR_ENVELOPE_ID = ENVELOPE_BASE_ID + 1;
 }

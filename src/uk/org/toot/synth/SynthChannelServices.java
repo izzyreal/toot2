@@ -7,28 +7,30 @@ package uk.org.toot.synth;
 
 import java.util.Iterator;
 import java.util.List;
+
+import uk.org.toot.control.CompoundControl;
 import uk.org.toot.service.*;
-import uk.org.toot.synth.spi.SynthServiceProvider;
+import uk.org.toot.synth.spi.SynthChannelServiceProvider;
 
 /**
  * SynthServices specialises Services with static methods to simplify the
  * provision of plugin synth services extending SynthChannel and SynthControls.
  */
-public class SynthServices extends Services
+public class SynthChannelServices extends Services
 {
-    private static List<SynthServiceProvider> providers =
-        new java.util.ArrayList<SynthServiceProvider>();
+    private static List<SynthChannelServiceProvider> providers =
+        new java.util.ArrayList<SynthChannelServiceProvider>();
 
     static {
         scan();
     }
 
-    protected SynthServices() { // prevent direct instantiation
+    protected SynthChannelServices() { // prevent direct instantiation
     }
 
     public static String lookupModuleName(int providerId, int moduleId) {
         String name;
-		for ( SynthServiceProvider provider : providers ) {
+		for ( SynthChannelServiceProvider provider : providers ) {
             if ( provider.getProviderId() == providerId ) {
 	            name = provider.lookupName(moduleId);
     	        if ( name != null ) {
@@ -39,9 +41,9 @@ public class SynthServices extends Services
         return null;
     }
 
-    public static SynthControls createControls(String name) {
-        SynthControls controls;
-		for ( SynthServiceProvider provider : providers ) {
+    public static CompoundControl createControls(String name) {
+        CompoundControl controls;
+		for ( SynthChannelServiceProvider provider : providers ) {
             controls = provider.createControls(name);
             if ( controls != null ) {
                 controls.setProviderId(provider.getProviderId());
@@ -51,9 +53,9 @@ public class SynthServices extends Services
         return null;
     }
 
-    public static SynthChannel createSynthChannel(SynthControls controls) {
+    public static SynthChannel createSynthChannel(CompoundControl controls) {
         SynthChannel process;
-		for ( SynthServiceProvider provider : providers ) {
+		for ( SynthChannelServiceProvider provider : providers ) {
             process = provider.createSynthChannel(controls);
             if ( process != null ) return process;
         }
@@ -61,15 +63,15 @@ public class SynthServices extends Services
     }
 
     public static void scan() {
-        Iterator<SynthServiceProvider> it = lookup(SynthServiceProvider.class);
+        Iterator<SynthChannelServiceProvider> it = lookup(SynthChannelServiceProvider.class);
         providers.clear();
         while ( it.hasNext() ) {
-            providers.add((SynthServiceProvider)it.next());
+            providers.add((SynthChannelServiceProvider)it.next());
         }
     }
 
     public static void accept(ServiceVisitor v, Class<?> clazz) {
-		for ( SynthServiceProvider provider : providers ) {
+		for ( SynthChannelServiceProvider provider : providers ) {
             provider.accept(v, clazz);
         }
 	}

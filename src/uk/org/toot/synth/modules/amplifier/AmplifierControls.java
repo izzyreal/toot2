@@ -7,14 +7,14 @@ import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
+import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.LogLaw;
-import uk.org.toot.synth.SynthControls;
 
-public class AmplifierControls extends SynthControls 
+public class AmplifierControls extends CompoundControl 
 	implements AmplifierVariables
 {
 	private FloatControl velocityTrackControl;

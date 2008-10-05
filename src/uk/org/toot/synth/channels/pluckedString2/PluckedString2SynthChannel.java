@@ -7,13 +7,13 @@ import uk.org.toot.dsp.jSTK.DelayA;
 import uk.org.toot.dsp.jSTK.Noise;
 import uk.org.toot.dsp.jSTK.OnePole;
 import uk.org.toot.dsp.jSTK.OneZero;
-import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.PolyphonicSynthChannel;
 
 /**
  * from pluck.c - elementary waveguide simulation of plucked strings - JOS 6/6/92
  * @author st
  */
-public class PluckedString2SynthChannel extends SynthChannel
+public class PluckedString2SynthChannel extends PolyphonicSynthChannel
 {
 	private PluckedString2SynthControls controls;
 

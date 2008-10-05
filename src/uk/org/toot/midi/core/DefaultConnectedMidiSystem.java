@@ -65,6 +65,8 @@ public class DefaultConnectedMidiSystem extends DefaultMidiSystem
     public void createMidiConnection(String fromPortName, String toPortName, int flags) {
     	MidiOutput from = (MidiOutput)getPort(fromPortName, true);
     	MidiInput to = (MidiInput)getPort(toPortName, false);
+    	if ( from == null ) System.err.println(fromPortName+" not found");
+    	if ( to == null ) System.err.println(toPortName+" not found");
     	createMidiConnection(from, to, flags);
     }
 

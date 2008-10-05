@@ -3,19 +3,30 @@ package uk.org.toot.synth;
 import javax.sound.midi.MidiMessage;
 
 import uk.org.toot.midi.core.AbstractMidiDevice;
-import uk.org.toot.midi.core.MidiInput;
 import uk.org.toot.midi.message.*;
 
-public class MultiMidiSynth extends AbstractMidiDevice implements MidiInput
+/**
+ * A BasicMidiSynth is a MidiSynth with 16 SynthChannels which may be set by the user.
+ * So it is multitimbral and each SynthChannel may be a different implementation,
+ * think a multitimbral synth with channel 1 a TX81Z, channel 2 a Moog etc.
+ * @author st
+ *
+ */
+public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
 {
+    /**
+     * @link aggregationByValue
+     * @supplierCardinality 16 
+     */
 	private SynthChannel[] synthChannels = new SynthChannel[16];
+	protected SynthRack rack;
 	
-	public MultiMidiSynth(String name) {
+	public BasicMidiSynth(String name) {
 		super(name);
 		addMidiInput(this);
 	}
 
-	public void setChannel(int chan, SynthChannel synthChannel) {
+	protected void setChannel(int chan, SynthChannel synthChannel) {
 		synthChannels[chan] = synthChannel;
 	}
 
@@ -23,6 +34,14 @@ public class MultiMidiSynth extends AbstractMidiDevice implements MidiInput
 		return synthChannels; 
 	}
 
+	public SynthChannel getChannel(int chan) {
+		return synthChannels[chan];
+	}
+	
+	public void setRack(SynthRack rack) {
+		this.rack = rack;
+	}
+	
 	public void transport(MidiMessage msg, long timestamp) {
 		if ( ChannelMsg.isChannel(msg) ) {
 			int chan = ChannelMsg.getChannel(msg);

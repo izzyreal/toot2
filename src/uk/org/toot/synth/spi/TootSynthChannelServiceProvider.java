@@ -11,9 +11,9 @@ import static uk.org.toot.control.id.ProviderId.TOOT_PROVIDER_ID;
  * The Toot Synth ServiceProvider is implemented so that the
  * provider id and name are only used once.
  */
-abstract public class TootSynthServiceProvider extends SynthServiceProvider
+abstract public class TootSynthChannelServiceProvider extends SynthChannelServiceProvider
 {
-    public TootSynthServiceProvider(String description, String version) {
+    public TootSynthChannelServiceProvider(String description, String version) {
         super(TOOT_PROVIDER_ID, "Toot Software", description, version);
     }
 }

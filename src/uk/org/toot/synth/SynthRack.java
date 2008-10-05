@@ -1,42 +1,80 @@
 package uk.org.toot.synth;
 
-import java.util.List;
 import java.util.Observable;
-import java.util.Collections;
+import java.util.Observer;
+
+import uk.org.toot.control.CompoundControl;
 import uk.org.toot.midi.core.MidiSystem;
 
 /**
- * A SynthRack is a List of MidiSynths.
+ * A SynthRack is an array of MidiSynths.
  * It adds its MidiSynths to a MidiSystem as MidiInputs.
  * 
  * @author st
  *
  */
-public class SynthRack extends Observable
+public class SynthRack
 {
 	private MidiSystem midiSystem;
-	private List<MultiMidiSynth> synths;
+	private MidiSynth[] synths;
 	
-	public SynthRack(MidiSystem midiSystem) {
+	public SynthRack(final SynthRackControls controls, MidiSystem midiSystem) {
 		this.midiSystem = midiSystem;
-		synths = new java.util.ArrayList<MultiMidiSynth>();
+		synths = new MidiSynth[controls.size()];
+		controls.addObserver(
+			new Observer() {
+				public void update(Observable obs, Object obj) {
+					if ( obj instanceof Integer ) {
+						int nsynth = ((Integer)obj).intValue();
+						if ( nsynth < 0 || nsynth >= synths.length ) return;
+						CompoundControl synthControls = controls.getSynthControls(nsynth);
+						if ( synthControls != null ) {
+							// SPI lookup plugin Synth for these controls
+							MidiSynth synth = SynthServices.createSynth(synthControls);
+							if ( synth == null ) {
+								System.err.println("No Synth for SynthControls "+synthControls.getName());
+								return;
+							}
+							setMidiSynth(nsynth, synth);
+						} else {
+							setMidiSynth(nsynth, null);
+						}
+					}
+				}					
+			}
+		);
 	}
 	
-	public void addMidiSynth(MultiMidiSynth synth) {
-		synths.add(synth);
+	public void setMidiSynth(int i, MidiSynth synth) {
+		MidiSynth old = synths[i];
+		if ( old != null ) {
+			midiSystem.removeMidiDevice(old);
+			old.setRack(null);
+			disconnect(old);
+			for ( int chan = 0; chan < 16; chan++ ) {
+				disconnect(old.getChannel(chan));
+			}
+		}
+		synths[i] = synth;
+		if ( synth == null ) return;
 		midiSystem.addMidiDevice(synth);
-		setChanged();
-		notifyObservers();
+		connect(synth);
+		for ( int chan = 0; chan < 16; chan++ ) {
+			connect(synth.getChannel(chan));
+		}
+		synth.setRack(this);
 	}
 	
-	public void removeMidiSynth(MultiMidiSynth synth) {
-		midiSystem.removeMidiDevice(synth);
-		synths.remove(synth);
-		setChanged();
-		notifyObservers();
+	public MidiSynth getMidiSynth(int i) {
+		return synths[i];
 	}
 	
-	public List<MultiMidiSynth> getMidiSynths() {
-		return Collections.unmodifiableList(synths);
+	// public as implementation side-effect
+	public void connect(Object obj) {	
 	}
+	
+	// public as implementation side-effect
+	public void disconnect(Object obj) {
+	}
+	
 }

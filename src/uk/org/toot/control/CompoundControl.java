@@ -233,6 +233,18 @@ public abstract class CompoundControl extends Control
 	    providerId = id;
 	}
 
+	protected void disambiguate(CompoundControl c) {
+		String original = c.getName();
+		int index = 2; // we start at two since this must be the second
+		String str;
+		do {
+			str = original+" #"+index;
+			index++;
+		} while ( find(str) != null ) ;
+		c.setName(str);
+		c.instanceIndex = --index;
+	}
+
 	/**
      * A ControlColumn groups certain Controls vertically.
      * It is always vertical and never bordered.

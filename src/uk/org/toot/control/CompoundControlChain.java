@@ -64,20 +64,6 @@ public class CompoundControlChain extends CompoundControl
             new ChainMutation(ChainMutation.INSERT, insertionIndex));
     }
 
-    protected void disambiguate(CompoundControl c) {
-        String original = c.getName();
-        int index = 2; // we start at two since this must be the second
-        String str;
-        do {
-	        str = original+" #"+index;
-            index++;
-        } while ( find(str) != null ) ;
-        c.setName(str);
-        c.instanceIndex = --index;
-//        assert index < MAX_INSTANCES;
-//   	    System.out.println("Need to Disambiguate "+original+" to "+str);
-    }
-
     // override for domain specific stuff
     protected CompoundControl createControl(String name) {
         return null;

@@ -6,17 +6,16 @@ import java.awt.Color;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
-import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 //import uk.org.toot.synth.oscillator.*;
 import static uk.org.toot.localisation.Localisation.getString;
-import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_3_SYNTH_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_3_CHANNEL_ID;
 
 /**
  * @author st
  *
  */
-public class Example3SynthControls extends SynthControls
+public class Example3SynthControls extends CompoundControl
 {
 	public static String NAME = "Ex3Syn";
 	
@@ -32,7 +31,7 @@ public class Example3SynthControls extends SynthControls
 //	private DelayedLFOControls[] lfoControls;
 	
 	public Example3SynthControls() {
-		super(EXAMPLE_3_SYNTH_ID, NAME);
+		super(EXAMPLE_3_CHANNEL_ID, NAME);
 		
 /*		lfoControls = new DelayedLFOControls[1];
 		

@@ -5,10 +5,10 @@
 
 package uk.org.toot.synth.modules.filter;
 
-import static uk.org.toot.synth.id.TootSynthControlsId.FILTER_BASE_ID;
-
 class FilterIds
 {
+    final static int FILTER_BASE_ID = 0x20;		// 32 filters
+
     final static int MOOG_LPF_ID = FILTER_BASE_ID + 1;
     final static int STATE_VARIABLE_FILTER_ID = FILTER_BASE_ID + 2;
 }
