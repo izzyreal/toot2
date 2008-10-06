@@ -63,7 +63,7 @@ public class AudioMixerStrip extends AudioProcessChain {
         this.input = input;
         if ( input == null ) {
         	metaInfo = null;
-            controlChain.setSourceLabel(" ");        	
+            controlChain.setMetaInfo(null);        	
         }
 //        System.out.println(getName()+" input process is "+this.input);
     }
@@ -117,7 +117,7 @@ public class AudioMixerStrip extends AudioProcessChain {
     protected void checkMetaInfo(AudioBuffer.MetaInfo info) {
         if ( metaInfo == info ) return; // no change
         metaInfo = info;
-        controlChain.setSourceLabel(metaInfo.getSourceLabel());
+        controlChain.setMetaInfo(metaInfo);
     }
 
     // intercept the SPI mechanism to handle bus mix controls

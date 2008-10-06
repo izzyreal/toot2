@@ -189,6 +189,8 @@ public abstract class MultiControlPanel extends JPanel
 				disableCombo = true;
 				// use annotation to avoid disambiguation/combo issue !!!
 				combo.setSelectedItem(controls.getAnnotation()); // goes recursive!!!
+				combo.setToolTipText(controls.getName());
+				combo.requestFocusInWindow();
 				disableCombo = false;
 				ui = createUI(controls);
 				centerPanel.add(ui, cardId);

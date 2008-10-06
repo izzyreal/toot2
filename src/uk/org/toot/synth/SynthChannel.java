@@ -24,7 +24,10 @@ public abstract class SynthChannel implements MidiChannel
 	
 	private byte[] controller = new byte[128];
 	
-	public SynthChannel(String name) {
+	public SynthChannel() {
+	}
+	
+	public void setLocation(String location) {	
 	}
 	
 	public static float midiFreq(int pitch) { 

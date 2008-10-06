@@ -20,12 +20,21 @@ public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
      */
 	private SynthChannel[] synthChannels = new SynthChannel[16];
 	protected SynthRack rack;
+	private String location;
 	
 	public BasicMidiSynth(String name) {
 		super(name);
 		addMidiInput(this);
 	}
 
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+	
 	protected void setChannel(int chan, SynthChannel synthChannel) {
 		synthChannels[chan] = synthChannel;
 	}

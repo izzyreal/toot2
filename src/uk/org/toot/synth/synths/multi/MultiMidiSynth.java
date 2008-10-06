@@ -29,6 +29,8 @@ public class MultiMidiSynth extends BasicMidiSynth
 							SynthChannel synthChannel = SynthChannelServices.createSynthChannel(channelControls);
 							if ( synthChannel == null ) {
 								System.err.println("No SynthChannel for SynthControls "+channelControls.getName());
+							} else {
+								synthChannel.setLocation(MultiMidiSynth.this.getLocation()+" Channel "+(1+chan));
 							}
 							setChannel(chan, synthChannel);
 						} else {

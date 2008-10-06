@@ -92,7 +92,7 @@ public class AudioPanelFactory extends ControlPanelFactory
             if ( axis == BoxLayout.Y_AXIS ) {
 	   	   		setFont(getFont().deriveFont(10f));
             }
-            labelSource(chain.getSourceLabel());
+            labelSource(chain.getSourceLabel(), chain.getSourceLocation());
         }
 
 	    public void addNotify() {
@@ -107,18 +107,18 @@ public class AudioPanelFactory extends ControlPanelFactory
 
         public void update(Observable obs, Object obj) {
            	if ( obj == null ) {
-        	    labelSource(chain.getSourceLabel());
+        	    labelSource(chain.getSourceLabel(), chain.getSourceLocation());
         	}
         }
 
-	    protected void labelSource(String string) {
-    	    if ( string == null ) string = " ";
+	    protected void labelSource(String label, String location) {
+    	    if ( label == null ) label = " ";
         	if ( axis == BoxLayout.Y_AXIS ) {
-            	boolean tooLong = string.length() > 8;
-    	    	setText(tooLong ? string.substring(0, 8) : string);
-            	setToolTipText(tooLong ? string : null);
+            	boolean tooLong = label.length() > 8;
+    	    	setText(tooLong ? label.substring(0, 8) : label);
+            	setToolTipText(tooLong ? "("+label+") "+location : location);
         	} else {
-            	setText(string);
+            	setText(label);
         	}
     	}
     }

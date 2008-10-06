@@ -34,6 +34,8 @@ public class SynthRack
 							if ( synth == null ) {
 								System.err.println("No Synth for SynthControls "+synthControls.getName());
 								return;
+							} else {
+								synth.setLocation("Synth "+String.valueOf((char)('A'+nsynth)));
 							}
 							setMidiSynth(nsynth, synth);
 						} else {

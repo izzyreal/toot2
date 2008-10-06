@@ -151,13 +151,24 @@ public class AudioBuffer extends FloatSampleBuffer
     static public class MetaInfo
     {
         private String sourceLabel;
+        private String sourceLocation;
 
+        // for release 2 backward compatibility with audioservers
         public MetaInfo(String sourceLabel) {
+        	this(sourceLabel, "");
+        }
+        
+        public MetaInfo(String sourceLabel, String sourceLocation) {
             this.sourceLabel = sourceLabel;
+            this.sourceLocation = sourceLocation;
         }
 
         public String getSourceLabel() {
             return sourceLabel;
+        }
+        
+        public String getSourceLocation() {
+        	return sourceLocation;
         }
     }
 }

@@ -36,11 +36,6 @@ public class SynthRackControls extends CompoundControl
 		}
 		if ( controls != null ) {
 	        if ( find(controls.getName()) != null ) {
-/*	        	System.out.print(synth+" disambiguating "+controls.getName()+" from ");
-	        	for ( Control c : getControls() ) {
-	        		System.out.print(c.getName()+", ");
-	        	}
-	        	System.out.println(); */
 	        	disambiguate(controls);
 	        }
 			add(controls);			

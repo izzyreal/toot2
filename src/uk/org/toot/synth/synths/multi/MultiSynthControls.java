@@ -19,6 +19,11 @@ public class MultiSynthControls extends SynthControls
 		if ( old != null ) {
 			remove(old);
 		}
+		if ( c != null ) {
+	        if ( find(c.getName()) != null ) {
+	        	disambiguate(c);
+	        }
+		}
 		super.setChannelControls(chan, c);
 		setChanged();
 		notifyObservers(chan);

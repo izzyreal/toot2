@@ -18,6 +18,7 @@ import uk.org.toot.audio.spi.AudioControlServiceDescriptor;
 public class AudioControlsChain extends CompoundControlChain
 {
     private String sourceLabel;
+    private String sourceLocation;
 
     /**
      * null means there are no format constraints
@@ -37,9 +38,15 @@ public class AudioControlsChain extends CompoundControlChain
         constraintChannelFormat = constraintFormat;
     }
 
-    public void setSourceLabel(String label) {
+    public void setMetaInfo(AudioBuffer.MetaInfo metaInfo) {
 //        System.out.println(getName()+": "+label);
-        sourceLabel = label;
+    	if ( metaInfo != null ) {
+    		sourceLabel = metaInfo.getSourceLabel();
+    		sourceLocation = metaInfo.getSourceLocation();
+    	} else {
+    		sourceLabel = " ";
+    		sourceLocation = " ";
+    	}
         setChanged();
         notifyObservers();
     }
@@ -48,6 +55,10 @@ public class AudioControlsChain extends CompoundControlChain
         return sourceLabel;
     }
 
+    public String getSourceLocation() {
+    	return sourceLocation;
+    }
+    
     public ChannelFormat getConstraintChannelFormat() {
         return constraintChannelFormat;
     }

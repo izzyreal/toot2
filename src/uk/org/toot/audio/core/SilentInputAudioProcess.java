@@ -20,7 +20,7 @@ public class SilentInputAudioProcess extends SimpleAudioProcess {
 
     public SilentInputAudioProcess(ChannelFormat format, String label) {
         channelFormat = format;
-        metaInfo = new AudioBuffer.MetaInfo(label);
+        metaInfo = new AudioBuffer.MetaInfo(label, "");
     }
 
     public int processAudio(AudioBuffer buffer) {

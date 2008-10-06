@@ -15,4 +15,6 @@ public interface MidiSynth extends MidiDevice, MidiInput
 	public SynthChannel[] getChannels();
 	public SynthChannel getChannel(int chan);
 	public void setRack(SynthRack rack); // !!! public OTT
+	public void setLocation(String location);
+	public String getLocation();
 }

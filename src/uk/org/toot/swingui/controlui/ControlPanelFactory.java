@@ -5,7 +5,6 @@
 
 package uk.org.toot.swingui.controlui;
 
-import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -161,30 +160,22 @@ public class ControlPanelFactory extends Observable implements PanelFactory
     protected JComponent createHeader(final CompoundControl control, int axis) {
         boolean isShort = false;
         String title = control.getName();
-        if ( isMinimised(title) || axis == BoxLayout.Y_AXIS) {
+        if ( isMinimised(title) ) {
             title = shorten(title);
             isShort = true;
         }
-        // !!! !!! we need vertical label if axis == X_AXIS and isMinimised(control)
+        JComponent comp;
         if ( canEdit() && control.getParent().isPluginParent() ) {
-        	JButton button = new JButton(title) { // !!! just for popup menu !!!
-               	public Dimension getMaximumSize() {
-                	Dimension d = super.getPreferredSize();
-            		d.width = 48;
-       	        	return d;
-           		}
-            };
-	        if ( isShort ) {
-    	        button.setToolTipText(control.getName());
-        	}
-	        button.setBorder(BorderFactory.createRaisedBevelBorder());
-            return button;
+        	comp = new JButton(title);
+	        comp.setBorder(BorderFactory.createRaisedBevelBorder());
+        } else {
+        	comp = new JLabel(title);
         }
-        JLabel label = new JLabel(title);
+        
         if ( isShort ) {
-            label.setToolTipText(control.getName());
+            comp.setToolTipText(control.getName());
         }
-        return label;
+        return comp;
     }
 
     protected JPopupMenu createPopupMenu() {

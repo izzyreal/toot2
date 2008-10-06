@@ -21,10 +21,14 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 	private int polyphony = 8;
 	private AudioBuffer.MetaInfo info;
 	private List<Voice> finished = new java.util.ArrayList<Voice>();
+	private String name;
 
 	public PolyphonicSynthChannel(String name) {
-		super(name);
-        info = new AudioBuffer.MetaInfo(name);
+		this.name = name;
+	}
+
+	public void setLocation(String location) {	
+        info = new AudioBuffer.MetaInfo(name, location);
 	}
 
 	public void open() {	
