@@ -75,12 +75,12 @@ public class LegacyDevices
             if (device.getMaxReceivers() != 0) {
                 addMidiInput(new DeviceMidiInput(device));
             	System.out.println("Opening MIDI Input "+simpleName(device.getDeviceInfo().getName()));
+                open();
             }
             if (device.getMaxTransmitters() != 0) {
                 addMidiOutput(new DeviceMidiOutput(device));
-            	System.out.println("Opening MIDI Output "+simpleName(device.getDeviceInfo().getName()));
+            	System.out.println("Using MIDI Output "+simpleName(device.getDeviceInfo().getName()));
             }
-            open();
         }
 
         protected static String simpleName(String name) {
@@ -126,6 +126,7 @@ public class LegacyDevices
             }
 
             public void transport(MidiMessage message, long timestamp) {
+//            	if ( !isOpen() ) open();
                 receiver.send(message, timestamp);
             }
 
@@ -159,11 +160,35 @@ public class LegacyDevices
                     });
             }
 
-            public void close() {
+            // TODO, currently never called !!!
+/*            public void close() {
                 // ensure the transmitter is closed
                 tx.setReceiver(null);
                 tx.close();
+            } */
+            
+            public void addConnectionTo(MidiInput input) {
+            	super.addConnectionTo(input);
+            	if ( getConnectionCount() > 0 && !isOpen() ) {
+            		try {
+            			open();
+            			System.out.println("Opened on demand: "+getName());
+            		} catch ( Exception e) {
+            			e.printStackTrace();
+            		}
+            	}
             }
+
+            public void removeConnectionTo(MidiInput input) {
+            	super.removeConnectionTo(input);
+            	// breaks usb midi out on M-249C
+/*            	if ( getConnectionCount() == 0 ) {
+            		close();
+            		System.out.println("Closed on demand: "+getName());
+            	} */
+            }
+
+
         }
     }        
 }

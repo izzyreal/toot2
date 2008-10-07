@@ -30,6 +30,10 @@ public class DefaultMidiOutput implements MidiOutput, MidiTransport
         tos.remove(input);
     }
 
+    public int getConnectionCount() {
+    	return tos.size();
+    }
+    
     public void transport(MidiMessage msg, long timestamp) {
         for ( MidiInput to : tos ) {
         	to.transport(msg, timestamp);

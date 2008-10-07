@@ -58,6 +58,7 @@ public class DefaultConnectedMidiSystem extends DefaultMidiSystem
     public void closeMidiConnection(MidiOutput from, MidiInput to) {
     	MidiConnection connection = getConnection(from, to); 
     	connections.remove(connection);
+    	connection.close();
     	setChanged();
     	notifyObservers();    	
     }
