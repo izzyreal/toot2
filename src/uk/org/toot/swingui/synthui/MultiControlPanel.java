@@ -22,10 +22,11 @@ import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
 import uk.org.toot.control.CompoundControl;
+import uk.org.toot.swing.DisposablePanel;
 import uk.org.toot.swingui.controlui.CompoundControlPanel;
 import uk.org.toot.swingui.controlui.ControlPanelFactory;
 
-public abstract class MultiControlPanel extends JPanel
+public abstract class MultiControlPanel extends DisposablePanel
 {
 	protected final static String NONE = "<none>";
 
@@ -57,14 +58,18 @@ public abstract class MultiControlPanel extends JPanel
 		);
 	}
 
+	protected void dispose() {
+		removeAll();
+	}
+	
 	abstract protected Vector<String> getSelectionNames();
 	
 	abstract protected String getAnnotation(int chan);
 
-	abstract protected void setControls(int chan, CompoundControl controls);
-
 	abstract protected CompoundControl getControls(int chan);
 	
+	abstract protected void setControls(int chan, CompoundControl controls);
+
 	abstract protected CompoundControl createControls(String name);
 	
 	protected JPanel createUI(CompoundControl controls) {

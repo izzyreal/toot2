@@ -14,13 +14,18 @@ public class MultiSynthPanel extends MultiControlPanel
 
 	static {
 		selectionNames.add(NONE);
-		SynthChannelServices.accept( // subclass
-			new ServiceVisitor() {
-				public void visitDescriptor(ServiceDescriptor d) {
-					selectionNames.add(d.getName());
-				}
-			}, CompoundControl.class
-		);
+		try {
+			SynthChannelServices.accept(
+					new ServiceVisitor() {
+						public void visitDescriptor(ServiceDescriptor d) {
+							selectionNames.add(d.getName());
+						}
+					}, CompoundControl.class
+			);
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public MultiSynthPanel(MultiSynthControls controls) {
@@ -31,15 +36,19 @@ public class MultiSynthPanel extends MultiControlPanel
 		return selectionNames;
 	}
 	
+	protected String getAnnotation(int chan) {
+		return String.valueOf(1+chan);
+	}
+
 	private MultiSynthControls getControls() {
 		return (MultiSynthControls)multiControls;
 	}
 	
-	protected String getAnnotation(int chan) { // subclass
-		return String.valueOf(1+chan);
+	protected CompoundControl getControls(int chan) {
+		return getControls().getChannelControls(chan);
 	}
-
-	protected void setControls(int chan, CompoundControl controls) { // subclass
+	
+	protected void setControls(int chan, CompoundControl controls) {
 		try {
 			getControls().setChannelControls(chan, controls);
 		} catch ( Exception e ) {
@@ -47,11 +56,7 @@ public class MultiSynthPanel extends MultiControlPanel
 		}
 	}
 
-	protected CompoundControl getControls(int chan) { // subclass
-		return getControls().getChannelControls(chan);
-	}
-	
-	protected CompoundControl createControls(String name) { // subclass
+	protected CompoundControl createControls(String name) {
 		return SynthChannelServices.createControls(name);
 	}
 	
