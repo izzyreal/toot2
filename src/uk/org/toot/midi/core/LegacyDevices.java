@@ -102,7 +102,7 @@ public class LegacyDevices
             }
         }
 
-        public void close() {
+        public void closeMidi() {
         	System.out.println("Closing "+simpleName(device.getDeviceInfo().getName()));
             device.close();
         }

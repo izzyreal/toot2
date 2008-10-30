@@ -1,24 +1,17 @@
-package uk.org.toot.synth.channels.pluckedString2;
+package uk.org.toot.synth.synths.plucked;
 
-//import static uk.org.toot.localisation.Localisation.getString;
+import static uk.org.toot.localisation.Localisation.getString;
+
 import java.awt.Color;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
+import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
-//import uk.org.toot.synth.oscillator.*;
-import static uk.org.toot.localisation.Localisation.getString;
-import static uk.org.toot.synth.id.TootSynthControlsId.PLUCKED_STRING_2_CHANNEL_ID;
 
-/**
- * @author st
- *
- */
-public class PluckedString2SynthControls extends CompoundControl
+abstract public class PluckedSynthControls extends SynthControls
 {
-	public static String NAME = "Pluck2";
-	
 	// OFFSETS MUST NOT BE CHANGED TO PRESERVE PERSISTENCE PORTABILITY
 	// OFFSETS ARE SLIGHTLY SPARSE TO ALLOW EXTENSION OF EXISTING MODULES
 //	private final static int LFOVIB_OFFSET 	= 0x18;
@@ -28,25 +21,11 @@ public class PluckedString2SynthControls extends CompoundControl
 	private StringControls stringControls;
 	private AmplifierControls amplifierControls;
 
-//	private DelayedLFOControls[] lfoControls;
+	private int stringCount;
 	
-	public PluckedString2SynthControls() {
-		super(PLUCKED_STRING_2_CHANNEL_ID, NAME);
-		
-/*		lfoControls = new DelayedLFOControls[1];
-		
-		LFOConfig vibratoConfig = new LFOConfig();
-		vibratoConfig.rateMin = 4f;
-		vibratoConfig.rateMax = 7f;
-		vibratoConfig.rate = 5.5f;
-		vibratoConfig.deviationMax = 2f;
-		vibratoConfig.deviation = 1.5f;		
-		vibratoConfig.hasLevel = true;
-
-		ControlRow osc0row = new ControlRow();
-		lfoControls[0] = new DelayedLFOControls(0, "Vibrato", LFOVIB_OFFSET, vibratoConfig);
-		osc0row.add(lfoControls[0]);
-		add(osc0row); */
+	public PluckedSynthControls(int id, String name, int nstrings) {
+		super(id, name);
+		stringCount = nstrings;
 		ControlRow row = new ControlRow();
 		stringControls = new StringControls();
 		row.add(stringControls);		
@@ -54,7 +33,13 @@ public class PluckedString2SynthControls extends CompoundControl
 		row.add(amplifierControls);
 		add(row);
 	}
+	
+	public int getStringCount() {
+		return stringCount;
+	}
 
+	public abstract float getLowestFrequency(int string);
+	
 	public float getPickup() {
 		return stringControls.getPickup();
 	}
@@ -70,10 +55,6 @@ public class PluckedString2SynthControls extends CompoundControl
 	public float getLevel() {
 		return amplifierControls.getLevel();
 	}
-	
-/*	public DelayedLFOControls getLFOVariables(int instance) {
-		return lfoControls[instance];
-	} */
 	
 	protected class StringControls extends CompoundControl
 	{
@@ -104,4 +85,5 @@ public class PluckedString2SynthControls extends CompoundControl
 			return pickControl.getValue();
 		}
 	}
+
 }

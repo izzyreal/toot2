@@ -12,14 +12,14 @@ import uk.org.toot.midi.message.*;
  * @author st
  *
  */
-public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
+abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
 {
     /**
      * @link aggregationByValue
      * @supplierCardinality 16 
      */
 	private SynthChannel[] synthChannels = new SynthChannel[16];
-	protected SynthRack rack;
+	protected SynthRack rack; // !!!
 	private String location;
 	
 	public BasicMidiSynth(String name) {
@@ -79,7 +79,5 @@ public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
 		}
 	}
 	
-	public void close() {
-		
-	}
+	public void closeMidi() {}
 }

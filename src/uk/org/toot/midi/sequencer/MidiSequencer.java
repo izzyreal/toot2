@@ -571,7 +571,7 @@ public class MidiSequencer extends AbstractMidiDevice implements TransportListen
 
 
 
-	public synchronized void close() {
+	public synchronized void closeMidi() {
 		if (Printer.trace) Printer.trace(">> RealTimeSequencer: implClose() ");
 
 		if (playEngine == null) {

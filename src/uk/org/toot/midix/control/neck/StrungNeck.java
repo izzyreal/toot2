@@ -45,7 +45,7 @@ public class StrungNeck extends AbstractMidiDevice implements Bendable {
         nextNum += 1;
     }
 
-    public void close() {
+    public void closeMidi() {
     	
     }
     
