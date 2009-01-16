@@ -10,6 +10,11 @@ public class VST
 {
 	private static List<File> paths = new java.util.ArrayList<File>();
 
+	// assume linux uses dlls somehow, WINE?
+	// assume Mac uses Mach-O, not Carbon VSTs
+	private static final String EXT =
+		System.getProperty("os.name").toLowerCase().startsWith("mac os x") ? ".vst" : ".dll";
+	
 	public static void addPluginPath(String path) {
 		paths.add(new File(path));
 	}
@@ -38,7 +43,7 @@ public class VST
 				continue;
 			}
 			String filename = file.getPath();
-			if ( filename.endsWith(".dll") ) {					// !!! TODO
+			if ( filename.endsWith(EXT) ) {
 				JVstHost2 vst = null;
 				try {
 					vst = JVstHost2.newInstance(file);
