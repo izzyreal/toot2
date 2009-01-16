@@ -76,7 +76,7 @@ public class PluckedString implements Instrument
 
 	public void pluck(float amplitude, float excitation, float position) {
 		loopGain_ = 0.999f;
-		pickComb.setDelay(position * length_); // pick position TODO
+		pickComb.setDelay(position * length_);
 		float f = frequency / 1000;
 		pickFilter_.setPole(0.999f - (excitation * 0.05f) - (f * 0.1f));
 		pickFilter_.setGain(amplitude * 0.5f);
