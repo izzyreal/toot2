@@ -100,7 +100,11 @@ public abstract class Control extends Observable
         return name;
     }
 
-    void setName(String s) {
+    /**
+     * Set the control's name
+     * @param s the name
+     */
+    public void setName(String s) {
         name = s;
     }
 
