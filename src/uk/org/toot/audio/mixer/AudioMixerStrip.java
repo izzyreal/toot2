@@ -58,13 +58,15 @@ public class AudioMixerStrip extends AudioProcessChain {
         if ( controlChain.getId() != CHANNEL_STRIP ) {
             throw new Exception("No external input to this Strip type");
         }
-        if ( this.input != null ) this.input.close();
+        AudioProcess oldInput = this.input;
         if ( input != null ) input.open();
         this.input = input;
         if ( input == null ) {
         	metaInfo = null;
             controlChain.setMetaInfo(null);        	
         }
+        // don't close old until new is properly set
+        if ( oldInput != null ) oldInput.close();
 //        System.out.println(getName()+" input process is "+this.input);
     }
 
