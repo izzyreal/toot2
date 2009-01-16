@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.tool;
 
-import static uk.org.toot.audio.id.TootControlsId.TOOL_BASE_ID;
+import static uk.org.toot.audio.id.TootAudioControlsId.TOOL_BASE_ID;
 
 class ToolIds
 {

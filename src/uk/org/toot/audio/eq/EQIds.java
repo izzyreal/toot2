@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.eq;
 
-import static uk.org.toot.audio.id.TootControlsId.EQ_BASE_ID;
+import static uk.org.toot.audio.id.TootAudioControlsId.EQ_BASE_ID;
 
 /**
  * The module IDs for EQ.

@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.dynamics;
 
-import static uk.org.toot.audio.id.TootControlsId.DYNAMICS_BASE_ID;
+import static uk.org.toot.audio.id.TootAudioControlsId.DYNAMICS_BASE_ID;
 
 class DynamicsIds
 {

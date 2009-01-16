@@ -47,28 +47,45 @@ public class SynthRack
 		);
 	}
 	
+	/*
+	 * TODO
+	 * invert control
+	 * ask synths to connect
+	 */
 	public void setMidiSynth(int i, MidiSynth synth) {
 		MidiSynth old = synths[i];
 		if ( old != null ) {
 			midiSystem.removeMidiDevice(old);
-			old.setRack(null);
-			disconnect(old);
-			for ( int chan = 0; chan < 16; chan++ ) {
-				disconnect(old.getChannel(chan));
+			if ( old instanceof BasicMidiSynth ) { // !!!
+				((BasicMidiSynth)old).setRack(null);
+				for ( int chan = 0; chan < 16; chan++ ) {
+					disconnect(((BasicMidiSynth)old).getChannel(chan));
+				}
 			}
+			disconnect(old);
 		}
 		synths[i] = synth;
 		if ( synth == null ) return;
 		midiSystem.addMidiDevice(synth);
 		connect(synth);
-		for ( int chan = 0; chan < 16; chan++ ) {
-			connect(synth.getChannel(chan));
+		if ( synth instanceof BasicMidiSynth ) { // !!!
+			for ( int chan = 0; chan < 16; chan++ ) {
+				connect(((BasicMidiSynth)synth).getChannel(chan));
+			}
+			((BasicMidiSynth)synth).setRack(this);
 		}
-		synth.setRack(this);
 	}
 	
 	public MidiSynth getMidiSynth(int i) {
 		return synths[i];
+	}
+	
+	public void close() {
+		System.out.println("Closing All Synths");
+		for ( int i = 0; i < synths.length; i++ ) {
+			setMidiSynth(i, null);
+		}
+		System.out.println("All Synths Closed");
 	}
 	
 	// public as implementation side-effect

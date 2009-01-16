@@ -34,31 +34,23 @@ abstract public class AudioServiceProvider extends ServiceProvider
     }
 
     public String lookupName(int moduleId) {
+    	ServiceDescriptor d = lookupDescriptor(moduleId);
+        return d == null ? null : d.getName();
+    }
+
+    public ServiceDescriptor lookupDescriptor(int moduleId) {
         for ( ServiceDescriptor d : controls ) {
             try {
 	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
-    	            return d.getName();
+    	            return d;
         	    }
             } catch ( Exception e ) {
                 e.printStackTrace();
 			}
         }
-        return null;
+        return null;    	
     }
-
-    public AudioControls createControls(int moduleId) {
-        for ( ServiceDescriptor d : controls ) {
-            try {
-	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
-    	            return (AudioControls)d.getServiceClass().newInstance();
-        	    }
-            } catch ( Exception e ) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
+    
     /**
      * Adds a ControlServiceDescriptor for the matching service.
      * The service can cope with any channel format.
@@ -76,30 +68,33 @@ abstract public class AudioServiceProvider extends ServiceProvider
         add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version, format));
     }
 
-
-
-    public AudioControls createControls(String name) {
+    public AudioControls createControls(int moduleId) {
         for ( ServiceDescriptor d : controls ) {
-            try {
-	            if ( d.getName().equals(name) ) {
-    	            return (AudioControls)d.getServiceClass().newInstance();
-        	    }
-            } catch ( Exception e ) {
-                e.printStackTrace();
-            }
+            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
+   	            return createControls(d);
+       	    }
         }
         return null;
     }
 
-    public abstract AudioProcess createProcessor(AudioControls c);
-
-/*    public Iterator<ServiceDescriptor> controlsDescriptors() {
-        return controls.iterator();
+    public AudioControls createControls(String name) {
+        for ( ServiceDescriptor d : controls ) {
+            if ( d.getName().equals(name) ) {
+   	            return createControls(d);
+       	    }
+        }
+        return null;
     }
 
-    public Iterator<ServiceDescriptor> processDescriptors() {
-        return processors.iterator();
-    } */
-
+    protected AudioControls createControls(ServiceDescriptor d) {
+        try {
+        	return (AudioControls)d.getServiceClass().newInstance();
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public abstract AudioProcess createProcessor(AudioControls c);
 
 }

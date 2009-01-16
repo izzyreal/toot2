@@ -19,8 +19,9 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
      * @supplierCardinality 16 
      */
 	private SynthChannel[] synthChannels = new SynthChannel[16];
-	protected SynthRack rack; // !!!
 	private String location;
+	protected SynthRack rack; // !!!
+
 	
 	public BasicMidiSynth(String name) {
 		super(name);
@@ -35,6 +36,10 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 		return location;
 	}
 	
+	public void setRack(SynthRack rack) {
+		this.rack = rack;
+	}
+	
 	protected void setChannel(int chan, SynthChannel synthChannel) {
 		synthChannels[chan] = synthChannel;
 	}
@@ -45,10 +50,6 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 
 	public SynthChannel getChannel(int chan) {
 		return synthChannels[chan];
-	}
-	
-	public void setRack(SynthRack rack) {
-		this.rack = rack;
 	}
 	
 	public void transport(MidiMessage msg, long timestamp) {

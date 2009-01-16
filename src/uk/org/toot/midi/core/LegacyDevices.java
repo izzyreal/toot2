@@ -37,7 +37,7 @@ public class LegacyDevices
                 if (maxtx != 0 && maxrx != 0) continue; // it's a Component
                 addDevice(device, system);
             } catch (MidiUnavailableException e) {
-                System.err.println(infos[i].getName()+" Unavailable!");
+                System.out.println(infos[i].getName()+" Unavailable!");
             }
         }
     }
@@ -60,7 +60,7 @@ public class LegacyDevices
                 if (maxtx == 0 || maxrx == 0) continue; // it's NOT a Component
                 addDevice(device, system);
             } catch (MidiUnavailableException e) {
-                System.err.println(infos[i].getName()+" Unavailable!");
+                System.out.println(infos[i].getName()+" Unavailable!");
             }
         }
     }
@@ -68,43 +68,53 @@ public class LegacyDevices
     static class DeviceAdaptor extends AbstractMidiDevice
     {
         protected javax.sound.midi.MidiDevice device;
+        private DeviceMidiInput input;
+        private DeviceMidiOutput output;
+        protected String name;
 
         public DeviceAdaptor(javax.sound.midi.MidiDevice device) throws MidiUnavailableException {
         	super("");
             this.device = device;
+            name = simpleName(device.getDeviceInfo().getName());
             if (device.getMaxReceivers() != 0) {
-                addMidiInput(new DeviceMidiInput(device));
-            	System.out.println("Opening MIDI Input "+simpleName(device.getDeviceInfo().getName()));
-                open();
+            	input = new DeviceMidiInput(device);
+                addMidiInput(input);
             }
             if (device.getMaxTransmitters() != 0) {
-                addMidiOutput(new DeviceMidiOutput(device));
-            	System.out.println("Using MIDI Output "+simpleName(device.getDeviceInfo().getName()));
+            	output = new DeviceMidiOutput(device);
+                addMidiOutput(output);
             }
         }
 
         protected static String simpleName(String name) {
             String[] parts = name.split("\\s");
             if (parts == null) return name;
-/*            if (name.startsWith("MIDI Yoke NT: ")) {
-                return "Loop " + parts[4];
-            } else if (name.startsWith("LB")) {
-                return "Loop " + parts[0].charAt(2);
-            } else*/ if (name.startsWith("Microsoft ")) {
+            if (name.startsWith("Microsoft ")) {
                 return name.substring("Microsoft ".length(), name.length());
             }
             return name;
         }
 
         public void open() throws MidiUnavailableException {
-            if (!isOpen()) {
-                device.open();
+            if ( !isOpen() ) {
+            	System.out.print("Opening "+name+" ... ");
+            	device.open();
+            	System.out.println("opened");
             }
         }
 
         public void closeMidi() {
-        	System.out.println("Closing "+simpleName(device.getDeviceInfo().getName()));
-            device.close();
+        	if ( input != null ) {
+        		input.closeInput();
+        	}
+        	if ( output != null ) {
+        		output.closeOutput();
+        	}
+        	if ( isOpen() ) {
+            	System.out.print("Closing "+name+" ... ");
+        		device.close();
+    			System.out.println("closed");
+        	}
         }
 
         public boolean isOpen() {
@@ -115,7 +125,7 @@ public class LegacyDevices
 
         public String getDescription() { return device.getDeviceInfo().getDescription(); }
 
-        public /*static*/ class DeviceMidiInput implements MidiInput
+        public class DeviceMidiInput implements MidiInput
         {
             private Receiver receiver;
             private javax.sound.midi.MidiDevice device;
@@ -126,10 +136,20 @@ public class LegacyDevices
             }
 
             public void transport(MidiMessage message, long timestamp) {
-//            	if ( !isOpen() ) open();
+            	if ( !isOpen() ) {
+            		try { 
+            			open();
+            		} catch ( MidiUnavailableException mua ) {
+            			System.err.println(name+" failed open on demand");
+            		}
+            	}
                 receiver.send(message, timestamp);
             }
 
+            public void closeInput() {
+            	receiver.close();
+            }
+            
             public int getLatency() {
                 if (device instanceof Synthesizer) {
                     return (int)((Synthesizer)device).getLatency();
@@ -137,15 +157,15 @@ public class LegacyDevices
                 return 0;
             }
             
-            public String getName() { return simpleName(device.getDeviceInfo().getName()); }
+            public String getName() { return name; }
             
             public String toString() { return getName(); }
         }
 
 
-        /*static*/ public class DeviceMidiOutput extends DefaultMidiOutput
+        public class DeviceMidiOutput extends DefaultMidiOutput
         {
-            Transmitter tx;
+            private Transmitter tx;
 
             public DeviceMidiOutput(javax.sound.midi.MidiDevice device) throws MidiUnavailableException {
                 super(simpleName(device.getDeviceInfo().getName()));
@@ -160,19 +180,15 @@ public class LegacyDevices
                     });
             }
 
-            // TODO, currently never called !!!
-/*            public void close() {
-                // ensure the transmitter is closed
-                tx.setReceiver(null);
+            public void closeOutput() {
                 tx.close();
-            } */
+            }
             
             public void addConnectionTo(MidiInput input) {
             	super.addConnectionTo(input);
             	if ( getConnectionCount() > 0 && !isOpen() ) {
             		try {
             			open();
-            			System.out.println("Opened on demand: "+getName());
             		} catch ( Exception e) {
             			e.printStackTrace();
             		}
@@ -181,14 +197,7 @@ public class LegacyDevices
 
             public void removeConnectionTo(MidiInput input) {
             	super.removeConnectionTo(input);
-            	// breaks usb midi out on M-249C
-/*            	if ( getConnectionCount() == 0 ) {
-            		close();
-            		System.out.println("Closed on demand: "+getName());
-            	} */
             }
-
-
         }
     }        
 }

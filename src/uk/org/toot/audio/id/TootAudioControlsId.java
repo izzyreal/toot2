@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.id;
 
-public interface TootControlsId
+public interface TootAudioControlsId
 {
     // allow for 16 in each category
     // THESE CONSTANTS MUST NEVER BE CHANGED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -14,6 +14,7 @@ public interface TootControlsId
     final static int DYNAMICS_BASE_ID = 0x20;
     final static int BASIC_BASE_ID = 0x30;
 
+    final static int VST_FX_ID = 0xDF;
     final static int TOOL_BASE_ID = 0xE0;
     // AUTOMATION_ID = 119
     final static int MIXER_BASE_ID = 120;

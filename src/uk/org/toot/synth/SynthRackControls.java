@@ -35,9 +35,10 @@ public class SynthRackControls extends CompoundControl
 			remove(old);
 		}
 		if ( controls != null ) {
-	        if ( find(controls.getName()) != null ) {
-	        	disambiguate(controls);
-	        }
+			String name = controls.getName();
+			// append the letter for the synth rack position
+			// distinguishes same synths
+			controls.setName(name+" "+String.valueOf((char)('A'+synth)));
 			add(controls);			
 		}
 		synthControls[synth] = controls;

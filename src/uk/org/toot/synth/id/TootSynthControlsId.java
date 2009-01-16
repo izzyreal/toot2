@@ -12,6 +12,8 @@ public interface TootSynthControlsId
 	final static int TWELVE_STRING_GUITAR_PLUCKED_SYNTH = 3;
 	final static int FOUR_STRING_BASS_PLUCKED_SYNTH = 4;
 
+	// a special case for wrapping VST instruments
+	final static int VSTI_SYNTH_ID = 127;
 	
 	// ids of the plugin synth channels
 	final static int EXAMPLE_1_CHANNEL_ID = 1;

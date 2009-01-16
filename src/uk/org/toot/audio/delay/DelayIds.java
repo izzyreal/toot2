@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.delay;
 
-import static uk.org.toot.audio.id.TootControlsId.DELAY_BASE_ID;
+import static uk.org.toot.audio.id.TootAudioControlsId.DELAY_BASE_ID;
 
 class DelayIds
 {

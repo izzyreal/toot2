@@ -47,13 +47,9 @@ abstract public class SynthServiceProvider extends ServiceProvider
 
     public SynthControls createControls(int moduleId) {
         for ( ServiceDescriptor d : controls ) {
-            try {
-	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
-    	            return (SynthControls)d.getServiceClass().newInstance();
-        	    }
-            } catch ( Exception e ) {
-                e.printStackTrace();
-            }
+            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
+   	            return createControls(d);
+       	    }
         }
         return null;
     }
@@ -68,16 +64,21 @@ abstract public class SynthServiceProvider extends ServiceProvider
 
     public SynthControls createControls(String name) {
         for ( ServiceDescriptor d : controls ) {
-            try {
-	            if ( d.getName().equals(name) ) {
-    	            return (SynthControls)d.getServiceClass().newInstance();
-        	    }
-            } catch ( Exception e ) {
-                e.printStackTrace();
-            }
+	        if ( d.getName().equals(name) ) {
+    	        return createControls(d);
+        	}
         }
         return null;
     }
 
+    protected SynthControls createControls(ServiceDescriptor d) {
+        try {
+        	return (SynthControls)d.getServiceClass().newInstance();
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 	public abstract MidiSynth createSynth(CompoundControl controls);
 }

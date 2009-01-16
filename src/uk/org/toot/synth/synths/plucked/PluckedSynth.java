@@ -87,7 +87,7 @@ public class PluckedSynth extends BasicMidiSynth implements AudioProcess
 		
 		@Override
 		public void noteOff(int pitch) {
-			string.noteOff(0.25f); // !!!
+			string.noteOff(0.1f); // !!!
 		}
 
 		@Override

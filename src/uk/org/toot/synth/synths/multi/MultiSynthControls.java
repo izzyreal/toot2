@@ -1,11 +1,11 @@
 package uk.org.toot.synth.synths.multi;
 
 import uk.org.toot.control.CompoundControl;
-import uk.org.toot.synth.SynthControls;
+import uk.org.toot.synth.ChannelledSynthControls;
 
 import static uk.org.toot.synth.id.TootSynthControlsId.MULTI_SYNTH_ID;
 
-public class MultiSynthControls extends SynthControls
+public class MultiSynthControls extends ChannelledSynthControls
 {
 	public final static int ID = MULTI_SYNTH_ID;
 	public final static String NAME = "MultiSynth";

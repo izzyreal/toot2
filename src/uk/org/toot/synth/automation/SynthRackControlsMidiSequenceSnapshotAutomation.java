@@ -10,15 +10,18 @@ import javax.sound.midi.*;
 import uk.org.toot.control.*;
 import uk.org.toot.control.automation.MidiPersistence;
 import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
+import uk.org.toot.synth.ChannelledSynthControls;
 import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.SynthChannelServices;
 import uk.org.toot.synth.SynthServices;
-import uk.org.toot.synth.synths.multi.MultiSynthControls;
+import uk.org.toot.synth.synths.multi.MultiSynthControls; // !!! TODO
 
 import static uk.org.toot.control.automation.ControlSysexMsg.*;
 import static uk.org.toot.midi.message.MetaMsg.*;
 import static uk.org.toot.midi.message.NoteMsg.*;
+import static uk.org.toot.control.id.ProviderId.TOOT_PROVIDER_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.VSTI_SYNTH_ID;
 
 /**
  * Stores and recalls synth rack automation snaphots as Midi Sequences.
@@ -36,10 +39,6 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     	rackControls = controls;
     }
 
-    protected int decodeChan(String rackPlace) {
-    	return Integer.valueOf(rackPlace.substring(1));
-    }
-    
     public void configureSequence(Sequence snapshot) {
     	rackControls.removeAll();
         Track[] tracks = snapshot.getTracks();
@@ -47,36 +46,48 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
         SynthControls synthControls;
         CompoundControl channelControls;
         int instanceIndex = -1;
+        String trackName;
         
         for ( int t = 0; t < tracks.length; t++ ) {
             track = tracks[t];
-            MidiMessage msg = track.get(1).getMessage(); 
+            trackName = null;
+            MidiMessage msg = track.get(0).getMessage();
+            if ( isMeta(msg) && getType(msg) == TRACK_NAME ) {
+            	trackName = getString(msg);
+            }
+            msg = track.get(1).getMessage();
             if ( !isNote(msg) ) continue;
             int providerId = getData1(msg);
             int synthId = getData2(msg);
-            String sname = SynthServices.lookupModuleName(providerId, synthId);
+            // VSTis don't have unique toot ids, but do have uniqueish names
+            boolean useTrackName = providerId == TOOT_PROVIDER_ID && 
+            						  synthId == VSTI_SYNTH_ID;
+            String sname = useTrackName ? trackName.substring(0, trackName.length()-2) 
+            							: SynthServices.lookupModuleName(providerId, synthId);
 //            System.out.println("Synth configure: "+t+" "+sname);
             if ( sname == null ) {
-            	System.err.println("Synth configure: failed to lookup service "+providerId+"/"+synthId);
+            	System.err.println("Synth configure: failed to lookup service "+providerId+"/"+synthId+" for "+trackName);
             	continue;
             }
             synthControls = SynthServices.createControls(sname);
             rackControls.setSynthControls(t, synthControls);
-            if ( !(synthControls instanceof MultiSynthControls) ) continue;
-            for ( int m = 2; m < track.size(); m++ ) {
-            	msg = track.get(m).getMessage();
-            	if ( !isControl(msg) ) continue;
-            	if ( instanceIndex == getInstanceIndex(msg) ) continue;
-           		instanceIndex = getInstanceIndex(msg);
-           		int chan = instanceIndex - 1;
-           		if ( chan < 0 ) continue;
-            	String name = SynthChannelServices.lookupModuleName(
-            			getProviderId(msg), getModuleId(msg));
-            	if ( name == null ) continue;
-            	channelControls = SynthChannelServices.createControls(name);
-            	if ( channelControls == null ) continue;
-            	((MultiSynthControls)synthControls).setChannelControls(chan, channelControls);
-//            	System.out.println("Synth configure: channel "+t+"/"+chan+" "+channelControls.getName());
+            
+            if ( synthControls instanceof MultiSynthControls) {
+            	for ( int m = 2; m < track.size(); m++ ) {
+            		msg = track.get(m).getMessage();
+            		if ( !isControl(msg) ) continue;
+            		if ( instanceIndex == getInstanceIndex(msg) ) continue;
+            		instanceIndex = getInstanceIndex(msg);
+            		int chan = instanceIndex - 1;
+            		if ( chan < 0 ) continue;
+            		String name = SynthChannelServices.lookupModuleName(
+            				getProviderId(msg), getModuleId(msg));
+            		if ( name == null ) continue;
+            		channelControls = SynthChannelServices.createControls(name);
+            		if ( channelControls == null ) continue;
+            		((MultiSynthControls)synthControls).setChannelControls(chan, channelControls);
+//          		System.out.println("Synth configure: channel "+t+"/"+chan+" "+channelControls.getName());
+            	}
             }
         }
     }
@@ -99,31 +110,33 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             int providerId = -1;
             int moduleId = -1;
             
-            for ( int i = 0; i < track.size(); i++ ) {
-                MidiMessage msg = track.get(i).getMessage();
-                if ( !isControl(msg) ) continue;
-                if ( instanceIndex != getInstanceIndex(msg) ) {
-                	instanceIndex = getInstanceIndex(msg);
-                	int chan = instanceIndex - 1;
-        	        channelControls = synthControls.getChannelControls(chan);
-                	if ( channelControls == null ) {
-                   		System.err.println("Synth recall: failed to get channel controls "+t+"/"+chan);        		
-                		break;
-                	}
-        	        providerId = channelControls.getProviderId();
-        	        moduleId = channelControls.getId();
-                }
-                if ( getProviderId(msg) != providerId || 
-                	 getModuleId(msg) != moduleId ) continue;
-                int cid = getControlId(msg);
-                Control control = channelControls.deepFind(cid);
-                if ( control == null ) {
-                    continue;
-                }
-                int newValue = getValue(msg);
-		        if ( newValue == control.getIntValue() ) continue;
-//                System.out.println("recall: "+control.getControlPath());
-                control.setIntValue(newValue);
+            if ( synthControls instanceof ChannelledSynthControls ) {
+            	for ( int i = 0; i < track.size(); i++ ) {
+            		MidiMessage msg = track.get(i).getMessage();
+            		if ( !isControl(msg) ) continue;
+            		if ( instanceIndex != getInstanceIndex(msg) ) {
+            			instanceIndex = getInstanceIndex(msg);
+            			int chan = instanceIndex - 1;
+            			channelControls = ((ChannelledSynthControls)synthControls).getChannelControls(chan);
+            			if ( channelControls == null ) {
+            				System.err.println("Synth recall: failed to get channel controls "+t+"/"+chan);        		
+            				break;
+            			}
+            			providerId = channelControls.getProviderId();
+            			moduleId = channelControls.getId();
+            		}
+            		if ( getProviderId(msg) != providerId || 
+            				getModuleId(msg) != moduleId ) continue;
+            		int cid = getControlId(msg);
+            		Control control = channelControls.deepFind(cid);
+            		if ( control == null ) {
+            			continue;
+            		}
+            		int newValue = getValue(msg);
+            		if ( newValue == control.getIntValue() ) continue;
+//          		System.out.println("recall: "+control.getControlPath());
+            		control.setIntValue(newValue);
+            	}
             }
         }
     }
@@ -153,22 +166,26 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     		} catch ( InvalidMidiDataException imde ) {
     			System.err.println("Synth store: error storing synth "+synthControls.getName());
     		}
-    		CompoundControl cc = synthControls.getGlobalControls();
-    		if ( cc != null ) {
-    			providerId = cc.getProviderId();
-    			moduleId = cc.getId();
-    			instanceIndex = 0; //cc.getInstanceIndex();
-    			MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
-    		}
-    		
-        	for ( int chan = 0; chan < 16; chan++ ) {
-        		cc = synthControls.getChannelControls(chan);
-        		if ( cc == null ) continue;
-        		providerId = cc.getProviderId();
-        		moduleId = cc.getId();
-        		instanceIndex = 1+chan; //cc.getInstanceIndex();
-        		MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
-        	}
+    		if ( synthControls instanceof ChannelledSynthControls ) {
+    			ChannelledSynthControls channelledControls = 
+    				(ChannelledSynthControls)synthControls;
+    			CompoundControl cc = channelledControls.getGlobalControls();
+    			if ( cc != null ) {
+    				providerId = cc.getProviderId();
+    				moduleId = cc.getId();
+    				instanceIndex = 0; //cc.getInstanceIndex();
+    				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
+    			}
+
+    			for ( int chan = 0; chan < 16; chan++ ) {
+    				cc = channelledControls.getChannelControls(chan);
+    				if ( cc == null ) continue;
+    				providerId = cc.getProviderId();
+    				moduleId = cc.getId();
+    				instanceIndex = 1+chan; //cc.getInstanceIndex();
+    				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
+    			}
+        }
         }
         return snapshot;
     }
