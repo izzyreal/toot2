@@ -78,14 +78,9 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
 
         for (int i = 0; i < len; i++) {
             // the side chain calculations, every millisecond
-            if ( (i % mslen) == 0  ) {
+            if ( (i % mslen) == 0 && (i + mslen) < len ) {
 	            double key = 0;
                 if ( isPeak ) {
-/*                	for ( int j = 0; j < mslen; j++ ) {
-    	    	    	for ( int c = 0; c < nc; c++ ) {
-        		        	key = Math.max(key, Math.abs(samples[c][i+j]));
-    	        		}
-	                } */
    	    	    	for ( int c = 0; c < nc; c++ ) {
     					samples = buffer.getChannel(c);
 	                	for ( int j = 0; j < mslen; j++ ) {
@@ -95,13 +90,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
                 } else { // rms
                 	float sample;
                 	float sumOfSquares = 0f;
-/*                	for ( int j = 0; j < mslen; j++ ) {
-    	    	    	for ( int c = 0; c < nc; c++ ) {
-        		        	sample = samples[c][i+j];
-                            sumOfSquares += sample * sample;
-    	        		}
-	                } */
-   	    	    	for ( int c = 0; c < nc; c++ ) {
+  	    	    	for ( int c = 0; c < nc; c++ ) {
     					samples = buffer.getChannel(c);
 	                	for ( int j = 0; j < mslen; j++ ) {
         		        	sample = samples[i+j];
@@ -116,7 +105,6 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
             // affect all channels identically to preserve positional image
             for ( int c = 0; c < nc; c++ ) {
                 buffer.getChannel(c)[i] *= gain;
-                // samples[c][i] *= gain;
             }
         }
         // we only announce the final value at the end of the buffer
