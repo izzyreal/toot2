@@ -198,7 +198,9 @@ public abstract class MultiControlPanel extends DisposablePanel
 				combo.requestFocusInWindow();
 				disableCombo = false;
 				ui = createUI(controls);
-				centerPanel.add(ui, cardId);
+				if ( ui != null ) {
+					centerPanel.add(ui, cardId);
+				}
 				showSelection();					
 			} else {
 				checkSelection(); // select something else or dummy button		

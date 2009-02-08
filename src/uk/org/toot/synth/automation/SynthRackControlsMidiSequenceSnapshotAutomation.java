@@ -10,12 +10,14 @@ import javax.sound.midi.*;
 import uk.org.toot.control.*;
 import uk.org.toot.control.automation.MidiPersistence;
 import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
+import uk.org.toot.misc.VstMidiPersistence;
 import uk.org.toot.synth.ChannelledSynthControls;
 import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.SynthChannelServices;
 import uk.org.toot.synth.SynthServices;
 import uk.org.toot.synth.synths.multi.MultiSynthControls; // !!! TODO
+import uk.org.toot.synth.synths.vsti.VstiSynthControls;
 
 import static uk.org.toot.control.automation.ControlSysexMsg.*;
 import static uk.org.toot.midi.message.MetaMsg.*;
@@ -111,7 +113,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             int moduleId = -1;
             
             if ( synthControls instanceof ChannelledSynthControls ) {
-            	for ( int i = 0; i < track.size(); i++ ) {
+            	for ( int i = 2; i < track.size(); i++ ) {
             		MidiMessage msg = track.get(i).getMessage();
             		if ( !isControl(msg) ) continue;
             		if ( instanceIndex != getInstanceIndex(msg) ) {
@@ -137,6 +139,10 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
 //          		System.out.println("recall: "+control.getControlPath());
             		control.setIntValue(newValue);
             	}
+            } else if ( synthControls instanceof VstiSynthControls ) {
+            	VstMidiPersistence.recall(synthControls, track, 2);
+            } else { // normal controls
+            	// TODO
             }
         }
     }
@@ -153,9 +159,11 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
         int providerId = -1;
         int moduleId = -1;
         int instanceIndex = -1;
+        boolean valid = false;
         for ( int synth = 0; synth < rackControls.size(); synth++ ) {
         	SynthControls synthControls = rackControls.getSynthControls(synth);
         	if ( synthControls == null ) continue;
+        	valid = true;
     		Track t = snapshot.createTrack();
     		try {
     			MidiMessage msg = createMeta(TRACK_NAME, synthControls.getName());
@@ -185,8 +193,12 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     				instanceIndex = 1+chan; //cc.getInstanceIndex();
     				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
     			}
+    		} else if ( synthControls instanceof VstiSynthControls ) {
+    			VstMidiPersistence.store(synthControls, t);
+    		} else { // just an unchannelled synth controls
+    			// TODO
+    		}
         }
-        }
-        return snapshot;
+        return valid ? snapshot : null;
     }
 }

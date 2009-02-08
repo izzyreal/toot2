@@ -11,6 +11,7 @@ import uk.org.toot.audio.core.ChannelFormat;
 public class AudioControlServiceDescriptor extends ControlServiceDescriptor
 {
     private ChannelFormat channelFormat = null;
+    private String pluginPath;
 
     public AudioControlServiceDescriptor(Class<?> clazz, int moduleId,
         	String name, String description, String version) {
@@ -18,12 +19,17 @@ public class AudioControlServiceDescriptor extends ControlServiceDescriptor
     }
 
     public AudioControlServiceDescriptor(Class<?> clazz, int moduleId,
-        String name, String description, String version, ChannelFormat format) {
+        String name, String description, String version, ChannelFormat format, String path) {
         this(clazz, moduleId, name, description, version);
         channelFormat = format;
+        pluginPath = path;
     }
 
     public ChannelFormat getChannelFormat() {
         return channelFormat;
+    }
+    
+    public String getPluginPath() {
+    	return pluginPath;
     }
 }

@@ -22,7 +22,8 @@ public class StereoImageServiceProvider extends TootAudioServiceProvider
     public StereoImageServiceProvider() {
         super(getString("Stereo Image"), "0.1");
         String family = getString("Basic");
-        addControls(StereoImageControls.class, StereoImageControls.STEREO_IMAGE, getString("Stereo.Image"), family, "0.1", ChannelFormat.STEREO);
+        addControls(StereoImageControls.class, StereoImageControls.STEREO_IMAGE, 
+        		getString("Stereo.Image"), family, "0.1", ChannelFormat.STEREO, null);
         add(StereoImageProcess.class, getString("Stereo.Image"), family, "0.1");
     }
 

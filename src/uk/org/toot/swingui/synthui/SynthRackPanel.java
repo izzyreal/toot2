@@ -15,10 +15,14 @@ import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.service.ServiceDescriptor;
 import uk.org.toot.service.ServiceVisitor;
+import uk.org.toot.swingui.miscui.VstEditButton;
 import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.SynthServices;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.synths.multi.MultiSynthControls;
+import uk.org.toot.synth.synths.vsti.VstiSynthControls;
+
+import com.synthbot.audioplugin.vst.vst2.JVstHost2;
 
 public class SynthRackPanel extends MultiControlPanel 
 {
@@ -58,7 +62,7 @@ public class SynthRackPanel extends MultiControlPanel
 
 	protected JComponent createToolBar() {
 		JToolBar bar = new JToolBar();
-		statusLabel = new JLabel("Label");
+		statusLabel = new JLabel(" ");
         bar.add(Box.createHorizontalStrut(200));
         bar.add(Box.createGlue());
 		bar.add(statusLabel);
@@ -123,6 +127,16 @@ public class SynthRackPanel extends MultiControlPanel
 	protected JPanel createUI(CompoundControl controls) {
 		if ( controls instanceof MultiSynthControls ) {
 			return new MultiSynthPanel((MultiSynthControls)controls);
+		} else if ( controls instanceof VstiSynthControls ) {
+			VstiSynthControls sc = (VstiSynthControls)controls;
+			JVstHost2 vsti = sc.getVst();
+			JPanel panel = new JPanel();
+			if ( vsti.hasEditor() ) {
+				String frameTitle = sc.getName()+" - Toot";
+				vsti.openEditor(frameTitle);
+				panel.add(new VstEditButton(vsti, frameTitle));
+			}
+			return panel;
 		}
 		return super.createUI(controls);
 	}

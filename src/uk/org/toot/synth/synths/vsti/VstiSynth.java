@@ -15,7 +15,7 @@ public abstract class VstiSynth extends AbstractMidiDevice implements MidiSynth
 	public VstiSynth(VstiSynthControls controls) {
 		super(controls.getName());
 		addMidiInput(this);
-		vsti = controls.getVsti();
+		vsti = controls.getVst();
 	}
 	
 	public void closeMidi() {

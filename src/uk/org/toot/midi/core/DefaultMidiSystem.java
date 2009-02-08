@@ -60,10 +60,10 @@ public class DefaultMidiSystem extends Observable implements MidiSystem
     }
     
     public void close() {
-		System.out.println("Closing Midi Devices");
+//		System.out.println("Closing Midi Devices");
     	for ( MidiDevice device : devices ) {
     		device.closeMidi();
     	}
-		System.out.println("All Midi Devices Closed");
+//		System.out.println("All Midi Devices Closed");
     }
 }

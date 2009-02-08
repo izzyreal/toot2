@@ -55,7 +55,8 @@ abstract public class AudioServiceProvider extends ServiceProvider
      * Adds a ControlServiceDescriptor for the matching service.
      * The service can cope with any channel format.
      */
-    protected void addControls(Class clazz, int moduleId, String name, String description, String version) {
+    protected void addControls(Class clazz, int moduleId, String name, String description, 
+    		String version) {
         add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version));
     }
 
@@ -64,8 +65,10 @@ abstract public class AudioServiceProvider extends ServiceProvider
      * The channel format required is specified, otherwise the service
      * will not require specific channel formats
      */
-    protected void addControls(Class clazz, int moduleId, String name, String description, String version, ChannelFormat format) {
-        add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version, format));
+    protected void addControls(Class clazz, int moduleId, String name, String description, 
+    		String version, ChannelFormat format, String path) {
+        add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version, 
+        		format, path));
     }
 
     public AudioControls createControls(int moduleId) {

@@ -29,14 +29,16 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             getString("Stereo.Modulated.Delay"),
             family,
             "0.1",
-            ChannelFormat.STEREO);
+            ChannelFormat.STEREO,
+            null);
         addControls(
             MultiTapDelayStereoControls.class,
             DelayIds.MULTI_TAP_DELAY_ID,
             getString("Stereo.Multi.Tap.Delay"),
             family,
             "0.1",
-            ChannelFormat.STEREO);
+            ChannelFormat.STEREO,
+            null);
 //        addControls(RoomSimulatorControls.class, DelayIds.ROOM_SIMULATOR, "Room Simulator", family, "0.1");
 
         add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.1");

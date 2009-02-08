@@ -9,6 +9,7 @@ import javax.sound.midi.*;
 import uk.org.toot.control.*;
 import uk.org.toot.control.automation.MidiPersistence;
 import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
+import uk.org.toot.misc.VstMidiPersistence;
 import uk.org.toot.audio.core.*;
 import java.util.List;
 import uk.org.toot.audio.mixer.MixerControls;
@@ -17,6 +18,7 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.control.automation.ControlSysexMsg.*;
 import static uk.org.toot.midi.message.MetaMsg.*;
 import static uk.org.toot.midi.message.NoteMsg.*;
+import static uk.org.toot.control.id.ProviderId.VST_PROVIDER_ID;
 
 /**
  * Stores and recalls mixer automations snaphots as Midi Sequences.
@@ -193,7 +195,15 @@ public class MixerControlsMidiSequenceSnapshotAutomation
             module = null;
             for ( int i = 1; i < track.size(); i++ ) {
                 msg = track.get(i).getMessage();
-                if ( !isControl(msg) ) continue;
+                if ( !isControl(msg) ) {
+                	if ( isSysex(msg) ) {
+                		if ( module == null ) continue; // should be preceded by Bypass
+                		if ( providerId == VST_PROVIDER_ID ) {
+                			VstMidiPersistence.recall(module, track, i);
+                		}
+                	}
+                	continue;
+                }
                 int pid = getProviderId(msg);
                 int mid = getModuleId(msg);
                 int ii = getInstanceIndex(msg);
@@ -269,6 +279,10 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 moduleId = cc.getId();
                 instanceIndex = cc.getInstanceIndex();
             	MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
+            	// VST sysex TODO
+            	if ( providerId == VST_PROVIDER_ID ) {
+            		VstMidiPersistence.store(cc, t);
+            	}
             }
         }
         return snapshot;

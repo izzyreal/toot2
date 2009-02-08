@@ -49,9 +49,9 @@ public abstract class Control extends Observable
      * @param name the name of the control
      */
     protected Control(int id, String name) {
+        this.name = name;
         checkId(id);
         this.id = id;
-        this.name = name;
         annotation = name; // default annotation
     }
 

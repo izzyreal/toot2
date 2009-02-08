@@ -72,8 +72,10 @@ public class MidiFileSnapshotAutomation implements SnapshotAutomation
         Sequence snapshot = null;
         try {
             snapshot = auto.storeSequence(name);
-	        file.createNewFile();
-	        MidiSystem.write(snapshot, 1, file);
+            if ( snapshot != null ) {
+            	file.createNewFile();
+            	MidiSystem.write(snapshot, 1, file);
+            }
         } catch ( IOException ioe ) {
             System.err.println("Failed to create or write Snapshot file "+file.getPath());
         }

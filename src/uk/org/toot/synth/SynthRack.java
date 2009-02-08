@@ -81,11 +81,11 @@ public class SynthRack
 	}
 	
 	public void close() {
-		System.out.println("Closing All Synths");
+//		System.out.println("Closing All Synths");
 		for ( int i = 0; i < synths.length; i++ ) {
 			setMidiSynth(i, null);
 		}
-		System.out.println("All Synths Closed");
+//		System.out.println("All Synths Closed");
 	}
 	
 	// public as implementation side-effect

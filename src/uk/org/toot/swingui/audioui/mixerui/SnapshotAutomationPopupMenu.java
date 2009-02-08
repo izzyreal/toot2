@@ -30,6 +30,7 @@ public class SnapshotAutomationPopupMenu extends JPopupMenu implements ActionLis
     	    JMenu recallMenu = new JMenu(getString("Recall"));
 	        add(recallMenu);
             for ( int i = 0; i < names.length; i++ ) {
+            	if ( !names[i].endsWith("mixer-snapshot") ) continue;
                 String name = names[i].substring(0, names[i].lastIndexOf("."));
                 JMenuItem item = new JMenuItem(name);
                 recallMenu.add(item);

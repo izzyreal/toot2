@@ -344,6 +344,7 @@ public class AudioMixer implements AudioClient
         	strips.add(strip);
         	strip.open();
         } catch ( Exception e ) {
+        	e.printStackTrace();
         	System.err.println("Mixer failed to open strip "+strip.getName());
         }
         return strip;
@@ -366,6 +367,14 @@ public class AudioMixer implements AudioClient
         }
     }
 
+    public void close() {
+//    	System.out.println("Closing Mixer Strips");
+        for ( AudioMixerStrip strip : strips ) {
+                strip.close();
+        }
+//    	System.out.println("All Mixer Strips Closed");
+    }
+    
     public boolean isEnabled() {
         return enabled;
     }

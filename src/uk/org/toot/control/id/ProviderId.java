@@ -15,6 +15,9 @@ public interface ProviderId
     static final int TOOT_PROVIDER_ID = 1;
     static final int FRINIKA_PROVIDER_ID = 2;
     
+    // to allow 127 differents VST effects
+    static final int VST_PROVIDER_ID = 126;
+    
     // this constant can be used to develop unreleased services.
     // TootSoftware will be pleased to add a proper provider ID for you to
     // release services. See toot.org.uk and join the discussion group to

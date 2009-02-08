@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.lang.reflect.Constructor;
 
 import uk.org.toot.control.CompoundControl;
-import uk.org.toot.misc.VST;
+import uk.org.toot.misc.Vst;
 import uk.org.toot.service.ServiceDescriptor;
 import uk.org.toot.synth.MidiSynth;
 import uk.org.toot.synth.SynthControls;
@@ -25,7 +25,7 @@ public class VstiSynthServiceProvider extends SynthServiceProvider
 		File synthdir = new File(tootdir, "synths");
 		synthdir.mkdirs();
 		File vstiCache = new File(synthdir, VSTI_CACHE);
-		if ( !vstiCache.exists() ) VST.scan(vstiCache, true);
+		if ( !vstiCache.exists() ) Vst.scan(vstiCache, true);
 		readCache(vstiCache);
 	}
 
@@ -35,9 +35,10 @@ public class VstiSynthServiceProvider extends SynthServiceProvider
 			BufferedReader br = new BufferedReader(new FileReader(cache));
 			String line;
 			while ((line = br.readLine()) != null) {
+				if ( line.charAt(0) == '-') continue; // disabled
 				String[] parts = line.split(", ");
 				if ( parts.length > 1 ) {
-					addVstiControls(parts[1], parts[0]);
+					addVstiControls(parts[3], parts[2]);
 				}
 			}
 			br.close();
