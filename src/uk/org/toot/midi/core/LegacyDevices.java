@@ -65,7 +65,7 @@ public class LegacyDevices
         }
     }
 
-    static class DeviceAdaptor extends AbstractMidiDevice
+    public static class DeviceAdaptor extends AbstractMidiDevice
     {
         protected javax.sound.midi.MidiDevice device;
         private DeviceMidiInput input;
