@@ -213,6 +213,8 @@ public abstract class CompoundControl extends Control
     
     public boolean hasPresets() { return true; }
 
+    public boolean hasCustomUI() { return false; }
+    
     // return a domain specific string for preset organisation
     // i.e. audio, synth
     public String getPersistenceDomain() {

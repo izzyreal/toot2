@@ -73,10 +73,12 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             } else if ( cc.isAlwaysHorizontal() ) {
                 a = BoxLayout.X_AXIS;
             }
-            // brute force service provider lookup
-            // expected slow-down but it still seems fast! causes sound glitches
-//	        JComponent comp = ControlPanelServices.createControlPanel(cc, a, null, this, axis == BoxLayout.X_AXIS, hasHeader);
-//    	    if ( comp != null ) return comp;
+            // service provider lookup
+            // used to cause sound glitches
+            if ( cc.hasCustomUI() ) {
+            	JComponent comp = ControlPanelServices.createControlPanel(cc, a, null, this, axis == BoxLayout.X_AXIS, hasHeader);
+	        	if ( comp != null ) return comp;
+            }
             // default compound UI
             return createCompoundComponent(cc, a, null, this, true, hasHeader);
         } else if ( control instanceof FloatControl ) {
@@ -165,7 +167,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             isShort = true;
         }
         JComponent comp;
-        if ( canEdit() && control.getParent().isPluginParent() ) {
+        if ( canEdit() && (control.getParent() == null || control.getParent().isPluginParent()) ) {
         	comp = new JButton(title);
 	        comp.setBorder(BorderFactory.createRaisedBevelBorder());
         } else {
