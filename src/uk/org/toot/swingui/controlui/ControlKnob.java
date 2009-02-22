@@ -19,8 +19,14 @@ import java.awt.event.*;
  */
 public class ControlKnob extends JComponent implements Observer
 {
+	public static final int ROTARY_MODE = 0;
+	public static final int VERTICAL_MODE = 1;
+    private static int mouseMode = ROTARY_MODE;
+    private static int linearRange = 20;
+    
     private static final int radius = 16;
     private static final int spotRadius = 4;
+    
     private int value;
     private double theta;
     private double thetaPrev = 0; // !!!
@@ -38,6 +44,10 @@ public class ControlKnob extends JComponent implements Observer
         setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
     }
 
+    static public void setMouseMode(int mode) {
+    	mouseMode = mode;
+    }
+    
 	public void setValue(int value) {
     	theta = (value * 2 * thetaMax) / (control.getLaw().getResolution()-1) - thetaMax;
 //        System.out.println("CK.update: "+control.getControlPath()+": "+control.getValue()+" => "+value+" => "+theta);
@@ -63,7 +73,8 @@ public class ControlKnob extends JComponent implements Observer
     }
 
     protected MouseController createMouseController() {
-        return new KnobMouseController();
+    	return new ModalMouseController();
+        //return new RotaryMouseController();
     }
 
     /**
@@ -178,45 +189,12 @@ public class ControlKnob extends JComponent implements Observer
         }
     }
 
-    @SuppressWarnings("unused")
-	private class SpotMouseController extends AbstractMouseController
+    private class ModalMouseController extends AbstractMouseController
     {
-        /**
-         * When the mouse button is pressed, the dragging of the spot will be
-         * enabled if the button was pressed over the spot.
-         * @param e reference to a MouseEvent object describing the mouse press.
-         */
-        public void mousePressed(MouseEvent e) {
-            pressedOn = isOnSpot(e.getPoint());
-            super.mousePressed(e);
-        }
-
-        /**
-         * Compute the new angle for the spot and repaint the knob.
-         * The new angle is computed based on the new mouse position.
-         * @param e reference to a MouseEvent object describing the mouse drag.
-         */
-        public void mouseDragged(MouseEvent e) {
-            if (pressedOn) {
-                setTheta(calculateTheta(e.getX(), e.getY()));
-                repaint();
-            }
-        }
-
-        /**
-         * Determine if the mouse click was on the spot or not.
-         * If it was return true, otherwise return false.
-         * @return true if x,y is on the spot and false if not.
-         */
-        private boolean isOnSpot(Point pt) {
-            return (pt.distance(getSpotCenter()) < spotRadius);
-        }
-    }
-
-
-    private class KnobMouseController extends AbstractMouseController
-    {
-        private double thetaDelta;
+        private int mode;
+        private double thetaDelta; // rotary mode angle between spot and mouse
+        							// also used in vertical mode
+        private int yPrev; // vertical mode
 
         /**
          * When the mouse button is pressed, the dragging of the spot will be
@@ -224,18 +202,37 @@ public class ControlKnob extends JComponent implements Observer
          * @param e reference to a MouseEvent object describing the mouse press.
          */
         public void mousePressed(MouseEvent e) {
+        	mode = mouseMode;
             pressedOn = true;
-            thetaDelta = theta - calculateTheta(e.getX(), e.getY());
+            switch ( mode ) {
+            case VERTICAL_MODE:
+            	yPrev = e.getY();
+            	break;
+            default:
+            	thetaDelta = theta - calculateTheta(e.getX(), e.getY());
+            	break;
+            }
             super.mousePressed(e);
         }
 
         /**
          * Compute the new angle for the spot and repaint the knob.
+         * If Shift is pressed sensitivity should be 10 times less.
          * @param e reference to a MouseEvent object describing the mouse drag.
          */
         public void mouseDragged(MouseEvent e) {
             if (pressedOn) {
-                double thetaNom = calculateTheta(e.getX(), e.getY()) + thetaDelta;
+            	double thetaNom;
+            	switch ( mode ) {
+            	case VERTICAL_MODE:
+            		thetaDelta = (yPrev - e.getY()) / (float)linearRange;
+            		if ( e.isShiftDown() ) thetaDelta /= 10;
+            		thetaNom = theta + thetaDelta;
+            		break;
+            	default:
+            		thetaNom = calculateTheta(e.getX(), e.getY()) + thetaDelta;
+            		break;
+            	}
                 if ( thetaNom < -thetaMax ) {
                     thetaNom = -thetaMax;
                 } else if ( thetaNom > thetaMax ) {
@@ -246,8 +243,10 @@ public class ControlKnob extends JComponent implements Observer
                 if ( thetaNom < 0 && thetaPrev > Math.PI/2 ) return;
                 thetaPrev = theta;
                 setTheta(thetaNom);
+                yPrev = e.getY();
                 repaint();
             }
         }
+    	
     }
 }
