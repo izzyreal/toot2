@@ -5,6 +5,7 @@
 
 package uk.org.toot.swingui.controlui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 //import java.awt.event.FocusListener;
 import java.util.Observable;
@@ -18,6 +19,7 @@ public class BooleanIndicatorPanel extends ControlPanel
 {
     private final BooleanControl control;
     private JLabel label;
+    private Color labelBackgroundColor;
 
     public BooleanIndicatorPanel(final BooleanControl control) {
         super(control);
@@ -26,6 +28,8 @@ public class BooleanIndicatorPanel extends ControlPanel
         this.control = control;
         String name = abbreviate(control.getAnnotation());
         final boolean small = name.length() < 2;
+        boolean val = control.getValue();
+		labelBackgroundColor = val ? control.getStateColor(control.getValue()) : getBackground();
         label = new JLabel(name, JLabel.CENTER) {
    	        public Dimension getMaximumSize() {
    	            Dimension size = super.getPreferredSize();
@@ -41,6 +45,10 @@ public class BooleanIndicatorPanel extends ControlPanel
 		        size.width = small ? 18 : 36;
        			return size;
    			}
+	        @Override
+	        public Color getBackground() {
+	        	return labelBackgroundColor;
+	        }
     	};
 
         label.setAlignmentX(0.5f);
@@ -49,14 +57,9 @@ public class BooleanIndicatorPanel extends ControlPanel
         add(label);
     }
 
-/*		    public Dimension getMinimumSize() {
-    	    	Dimension size = super.getPreferredSize();
-		        size.width = 22;
-       			return size;
-   			} */
-
     public void update(Observable obs, Object arg) {
         boolean val = control.getValue();
-		label.setBackground(val ? control.getStateColor(control.getValue()) : getBackground());
+		labelBackgroundColor = val ? control.getStateColor(control.getValue()) : getBackground();
+		label.repaint();
     }
 }

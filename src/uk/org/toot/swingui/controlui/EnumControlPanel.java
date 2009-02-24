@@ -23,13 +23,16 @@ public class EnumControlPanel extends ControlPanel
     private JPopupMenu popupMenu;
 	private ActionListener popupListener;
 	private ActionListener buttonListener;
+	private String buttonText;
 
     public EnumControlPanel(final EnumControl control) {
         super(control);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.control = control;
         final String name = abbreviate(control.getValue().toString());
+        buttonText = name;
         button = new JButton(name) {
+        	@Override
             public Dimension getMaximumSize() {
                 Dimension size = super.getPreferredSize();
                 if ( control.isWidthLimited() ) {
@@ -38,6 +41,10 @@ public class EnumControlPanel extends ControlPanel
                     size.width = 128;
                 }
                 return size;
+            }
+            @Override
+            public String getText() {
+            	return buttonText;
             }
         };
    	    popupListener = new ActionListener() {
@@ -73,8 +80,8 @@ public class EnumControlPanel extends ControlPanel
     }
 
     public void update(Observable obs, Object obj) {
-        String text = abbreviate(control.getValue().toString());
-       	button.setText(text);
+        buttonText = abbreviate(control.getValue().toString());
+       	button.repaint();
     }
 
     protected JPopupMenu createPopupMenu() {

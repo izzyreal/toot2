@@ -48,9 +48,8 @@ public class ControlKnob extends JComponent implements Observer
     	mouseMode = mode;
     }
     
-	public void setValue(int value) {
+	protected void setValue(int value) {
     	theta = (value * 2 * thetaMax) / (control.getLaw().getResolution()-1) - thetaMax;
-//        System.out.println("CK.update: "+control.getControlPath()+": "+control.getValue()+" => "+value+" => "+theta);
 	}
 
     public void addNotify() {
@@ -74,7 +73,6 @@ public class ControlKnob extends JComponent implements Observer
 
     protected MouseController createMouseController() {
     	return new ModalMouseController();
-        //return new RotaryMouseController();
     }
 
     /**
@@ -217,7 +215,7 @@ public class ControlKnob extends JComponent implements Observer
 
         /**
          * Compute the new angle for the spot and repaint the knob.
-         * If Shift is pressed sensitivity should be 10 times less.
+         * If Shift is pressed sensitivity should be 10 times less in vertical mode.
          * @param e reference to a MouseEvent object describing the mouse drag.
          */
         public void mouseDragged(MouseEvent e) {

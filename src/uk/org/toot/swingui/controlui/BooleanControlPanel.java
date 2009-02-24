@@ -5,6 +5,7 @@
 
 package uk.org.toot.swingui.controlui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ public class BooleanControlPanel extends ControlPanel
     private final BooleanControl control;
     private AbstractButton button;
     private ActionListener buttonListener;
+    private Color buttonBackgroundColor;
 
     public BooleanControlPanel(final BooleanControl control) {
         super(control);
@@ -24,8 +26,10 @@ public class BooleanControlPanel extends ControlPanel
         this.control = control;
         String name = abbreviate(control.getAnnotation());
         final boolean small = name.length() < 2;
+		buttonBackgroundColor = control.getStateColor(control.getValue()); 
         if ( !control.isMomentary() ) {
 	        button = new JButton(name) {
+	        	@Override
     	        public Dimension getMaximumSize() {
     	            Dimension size = super.getPreferredSize();
                     if ( control.isWidthLimited() ) {
@@ -35,11 +39,16 @@ public class BooleanControlPanel extends ControlPanel
                     }
                 	return size;
             	}
+	        	@Override
     	        public Dimension getMinimumSize() {
     	            Dimension size = super.getPreferredSize();
 	                size.width = small ? 18 : 36;
                 	return size;
             	}
+    	        @Override
+    	        public Color getBackground() {
+    	        	return buttonBackgroundColor;
+    	        }
         	};
     	    buttonListener = new ActionListener() {
            		public void actionPerformed(ActionEvent ae) {
@@ -48,6 +57,7 @@ public class BooleanControlPanel extends ControlPanel
     		};
         } else {
 	        button = new JButton(name) {
+	        	@Override
     	        public Dimension getMaximumSize() {
     	            Dimension size = super.getPreferredSize();
                     if ( control.isWidthLimited() ) {
@@ -67,12 +77,12 @@ public class BooleanControlPanel extends ControlPanel
         button.setBorder(BorderFactory.createRaisedBevelBorder());
 //		button.setMargin(new Insets(0, 0, 0, 0));
         button.setAlignmentX(0.5f);
-		button.setBackground(control.getStateColor(control.getValue()));
         add(button);
     }
 
     public void update(Observable obs, Object arg) {
-		button.setBackground(control.getStateColor(control.getValue()));
+		buttonBackgroundColor = control.getStateColor(control.getValue());
+		repaint();
     }
 
     public void addNotify() {
