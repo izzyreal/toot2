@@ -42,7 +42,13 @@ public class EnumControlPanel extends ControlPanel
         };
    	    popupListener = new ActionListener() {
        		public void actionPerformed(ActionEvent ae) {
-	            control.setValue(ae.getActionCommand());
+       			String cmd = ae.getActionCommand();
+       			for ( Object o : control.getValues() ) {
+       				if ( o.toString().equals(cmd) ) {
+       		            control.setValue(o);
+       					return;
+       				}
+       			}
     		}
     	};
         popupMenu = createPopupMenu();
