@@ -10,6 +10,7 @@ import java.util.Observable;
 import java.util.Observer;
 import uk.org.toot.control.*;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 
 public class ControlSlider extends JSlider implements Observer
 {
@@ -33,8 +34,13 @@ public class ControlSlider extends JSlider implements Observer
     }
 
    	public void update(Observable obs, Object obj) {
-       	super.setValue(sliderValue(control.getValue())); // !!! avoid NEL?
-//        repaint();
+   		SwingUtilities.invokeLater(
+   			new Runnable() {
+   				public void run() {
+   					ControlSlider.super.setValue(sliderValue(control.getValue())); 
+   				}
+   			} 
+   		);
     }
 
 	protected float userValue(int sliderVal) {

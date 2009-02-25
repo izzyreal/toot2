@@ -39,7 +39,13 @@ public class Fader extends JSlider implements Observer
     }
 
    	public void update(Observable obs, Object obj) {
-       	Fader.super.setValue(sliderValue(control.getValue())); // !!! avoid NEL?
+   		SwingUtilities.invokeLater(
+   	   		new Runnable() {
+   	   			public void run() {
+   	   		       	Fader.super.setValue(sliderValue(control.getValue())); // !!! avoid NEL
+   	   			}
+   	   		} 
+   	   	);
     }
 
     protected Hashtable createLabelTable() {
