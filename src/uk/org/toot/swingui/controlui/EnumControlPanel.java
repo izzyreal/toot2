@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import uk.org.toot.control.EnumControl;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import javax.swing.BorderFactory;
@@ -64,6 +65,13 @@ public class EnumControlPanel extends ControlPanel
                 popupMenu.show(button, 0, 0);
             }
         };
+        if ( control.hasLabel() ) {
+        	JLabel label = new JLabel(abbreviate(control.getAnnotation()));
+        	label.setLabelFor(button);
+   	   		label.setFont(font);
+   	   		label.setAlignmentX(0.5f);
+   	   		add(label);
+    	}
         button.setBorder(BorderFactory.createRaisedBevelBorder());
         button.setAlignmentX(0.5f);
         add(button);

@@ -5,6 +5,7 @@
 
 package uk.org.toot.swingui.controlui;
 
+import java.awt.Font;
 import java.util.Observer;
 import java.util.Observable;
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ public abstract class ControlPanel extends JPanel implements Observer
 {
     private Control control;
     private Timer timer = null;
+    protected static Font font = new Font("Arial", Font.PLAIN, 10);
 
     public ControlPanel(Control c) {
         control = c;

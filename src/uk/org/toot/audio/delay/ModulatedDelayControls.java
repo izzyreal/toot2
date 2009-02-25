@@ -122,6 +122,8 @@ public class ModulatedDelayControls extends AbstractDelayControls
         }
 
         public List<Object> getValues() { return values; }
+        
+        public boolean hasLabel() { return true; }
     }
 
 /*

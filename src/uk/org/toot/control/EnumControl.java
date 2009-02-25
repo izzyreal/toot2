@@ -84,4 +84,6 @@ public abstract class EnumControl extends Control
     }
 
     public boolean isWidthLimited() { return true; }
+    
+    public boolean hasLabel() { return false; }
 }

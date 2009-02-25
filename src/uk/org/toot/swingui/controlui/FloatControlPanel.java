@@ -13,7 +13,6 @@ public class FloatControlPanel extends ControlPanel
 {
     private final FloatControl control;
     private JComponent pot;
-    private static Font font = new Font("Arial", Font.PLAIN, 10);
 
     public FloatControlPanel(final FloatControl control, int axis) {
         super(control);
