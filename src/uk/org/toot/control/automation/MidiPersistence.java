@@ -23,6 +23,7 @@ public class MidiPersistence
     }
 
     // can be used to store a strip or a module
+    // providerId and moduleId must be passed in because recursive! DO NOT simplify ;)
     public static void store(int providerId, int moduleId, int instanceIndex,
 									        CompoundControl parent, Track t) {
         for ( Control c : parent.getMemberControls() ) {
@@ -30,9 +31,10 @@ public class MidiPersistence
 	            store(providerId, moduleId, instanceIndex, (CompoundControl)c, t);
             } else {
 		        try {
-                    if ( !c.isIndicator() && c.getId() > 0 ) {
+		        	int id = c.getId();
+                    if ( !c.isIndicator() && id > 0 && id < 128 ) {
 	    		    	MidiMessage msg = createControl(
-   		        			providerId, moduleId, instanceIndex, c.getId(), c.getIntValue());
+   		        			providerId, moduleId, instanceIndex, id, c.getIntValue());
 	                	t.add(new MidiEvent(msg, 0L));
                     }
 		        } catch ( InvalidMidiDataException imde ) {

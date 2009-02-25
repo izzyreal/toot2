@@ -28,6 +28,14 @@ import java.util.Observable;
  */
 public abstract class Control extends Observable
 {
+	/**
+	 * The unique id of the control, to support static and dynamic automation/persistence.
+	 * Only unique within a limited sub-tree of a Control tree.
+	 * Negative ids should not be persisted.
+	 * Positive ids should be persisted.
+	 * There may be a limited range for positive ids, depending on how persistence
+	 * is implemented.
+	 */
 	private final int id;
 
     /**
@@ -50,14 +58,8 @@ public abstract class Control extends Observable
      */
     protected Control(int id, String name) {
         this.name = name;
-        checkId(id);
         this.id = id;
         annotation = name; // default annotation
-    }
-
-    protected void checkId(int id) {
-        if ( id > 127 )
-            throw new IllegalArgumentException(name+" id "+id+" > 127!");
     }
 
     public void setHidden(boolean h) {
@@ -82,7 +84,7 @@ public abstract class Control extends Observable
 
     protected void notifyParent(Control obj) {
         setChanged();
-        notifyObservers(obj); // problematic
+        notifyObservers(obj);
         // we don't broadcast indicators to parent observers
         // they're probably changed frequently, i.e. every 2ms
         // and they are probably polled, i.e. every 200ms
@@ -168,9 +170,4 @@ public abstract class Control extends Observable
         }
         return getName();
     }
-
-/*    public int getDepth() {
-        return parent == null ? 0 : parent.getDepth()+1;
-    } */
-
 }
