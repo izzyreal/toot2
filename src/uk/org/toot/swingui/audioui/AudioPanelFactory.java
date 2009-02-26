@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
+
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.control.*;
@@ -79,6 +80,13 @@ public class AudioPanelFactory extends ControlPanelFactory
         return new AudioCompoundControlPanel(c, axis, s, f, hasBorder, hasHeader);
 	}
 
+    public JComponent createComponent(Control control, int axis, boolean hasHeader) {
+    	if ( control instanceof FloatControl && control.isIndicator() ) {
+            return new uk.org.toot.swingui.audioui.meterui.GainReductionIndicatorPanel((FloatControl)control);
+    	}
+    	return super.createComponent(control, axis, hasHeader);
+    }
+    
     static protected class SourceLabel extends JLabel implements Observer
     {
         private AudioControlsChain chain;

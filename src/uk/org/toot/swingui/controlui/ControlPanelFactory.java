@@ -14,7 +14,7 @@ import java.util.Observable;
 import javax.swing.*;
 import javax.swing.border.*;
 import uk.org.toot.control.*;
-import uk.org.toot.service.*; // !!! !!! !!!
+import uk.org.toot.service.*;
 
 import static uk.org.toot.localisation.Localisation.*;
 
@@ -83,13 +83,8 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             return createCompoundComponent(cc, a, null, this, true, hasHeader);
         } else if ( control instanceof FloatControl ) {
             JPanel floatPanel;
-            if ( control.isIndicator() ) {
-                // !!! !!! !!!
-                floatPanel = new uk.org.toot.swingui.audioui.meterui.GainReductionIndicatorPanel((FloatControl)control);
-            } else {
-	            floatPanel = new FloatControlPanel((FloatControl)control, axis);
-    	        floatPanel.setAlignmentY(0.25f); // ??? !!!
-            }
+            floatPanel = new FloatControlPanel((FloatControl)control, axis);
+   	        floatPanel.setAlignmentY(0.25f); // ??? !!!
             return floatPanel;
         } else if ( control instanceof BooleanControl ) {
             if ( control.isIndicator() ) {
