@@ -16,7 +16,7 @@ import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.SynthChannelServices;
 import uk.org.toot.synth.SynthServices;
-import uk.org.toot.synth.synths.multi.MultiSynthControls; // !!! TODO
+import uk.org.toot.synth.synths.multi.MultiSynthControls;
 import uk.org.toot.synth.synths.vsti.VstiSynthControls;
 
 import static uk.org.toot.control.automation.ControlSysexMsg.*;
@@ -98,7 +98,6 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
         Track[] tracks = snapshot.getTracks();
         Track track;
         SynthControls synthControls;
-       	CompoundControl channelControls = null;
         int instanceIndex = -1;
         
         for ( int t = 0; t < tracks.length; t++ ) {
@@ -113,6 +112,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             int moduleId = -1;
             
             if ( synthControls instanceof ChannelledSynthControls ) {
+               	CompoundControl channelControls = null;
             	for ( int i = 2; i < track.size(); i++ ) {
             		MidiMessage msg = track.get(i).getMessage();
             		if ( !isControl(msg) ) continue;
@@ -142,7 +142,23 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             } else if ( synthControls instanceof VstiSynthControls ) {
             	VstMidiPersistence.recall(synthControls, track, 2);
             } else { // normal controls
-            	// TODO
+    			providerId = synthControls.getProviderId();
+    			moduleId = synthControls.getId();
+            	for ( int i = 2; i < track.size(); i++ ) {
+            		MidiMessage msg = track.get(i).getMessage();
+            		if ( !isControl(msg) ) continue;
+            		if ( getProviderId(msg) != providerId || 
+            				getModuleId(msg) != moduleId ) continue;
+            		int cid = getControlId(msg);
+            		Control control = synthControls.deepFind(cid);
+            		if ( control == null ) {
+            			continue;
+            		}
+            		int newValue = getValue(msg);
+            		if ( newValue == control.getIntValue() ) continue;
+//          		System.out.println("recall: "+control.getControlPath());
+            		control.setIntValue(newValue);
+            	}
             }
         }
     }
@@ -181,7 +197,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     			if ( cc != null ) {
     				providerId = cc.getProviderId();
     				moduleId = cc.getId();
-    				instanceIndex = 0; //cc.getInstanceIndex();
+    				instanceIndex = 0;
     				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
     			}
 
@@ -196,7 +212,11 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     		} else if ( synthControls instanceof VstiSynthControls ) {
     			VstMidiPersistence.store(synthControls, t);
     		} else { // just an unchannelled synth controls
-    			// TODO
+				providerId = synthControls.getProviderId();
+				moduleId = synthControls.getId();
+				instanceIndex = 0;
+				MidiPersistence.store(providerId, moduleId, instanceIndex, synthControls, t);
+    			
     		}
         }
         return valid ? snapshot : null;

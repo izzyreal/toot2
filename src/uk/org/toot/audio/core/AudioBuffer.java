@@ -146,7 +146,6 @@ public class AudioBuffer extends FloatSampleBuffer
      * MetaInfo is intentionally immutable.
      * 'observers' will be able to simply detect a different MetaInfo
      * if any information is changed.
-     * TODO It does not scale and should be replaced with a source label property?
      */
     static public class MetaInfo
     {

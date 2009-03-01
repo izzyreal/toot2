@@ -2,6 +2,7 @@ package uk.org.toot.synth.synths.vsti;
 
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
+import javax.sound.midi.SysexMessage;
 
 import com.synthbot.audioplugin.vst.vst2.JVstHost2;
 
@@ -24,6 +25,8 @@ public abstract class VstiSynth extends AbstractMidiDevice implements MidiSynth
 	public void transport(MidiMessage msg, long timestamp) {
 		if ( msg instanceof ShortMessage ) {
 			vsti.queueMidiMessage((ShortMessage)msg); 
+		} else if ( msg instanceof SysexMessage ) {
+			vsti.queueMidiMessage((SysexMessage)msg);
 		}
 	}
 }

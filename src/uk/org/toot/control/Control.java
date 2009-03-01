@@ -114,6 +114,10 @@ public abstract class Control extends Observable
         return annotation;
     }
 
+    /**
+     * Set a specific annotation, other than the default name
+     * @param a the annotation
+     */
     public void setAnnotation(String a) {
         annotation = a;
     }
@@ -129,12 +133,12 @@ public abstract class Control extends Observable
         return "";
     }
 
-    /** a clue to a UI to inhibit display of this control. **/
+    /** a hint to a UI to inhibit display of this control. **/
     public boolean isHidden() {
         return hidden;
     }
 
-    /** a clue to a UI to decide how to represent this control. */
+    /** a hint to a UI to decide how to represent this control. */
     public boolean isIndicator() {
         return indicator;
     }

@@ -149,6 +149,10 @@ public class AudioMixer implements AudioClient
 //       	System.out.println("Mixer created");
     }
 
+    public MixerControls getMixerControls() {
+    	return controls;
+    }
+    
     protected AudioBuffer getSharedBuffer() {
         return sharedAudioBuffer;
     }

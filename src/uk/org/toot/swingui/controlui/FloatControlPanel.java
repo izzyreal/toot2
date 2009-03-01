@@ -5,7 +5,6 @@
 
 package uk.org.toot.swingui.controlui;
 
-import java.awt.Font;
 import uk.org.toot.control.FloatControl;
 import javax.swing.*;
 

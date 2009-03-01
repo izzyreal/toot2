@@ -147,7 +147,7 @@ abstract public class DynamicsControls extends AudioControls
         return depthC;
     }
 
-    static protected class GainReductionIndicator extends FloatControl
+    static public class GainReductionIndicator extends FloatControl
     {
         public GainReductionIndicator() {
 //            super(0, "Gain Reduction", new LinearLaw(-20f, 0, "dB"), 3f, 0f);

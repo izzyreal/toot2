@@ -279,7 +279,7 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 moduleId = cc.getId();
                 instanceIndex = cc.getInstanceIndex();
             	MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
-            	// VST sysex TODO
+            	// VST sysex
             	if ( providerId == VST_PROVIDER_ID ) {
             		VstMidiPersistence.store(cc, t);
             	}

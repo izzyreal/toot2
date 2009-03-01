@@ -21,7 +21,7 @@ public class VstEditButton extends JButton implements ActionListener
 	
 	public void actionPerformed(ActionEvent ae) {
 		if ( vst.isEditorOpen() ) {
-			System.out.println(frameTitle+" is already open");
+			vst.topEditor();
 		} else {
 			vst.openEditor(frameTitle);
 		}

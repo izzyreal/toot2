@@ -20,13 +20,11 @@ public class ChannelledSynthControls extends SynthControls
 	}
 
 	protected void setGlobalControls(CompoundControl controls) {
-		// TODO set instance index
 		globalControls = controls;
 		add(controls);
 	}
 	
 	protected void setChannelControls(int chan, CompoundControl controls) {
-		// TODO set instance index
 		channelControls[chan] = controls;
 		add(controls);
 	}

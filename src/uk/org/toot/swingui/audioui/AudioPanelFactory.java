@@ -16,7 +16,9 @@ import javax.swing.*;
 
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioControlsChain;
+import uk.org.toot.audio.dynamics.DynamicsControls;
 import uk.org.toot.control.*;
+import uk.org.toot.swingui.audioui.meterui.GainReductionIndicatorPanel;
 import uk.org.toot.swingui.controlui.*;
 import uk.org.toot.control.ControlSelector;
 
@@ -81,8 +83,8 @@ public class AudioPanelFactory extends ControlPanelFactory
 	}
 
     public JComponent createComponent(Control control, int axis, boolean hasHeader) {
-    	if ( control instanceof FloatControl && control.isIndicator() ) {
-            return new uk.org.toot.swingui.audioui.meterui.GainReductionIndicatorPanel((FloatControl)control);
+    	if ( control instanceof DynamicsControls.GainReductionIndicator ) {
+            return new GainReductionIndicatorPanel((FloatControl)control);
     	}
     	return super.createComponent(control, axis, hasHeader);
     }

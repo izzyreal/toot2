@@ -1,8 +1,16 @@
 package uk.org.toot.synth.synths.vsti;
 
+import java.util.Arrays;
+
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.misc.plugin.Plugin;
+import uk.org.toot.misc.plugin.PluginSupport;
+import uk.org.toot.misc.plugin.PluginTempoListener;
+import uk.org.toot.misc.plugin.PluginTransportListener;
+
+import com.synthbot.audioplugin.vst.vst2.VstPinProperties;
 
 /**
  * This class has a single audio output, for mono and stereo vstis.
@@ -21,14 +29,23 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 	private ChannelFormat format;
 	private boolean mustClear = false;
 	private VstiSynthControls controls;
+	private PluginSupport support;
+	private PluginTransportListener transportListener;
+	private PluginTempoListener tempoListener;
 	
-	public SimpleVstiSynth(VstiSynthControls controls) {
+	public SimpleVstiSynth(final VstiSynthControls controls) {
 		super(controls);
 		this.controls = controls;
 		nsamples = vsti.getBlockSize();
 		sampleRate = (int)vsti.getSampleRate();
 		
 		nOutChan = vsti.numOutputs();
+		VstPinProperties props;
+		for ( int i = 0; i < nOutChan; i++ ) {
+			props = vsti.getOutputProperties(i);
+			if ( !props.isValid() ) continue;
+			System.out.println(i+", "+props.getLabel()+", "+props.getShortLabel()+", "+props.isFirstInStereoPair());
+		}
 		outSamples = new float[nOutChan][nsamples];
 		if ( nOutChan >= 2 ) {
 			nOutChan = 2;
@@ -44,6 +61,22 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 		System.out.print("Using "+controls.getName());
 		if ( mustClear ) System.err.println(" !!! Must Clear");
 		else System.out.println();
+		
+		support = Plugin.getPluginSupport();
+		
+		transportListener = new PluginTransportListener() {
+			public void play() {
+			}
+
+			public void stop() {
+			}			
+		};
+		
+		tempoListener = new PluginTempoListener() {
+			public void tempoChanged(float newTempo) {
+				vsti.setTempo(newTempo);				
+			}			
+		};
 	}
 
 	public void setLocation(String location) {
@@ -54,6 +87,8 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 		System.out.print("Opening audio: "+controls.getName()+" ... ");
 		vsti.turnOn();
 		System.out.println("opened");
+		support.addTempoListener(tempoListener);
+		support.addTransportListener(transportListener);
 	}
 
 	public int processAudio(AudioBuffer buffer) {
@@ -75,9 +110,7 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 		}
 		if ( mustClear ) {
 			for ( int i = 0; i < nOutChan; i++ ) {
-				for ( int j = 0; j < nsamples; j++ ) {
-					outSamples[i][j] = 0f;
-				}					
+				Arrays.fill(outSamples[i], 0f);
 			}
 		}
 		vsti.processReplacing(inSamples, outSamples, nsamples);
@@ -93,5 +126,7 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 		System.out.print("Closing audio: "+controls.getName()+" ... ");
 		vsti.turnOffAndUnloadPlugin();
 		System.out.println("closed");
+		support.removeTempoListener(tempoListener);
+		support.removeTransportListener(transportListener);
 	}
 }

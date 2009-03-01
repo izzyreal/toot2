@@ -1,5 +1,7 @@
 package uk.org.toot.audio.vstfx;
 
+import java.util.Arrays;
+
 import com.synthbot.audioplugin.vst.vst2.*;
 
 import uk.org.toot.audio.core.AudioBuffer;
@@ -81,9 +83,7 @@ public class VstEffect implements AudioProcess
 		}
 		if ( mustClear ) {
 			for ( int i = 0; i < nOutChan; i++ ) {
-				for ( int j = 0; j < nsamples; j++ ) {
-					outSamples[i][j] = 0f;
-				}					
+				Arrays.fill(outSamples[i], 0f);
 			}
 		}
 		for ( int i = 0; i < nInChan; i++ ) {
