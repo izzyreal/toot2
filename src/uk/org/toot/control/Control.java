@@ -50,6 +50,7 @@ public abstract class Control extends Observable
     private boolean hidden = false; // visible, hidden if true
     protected boolean indicator = false; // mutable, immutable if true
 	private boolean adjusting = false; // UI should set for knobs, sliders etc.
+	private boolean enabled = true;
 
     /**
      * Constructs a Control with the specified id and name.
@@ -152,6 +153,14 @@ public abstract class Control extends Observable
         notifyParent(this); // tickle automation etc.
     }
 
+    public void setEnabled(boolean enable) {
+    	enabled = enable;
+    }
+    
+    public boolean isEnabled() {
+    	return enabled;
+    }
+    
     /**
      * Obtains a String describing the control type and its current state.
      * @return a String representation of the Control.

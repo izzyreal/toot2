@@ -35,6 +35,7 @@ public abstract class EnumControl extends Control
      */
     public void setValue(Object value) {
         if ( indicator ) return; // !!!
+    	if ( !isEnabled() ) return; 
         if (!isValueSupported(value)) {
             throw new IllegalArgumentException("Requested value " + value + " is not supported.");
         }

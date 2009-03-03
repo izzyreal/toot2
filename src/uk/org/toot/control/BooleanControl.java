@@ -65,6 +65,7 @@ public class BooleanControl extends Control
      * @param value desired new value.
      */
     public void setValue(boolean value) {
+    	if ( !isEnabled() ) return; 
         if (value != this.value) {
             this.value = value;
             notifyParent(this);

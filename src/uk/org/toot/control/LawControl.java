@@ -64,6 +64,7 @@ public class LawControl extends Control
      * @throws IllegalArgumentException if the value indicated does not fall within the allowable range
      */
     public void setValue(float value) {
+    	if ( !isEnabled() ) return; 
         /* in Trim AutomationMode we want to
            add the value/null delta
            to the value set by setIntValue.
