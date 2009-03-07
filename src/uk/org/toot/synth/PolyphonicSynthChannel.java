@@ -5,6 +5,7 @@ import java.util.List;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.audio.system.AudioOutput;
 
 /**
  * A PolyphonicSynthChannel is a SynthChannel that generates audio as an AudioProcess.
@@ -13,7 +14,7 @@ import uk.org.toot.audio.core.ChannelFormat;
  * @author st
  *
  */
-abstract public class PolyphonicSynthChannel extends SynthChannel implements AudioProcess
+abstract public class PolyphonicSynthChannel extends SynthChannel implements AudioOutput
 {
 
 	private List<Voice> voices = new java.util.ArrayList<Voice>();
@@ -22,15 +23,25 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 	private AudioBuffer.MetaInfo info;
 	private List<Voice> finished = new java.util.ArrayList<Voice>();
 	private String name;
+	private String location;
 
 	public PolyphonicSynthChannel(String name) {
 		this.name = name;
 	}
 
-	public void setLocation(String location) {	
+	public String getName() {
+		return name;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
         info = new AudioBuffer.MetaInfo(name, location);
 	}
 
+	public String getLocation() {
+		return location;
+	}
+	
 	public void open() {	
 	}
 	

@@ -53,8 +53,8 @@ public class SynthChannelServices extends Services
         return null;
     }
 
-    public static SynthChannel createSynthChannel(CompoundControl controls) {
-        SynthChannel process;
+    public static PolyphonicSynthChannel createSynthChannel(CompoundControl controls) {
+        PolyphonicSynthChannel process;
 		for ( SynthChannelServiceProvider provider : providers ) {
             process = provider.createSynthChannel(controls);
             if ( process != null ) return process;

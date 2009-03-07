@@ -1,7 +1,7 @@
 package uk.org.toot.synth.channels.example3;
 
 import uk.org.toot.control.CompoundControl;
-import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.PolyphonicSynthChannel;
 import uk.org.toot.synth.spi.TootSynthChannelServiceProvider;
 import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_3_CHANNEL_ID;
 
@@ -15,7 +15,7 @@ public class Example3SynthServiceProvider extends TootSynthChannelServiceProvide
 		add(Example3SynthChannel.class, name, "Example Synth 3", "0.1");
 	}
 
-	public SynthChannel createSynthChannel(CompoundControl c) {
+	public PolyphonicSynthChannel createSynthChannel(CompoundControl c) {
 		if ( c instanceof Example3SynthControls ) {
 			return new Example3SynthChannel((Example3SynthControls)c);
 		}

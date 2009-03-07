@@ -1,5 +1,6 @@
 package uk.org.toot.synth;
 
+import uk.org.toot.audio.system.AudioDevice;
 import uk.org.toot.midi.core.MidiDevice;
 import uk.org.toot.midi.core.MidiInput;
 
@@ -9,7 +10,7 @@ import uk.org.toot.midi.core.MidiInput;
  * @author st
  *
  */
-public interface MidiSynth extends MidiDevice, MidiInput 
+public interface MidiSynth extends MidiDevice, MidiInput, AudioDevice
 {
 	public void setLocation(String location); /// !!! called once by SynthRack
 }

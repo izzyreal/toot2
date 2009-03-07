@@ -3,12 +3,14 @@ package uk.org.toot.synth;
 import java.util.Observable;
 import java.util.Observer;
 
+import uk.org.toot.audio.system.AudioSystem;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.midi.core.MidiSystem;
 
 /**
  * A SynthRack is an array of MidiSynths.
  * It adds its MidiSynths to a MidiSystem as MidiInputs.
+ * It adds one or more AudioOutputs to an AudioSystem.
  * 
  * @author st
  *
@@ -16,10 +18,12 @@ import uk.org.toot.midi.core.MidiSystem;
 public class SynthRack
 {
 	private MidiSystem midiSystem;
+	private AudioSystem audioSystem;
 	private MidiSynth[] synths;
 	
-	public SynthRack(final SynthRackControls controls, MidiSystem midiSystem) {
+	public SynthRack(final SynthRackControls controls, MidiSystem midiSystem, AudioSystem audioSystem) {
 		this.midiSystem = midiSystem;
+		this.audioSystem = audioSystem;
 		synths = new MidiSynth[controls.size()];
 		controls.addObserver(
 			new Observer() {
@@ -47,33 +51,16 @@ public class SynthRack
 		);
 	}
 	
-	/*
-	 * TODO
-	 * invert control
-	 * ask synths to connect
-	 */
-	public void setMidiSynth(int i, MidiSynth synth) {
+	protected void setMidiSynth(int i, MidiSynth synth) {
 		MidiSynth old = synths[i];
 		if ( old != null ) {
 			midiSystem.removeMidiDevice(old);
-			if ( old instanceof BasicMidiSynth ) { // !!!
-				((BasicMidiSynth)old).setRack(null);
-				for ( int chan = 0; chan < 16; chan++ ) {
-					disconnect(((BasicMidiSynth)old).getChannel(chan));
-				}
-			}
-			disconnect(old);
+			audioSystem.removeAudioDevice(old);
 		}
 		synths[i] = synth;
 		if ( synth == null ) return;
 		midiSystem.addMidiDevice(synth);
-		connect(synth);
-		if ( synth instanceof BasicMidiSynth ) { // !!!
-			for ( int chan = 0; chan < 16; chan++ ) {
-				connect(((BasicMidiSynth)synth).getChannel(chan));
-			}
-			((BasicMidiSynth)synth).setRack(this);
-		}
+		audioSystem.addAudioDevice(synth);
 	}
 	
 	public MidiSynth getMidiSynth(int i) {
@@ -87,13 +74,4 @@ public class SynthRack
 		}
 //		System.out.println("All Synths Closed");
 	}
-	
-	// public as implementation side-effect
-	public void connect(Object obj) {	
-	}
-	
-	// public as implementation side-effect
-	public void disconnect(Object obj) {
-	}
-	
 }

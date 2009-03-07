@@ -1,7 +1,12 @@
 package uk.org.toot.synth;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.sound.midi.MidiMessage;
 
+import uk.org.toot.audio.system.AudioInput;
+import uk.org.toot.audio.system.AudioOutput;
 import uk.org.toot.midi.core.AbstractMidiDevice;
 import uk.org.toot.midi.message.*;
 
@@ -14,18 +19,20 @@ import uk.org.toot.midi.message.*;
  */
 abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
 {
+	private List<AudioOutput> audioOutputs;
+	
     /**
      * @link aggregationByValue
      * @supplierCardinality 16 
      */
 	private SynthChannel[] synthChannels = new SynthChannel[16];
-	private String location;
-	protected SynthRack rack; // !!!
+	private String location = "?";
 
 	
 	public BasicMidiSynth(String name) {
 		super(name);
 		addMidiInput(this);
+		audioOutputs = new java.util.ArrayList<AudioOutput>();
 	}
 
 	public void setLocation(String location) {
@@ -34,10 +41,6 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 	
 	public String getLocation() {
 		return location;
-	}
-	
-	public void setRack(SynthRack rack) {
-		this.rack = rack;
 	}
 	
 	protected void setChannel(int chan, SynthChannel synthChannel) {
@@ -81,4 +84,28 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 	}
 	
 	public void closeMidi() {}
+	
+    protected void addAudioOutput(AudioOutput output) {
+        audioOutputs.add(output);
+        setChanged();
+        notifyObservers(output);
+    }
+
+    protected void removeAudioOutput(AudioOutput output) {
+        audioOutputs.remove(output);
+        setChanged();
+        notifyObservers(output);
+    }
+
+	public List<AudioOutput> getAudioOutputs() {
+        return Collections.unmodifiableList(audioOutputs);
+	}
+	
+	public List<AudioInput> getAudioInputs() {
+		return Collections.emptyList();
+	}
+	
+	public void closeAudio() {	
+	}
+	
 }

@@ -5,11 +5,12 @@ import java.util.List;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.audio.system.AudioOutput;
 import uk.org.toot.dsp.jSTK.instrument.PluckedString;
 import uk.org.toot.synth.BasicMidiSynth;
 import uk.org.toot.synth.SynthChannel;
 
-public class PluckedSynth extends BasicMidiSynth implements AudioProcess
+public class PluckedSynth extends BasicMidiSynth implements AudioOutput
 {
 	private PluckedSynthControls controls;
 	private AudioBuffer.MetaInfo info;
@@ -18,6 +19,7 @@ public class PluckedSynth extends BasicMidiSynth implements AudioProcess
 	
 	public PluckedSynth(PluckedSynthControls controls) {
 		super(controls.getName());
+		addAudioOutput(this);
 		this.controls = controls;
 		int nstrings = controls.getStringCount();
 		for ( int i = 0; i < nstrings; i++ ) {
@@ -30,6 +32,7 @@ public class PluckedSynth extends BasicMidiSynth implements AudioProcess
 
 	public void setLocation(String location) {	
         info = new AudioBuffer.MetaInfo(getName(), location);
+        super.setLocation(location);
 	}
 
 	public void open() throws Exception {

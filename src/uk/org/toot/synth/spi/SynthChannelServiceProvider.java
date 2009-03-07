@@ -79,7 +79,7 @@ abstract public class SynthChannelServiceProvider extends ServiceProvider
         return null;
     }
 
-	public abstract SynthChannel createSynthChannel(CompoundControl controls2);
+	public abstract PolyphonicSynthChannel createSynthChannel(CompoundControl controls2);
 
 /*    public Iterator<ServiceDescriptor> controlsDescriptors() {
         return controls.iterator();

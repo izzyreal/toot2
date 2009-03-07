@@ -34,11 +34,11 @@ public class VstMidiPersistence
 			JVstHost2 vst = ((VstHost)controls).getVst();
 			byte[] data = null;
 			int n;
-			String str;
+//			String str;
 			if ( vst.acceptsProgramsAsChunks() ) {
 				data = vst.getProgramChunk();
 				n = data.length;
-				str = "byte VST Chunk";
+//				str = "byte VST Chunk";
 			} else { // enumerate parameters
 				n = vst.numParameters();
 				ByteBuffer bb = ByteBuffer.allocate(n * 4); // !
@@ -46,13 +46,13 @@ public class VstMidiPersistence
 					bb.putFloat(vst.getParameter(i));
 				}
 				data = bb.array();
-				str = "VST parameters";
+//				str = "VST parameters";
 			}
 			SysexMessage sysex = new SysexMessage();
 			try {
 				sysex.setMessage(SYSTEM_EXCLUSIVE, data, data.length);
 				t.add(new MidiEvent(sysex, 0));
-				System.out.println("stored "+n+" "+str+" from "+controls.getName());
+//				System.out.println("stored "+n+" "+str+" from "+controls.getName());
 			} catch ( InvalidMidiDataException imde ) {
 				imde.printStackTrace();
 			}
@@ -78,16 +78,16 @@ public class VstMidiPersistence
 				byte[] data = sysex.getData();
 				if ( vst.acceptsProgramsAsChunks() ) {
 					vst.setProgramChunk(data);
-					System.out.println("recalled "+data.length+" byte VST Chunk to "+
-							controls.getName());
+//					System.out.println("recalled "+data.length+" byte VST Chunk to "+
+//							controls.getName());
 				} else { // parameters
 					ByteBuffer bb = ByteBuffer.wrap(data);
 					int nparams = vst.numParameters();
 					for ( int i = 0; i < nparams; i++ ) {
 						vst.setParameter(i, bb.getFloat());
 					}
-					System.out.println("recalled "+nparams+" VST parameters to "+
-							controls.getName());
+//					System.out.println("recalled "+nparams+" VST parameters to "+
+//							controls.getName());
 				}
 				pos++;
 			}

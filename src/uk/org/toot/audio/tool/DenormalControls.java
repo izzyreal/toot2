@@ -24,6 +24,8 @@ public class DenormalControls extends AudioControls
     public DenormalControls() {
         super(ToolIds.DENORMAL_ID, "Denorm");
         add(new ModeControl());
+        IntegerLaw law = new IntegerLaw(3, 7, "");
+        add(new IntegerControl(ToolIds.DENORMAL_ID+1, "Chan", law, 0f, 5));
     }
 
     public boolean canBypass() { return true; }

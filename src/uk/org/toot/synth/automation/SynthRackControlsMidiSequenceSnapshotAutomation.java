@@ -7,6 +7,7 @@ package uk.org.toot.synth.automation;
 
 import javax.sound.midi.*;
 
+import uk.org.toot.audio.system.AudioSystem;
 import uk.org.toot.control.*;
 import uk.org.toot.control.automation.MidiPersistence;
 import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
@@ -36,12 +37,18 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
 	implements MidiSequenceSnapshotAutomation
 {
 	private SynthRackControls rackControls;
+	private AudioSystem audioSystem;
 	
     public SynthRackControlsMidiSequenceSnapshotAutomation(SynthRackControls controls) {
     	rackControls = controls;
     }
 
+    public void setAudioSystem(AudioSystem system) {
+    	audioSystem = system;
+    }
+    
     public void configureSequence(Sequence snapshot) {
+    	if ( audioSystem != null ) audioSystem.setAutoConnect(false);
     	rackControls.removeAll();
         Track[] tracks = snapshot.getTracks();
         Track track;
@@ -49,13 +56,16 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
         CompoundControl channelControls;
         int instanceIndex = -1;
         String trackName;
+        int pos;
         
         for ( int t = 0; t < tracks.length; t++ ) {
             track = tracks[t];
-            trackName = null;
+            pos = t;
+            trackName = "";
             MidiMessage msg = track.get(0).getMessage();
             if ( isMeta(msg) && getType(msg) == TRACK_NAME ) {
             	trackName = getString(msg);
+                pos = trackName.charAt(trackName.length()-1) - 'A';
             }
             msg = track.get(1).getMessage();
             if ( !isNote(msg) ) continue;
@@ -66,13 +76,12 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             						  synthId == VSTI_SYNTH_ID;
             String sname = useTrackName ? trackName.substring(0, trackName.length()-2) 
             							: SynthServices.lookupModuleName(providerId, synthId);
-//            System.out.println("Synth configure: "+t+" "+sname);
             if ( sname == null ) {
             	System.err.println("Synth configure: failed to lookup service "+providerId+"/"+synthId+" for "+trackName);
             	continue;
             }
             synthControls = SynthServices.createControls(sname);
-            rackControls.setSynthControls(t, synthControls);
+            rackControls.setSynthControls(pos, synthControls);
             
             if ( synthControls instanceof MultiSynthControls) {
             	for ( int m = 2; m < track.size(); m++ ) {
@@ -92,19 +101,30 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             	}
             }
         }
+        if ( audioSystem != null ) audioSystem.setAutoConnect(true);
     }
 
     public void recallSequence(Sequence snapshot) {
+//        rackControls.setAutoConnect(false);
         Track[] tracks = snapshot.getTracks();
         Track track;
         SynthControls synthControls;
         int instanceIndex = -1;
+        String trackName;
+        int pos;
         
         for ( int t = 0; t < tracks.length; t++ ) {
             track = tracks[t];
-           	synthControls = rackControls.getSynthControls(t);
+            pos = t;
+            trackName = "";
+            MidiMessage msg = track.get(0).getMessage();
+            if ( isMeta(msg) && getType(msg) == TRACK_NAME ) {
+            	trackName = getString(msg);
+                pos = trackName.charAt(trackName.length()-1) - 'A';
+            }
+           	synthControls = rackControls.getSynthControls(pos);
            	if ( synthControls == null ) {
-           		System.err.println("Synth recall: failed to get synth controls "+t);
+           		System.err.println("Synth recall: failed to get synth controls "+pos);
            		continue;
            	}
 
@@ -114,7 +134,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             if ( synthControls instanceof ChannelledSynthControls ) {
                	CompoundControl channelControls = null;
             	for ( int i = 2; i < track.size(); i++ ) {
-            		MidiMessage msg = track.get(i).getMessage();
+            		msg = track.get(i).getMessage();
             		if ( !isControl(msg) ) continue;
             		if ( instanceIndex != getInstanceIndex(msg) ) {
             			instanceIndex = getInstanceIndex(msg);
@@ -145,7 +165,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     			providerId = synthControls.getProviderId();
     			moduleId = synthControls.getId();
             	for ( int i = 2; i < track.size(); i++ ) {
-            		MidiMessage msg = track.get(i).getMessage();
+            		msg = track.get(i).getMessage();
             		if ( !isControl(msg) ) continue;
             		if ( getProviderId(msg) != providerId || 
             				getModuleId(msg) != moduleId ) continue;
@@ -161,6 +181,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             	}
             }
         }
+//        rackControls.setAutoConnect(true);
     }
 
     public Sequence storeSequence(String name) {

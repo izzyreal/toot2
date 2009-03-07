@@ -5,6 +5,7 @@ import java.util.Arrays;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.audio.system.AudioOutput;
 import uk.org.toot.misc.plugin.Plugin;
 import uk.org.toot.misc.plugin.PluginSupport;
 import uk.org.toot.misc.plugin.PluginTempoListener;
@@ -17,7 +18,7 @@ import com.synthbot.audioplugin.vst.vst2.VstPinProperties;
  * @author st
  *
  */
-public class SimpleVstiSynth extends VstiSynth implements AudioProcess
+public class SimpleVstiSynth extends VstiSynth implements AudioOutput
 {
 	private int nOutChan;
 	private int nInChan;
@@ -32,10 +33,12 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 	private PluginSupport support;
 	private PluginTransportListener transportListener;
 	private PluginTempoListener tempoListener;
+	private String location;
 	
 	public SimpleVstiSynth(final VstiSynthControls controls) {
 		super(controls);
 		this.controls = controls;
+		addAudioOutput(this);
 		nsamples = vsti.getBlockSize();
 		sampleRate = (int)vsti.getSampleRate();
 		
@@ -44,7 +47,7 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 		for ( int i = 0; i < nOutChan; i++ ) {
 			props = vsti.getOutputProperties(i);
 			if ( !props.isValid() ) continue;
-			System.out.println(i+", "+props.getLabel()+", "+props.getShortLabel()+", "+props.isFirstInStereoPair());
+//			System.out.println(i+", "+props.getLabel()+", "+props.getShortLabel()+", "+props.isFirstInStereoPair());
 		}
 		outSamples = new float[nOutChan][nsamples];
 		if ( nOutChan >= 2 ) {
@@ -58,9 +61,9 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 		inSamples = new float[nInChan][nsamples];
 
 		mustClear = vsti.getVendorName().indexOf("Steinberg") >= 0;
-		System.out.print("Using "+controls.getName());
-		if ( mustClear ) System.err.println(" !!! Must Clear");
-		else System.out.println();
+//		System.out.print("Using "+controls.getName());
+//		if ( mustClear ) System.err.println(" !!! Must Clear");
+//		else System.out.println();
 		
 		support = Plugin.getPluginSupport();
 		
@@ -80,9 +83,14 @@ public class SimpleVstiSynth extends VstiSynth implements AudioProcess
 	}
 
 	public void setLocation(String location) {
+		this.location = location;
         info = new AudioBuffer.MetaInfo(getName(), location);
 	}
 
+	public String getLocation() {
+		return location;
+	}
+	
 	public void open() throws Exception {
 		System.out.print("Opening audio: "+controls.getName()+" ... ");
 		vsti.turnOn();
