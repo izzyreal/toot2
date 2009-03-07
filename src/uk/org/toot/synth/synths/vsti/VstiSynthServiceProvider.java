@@ -66,6 +66,8 @@ public class VstiSynthServiceProvider extends SynthServiceProvider
     }
     
 	public MidiSynth createSynth(CompoundControl c) {
-		return new SimpleVstiSynth((VstiSynthControls)c);
+		VstiSynthControls sc = (VstiSynthControls)c;
+		int nchan = sc.getVst().numOutputs();
+		return nchan > 2 ? new MultiOutVstiSynth(sc) : new SimpleVstiSynth(sc);
 	}
 }
