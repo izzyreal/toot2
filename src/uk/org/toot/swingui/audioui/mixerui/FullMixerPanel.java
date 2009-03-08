@@ -178,12 +178,15 @@ public class FullMixerPanel extends DisposablePanel
         controlSelector = selector; // !!! !!! for resetting !!! !!!
     }
 
-    protected void updateStatusLabel(Control c) {
-        // if it's an indicator it will have indicated, and it may well
-        // be varied frequently and polled for updates.
-//        if ( c.isIndicator() ) return;
-        // want the path from mixerControls to c
-        statusLabel.setText(c.getControlPath(mixerControls, ", ")+"  "+c.getValueString());
+    protected void updateStatusLabel(final Control c) {
+    	SwingUtilities.invokeLater(
+    		new Runnable() {
+    			public void run() {
+    		        // want the path from mixerControls to c
+    		        statusLabel.setText(c.getControlPath(mixerControls, ", ")+"  "+c.getValueString());    				
+    			}
+    		}
+   		);
     }
 
     protected void addTools(JToolBar bar) {

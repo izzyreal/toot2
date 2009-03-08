@@ -15,6 +15,7 @@ import javax.swing.*;
 public class Fader extends JSlider implements Observer
 {
     private final FaderControl control;
+    private Runnable updater;
 
     private static final String SINGLE_DASH = " -";
     private static final String DOUBLE_DASH = " --";
@@ -26,6 +27,11 @@ public class Fader extends JSlider implements Observer
         setPaintTrack(false);
         setLabelTable(createLabelTable());
         setPaintLabels(true);
+        updater = new Runnable() {
+   			public void run() {
+   				Fader.super.setValue(sliderValue(control.getValue())); 
+   			}
+   		}; 
 	}
 
 	public void addNotify() {
@@ -39,13 +45,7 @@ public class Fader extends JSlider implements Observer
     }
 
    	public void update(Observable obs, Object obj) {
-   		SwingUtilities.invokeLater(
-   	   		new Runnable() {
-   	   			public void run() {
-   	   		       	Fader.super.setValue(sliderValue(control.getValue())); // !!! avoid NEL
-   	   			}
-   	   		} 
-   	   	);
+   		SwingUtilities.invokeLater(updater);
     }
 
     protected Hashtable createLabelTable() {

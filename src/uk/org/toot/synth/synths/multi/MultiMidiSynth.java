@@ -6,7 +6,6 @@ import java.util.Observer;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.BasicMidiSynth;
 import uk.org.toot.synth.PolyphonicSynthChannel;
-import uk.org.toot.synth.SynthChannel;
 import uk.org.toot.synth.SynthChannelServices;
 
 /**

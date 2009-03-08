@@ -10,6 +10,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -70,8 +71,14 @@ public class SynthRackPanel extends MultiControlPanel
 		return bar;
 	}
 	
-    protected void updateStatusLabel(Control c) {
-        statusLabel.setText(c.getControlPath(rackControls, ", ")+"  "+c.getValueString());
+    protected void updateStatusLabel(final Control c) {
+    	SwingUtilities.invokeLater(
+    		new Runnable() {
+    			public void run() {
+    		        statusLabel.setText(c.getControlPath(rackControls, ", ")+"  "+c.getValueString());    				
+    			}
+    		}
+    	);
     }
     
     public void addNotify() {

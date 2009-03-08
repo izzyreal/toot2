@@ -15,12 +15,18 @@ import javax.swing.SwingUtilities;
 public class ControlSlider extends JSlider implements Observer
 {
     private final FloatControl control;
+    private Runnable updater;
 
 	public ControlSlider(final FloatControl control) {
     	super(VERTICAL, 0, control.getLaw().getResolution()-1, 0);
         this.control = control;
         super.setValue(sliderValue(control.getValue()));
         setPaintTrack(false);
+        updater = new Runnable() {
+   			public void run() {
+   				ControlSlider.super.setValue(sliderValue(control.getValue())); 
+   			}
+   		}; 
 	}
 
 	public void addNotify() {
@@ -34,13 +40,7 @@ public class ControlSlider extends JSlider implements Observer
     }
 
    	public void update(Observable obs, Object obj) {
-   		SwingUtilities.invokeLater(
-   			new Runnable() {
-   				public void run() {
-   					ControlSlider.super.setValue(sliderValue(control.getValue())); 
-   				}
-   			} 
-   		);
+   		SwingUtilities.invokeLater(updater);
     }
 
 	protected float userValue(int sliderVal) {
