@@ -40,10 +40,17 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             ChannelFormat.STEREO,
             null);
 //        addControls(RoomSimulatorControls.class, DelayIds.ROOM_SIMULATOR, "Room Simulator", family, "0.1");
+        addControls(
+        	TempoDelayControls.class,
+        	DelayIds.TEMPO_DELAY_ID,
+        	getString("BPM.Delay"),
+        	family,
+        	"0.1");
 
         add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.1");
         add(StereoModulatedDelayProcess.class, getString("Stereo.Modulated.Delay"), family, "0.1");
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
+        add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -58,6 +65,8 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             // but this should get the Room Simulator working
             // albeit hardcoded to a single ImageSourceDesign
             return new MultiTapDelayProcess(new ImageSourceDesign((RoomSimulatorControls)c));
+        } else if ( c instanceof TempoDelayControls ) {
+        	return new TempoDelayProcess((TempoDelayControls)c);
         }
         return null; // caller then tries another provider
     }

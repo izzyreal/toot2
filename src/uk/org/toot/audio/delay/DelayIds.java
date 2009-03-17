@@ -13,4 +13,5 @@ class DelayIds
     final static int MULTI_TAP_DELAY_ID = DELAY_BASE_ID + 2;
     final static int ROOM_SIMULATOR = DELAY_BASE_ID + 3;
     final static int MODULATED_DELAY_ID = DELAY_BASE_ID + 4; // mono modulation
+    final static int TEMPO_DELAY_ID = DELAY_BASE_ID + 5;
 }

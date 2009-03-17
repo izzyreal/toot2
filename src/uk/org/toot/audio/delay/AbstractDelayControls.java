@@ -31,35 +31,35 @@ public class AbstractDelayControls extends AudioControls
         super(id, name);
     }
 
-    protected void addFeedbackInvertControl() {
+    protected BooleanControl createFeedbackInvertControl() {
         feedbackInvertControl = new BooleanControl(FEEDBACK_INVERT_ID, getString("Invert"), false);
         feedbackInvertControl.setStateColor(true, Color.orange);
+        return feedbackInvertControl;
     }
 
-    protected void addFeedbackControl() {
+    protected FloatControl createFeedbackControl() {
  		feedbackControl = new FloatControl(FEEDBACK_ID, getString("Resonance"), UNITY_LIN_LAW, 0.01f, 0f);
         feedbackControl.setInsertColor(Color.orange);
+        return feedbackControl;
  	}
 
-    protected void addMixInvertControl() {
+    protected BooleanControl createMixInvertControl() {
         mixInvertControl = new BooleanControl(MIX_INVERT_ID, getString("Invert"), false);
         mixInvertControl.setStateColor(true, Color.PINK);
+        return mixInvertControl;
     }
 
-    protected void addMixControl() {
+    protected FloatControl createMixControl() {
         mixControl = new MixControl();
+        return mixControl;
     }
 
     protected ControlColumn createCommonControlColumn(boolean withInverts) {
         ControlColumn g = new ControlColumn();
-        if ( withInverts ) addFeedbackInvertControl();
-        addFeedbackControl();
-        if ( withInverts ) addMixInvertControl();
-        addMixControl();
-        if ( feedbackInvertControl != null ) g.add(feedbackInvertControl);
-        if ( feedbackControl != null ) g.add(feedbackControl);
-        if ( mixInvertControl != null ) g.add(mixInvertControl);
-        if ( mixControl != null ) g.add(mixControl);
+        if ( withInverts ) g.add(createFeedbackInvertControl());
+        g.add(createFeedbackControl());
+        if ( withInverts ) g.add(createMixInvertControl());
+        g.add(createMixControl());
         return g;
     }
 
