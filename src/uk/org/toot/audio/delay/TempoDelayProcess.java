@@ -1,4 +1,4 @@
-// Copyright (C) 2006 Steve Taylor.
+// Copyright (C) 2009 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org.uk/LICENSE_1_0.txt)
@@ -9,7 +9,7 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.misc.plugin.Plugin;
 import uk.org.toot.misc.plugin.PluginSupport;
-import uk.org.toot.misc.plugin.PluginTempoListener;
+import uk.org.toot.misc.TempoListener;
 
 /**
  * A Tempo linked Delay Process
@@ -26,7 +26,7 @@ public class TempoDelayProcess implements AudioProcess
     private DelayBuffer tappedBuffer; // just for conform()
 
     private PluginSupport support;
-	private PluginTempoListener tempoListener;
+	private TempoListener tempoListener;
 
 	/**
      * @link aggregation
@@ -42,7 +42,7 @@ public class TempoDelayProcess implements AudioProcess
         this.vars = vars;
         wasBypassed = !vars.isBypassed(); // force update
 		support = Plugin.getPluginSupport();
-		tempoListener = new PluginTempoListener() {
+		tempoListener = new TempoListener() {
 			public void tempoChanged(float newTempo) {
 				bpm = newTempo;				
 			}			

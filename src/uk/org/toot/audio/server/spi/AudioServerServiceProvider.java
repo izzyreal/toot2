@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class AudioServerServiceProvider extends ServiceProvider
 {
-    private List<ServiceDescriptor> servers;
+    protected List<ServiceDescriptor> servers;
 
     /**
      * Constructs an <code>AudioServiceProvider</code> with a given

@@ -1,3 +1,8 @@
+// Copyright (C) 2009 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
+
 package uk.org.toot.audio.vstfx;
 
 import java.util.Arrays;
@@ -7,6 +12,9 @@ import com.synthbot.audioplugin.vst.vst2.*;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.misc.TempoListener;
+import uk.org.toot.misc.plugin.Plugin;
+import uk.org.toot.misc.plugin.PluginSupport;
 
 /**
  * This class has a single audio output, for mono and stereo VST effects.
@@ -26,6 +34,8 @@ public class VstEffect implements AudioProcess
 	private JVstHost2 vstfx;
 	private boolean bypassed;
 	private boolean wasBypassed = false;
+	private PluginSupport support;
+	private TempoListener tempoListener;
 	
 	public VstEffect(VstEffectControls controls) {
 		this.controls = controls;
@@ -46,12 +56,19 @@ public class VstEffect implements AudioProcess
 /*		System.out.print("Using "+controls.getName());
 		if ( mustClear ) System.err.println(" !!! Must Clear");
 		else System.out.println(); */
+		support = Plugin.getPluginSupport();
+		tempoListener = new TempoListener() {
+			public void tempoChanged(float newTempo) {
+				vstfx.setTempo(newTempo);				
+			}			
+		};
 	}
 
 	public void open() throws Exception {
 		System.out.print("Opening audio: "+controls.getName()+" ... ");
 		vstfx.turnOn();
 		System.out.println("opened");
+		support.addTempoListener(tempoListener);
 	}
 
 	public int processAudio(AudioBuffer buffer) {
@@ -104,5 +121,6 @@ public class VstEffect implements AudioProcess
 		System.out.print("Closing audio: "+controls.getName()+" ... ");
 		vstfx.turnOffAndUnloadPlugin();
 		System.out.println("closed");
+		support.removeTempoListener(tempoListener);
 	}
 }

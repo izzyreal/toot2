@@ -1,9 +1,14 @@
+// Copyright (C) 2009 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
+
 package uk.org.toot.audio.vstfx;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Constructor;
+//import java.lang.reflect.Constructor;
 
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioProcess;
@@ -57,13 +62,14 @@ public class VstEffectServiceProvider extends AudioServiceProvider
 	
 	@Override
     protected AudioControls createControls(ServiceDescriptor d) {
-		Class<VstEffectControls> clazz = VstEffectControls.class;
+//		Class<VstEffectControls> clazz = VstEffectControls.class;
 		try {
-			Constructor<VstEffectControls> ctor = 
+			return new VstEffectControls((AudioControlServiceDescriptor)d);
+/*			Constructor<VstEffectControls> ctor = 
 				clazz.getConstructor(AudioControlServiceDescriptor.class);
-			return ctor.newInstance((AudioControlServiceDescriptor)d);
+			return ctor.newInstance((AudioControlServiceDescriptor)d); */
 		} catch ( Exception e ) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 		return null;
     }

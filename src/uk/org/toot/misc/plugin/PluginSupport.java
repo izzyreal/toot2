@@ -1,4 +1,12 @@
+// Copyright (C) 2009 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
+
 package uk.org.toot.misc.plugin;
+
+import uk.org.toot.misc.TimeSignatureListener;
+import uk.org.toot.misc.TempoListener;
 
 /**
  * An interface that specifies the support required by plugins to receive
@@ -15,9 +23,12 @@ package uk.org.toot.misc.plugin;
  */
 public interface PluginSupport
 {
-	void addTempoListener(PluginTempoListener listener);
-	void removeTempoListener(PluginTempoListener listener);
+	void addTempoListener(TempoListener listener);
+	void removeTempoListener(TempoListener listener);
 	
+	void addTimeSignatureListener(TimeSignatureListener listener);
+	void removeTimeSignatureListener(TimeSignatureListener listener);
+
 	void addTransportListener(PluginTransportListener listener);
 	void removeTransportListener(PluginTransportListener listener);
 }

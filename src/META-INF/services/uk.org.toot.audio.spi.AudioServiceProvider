@@ -2,6 +2,7 @@ uk.org.toot.audio.eq.EQServiceProvider
 uk.org.toot.audio.dynamics.DynamicsServiceProvider
 uk.org.toot.audio.delay.DelayServiceProvider
 uk.org.toot.audio.basic.stereoImage.StereoImageServiceProvider
+uk.org.toot.audio.tool.ToolServiceProvider
 uk.org.toot.audio.vstfx.VstEffectServiceProvider
 
 

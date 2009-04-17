@@ -1,9 +1,14 @@
+// Copyright (C) 2009 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
+
 package uk.org.toot.synth.synths.vsti;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Constructor;
+//import java.lang.reflect.Constructor;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.misc.Vst;
@@ -54,11 +59,12 @@ public class VstiSynthServiceProvider extends SynthServiceProvider
 	
 	@Override
     protected SynthControls createControls(ServiceDescriptor d) {
-		Class<VstiSynthControls> clazz = VstiSynthControls.class;
+//		Class<VstiSynthControls> clazz = VstiSynthControls.class;
 		try {
-			Constructor<VstiSynthControls> ctor = 
+			return new VstiSynthControls(d);
+/*			Constructor<VstiSynthControls> ctor = 
 				clazz.getConstructor(ServiceDescriptor.class);
-			return ctor.newInstance(d);
+			return ctor.newInstance(d); */
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}

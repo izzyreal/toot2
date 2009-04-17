@@ -1,3 +1,8 @@
+// Copyright (C) 2009 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
+
 package uk.org.toot.synth.synths.vsti;
 
 import java.util.Arrays;
@@ -8,7 +13,8 @@ import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.system.AudioOutput;
 import uk.org.toot.misc.plugin.Plugin;
 import uk.org.toot.misc.plugin.PluginSupport;
-import uk.org.toot.misc.plugin.PluginTempoListener;
+import uk.org.toot.misc.TempoListener;
+import uk.org.toot.misc.TimeSignatureListener;
 import uk.org.toot.misc.plugin.PluginTransportListener;
 
 import com.synthbot.audioplugin.vst.vst2.VstPinProperties;
@@ -31,7 +37,8 @@ public class MultiOutVstiSynth extends VstiSynth
 	private VstiSynthControls controls;
 	private PluginSupport support;
 	private PluginTransportListener transportListener;
-	private PluginTempoListener tempoListener;
+	private TempoListener tempoListener;
+	private TimeSignatureListener timeSignatureListener;
 	
 	public MultiOutVstiSynth(final VstiSynthControls controls) {
 		super(controls);
@@ -74,9 +81,15 @@ public class MultiOutVstiSynth extends VstiSynth
 			}			
 		};
 		
-		tempoListener = new PluginTempoListener() {
+		tempoListener = new TempoListener() {
 			public void tempoChanged(float newTempo) {
 				vsti.setTempo(newTempo);				
+			}			
+		};
+
+		timeSignatureListener = new TimeSignatureListener() {
+			public void timeSignatureChanged(int numerator, int denominator) {
+				vsti.setTimeSignature(numerator, denominator);				
 			}			
 		};
 	}
@@ -109,6 +122,7 @@ public class MultiOutVstiSynth extends VstiSynth
 			vsti.turnOn();
 			System.out.println("opened");
 			support.addTempoListener(tempoListener);
+			support.addTimeSignatureListener(timeSignatureListener);
 			support.addTransportListener(transportListener);
 		}
 
@@ -151,6 +165,7 @@ public class MultiOutVstiSynth extends VstiSynth
 			vsti.turnOffAndUnloadPlugin();
 			System.out.println("closed");
 			support.removeTempoListener(tempoListener);
+			support.removeTimeSignatureListener(timeSignatureListener);
 			support.removeTransportListener(transportListener);
 		}
 
