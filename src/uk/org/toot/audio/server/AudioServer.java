@@ -100,13 +100,6 @@ public interface AudioServer
 
     float getSampleRate();
 
-    /*
-     * Typically this may only be called before any buffers are created, or inputs or 
-     * outputs are opened since they all depend on the sample rate.
-     * An IllegalStateException should be thrown otherwise.
-     */
-    void setSampleRate(float sampleRate);
-
     float getLoad();
     
     /**

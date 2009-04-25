@@ -5,23 +5,20 @@
 
 package uk.org.toot.swingui.audioui.serverui;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Iterator;
-import java.util.Properties;
 import uk.org.toot.service.*;
 import uk.org.toot.audio.server.*;
+import uk.org.toot.swingui.audioui.serverui.AudioServerChooser.ServerSelector;
 import uk.org.toot.swingui.audioui.serverui.spi.AudioServerUIServiceProvider;
 import javax.swing.*;
 
 public class AudioServerUIServices extends Services
 {
     protected AudioServerUIServices() {
-    }
-
-    /**
-     * Allow changes to server and sample.rate properties
-     */
-    public static JPanel createServerSetupUI(Properties properties) {
- 		return new AudioServerSetup(properties);
     }
 
     public static JComponent createServerUI(AudioServer server, AudioServerConfiguration p) {
@@ -34,6 +31,27 @@ public class AudioServerUIServices extends Services
         return null;
     }
 
+    public static void showSetupDialog(AudioServer server, AudioServerConfiguration p) {
+        JComponent ui;
+        Iterator<AudioServerUIServiceProvider> it = providers();
+        while ( it.hasNext() ) {
+            ui = it.next().createSetupUI(server, p);
+            if ( ui != null ) {
+            	final JComponent theUi = ui;
+            	try {
+            		SwingUtilities.invokeAndWait(new Runnable() {
+            			public void run() {
+            				new SetupDialog(theUi);    		
+            			}
+            		});
+            	} catch ( Exception e ) {
+            		// empty 
+            	}
+        		return;
+            }
+        }    	
+    }
+    
     public static Iterator<AudioServerUIServiceProvider> providers() {
         return lookup(AudioServerUIServiceProvider.class);
     }
@@ -49,6 +67,34 @@ public class AudioServerUIServices extends Services
 	public static void printServiceDescriptors(Class<?> clazz) {
         accept(new ServicePrinter(), clazz);
     }
+
+	public static class SetupDialog extends JDialog implements ActionListener 
+	{ 
+	    private JButton     okButton;
+
+	    private SetupDialog(JComponent ui) {
+	        setTitle("Audio Server Setup");
+	        setModal(true);
+	        
+	        getContentPane().add(ui, BorderLayout.CENTER);
+	        
+	        okButton = new JButton("OK");
+	        okButton.addActionListener(this);
+	        
+	        JPanel buttonPanel = new JPanel(
+	                new FlowLayout(FlowLayout.CENTER, 10, 10));
+	        buttonPanel.add(okButton);
+	        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+	        
+	        pack();
+	        setLocationRelativeTo(null);
+	        setVisible(true);
+	    }
+	 
+	    public void actionPerformed(ActionEvent e) {
+	        dispose();
+	    }
+	}
 
     public static void main(String[] args) {
         try {

@@ -7,27 +7,33 @@ package uk.org.toot.swingui.audioui.serverui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Properties;
 
 import javax.swing.*;
+
+import uk.org.toot.audio.server.AudioServerServices;
  
-public class AudioServerChooser extends JDialog implements ActionListener {
- 
+public class AudioServerChooser extends JDialog implements ActionListener 
+{ 
+    private static String chosenServerName;
+    
     private JButton     okButton;
     private JButton     cancelButton;
 
+    static {
+		AudioServerServices.scan(); // early tickle	
+    }
+    
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * @link aggregationByValue
+     * @supplierCardinality 1 
      */
-    private AudioServerSetup setupPanel;
+    private AudioServerCombo serverCombo;
 
-    public AudioServerChooser(AudioServerSetup setupPanel) {
-    	this.setupPanel = setupPanel;
-        setTitle("Audio Server Setup");
+    private AudioServerChooser(String serverName) {
+        setTitle("Audio Server Selection");
         setModal(true);
         
-        getContentPane().add(setupPanel, BorderLayout.CENTER);
+        getContentPane().add(new ServerSelector(serverName), BorderLayout.CENTER);
         
         okButton = new JButton("OK");
         okButton.addActionListener(this);
@@ -48,21 +54,33 @@ public class AudioServerChooser extends JDialog implements ActionListener {
  
     public void actionPerformed(ActionEvent e) {
         if ( e.getSource() == okButton ) {
-        	setupPanel.store();
+        	chosenServerName = (String)serverCombo.getSelectedItem();
         }
         dispose();
     }
 
-    public static void showDialog(final Properties properties) {
+    protected class ServerSelector extends JPanel
+    {
+        public ServerSelector(String serverName) {
+            JLabel serverLabel = new JLabel("Audio Server");
+            add(serverLabel);
+            add(serverCombo = new AudioServerCombo(serverName));
+            serverLabel.setLabelFor(serverCombo);
+        }
+    }
+
+    public static String showDialog(final String serverName) {
+    	chosenServerName = null;
     	try {
     		SwingUtilities.invokeAndWait(new Runnable() {
     			public void run() {
-    	    		new AudioServerChooser(new AudioServerSetup(properties));    		
+    	    		new AudioServerChooser(serverName);    		
     			}
     		});
     	} catch ( Exception e ) {
     		// empty 
     	}
+    	return chosenServerName;
     }
 
 }

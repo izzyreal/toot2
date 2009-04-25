@@ -5,14 +5,17 @@
 
 package uk.org.toot.swingui.audioui.meterui;
 
-import java.util.Observable;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.control.Control;
 import uk.org.toot.audio.meter.MeterControls;
 import uk.org.toot.swingui.controlui.*;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.Timer;
 
 public class MeterOversPanel extends ControlPanel
 {
@@ -47,9 +50,17 @@ public class MeterOversPanel extends ControlPanel
 	        rightOvers.setHorizontalAlignment(JLabel.RIGHT);
     	    add(rightOvers);
         }
+        Timer t = new Timer(500,
+    	        new ActionListener() {
+	                public void actionPerformed(ActionEvent ae) {
+                	    pollAndUpdate();
+            	    }
+        	    }
+            );
+    	    setTimer(t);
     }
 
-   	public void update(Observable obs, Object obj) {
+   	public void pollAndUpdate() {
        	int overs;
         if ( leftOvers != null ) {
             overs = 0;

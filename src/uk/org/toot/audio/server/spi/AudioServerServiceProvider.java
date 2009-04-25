@@ -44,4 +44,8 @@ public abstract class AudioServerServiceProvider extends ServiceProvider
     }
 
     public abstract AudioServerConfiguration createServerConfiguration(AudioServer server);
+    
+    public AudioServerConfiguration createServerSetup(AudioServer server) {
+    	return null;
+    }
 }

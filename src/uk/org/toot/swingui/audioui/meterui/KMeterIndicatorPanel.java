@@ -34,6 +34,7 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
 
     public KMeterIndicatorPanel(MeterControls.MeterIndicator indicator) {
         super(indicator, times[timeIndex]);
+//        System.out.println(indicator.getControlPath()+" "+times[timeIndex]+" ms");
         timeIndex += 1;
         timeIndex %= times.length;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

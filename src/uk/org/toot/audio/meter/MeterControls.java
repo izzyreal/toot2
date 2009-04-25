@@ -30,7 +30,6 @@ public class MeterControls extends AudioControls
 
     private ChannelFormat channelFormat;
     private ChannelState[] channelState;
-    private OverIndicator overIndicator;
     private TypeControl typeControl;
     private MeterIndicator meterIndicator;
     private MindBControl mindBControl;
@@ -48,7 +47,7 @@ public class MeterControls extends AudioControls
         }
         // momentary
         add(new ResetControl());
-        add(overIndicator = new OverIndicator());
+        add(new OverIndicator());
         add(typeControl = new TypeControl());
         add(meterIndicator = new MeterIndicator(name)); // !!!
         add(mindBControl = new MindBControl());
@@ -85,8 +84,6 @@ public class MeterControls extends AudioControls
         for ( int c = 0; c < channelFormat.getCount(); c++ ) {
             channelState[c].overs = 0;
         }
-        overIndicator.setChanged();
-		overIndicator.notifyObservers();
     }
 
     public void resetMaxima() {
@@ -99,8 +96,6 @@ public class MeterControls extends AudioControls
     public void addOvers(int chan, int overs) {
         if ( invalidChannel(chan) || overs == 0 ) return;
         channelState[chan].overs += overs;
-        overIndicator.setChanged();
-		overIndicator.notifyObservers();
     }
 
     public void setPeak(int chan, float peak) {
@@ -206,8 +201,6 @@ public class MeterControls extends AudioControls
         public OverIndicator() {
             super(METER_OVERS, "");
         }
-
-        public void setChanged() { super.setChanged(); }
     }
 
     /**
