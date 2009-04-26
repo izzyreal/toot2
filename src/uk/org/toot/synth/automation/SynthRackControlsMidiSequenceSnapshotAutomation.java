@@ -11,14 +11,12 @@ import uk.org.toot.audio.system.AudioSystem;
 import uk.org.toot.control.*;
 import uk.org.toot.control.automation.MidiPersistence;
 import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
-import uk.org.toot.misc.VstMidiPersistence;
 import uk.org.toot.synth.ChannelledSynthControls;
 import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.SynthChannelServices;
 import uk.org.toot.synth.SynthServices;
 import uk.org.toot.synth.synths.multi.MultiSynthControls;
-import uk.org.toot.synth.synths.vsti.VstiSynthControls;
 
 import static uk.org.toot.control.automation.ControlSysexMsg.*;
 import static uk.org.toot.midi.message.MetaMsg.*;
@@ -121,8 +119,11 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
 
             int providerId = -1;
             int moduleId = -1;
-            
-            if ( synthControls instanceof ChannelledSynthControls ) {
+
+    		NativeSupport ns = synthControls.getNativeSupport();
+            if ( ns != null && ns.canPersistMidi() ) {
+            	ns.recall(track, 2);
+            } else if ( synthControls instanceof ChannelledSynthControls ) {
                	CompoundControl channelControls = null;
             	for ( int i = 2; i < track.size(); i++ ) {
             		msg = track.get(i).getMessage();
@@ -150,8 +151,6 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
 //          		System.out.println("recall: "+control.getControlPath());
             		control.setIntValue(newValue);
             	}
-            } else if ( synthControls instanceof VstiSynthControls ) {
-            	VstMidiPersistence.recall(synthControls, track, 2);
             } else { // normal controls
     			providerId = synthControls.getProviderId();
     			moduleId = synthControls.getId();
@@ -200,7 +199,10 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     		} catch ( InvalidMidiDataException imde ) {
     			System.err.println("Synth store: error storing synth "+synthControls.getName());
     		}
-    		if ( synthControls instanceof ChannelledSynthControls ) {
+    		NativeSupport ns = synthControls.getNativeSupport();
+    		if ( ns != null && ns.canPersistMidi() ) {
+    			ns.store(t);
+    		} else if ( synthControls instanceof ChannelledSynthControls ) {
     			ChannelledSynthControls channelledControls = 
     				(ChannelledSynthControls)synthControls;
     			CompoundControl cc = channelledControls.getGlobalControls();
@@ -219,8 +221,6 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     				instanceIndex = 1+chan; //cc.getInstanceIndex();
     				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
     			}
-    		} else if ( synthControls instanceof VstiSynthControls ) {
-    			VstMidiPersistence.store(synthControls, t);
     		} else { // just an unchannelled synth controls
 				providerId = synthControls.getProviderId();
 				moduleId = synthControls.getId();

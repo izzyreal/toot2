@@ -298,4 +298,6 @@ public abstract class CompoundControl extends Control
             setHidden(true);
         }
     }
+    
+    public NativeSupport getNativeSupport() { return null; }
 }

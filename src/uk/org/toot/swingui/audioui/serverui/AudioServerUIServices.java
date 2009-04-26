@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import uk.org.toot.service.*;
 import uk.org.toot.audio.server.*;
-import uk.org.toot.swingui.audioui.serverui.AudioServerChooser.ServerSelector;
 import uk.org.toot.swingui.audioui.serverui.spi.AudioServerUIServiceProvider;
 import javax.swing.*;
 
