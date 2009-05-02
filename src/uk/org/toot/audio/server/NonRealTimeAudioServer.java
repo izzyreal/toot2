@@ -10,7 +10,7 @@ import java.util.List;
 import uk.org.toot.audio.core.*;
 
 /**
- * An AudioServer that adapts any other AudioServer to add
+ * An AudioServer that decorates any other AudioServer to add
  * a non-real-time capability.
  */
 public class NonRealTimeAudioServer
@@ -181,10 +181,6 @@ public class NonRealTimeAudioServer
 
     public float getSampleRate() {
         return server.getSampleRate();
-    }
-
-    public void setSampleRate(float sampleRate) {
-//        server.setSampleRate(sampleRate);
     }
 
     public int getInputLatencyFrames() {
