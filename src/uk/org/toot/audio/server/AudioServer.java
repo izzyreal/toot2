@@ -24,13 +24,14 @@ import java.util.List;
  *
  * The hardware i/o is abstracted with getAvailableOutputNames() and
  * getAvailableInputNames() to discover the names of hardware output and input
- * lines repsectively.
+ * lines respectively. The first line returned should be the most obvious stereo
+ * line. Stereo lines should be returned before mono lines.
  * Also, createAudioOutput() and createAudioInput() create AudioProcess's
  * backed by named hardware lines with user specified labels.
  * 
  * An AudioServer implementation should use a particular audio format,
  * defined in its own terms, to return appropriate AudioBuffers and
- * AudioProcesses.
+ * IOAudioProcesses.
  * 
  * Latency occurs in hardware and software for both input and output.
  * Total latency from analogue input to analogue output is
@@ -77,18 +78,12 @@ public interface AudioServer
      * Returns an AudioProcess backed by a hardware audio output line
      * represented by 'name' and labelled 'label'.
      * start may be deferred until called at least once.
-     * May be called multiple times with the same 'name' in which case each
-     * returned OutputAudioProcess will be backed by the same hardware audio output
-     * line. Only one of the processes may be used at a time though.
      */
     IOAudioProcess openAudioOutput(String name, String label) throws Exception; // !!!
 
     /**
      * Returns an AudioProcess backed by a hardware audio input line
      * represented by 'name' and labelled 'label'.
-     * May be called multiple times with the same 'name' in which case each
-     * returned InputAudioProcess will be backed by the same hardware audio
-     * output line. Only one of the processes may be used at a time though.
      */
     IOAudioProcess openAudioInput(String name, String label) throws Exception; // !!!
 
@@ -100,15 +95,18 @@ public interface AudioServer
 
     float getSampleRate();
 
+    /**
+     * @return the normalised server load 0..1f
+     */
     float getLoad();
     
     /**
-     * @return the number of frames input latency due to software.
+     * @return the number of frames input latency due to software and hardware.
      */
     int getInputLatencyFrames();
     
     /**
-     * @return the number of frames output latency due to software.
+     * @return the number of frames output latency due to software and hardware.
      */
     int getOutputLatencyFrames();
     
