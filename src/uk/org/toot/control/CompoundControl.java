@@ -97,7 +97,7 @@ public abstract class CompoundControl extends Control
     }
 
     public List<Control> getControls() {
-        if ( controls == null ) return Collections.emptyList();
+        if ( controls == null ) return Collections.<Control>emptyList();
         return Collections.unmodifiableList(controls);
     }
 
@@ -300,4 +300,14 @@ public abstract class CompoundControl extends Control
     }
     
     public NativeSupport getNativeSupport() { return null; }
+    
+    @Override
+    public void setEnabled(boolean enable) {
+    	super.setEnabled(enable);
+    	for ( Control control : getControls() ) {
+    		control.setEnabled(enable);
+    	}
+    }
+    
+
 }
