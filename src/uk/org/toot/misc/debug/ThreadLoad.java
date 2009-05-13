@@ -1,6 +1,6 @@
 /* Copyright Steve Taylor 2006 */
 
-package uk.org.toot.debug;
+package uk.org.toot.misc.debug;
 
 import java.util.Observable;
 import java.util.Timer;
