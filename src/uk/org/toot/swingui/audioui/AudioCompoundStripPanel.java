@@ -10,8 +10,8 @@ import javax.swing.*;
 //import java.util.Observer;
 //import java.util.Observable;
 import uk.org.toot.control.ControlSelector;
+import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.controlui.PanelFactory;
-import uk.org.toot.swing.DisposablePanel;
 
 public class AudioCompoundStripPanel extends DisposablePanel
 {

@@ -1,4 +1,4 @@
-package uk.org.toot.swing;
+package uk.org.toot.swingui;
 
 import javax.swing.*;
 import javax.swing.SpringLayout;

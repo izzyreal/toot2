@@ -20,9 +20,9 @@ import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.audio.mixer.automation.AutomationControls;
 import uk.org.toot.control.ControlSelector;
 import uk.org.toot.control.automation.SnapshotAutomation;
+import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.audioui.AudioCompoundControlPanel;
 import uk.org.toot.swingui.controlui.PanelFactory;
-import uk.org.toot.swing.DisposablePanel;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.misc.Localisation.*;

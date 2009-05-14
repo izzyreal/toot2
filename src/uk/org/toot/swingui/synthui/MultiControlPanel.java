@@ -22,7 +22,7 @@ import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
 import uk.org.toot.control.CompoundControl;
-import uk.org.toot.swing.DisposablePanel;
+import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.controlui.CompoundControlPanel;
 import uk.org.toot.swingui.controlui.ControlPanelFactory;
 

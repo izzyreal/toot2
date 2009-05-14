@@ -1,7 +1,7 @@
 // Thanks to DrLaszloJamf for the original source
 // http://forum.java.sun.com/thread.jspa?threadID=481481&messageID=2244706
 
-package uk.org.toot.swing;
+package uk.org.toot.swingui;
 
 import java.awt.event.*;
 import javax.swing.*;

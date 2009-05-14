@@ -16,11 +16,11 @@ import javax.swing.*;
 import java.util.Observer;
 import java.util.Observable;
 import uk.org.toot.audio.mixer.MixerControls;
+import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.audioui.meterui.KMeterPanel;
 import uk.org.toot.control.ControlSelector;
 import uk.org.toot.swingui.controlui.PanelFactory;
 import static javax.swing.ScrollPaneConstants.*;
-import uk.org.toot.swing.DisposablePanel;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.audio.mixer.automation.AutomationControls.AUTOMATION_ID;
