@@ -8,7 +8,8 @@ package uk.org.toot.audio.mixer;
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import uk.org.toot.audio.core.*;
 import java.util.List;
-import static uk.org.toot.localisation.Localisation.*;
+
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * MixerControlsFactory adds components to MixerControls

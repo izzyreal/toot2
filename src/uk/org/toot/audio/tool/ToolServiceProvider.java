@@ -9,7 +9,7 @@ import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.spi.TootAudioServiceProvider;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class ToolServiceProvider extends TootAudioServiceProvider
 {

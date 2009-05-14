@@ -1,6 +1,6 @@
 package uk.org.toot.synth.channels.example2;
 
-import static uk.org.toot.localisation.Localisation.getString;
+import static uk.org.toot.misc.Localisation.getString;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;

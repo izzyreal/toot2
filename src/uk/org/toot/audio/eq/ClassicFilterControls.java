@@ -10,7 +10,7 @@ import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.filter.*;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * ClassicFilterControls are controls for the type, level, frequency and

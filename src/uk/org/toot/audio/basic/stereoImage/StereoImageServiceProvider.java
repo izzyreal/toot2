@@ -10,7 +10,7 @@ import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * Exposes stereo image manipulation as a plugin service

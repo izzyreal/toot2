@@ -6,16 +6,13 @@
 package uk.org.toot.audio.mixer;
 
 import java.awt.Color;
-import uk.org.toot.control.EnumControl;
-import uk.org.toot.control.FloatControl;
-import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import uk.org.toot.audio.fader.*;
 
 import static uk.org.toot.audio.mixer.MixControlIds.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * MixControls are the composite Controls for a MixProcess.

@@ -5,7 +5,7 @@ package uk.org.toot.audio.dynamics;
 import uk.org.toot.audio.core.KVolumeUtils;
 import org.tritonus.share.sampled.TVolumeUtils;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class Compressor extends DynamicsProcess
 {

@@ -7,7 +7,7 @@ import uk.org.toot.control.*;
 import java.awt.Color;
 
 import static uk.org.toot.audio.dynamics.DynamicsControlIds.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 abstract public class DynamicsControls extends AudioControls
     implements DynamicsDesign.DesignVariables

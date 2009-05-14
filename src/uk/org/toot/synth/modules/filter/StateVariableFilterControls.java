@@ -1,6 +1,6 @@
 package uk.org.toot.synth.modules.filter;
 
-import static uk.org.toot.localisation.Localisation.getString;
+import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.filter.FilterControlIds.*;
 
 import java.awt.Color;

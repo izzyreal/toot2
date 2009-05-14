@@ -7,7 +7,7 @@ package uk.org.toot.audio.eq;
 
 import uk.org.toot.audio.filter.Filter;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * A parametric EQ.

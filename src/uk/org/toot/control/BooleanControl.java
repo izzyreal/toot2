@@ -7,7 +7,7 @@ package uk.org.toot.control;
 
 import java.awt.Color;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * A BooleanControl enables control of a boolean value.

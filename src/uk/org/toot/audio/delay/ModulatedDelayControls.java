@@ -8,7 +8,7 @@ package uk.org.toot.audio.delay;
 import java.util.List;
 import java.awt.Color;
 import uk.org.toot.control.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class ModulatedDelayControls extends AbstractDelayControls
     implements ModulatedDelayVariables

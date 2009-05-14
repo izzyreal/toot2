@@ -10,7 +10,7 @@ import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.spi.TootAudioServiceProvider;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class DelayServiceProvider extends TootAudioServiceProvider
 {

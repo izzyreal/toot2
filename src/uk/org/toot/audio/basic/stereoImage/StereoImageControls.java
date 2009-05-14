@@ -12,7 +12,7 @@ import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LinearLaw;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * Implements stereo image controls and obeys the process variables contract

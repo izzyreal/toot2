@@ -9,7 +9,7 @@ import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioControls;
 import java.awt.Color;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * The relevant controls for snapshot and dynamic automation.

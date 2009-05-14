@@ -24,7 +24,7 @@ import uk.org.toot.swing.DisposablePanel;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.audio.mixer.automation.AutomationControls.AUTOMATION_ID;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class FullMixerPanel extends DisposablePanel
 {

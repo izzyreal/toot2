@@ -10,7 +10,7 @@ import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.filter.*;
 
 import static uk.org.toot.audio.core.FloatDenormals.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * A dual or quad band compressor.

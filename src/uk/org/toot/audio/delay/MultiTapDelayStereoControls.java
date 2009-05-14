@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.util.List;
 import uk.org.toot.control.*;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * Provides tap list per channel.

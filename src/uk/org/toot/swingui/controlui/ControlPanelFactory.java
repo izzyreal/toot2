@@ -16,7 +16,7 @@ import javax.swing.border.*;
 import uk.org.toot.control.*;
 import uk.org.toot.service.*;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class ControlPanelFactory extends Observable implements PanelFactory
 {

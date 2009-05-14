@@ -4,7 +4,7 @@ import java.util.List;
 
 import uk.org.toot.control.EnumControl;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 import static uk.org.toot.audio.delay.DelayIds.TEMPO_DELAY_ID;
 
 public class TempoDelayControls extends AbstractDelayControls

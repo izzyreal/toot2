@@ -12,7 +12,7 @@ import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.meter.MeterControls;
 import uk.org.toot.control.BooleanControl;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * BusControls are the composite Controls for a bus.

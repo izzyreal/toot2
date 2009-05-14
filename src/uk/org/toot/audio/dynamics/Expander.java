@@ -2,7 +2,7 @@
 
 package uk.org.toot.audio.dynamics;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class Expander extends DynamicsProcess
 {

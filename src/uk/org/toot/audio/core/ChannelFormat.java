@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.core;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * ChannelFormat provides information about AudioBuffer channels.

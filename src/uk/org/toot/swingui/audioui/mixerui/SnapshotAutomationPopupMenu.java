@@ -13,7 +13,7 @@ import uk.org.toot.control.automation.SnapshotAutomation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class SnapshotAutomationPopupMenu extends JPopupMenu implements ActionListener
 {

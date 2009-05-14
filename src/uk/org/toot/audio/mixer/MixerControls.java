@@ -15,7 +15,7 @@ import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.id.ProviderId;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * MixerControls defines the various types of strip that available and

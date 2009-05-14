@@ -11,7 +11,7 @@ import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * MeterControls provides composite controls for MeterProcess.

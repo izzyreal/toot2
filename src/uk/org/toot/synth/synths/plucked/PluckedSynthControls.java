@@ -1,6 +1,6 @@
 package uk.org.toot.synth.synths.plucked;
 
-import static uk.org.toot.localisation.Localisation.getString;
+import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
 

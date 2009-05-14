@@ -10,7 +10,7 @@ import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import java.awt.Color;
 
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class StereoModulatedDelayControls extends ModulatedDelayControls implements StereoModulatedDelayVariables
 {

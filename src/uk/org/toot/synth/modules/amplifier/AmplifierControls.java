@@ -1,6 +1,6 @@
 package uk.org.toot.synth.modules.amplifier;
 
-import static uk.org.toot.localisation.Localisation.getString;
+import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.amplifier.AmplifierControlIds.*;
 
 import java.awt.Color;

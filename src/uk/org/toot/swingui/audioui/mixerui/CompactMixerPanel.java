@@ -25,7 +25,7 @@ import uk.org.toot.swingui.controlui.PanelFactory;
 import uk.org.toot.swing.DisposablePanel;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 public class CompactMixerPanel extends DisposablePanel
 {

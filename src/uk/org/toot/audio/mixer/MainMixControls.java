@@ -12,7 +12,7 @@ import java.util.List;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.audio.mixer.MixControlIds.*;
-import static uk.org.toot.localisation.Localisation.*;
+import static uk.org.toot.misc.Localisation.*;
 
 /**
  * MainMixControls add a route control to MixControls.
