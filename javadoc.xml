@@ -23,7 +23,7 @@
 	<tag name="label" scope="all" description="Label:" />
     <tag name="supplierCardinality" scope="all" enabled="false" description="Supplier Cardinality:" />
 	<bottom>
-		<![CDATA[<i>Copyright &#169; 2004, 2005, 2006, 2007 Steve Taylor. All Rights Reserved.</i>]]>
+		<![CDATA[<i>Copyright &#169; 2004, 2005, 2006, 2007, 2008, 2009 Steve Taylor. All Rights Reserved.</i>]]>
  	</bottom>
 </javadoc>
 </target>

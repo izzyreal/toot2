@@ -9,8 +9,8 @@ public class FIRFilter extends AbstractFilter
 {
     private float[] a; // filter coefficients
 
-    public FIRFilter(FilterSpecification spec) {
-        super(spec);
+    public FIRFilter(FilterSpecification spec, boolean relative) {
+        super(spec, relative);
     }
 
     public float filterSample(float sample, FIRState s) {

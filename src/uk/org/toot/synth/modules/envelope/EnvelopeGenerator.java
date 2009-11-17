@@ -3,6 +3,8 @@ package uk.org.toot.synth.modules.envelope;
 /**
  * A DAHDSR Envelope Generator.
  * Uses efficient exponential difference equations for good sounding segments.
+ * Except for attack, which is linear, which helps filter cutoff frequencies and is typical
+ * for analog envelope generators.
  * @author st
  *
  */
@@ -10,7 +12,9 @@ public class EnvelopeGenerator
 {
 	public enum State { DELAY, ATTACK, HOLD, DECAY, SUSTAIN, RELEASE, COMPLETE };
 	
-	private State state = State.DELAY;
+	private EnvelopeVariables vars;
+	
+	private State state = State.COMPLETE;
 	
 	private int delayCount;
 	private float attackCoeff;
@@ -22,12 +26,7 @@ public class EnvelopeGenerator
 	private float envelope = 0f;
 
 	public EnvelopeGenerator(EnvelopeVariables vars) {
-		delayCount = vars.getDelayCount();
-		attackCoeff = vars.getAttackCoeff();
-		holdCount = vars.getHoldCount();
-		decayCoeff = vars.getDecayCoeff();
-		sustainLevel = vars.getSustainLevel();
-		releaseCoeff = vars.getReleaseCoeff();
+		this.vars = vars;
 	}
 	
 	public float getEnvelope(boolean release) {
@@ -38,7 +37,7 @@ public class EnvelopeGenerator
 			state = State.ATTACK;
 			// intentional fall through
 		case ATTACK:
-			envelope += attackCoeff * (1f - envelope);
+			envelope += attackCoeff; // * (1f - envelope);
 			if ( envelope > 0.99f ) {
 				state = State.HOLD;
 			}
@@ -70,5 +69,16 @@ public class EnvelopeGenerator
 	
 	public boolean isComplete() {
 		return state == State.COMPLETE;
+	}
+	
+	public void trigger() {
+		delayCount = vars.getDelayCount();
+		attackCoeff = vars.getAttackCoeff();
+		holdCount = vars.getHoldCount();
+		decayCoeff = vars.getDecayCoeff();
+		sustainLevel = vars.getSustainLevel();
+		releaseCoeff = vars.getReleaseCoeff();		
+//		envelope = 0;
+		state = State.DELAY;
 	}
 }

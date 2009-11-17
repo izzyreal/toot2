@@ -109,6 +109,7 @@ public abstract class Control extends Observable
      */
     public void setName(String s) {
         name = s;
+        annotation = s;
     }
 
     public String getAnnotation() {

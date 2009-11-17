@@ -140,7 +140,6 @@ public abstract class SynthChannel implements MidiChannel
 	}
 
 	public boolean localControl(boolean arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

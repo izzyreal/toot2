@@ -77,7 +77,11 @@ public abstract class EnumControl extends Control
     }
 
     public void setIntValue(int value) {
-        setValue(getValues().get(value));
+    	try {
+    		setValue(getValues().get(value));
+    	} catch ( Exception e ) {
+    		e.printStackTrace();
+    	}
     }
 
     public int getIntValue() {

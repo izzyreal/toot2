@@ -3,9 +3,10 @@ package uk.org.toot.synth.synths.multi;
 import java.util.Observable;
 import java.util.Observer;
 
+import uk.org.toot.audio.system.AudioOutput;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.BasicMidiSynth;
-import uk.org.toot.synth.PolyphonicSynthChannel;
+import uk.org.toot.synth.SynthChannel;
 import uk.org.toot.synth.SynthChannelServices;
 
 /**
@@ -26,7 +27,7 @@ public class MultiMidiSynth extends BasicMidiSynth
 						CompoundControl channelControls = controls.getChannelControls(chan);
 						if ( channelControls != null ) {
 							// SPI lookup plugin SynthChannel for these controls
-							PolyphonicSynthChannel synthChannel = SynthChannelServices.createSynthChannel(channelControls);
+							SynthChannel synthChannel = SynthChannelServices.createSynthChannel(channelControls);
 							if ( synthChannel == null ) {
 								System.err.println("No SynthChannel for SynthControls "+channelControls.getName());
 							} else {
@@ -42,14 +43,14 @@ public class MultiMidiSynth extends BasicMidiSynth
 		);
 	}
 
-	protected void setChannel(int chan, PolyphonicSynthChannel synthChannel) {
-		PolyphonicSynthChannel old = (PolyphonicSynthChannel)getChannel(chan);
-		if ( old != null ) {
-			removeAudioOutput(old);
+	protected void setChannel(int chan, SynthChannel synthChannel) {
+		SynthChannel old = getChannel(chan);
+		if ( old != null && old instanceof AudioOutput ) {
+			removeAudioOutput((AudioOutput)old);
 		}
 		super.setChannel(chan, synthChannel);
-		if ( synthChannel != null ) {
-			addAudioOutput(synthChannel);
+		if ( synthChannel != null && synthChannel instanceof AudioOutput ) {
+			addAudioOutput((AudioOutput)synthChannel);
 		}
 	}
 }

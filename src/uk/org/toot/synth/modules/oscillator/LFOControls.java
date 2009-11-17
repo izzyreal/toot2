@@ -32,12 +32,12 @@ public class LFOControls extends CompoundControl implements LFOVariables
 
 	protected LFOConfig config;
 	
-	protected LFOControls(int instanceIndex, String name, int idOffset, LFOConfig cfg) {
+	public LFOControls(int instanceIndex, String name, int idOffset, LFOConfig cfg) {
 		this(OscillatorIds.LFO_ID, instanceIndex, name, idOffset, cfg);
 	}
 
 	public LFOControls(int id, int instanceIndex, String name, final int idOffset, LFOConfig cfg) {
-		super(id, name);
+		super(id, instanceIndex, name);
 		this.idOffset = idOffset;
 		config = cfg;
 		createControls();

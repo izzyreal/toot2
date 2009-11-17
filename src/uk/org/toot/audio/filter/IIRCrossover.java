@@ -22,8 +22,8 @@ public class IIRCrossover implements Crossover
     private Filter lpf;
 
     public IIRCrossover(FilterSpecification low, FilterSpecification high) {
-        lpf = new BiQuadFilter(low);
-        hpf = new BiQuadFilter(high);
+        lpf = new BiQuadFilter(low, true);
+        hpf = new BiQuadFilter(high, true);
         lpf.open(); // !!!
         hpf.open(); // !!!
     }

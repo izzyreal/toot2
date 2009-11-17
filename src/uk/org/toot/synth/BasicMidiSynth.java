@@ -78,6 +78,9 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 				case ChannelMsg.CONTROL_CHANGE:
 					synthChannel.controlChange(ChannelMsg.getData1(msg), ChannelMsg.getData2(msg));
 					break;
+				case ChannelMsg.CHANNEL_PRESSURE:
+					synthChannel.setChannelPressure(ChannelMsg.getData1(msg));
+					break;
 				}
 			}
 		}

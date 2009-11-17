@@ -18,10 +18,10 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 {
 
 	private List<Voice> voices = new java.util.ArrayList<Voice>();
+	private List<Voice> finished = new java.util.ArrayList<Voice>();
 	protected int sampleRate = 44100;
 	private int polyphony = 8;
 	private AudioBuffer.MetaInfo info;
-	private List<Voice> finished = new java.util.ArrayList<Voice>();
 	private String name;
 	private String location;
 
@@ -86,10 +86,14 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 		Voice v = createVoice(pitch, velocity, sampleRate);
 		synchronized ( voices ) {
 			if ( voices.size() >= polyphony ) {
-				// oldest note stealing
-				Voice steal = voices.get(0);
-				steal.stop();
-				voices.remove(steal);
+				for ( Voice voice : voices ) { 
+					// oldest released note stealing
+					if ( voice.isReleased() ) {
+						voice.stop();
+						voices.remove(voice);
+						break;
+					}
+				}
 			}
 			voices.add(v);
 		}
@@ -170,7 +174,7 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 			if ( stop ) return false;
 			float[] samples = buffer.getChannel(0);
 			int nsamples = buffer.getSampleCount();
-			for ( int i = 0; i < nsamples; i++ ) {
+			for ( int i = 0; i < nsamples; i++ ) {	// TODO !!!
 				samples[i] += getSample();
 			}
 			return !isComplete();

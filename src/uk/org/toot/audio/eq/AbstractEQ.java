@@ -29,9 +29,11 @@ abstract public class AbstractEQ extends EQ
     protected EQ.Specification specification;
     protected int sampleRate = -1;
     private boolean wasBypassed;
+    protected boolean relative;
 
-    public AbstractEQ(EQ.Specification spec) {
+    public AbstractEQ(EQ.Specification spec, boolean relative) {
         specification = spec;
+        this.relative = relative;
         wasBypassed = !specification.isBypassed(); // force update
         createEQ(spec);
     }
@@ -61,7 +63,7 @@ abstract public class AbstractEQ extends EQ
     }
 
     protected Filter createFilter(FilterSpecification fspec) {
-        return new BiQuadFilter(fspec);
+        return new BiQuadFilter(fspec, relative);
     }
 
     public int getSize() { return filters.size(); }

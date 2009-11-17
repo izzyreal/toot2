@@ -19,4 +19,6 @@ public interface TootSynthControlsId
 	final static int EXAMPLE_1_CHANNEL_ID = 1;
 	final static int EXAMPLE_2_CHANNEL_ID = 2;
 	final static int EXAMPLE_3_CHANNEL_ID = 3;
+	final static int COPAL_CHANNEL_ID = 4;
+	final static int WHIRL_CHANNEL_ID = 5;
 }

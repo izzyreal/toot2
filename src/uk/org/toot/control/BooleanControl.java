@@ -42,7 +42,7 @@ public class BooleanControl extends Control
 
     /**
      * Constructs a new boolean control object with the given parameters.
-     * The labels for the <code>true</code> and <code>false</code> states default to "true" and "false."
+     * The labels for the <code>true</code> and <code>false</code> states default to "On" and "Off".
      * @param id the id of the control represented by this float control object
      * @param initialValue the initial control value
      */

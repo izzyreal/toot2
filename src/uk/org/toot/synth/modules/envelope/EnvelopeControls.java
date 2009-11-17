@@ -31,20 +31,33 @@ public class EnvelopeControls extends CompoundControl
 
 	private int idOffset = 0;
 	
+	private boolean hasDelay;
+	private boolean hasHold;
+	private boolean hasSustain;
+	
 	// mutiplies the max attack, decay and release times
 	private float timeMultiplier;
 	
+	// a default ADSR envelope
 	public EnvelopeControls(int instanceIndex, String name, int idOffset) {
-		this(instanceIndex, name, idOffset, 1f);
+		this(instanceIndex, name, idOffset, "S", 1f);
 	}
 		
-	public EnvelopeControls(int instanceIndex, String name, int idOffset, float timeMultiplier) {
-		this(EnvelopeIds.DAHDSR_ENVELOPE_ID, instanceIndex, name, idOffset, timeMultiplier);
+	// options are D, H and S, i.e. "S", "DS", "D", "HS" etc.
+	public EnvelopeControls(int instanceIndex, String name, int idOffset, String options) {
+		this(instanceIndex, name, idOffset, options, 1f);
 	}
 		
-	public EnvelopeControls(int id, int instanceIndex, String name, final int idOffset, float timeMultiplier) {
-		super(id, name);
+	public EnvelopeControls(int instanceIndex, String name, int idOffset, String options, float timeMultiplier) {
+		this(EnvelopeIds.DAHDSR_ENVELOPE_ID, instanceIndex, name, idOffset, options, timeMultiplier);
+	}
+		
+	public EnvelopeControls(int id, int instanceIndex, String name, final int idOffset, String options, float timeMultiplier) {
+		super(id, instanceIndex, name);
 		this.idOffset = idOffset;
+		hasDelay = options.startsWith("D");
+		hasHold = options.indexOf("H") > -1;
+		hasSustain = options.indexOf("S") > -1;
 		this.timeMultiplier = timeMultiplier;
 		createControls();
 		deriveSampleRateIndependentVariables();
@@ -65,20 +78,20 @@ public class EnvelopeControls extends CompoundControl
 		});
 	}
 	
-	protected boolean hasDelay() {
-		return true;
-	}
-	
 	protected void createControls() {
 		float m = timeMultiplier;
-		if ( hasDelay() ) {
-			add(delayControl = createDelayControl(0f, 1000f, 0f));		// ms
+		if ( hasDelay ) {
+			add(delayControl = createDelayControl(0f, 1000f*m, 0f));	// ms
 		}
 		add(attackControl = createAttackControl(1f, 10000f*m, 1f)); 	// ms
-		add(holdControl = createHoldControl(0, 1000, 10)); 				// ms
-		add(decayControl = createDecayControl(20f, 20000f*m, 200f));	// ms
-		add(sustainControl = createSustainControl());
-		add(releaseControl = createReleaseControl(20, 2000*m, 200f));		// ms
+		if ( hasHold ) {
+			add(holdControl = createHoldControl(0, 1000, 10)); 			// ms
+		}
+		if ( hasSustain ) {
+			add(decayControl = createDecayControl(20f, 20000f*m, 200f));// ms
+			add(sustainControl = createSustainControl());
+		}
+		add(releaseControl = createReleaseControl(20, 2000*m, 200f));	// ms
 	}
 
     protected void deriveSampleRateIndependentVariables() {
@@ -93,10 +106,6 @@ public class EnvelopeControls extends CompoundControl
     	release = deriveRelease();
     }
     
-	protected float deriveSustain() {
-		return sustainControl.getValue(); // 0..1		
-	}
-
     private static float LOG_0_01 = (float)Math.log(0.01);
     // http://www.physics.uoguelph.ca/tutorials/exp/Q.exp.html
 	// http://www.musicdsp.org/showArchiveComment.php?ArchiveID=136
@@ -108,20 +117,30 @@ public class EnvelopeControls extends CompoundControl
     }
 
 	protected int deriveDelay() {
-		if ( !hasDelay() ) return 0;
+		if ( !hasDelay ) return 0;
 		return (int)(delayControl.getValue() * sampleRate / 1000);		
 	}
 
+	// atack is linear
     protected float deriveAttack() {
-        return deriveTimeFactor(attackControl.getValue());
+    	float ns = attackControl.getValue() * sampleRate / 1000;
+//        return deriveTimeFactor(attackControl.getValue());
+    	return 1/ns;
     }
 
     protected int deriveHold() {
+    	if ( !hasHold ) return 0;
         return (int)(holdControl.getValue() * sampleRate / 1000);
     }
 
 	protected float deriveDecay() {
+		if ( !hasSustain ) return 0.001f;
 		return deriveTimeFactor(decayControl.getValue());
+	}
+
+	protected float deriveSustain() {
+		if ( !hasSustain ) return 1f;
+		return sustainControl.getValue(); // 0..1		
 	}
 
     protected float  deriveRelease() {

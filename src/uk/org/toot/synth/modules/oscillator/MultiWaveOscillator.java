@@ -1,14 +1,11 @@
 package uk.org.toot.synth.modules.oscillator;
 
 import uk.org.toot.synth.SynthChannel;
-import uk.org.toot.synth.modules.envelope.EnvelopeGenerator;
 
-public class MultiWaveOscillator implements Oscillator
+public class MultiWaveOscillator
 {
 	private SynthChannel channel;
 	private MultiWaveOscillatorVariables vars;
-	private EnvelopeGenerator syncEnv;
-	private LFO lfo;
 	private boolean master;
 	private MultiWave multiWave;
 	private Wave wave;
@@ -18,26 +15,19 @@ public class MultiWaveOscillator implements Oscillator
 	private float k2;				// frequency / increment
 	private float increment = 1f;	// wave increment for the nominal pitch
 	private float currentIncrement;
-	private float syncEnvDepth;
 	private boolean sync;
 	private float index = 0f;		// index of the sample within the Wave
 	private float scalar = 1f;
 	private float offset = 0f;
 	private float frequency;		// nominal (start) frequency
 	private float width;
-	private float lfoDepth;
-	private boolean widthMod;
 	
 	public MultiWaveOscillator(
 			SynthChannel channel, 
 			MultiWaveOscillatorVariables oscillatorVariables, 
-			EnvelopeGenerator env,
-			LFO lfo,
 			float frequency) {
 		this.channel = channel;
 		vars = oscillatorVariables;
-		syncEnv = env;
-		this.lfo = lfo;
 		master = vars.isMaster();
 		multiWave = vars.getMultiWave();
 		int octave = vars.getOctave();
@@ -62,26 +52,21 @@ public class MultiWaveOscillator implements Oscillator
 	
 	public void update() {
 		currentIncrement = increment * channel.getBendFactor() * vars.getDetuneFactor();
-		syncEnvDepth = vars.getEnvelopeDepth();
-		sync = syncEnv != null && syncEnvDepth > 0.01f && !master;
+		sync = !master;
 		width = vars.getWidth();
-		lfoDepth = Math.min(width, 1f-width) * vars.getWidthLFODepth();
-		widthMod = lfoDepth > 0.01f;
-		if ( widthMod ) lfo.update();
 		scalar = multiWave.getWidthScalar(width);
 		offset = multiWave.getWidthOffset(width);
 	}
 	
-	public float getSample(float mod, OscillatorControl control, boolean release) {
+	public float getSample(float mod, float wmod, OscillatorControl control) {
 		float inc = currentIncrement * mod; 	// !!! 0 .. 2 instead of 0.5 .. 2 !!!
 		if ( sync ) {
 			if ( control.sync ) index = 0; 		// hard sync - aliases
-			float env = syncEnv.getEnvelope(release);
-			inc *= (1 + syncEnvDepth * env * env);
 		}
 		float sample = wave.get(index);
-		float w = width;
-		if ( widthMod ) w += lfoDepth * lfo.getSample();
+		float w = width + wmod;
+		if ( w > 0.99f ) w = 0.99f;
+		else if ( w < 0.01f ) w = 0.01f;
 		float ixShift = index + waveSize * w;
 		if ( ixShift >= waveSize ) ixShift -= waveSize;
 		sample -= wave.get(ixShift);  			// inverted phase shifted for PWM etc.

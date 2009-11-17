@@ -11,4 +11,5 @@ class FilterIds
 
     final static int MOOG_LPF_ID = FILTER_BASE_ID + 1;
     final static int STATE_VARIABLE_FILTER_ID = FILTER_BASE_ID + 2;
+    final static int FORMANT_FILTER_ID = FILTER_BASE_ID + 3;
 }

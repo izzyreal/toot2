@@ -11,12 +11,22 @@ public class LFO
     private float rateDelta;
     private double phaseDelta;
     
+    public LFO(LFOVariables vars, float initPhase) {
+    	this(vars);
+    	modulatorPhase = initPhase;
+    }
+    
     public LFO(LFOVariables vars) {
     	this.vars = vars;
 		float spread = vars.getDeviation();
 		rateDelta = spread * (float)Math.random() - spread/2;
+		setSampleRate(44100);
     }
     
+	public void setSampleRate(int sampleRate) {
+		xDelta = (float)(2 * Math.PI / sampleRate);
+	}
+
     // do not call from constructor! called in real-time before getSample(...)
 	public void update() {
         phaseDelta = xDelta * (vars.getFrequency() + rateDelta);
@@ -29,10 +39,6 @@ public class LFO
    	        modulatorPhase -= 2 * Math.PI;
        	}
         return (shape == 0) ? FastMath.sin(modulatorPhase) : FastMath.triangle(modulatorPhase);
-	}
-
-	public void setSampleRate(int sampleRate) {
-		xDelta = (float)(2 * Math.PI / sampleRate);
 	}
 
 

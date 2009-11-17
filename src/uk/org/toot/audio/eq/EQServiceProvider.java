@@ -17,15 +17,17 @@ import static uk.org.toot.misc.Localisation.*;
 public class EQServiceProvider extends TootAudioServiceProvider
 {
     public EQServiceProvider() {
-        super(getString("EQ"), "0.3");
+        super(getString("EQ"), "0.4");
 		String family = description;
         addControls(ParametricEQ.Controls.class, EQIds.PARAMETRIC_EQ_ID, getString("Parametric.EQ"), family, "0.2");
         addControls(GraphicEQ.Controls.class, EQIds.GRAPHIC_EQ_ID, getString("Graphic.EQ"), family, "0.2");
         addControls(CutEQ.Controls.class, EQIds.CUT_EQ_ID, getString("Cut.EQ"), family, "0.1");
+        addControls(FormantEQ.Controls.class, EQIds.FORMANT_EQ_ID, getString("Formant.EQ"), family, "0.1");
 
         add(ParametricEQ.class, getString("Parametric.EQ"), family, "0.2");
         add(GraphicEQ.class, getString("Graphic.EQ"), family, "0.2");
         add(CutEQ.class, getString("Cut.EQ"), family, "0.1");
+        add(FormantEQ.class, getString("Formant.EQ"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -35,6 +37,8 @@ public class EQServiceProvider extends TootAudioServiceProvider
             return new GraphicEQ((GraphicEQ.Controls)c);
         } else if ( c instanceof CutEQ.Controls ) {
             return new CutEQ((CutEQ.Controls)c);
+        } else if ( c instanceof FormantEQ.Controls ) {
+            return new FormantEQ((FormantEQ.Controls)c);
         }
         return null; // caller then tries another provider
     }

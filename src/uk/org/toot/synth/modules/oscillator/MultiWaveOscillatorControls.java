@@ -20,22 +20,16 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	public final static int WAVE = 0; // TODO move to OscillatorControlIds.java
 	public final static int WIDTH = 1;
 	public final static int DETUNE = 2;
-	public final static int ENV_DEPTH = 3;
-	public final static int LFO_DEPTH = 4;
 	public final static int OCTAVE = 5;
 	
-	private FloatControl envDepthControl;
 	private FloatControl detuneControl;
 	private EnumControl waveControl;
 	private FloatControl widthControl;
-	private FloatControl widthLFODepthControl;
 	private EnumControl octaveControl;
 	private int idOffset = 0;
 	private MultiWave multiWave;
 	private float width;
-	private float envDepth;
 	private float detuneFactor;
-	private float widthLFODepth;
 	private int octave;
 
 	private boolean master;
@@ -45,7 +39,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	}
 
 	public MultiWaveOscillatorControls(int id, int instanceIndex, String name, final int idOffset, boolean master) {
-		super(id, name);
+		super(id, instanceIndex, name);
 		this.idOffset = idOffset;
 		this.master = master;
 		createControls();
@@ -57,10 +51,8 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 //				if (c.isIndicator()) return;
 				switch (c.getId()-idOffset) {
 				case WAVE:		multiWave = deriveMultiWave(); 			break;
-				case ENV_DEPTH: envDepth = deriveEnvDepth(); 			break;
 				case DETUNE:	detuneFactor = deriveDetuneFactor(); 	break;
 				case WIDTH:		width = deriveWidth();					break;
-				case LFO_DEPTH:	widthLFODepth = deriveWidthLFODepth();	break;
 				case OCTAVE:	octave = deriveOctave();				break;
 				}
 			}
@@ -68,27 +60,16 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	}
 	
 	private void createControls() {
-		if ( !master ) {
-			add(envDepthControl = createEnvelopeDepthControl());
+		if ( getInstanceIndex() > 0 ) {
 			add(detuneControl = createDetuneControl());
 		}
 		ControlColumn cc = new ControlColumn() {
 			public float getAlignmentY() { return 0.20f; }
 		};
 		cc.add(waveControl = createWaveControl());
-		if ( !master ) {
-			cc.add(octaveControl = createOctaveControl());
-		}
+		cc.add(octaveControl = createOctaveControl());
 		add(cc);
 		add(widthControl = createWidthControl());
-		add(widthLFODepthControl = createWidthLFODepthControl());
-	}
-
-	protected FloatControl createEnvelopeDepthControl() {
-        ControlLaw law = new LinearLaw(0f, 4f, "");
-        FloatControl control = new FloatControl(ENV_DEPTH+idOffset, getString("Envelope"), law, 0.01f, 0f);
-        control.setInsertColor(Color.LIGHT_GRAY);
-        return control;				
 	}
 
 	protected FloatControl createDetuneControl() {
@@ -128,14 +109,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
         return control;				
 	}
 
-	protected FloatControl createWidthLFODepthControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(LFO_DEPTH+idOffset, getString("LFO"), law, 0.01f, 0f);
-        control.setInsertColor(Color.LIGHT_GRAY);
-        return control;				
-	}
-
-	private static String[] octaveArray = { "-2", "-1", "0", "1", "2" };
+	private static String[] octaveArray = { "2", "1", "0", "-1", "-2" };
 	private static List<String> octaveList = Arrays.asList(octaveArray);
 	
 	protected EnumControl createOctaveControl() {
@@ -147,11 +121,9 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	}
 		
 	private void deriveSampleRateIndependentVariables() {
-		envDepth = deriveEnvDepth();
 		detuneFactor = deriveDetuneFactor();
 		multiWave = deriveMultiWave();
 		width = deriveWidth();
-		widthLFODepth = deriveWidthLFODepth();
 		octave = deriveOctave();
 	}
 
@@ -168,22 +140,12 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 		return widthControl.getValue();
 	}
 	
-	protected float deriveEnvDepth() {
-		if ( envDepthControl == null ) return 0f;
-		return envDepthControl.getValue();
-	}
-	
 	protected float deriveDetuneFactor() {
 		if ( detuneControl == null ) return 1f;
 		return detuneControl.getValue();
 	}
 	
-	protected float deriveWidthLFODepth() {
-		return widthLFODepthControl.getValue();
-	}
-	
 	protected int deriveOctave() {
-		if ( master ) return 0;
 		return Integer.parseInt((String)octaveControl.getValue());
 	}
 	
@@ -195,20 +157,12 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 		return width;
 	}
 	
-	public float getEnvelopeDepth() {
-		return envDepth;
-	}
-	
 	public float getSyncThreshold() {
 		return Integer.parseInt((String)octaveControl.getValue());
 	}
 
 	public float getDetuneFactor() {
 		return detuneFactor;
-	}
-	
-	public float getWidthLFODepth() {
-		return widthLFODepth;
 	}
 	
 	public int getOctave() {

@@ -28,8 +28,8 @@ public class BiQuadFilter extends AbstractFilter
     private double a3;
     private double a4; // coefficients (faster than array)
 
-    public BiQuadFilter(FilterSpecification spec) {
-        super(spec);
+    public BiQuadFilter(FilterSpecification spec, boolean relative) {
+        super(spec, relative);
     }
 
     public void filter(float[] buffer, float[] mixBuffer, int length, int chan, boolean doMix) {

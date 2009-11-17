@@ -39,7 +39,7 @@ public class SynthRack
 								System.err.println("No Synth for SynthControls "+synthControls.getName());
 								return;
 							} else {
-								synth.setLocation("Synth "+String.valueOf((char)('A'+nsynth)));
+								synth.setLocation(synthControls.getName()+" "+String.valueOf((char)('A'+nsynth)));
 							}
 							setMidiSynth(nsynth, synth);
 						} else {

@@ -26,7 +26,7 @@ public class CutEQ extends AbstractSerialEQ
      * Create a CutEQ with the specified controls.
      */
     public CutEQ(Controls controls) {
-        super(controls);
+        super(controls, true);
     }
 
     /**

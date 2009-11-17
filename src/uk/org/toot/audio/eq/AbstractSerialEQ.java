@@ -12,8 +12,8 @@ import uk.org.toot.audio.filter.Filter;
  */
 abstract public class AbstractSerialEQ extends AbstractEQ
 {
-    public AbstractSerialEQ(EQ.Specification spec) {
-        super(spec);
+    public AbstractSerialEQ(EQ.Specification spec, boolean relative) {
+        super(spec, relative);
     }
 
     protected int filter(float[] buffer, int length, int chan) {

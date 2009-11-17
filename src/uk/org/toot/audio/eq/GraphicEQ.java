@@ -26,7 +26,7 @@ public class GraphicEQ extends AbstractParallelEQ {
     }
 
     public GraphicEQ(Controls c) {
-        super(c);
+        super(c, true); // true means levels are relative (to input)
     }
 
     /**

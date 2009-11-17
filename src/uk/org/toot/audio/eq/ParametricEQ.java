@@ -18,14 +18,14 @@ public class ParametricEQ extends AbstractParallelEQ
      * Creates a default ParametricEQ object.
      */
     public ParametricEQ() {
-        super(new Controls());
+        this(new Controls());
     }
 
     /**
      * Creates a ParemetricEQ object with the specified controls.
      */
     public ParametricEQ(Controls spec) {
-        super(spec);
+        super(spec, true); // true means relative levels (to input)
     }
 
     /**

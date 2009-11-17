@@ -21,8 +21,10 @@ abstract public class AbstractFilter implements Filter
     private Filter.State[] states = new State[MAX_CHANNELS];
     protected float amplitudeAdj = 0f;
     protected int sampleRate = -1; // force initial update
+    private float levelOffset;
 
-    public AbstractFilter(FilterSpecification spec) {
+    public AbstractFilter(FilterSpecification spec, boolean relative) {
+    	levelOffset = relative ? 1f : 0f;
         // create an appropriate FilterDesign for the implementation
         design = createDesign(spec);
         // create an Observer to observe asynchronous FilterSpecification changes
@@ -66,7 +68,8 @@ abstract public class AbstractFilter implements Filter
         }
 
         // level changes don't require a redesign so update them here
-       	amplitudeAdj = design.getFilterSpecification().getLevelFactor()-1;
+        // surely subtracting levelOffset doesn't work right !!! !!! TODO
+       	amplitudeAdj = design.getFilterSpecification().getLevelFactor()-levelOffset;
         if ( states[chan] == null ) {
             states[chan] = createState();
         }

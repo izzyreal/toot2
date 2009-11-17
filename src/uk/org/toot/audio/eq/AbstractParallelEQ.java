@@ -6,6 +6,7 @@
 package uk.org.toot.audio.eq;
 
 import uk.org.toot.audio.filter.Filter;
+import java.util.Arrays;
 
 /**
  * The abstract class for parallel EQ such as parametrics and graphics.
@@ -14,8 +15,8 @@ abstract public class AbstractParallelEQ extends AbstractEQ
 {
     protected float[] mixBuffer = null;
 
-    public AbstractParallelEQ(EQ.Specification spec) {
-        super(spec);
+    public AbstractParallelEQ(EQ.Specification spec, boolean relative) {
+        super(spec, relative);
     }
 
     protected int filter(float[] buffer, int length, int chan) {
@@ -24,8 +25,12 @@ abstract public class AbstractParallelEQ extends AbstractEQ
         if ( mixBuffer == null || mixBuffer.length != length ) {
             mixBuffer = new float[length];
         }
-        // Move samples into summation buffer for processing
-        System.arraycopy(buffer, 0, mixBuffer, 0, length);
+        if ( relative ) {
+        	// Move samples into summation buffer for relative level processing
+        	System.arraycopy(buffer, 0, mixBuffer, 0, length);
+        } else {
+        	Arrays.fill(mixBuffer, 0); // clear summation buffer
+        }
         // Apply the filters
         for ( Filter filter : filters ) {
         	filter.filter(buffer, mixBuffer, length, chan, true);
