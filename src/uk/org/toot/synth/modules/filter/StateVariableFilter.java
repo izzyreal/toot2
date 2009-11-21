@@ -13,11 +13,13 @@ public class StateVariableFilter extends AbstractFilter
 		element = new StateVariableFilterElement();
 	}
 	
-	public void update(float freq) {
-		fc = vars.getFrequency() + freq * 2 / fs;
+	public float update(float freq) {
+		float fstatic = vars.getFrequency(); 
+		fc = fstatic + freq * 2 / fs;
 		res = vars.getResonance();
 		element.mix = ((StateVariableFilterVariables)vars).getModeMix();
-		element.bp = ((StateVariableFilterVariables)vars).isBandMode();	
+		element.bp = ((StateVariableFilterVariables)vars).isBandMode();
+		return fstatic;
 	}
 
 	/*

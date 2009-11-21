@@ -11,9 +11,11 @@ public class MoogFilter2 extends AbstractFilter
 		element = new MoogFilterElement();
 	}
 	
-	public void update(float freq) {
-		fc = vars.getFrequency() + freq * 2 / fs;
+	public float update(float freq) {
+		float fstatic = vars.getFrequency(); 
+		fc = fstatic + freq * 2 / fs;
 		res  = vars.getResonance();
+		return fstatic;
 	}
 
 	public float filter(float sample, float fmod) {

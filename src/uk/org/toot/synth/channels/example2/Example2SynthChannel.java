@@ -124,6 +124,8 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 		private float[] vibModDepths;
 		
 		private float vibModPre;
+		private float fsvstatic = 0f;
+		private float flpstatic = 0f;
 		
 		public Example2Voice(int pitch, int velocity, int sampleRate) {
 			super(pitch, velocity);
@@ -144,6 +146,8 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			lpFilter = new MoogFilter2(lpFilterVars);
 			svFilter = new StateVariableFilter(svFilterVars);
 			oscControl = new OscillatorControl();
+			lpfCutoffModDepths = new float[lpfCutoffModMixer.getDepths().length];
+			svfCutoffModDepths = new float[svfCutoffModMixer.getDepths().length];
 //			delay = new SingleTapDelay(4410);
 			float ampTracking = amplifierVars.getVelocityTrack();
 			ampT = velocity == 0 ? 0f : (1 - ampTracking * (1 - amplitude));
@@ -177,8 +181,15 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			osc1WidthModDepths = osc1WidthModMixer.getDepths();
 			osc2WidthModDepths = osc2WidthModMixer.getDepths();
 			osc3WidthModDepths = osc3WidthModMixer.getDepths();
-			lpfCutoffModDepths = lpfCutoffModMixer.getDepths();
-			svfCutoffModDepths = svfCutoffModMixer.getDepths();
+			float[] rawDepths = lpfCutoffModMixer.getDepths();
+			// normalise filter cutoff modulation depths so cutoff never below osc pitch
+			for ( int i = 0; i < rawDepths.length; i++ ) {				
+				lpfCutoffModDepths[i] = rawDepths[i] * (rawDepths[i] < 0 ? flpstatic : 1-flpstatic);
+			}
+			rawDepths = svfCutoffModMixer.getDepths();
+			for ( int i = 0; i < rawDepths.length; i++ ) {
+				svfCutoffModDepths[i] = rawDepths[i] * (rawDepths[i] < 0 ? fsvstatic : 1-fsvstatic);
+			}
 			vibModDepths = vibModMixer.getDepths();
 			// Vel, Key, AT and Wheel mod per buffer
 			modSamples[4] = amplitude;
@@ -189,13 +200,13 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 						modSamples[7] * vibModDepths[2];						// Wheel
 			lpfEnabled = lpfOsc1Level + lpfOsc2Level + lpfOsc3Level > 0.01f;   
 			if ( lpfEnabled ) {
-				float lpfMod = 1f + 0.8f * modulation(4, 4, lpfCutoffModDepths); // 0.2 .. 1.8
-				lpFilter.update(frequency * lpfMod);
+				float lpfMod = modulation(4, 4, lpfCutoffModDepths);
+				flpstatic = lpFilter.update(frequency + lpfMod * sampleRate  / 2);
 			}
 			svfEnabled = svfOsc1Level + svfOsc2Level + svfOsc3Level > 0.01f;
 			if ( svfEnabled ) { 
-				float svfMod = 1f + 0.8f * modulation(4, 4, svfCutoffModDepths); // 0.2 .. 1.8
-				svFilter.update(frequency * svfMod);
+				float svfMod = modulation(4, 4, svfCutoffModDepths);
+				fsvstatic = svFilter.update(frequency + svfMod * sampleRate  / 2);
 			}
 			ampLevel = amplifierVars.getLevel() * ampT;
 			return super.mix(buffer);
