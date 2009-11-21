@@ -108,13 +108,13 @@ public class AudioMixerStrip extends AudioProcessChain {
 			// fast exit if CHANNEL with no input
         	if ( input == null ) return false;
 	        int ret = input.processAudio(buffer);
+	        checkMetaInfo(buffer.getMetaInfo());
             if ( ret == AUDIO_DISCONNECT ) return false;
         }
         processAudio(buffer);
         if ( directOutput != null ) {
             directOutput.processAudio(buffer);
         }
-        checkMetaInfo(buffer.getMetaInfo());
         return true;
     }
 
