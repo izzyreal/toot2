@@ -3,7 +3,6 @@ package uk.org.toot.synth.modules.filter;
 public class MoogFilter2 extends AbstractFilter
 {
 	private MoogFilterElement element;
-	private float fc;
 	private float res;
 
 	public MoogFilter2(FilterVariables variables) {
@@ -11,17 +10,13 @@ public class MoogFilter2 extends AbstractFilter
 		element = new MoogFilterElement();
 	}
 	
-	public float update(float freq) {
-		float fstatic = vars.getFrequency(); 
-		fc = fstatic + freq * 2 / fs;
-		res  = vars.getResonance();
-		return fstatic;
+	public float update() {
+		res = vars.getResonance();
+		return vars.getCutoff();
 	}
 
-	public float filter(float sample, float fmod) {
-		float f = fc + fmod;
-		if ( f > 1 ) f = 1;
-		if ( f < 0.004f ) f = 0.004f; // !!! 44.1k gives 80Hz approx
+	public float filter(float sample, float f) {
+		if ( f > 1f ) f = 1f;
 		return element.filter(sample, f, res);
 	}
 }

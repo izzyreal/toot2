@@ -23,6 +23,8 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	private float glideFactor;
 	private int sampleCount = 256;
 	protected float amplitude;
+	protected float semitones;
+	private float targetSemitones;
 
 	public MonophonicSynthChannel(String name) {
 		this.name = name;
@@ -45,14 +47,17 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	public void noteOn(int pitch, int velocity) {
 		noteCount += 1;
 		targetFrequency = midiFreq(pitch);
+		targetSemitones = pitch;
 		amplitude = velocity / 128f;
 		if ( noteCount == 1 || !isGlideEnabled() ) {	// immediate, no glide
-			frequency = targetFrequency; 	
+			frequency = targetFrequency;
+			semitones = targetSemitones;
 			trigger(amplitude);
 		} else { 										// fingered portamento
 			int nblocks = getGlideMilliseconds() * sampleRate / 1000 / sampleCount;				
 			glideFactor = (float)Math.pow(targetFrequency/frequency, 1.0/nblocks);
 			gliding = true;
+			semitones = targetSemitones; // TODO semitones glide
 		}
 	}
 

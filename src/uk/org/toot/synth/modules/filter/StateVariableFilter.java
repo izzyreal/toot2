@@ -5,7 +5,6 @@ import uk.org.toot.dsp.FastMath;
 public class StateVariableFilter extends AbstractFilter
 {
 	private StateVariableFilterElement element;
-	private float fc;
 	private float res;
 
 	public StateVariableFilter(StateVariableFilterVariables variables) {
@@ -13,13 +12,11 @@ public class StateVariableFilter extends AbstractFilter
 		element = new StateVariableFilterElement();
 	}
 	
-	public float update(float freq) {
-		float fstatic = vars.getFrequency(); 
-		fc = fstatic + freq * 2 / fs;
+	public float update() {
 		res = vars.getResonance();
 		element.mix = ((StateVariableFilterVariables)vars).getModeMix();
 		element.bp = ((StateVariableFilterVariables)vars).isBandMode();
-		return fstatic;
+		return vars.getCutoff();
 	}
 
 	/*
@@ -28,10 +25,7 @@ public class StateVariableFilter extends AbstractFilter
 	 * freq   = 2.0*sin(PI*MIN(0.25, fc/(fs*2)));  // the fs*2 is because it's double sampled
 	 * damp   = MIN(2.0*(1.0 - pow(res, 0.25)), MIN(2.0, 2.0/freq - freq*0.5)); 
 	 */
-	public float filter(float sample, float fmod) {
-		float f = fc + fmod;
-		if ( f > 1 ) f = 1;
-		if ( f < 0 ) f = 0;
+	public float filter(float sample, float f) {
 		// the /4 is because it's double sampled
 		float f1 = 2f * FastMath.sin((float)(Math.PI * Math.min(0.24f, f*0.25f)));  
 		// Thanks to Laurent de Soras for the stability limit

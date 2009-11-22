@@ -89,14 +89,14 @@ public class Example2SynthControls extends CompoundControl
 		oscRow.add(modulationControls[2]);
 		add(oscRow);
 		
-		String[] cutoffLabels = { "LFO 1", "LFO 2", "Env 1", "Env 2", "Vel", "Key", "AT", "Wheel" };
+		String[] cutoffLabels = { "LFO 1", "LFO 2", "Env 1", "Env 2", "Vel", "AT", "Wheel" };
 
 		ControlRow lpfRow = new ControlRow();		
 		mixerControls[0] = new MixerControls(0, "LPF Oscillator Mix", LPFMIX_OFFSET, 3);
 		lpfRow.add(mixerControls[0]);
 		filterControls[0] = new MoogFilterControls(0, "Low Pass Filter", LPF_OFFSET);
 		lpfRow.add(filterControls[0]);
-		modulationControls[3] = new ModulationMixerControls(3, "Cutoff Mod", LPF_MOD_OFFSET, cutoffLabels, true);
+		modulationControls[3] = new ModulationMixerControls(3, "Cutoff Mod", LPF_MOD_OFFSET, cutoffLabels, true, 64, "semitones");
 		lpfRow.add(modulationControls[3]);
 		add(lpfRow);
 
@@ -105,7 +105,7 @@ public class Example2SynthControls extends CompoundControl
 		svfRow.add(mixerControls[1]);
 		filterControls[1] = new StateVariableFilterControls(0, "State Variable Filter", SVF_OFFSET);
 		svfRow.add(filterControls[1]);
-		modulationControls[4] = new ModulationMixerControls(4, "Cutoff Mod", SVF_MOD_OFFSET, cutoffLabels, true);
+		modulationControls[4] = new ModulationMixerControls(4, "Cutoff Mod", SVF_MOD_OFFSET, cutoffLabels, true, 64, "semitones");
 		svfRow.add(modulationControls[4]);
 		add(svfRow);
 

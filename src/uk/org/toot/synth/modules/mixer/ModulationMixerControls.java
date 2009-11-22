@@ -16,23 +16,23 @@ public class ModulationMixerControls extends CompoundControl implements Modulati
 {
 	public final static int DEPTH = 0;
 	
+	private ControlLaw law;
 	private FloatControl[] depthControl;
 	private float[] depth;
 	
 	private int idOffset = 0;
-	private boolean bipolar;
 	
 	private int count;
 	
 	public ModulationMixerControls(int instanceIndex, String name, int idOffset, String[] labels, boolean bipolar) {
-		this(MixerIds.MODULATION_MIXER_ID , instanceIndex, name, idOffset, labels, bipolar);
+		this(instanceIndex, name, idOffset, labels, bipolar, 1f, "");
 	}
 	
-	public ModulationMixerControls(int id, int instanceIndex, String name, final int idOffset, String[] labels, boolean bipolar) {
-		super(id, instanceIndex, name);
+	public ModulationMixerControls(int instanceIndex, String name, final int idOffset, String[] labels, boolean bipolar, float range, String units) {
+		super(MixerIds.MODULATION_MIXER_ID, instanceIndex, name);
 		this.idOffset = idOffset;
 		this.count = labels.length;
-		this.bipolar = bipolar;
+		law = new LinearLaw(bipolar ? -range : 0f, range, units);
 		depth = new float[count];
 		createControls(labels);
 		deriveSampleRateIndependentVariables();
@@ -63,7 +63,6 @@ public class ModulationMixerControls extends CompoundControl implements Modulati
 	}
 
 	protected FloatControl createDepthControl(int i, String label) {
-		ControlLaw law = new LinearLaw(bipolar ? -1f : 0f, 1f, "");
 		FloatControl control = new FloatControl(i+DEPTH+idOffset, label, law, 0.01f, 0f) {
 			private final String[] presetNames = { getString("Off") };
 

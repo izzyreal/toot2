@@ -80,8 +80,9 @@ public class WhirlSynthControls extends CompoundControl
 		row2.add(modulationControls[1]);
 		modulationControls[2] = new ModulationMixerControls(0, "Sub PWM", OSC2_PWM_MOD_OFFSET, labels, true);
 		row2.add(modulationControls[2]);
-		String[] flabels = { "LFO", "Env", "Vel", "Key", "AT", "Wheel" };
-		modulationControls[3] = new ModulationMixerControls(0, "Filter Cutoff Mod", SVF_CUTOFF_MOD_OFFSET, flabels, true);
+		String[] flabels = { "LFO", "Env", "Vel", "AT", "Wheel" };
+		modulationControls[3] = new ModulationMixerControls(0, "Filter Cutoff Mod", SVF_CUTOFF_MOD_OFFSET, 
+				flabels, true, 64, "semitones");
 		row2.add(modulationControls[3]);
 		add(row2);
 		

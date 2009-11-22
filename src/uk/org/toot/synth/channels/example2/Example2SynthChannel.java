@@ -14,8 +14,8 @@ import uk.org.toot.synth.modules.oscillator.*;
 /**
  * 3 Band Limited Oscillators
  * 		continously variable width between Pulse/Square or Saw/Triangle
- * 4 LFOs, Sine/Triangle, one for Vibrato, one per Oscillator modulating width
- * 5 AHDSR Envelopes, one amplifier, one per filter, one for oscillators 2 and 3
+ * 3 LFOs, Sine/Triangle, one for Vibrato, two for general modulation
+ * 3 AHDSR Envelopes, one amplifier, two general modulation
  * Moog 24dB/octave Low Pass Filter
  * Oberheim SEM 12dB/octave Multimode Filter
  * 
@@ -146,8 +146,6 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			lpFilter = new MoogFilter2(lpFilterVars);
 			svFilter = new StateVariableFilter(svFilterVars);
 			oscControl = new OscillatorControl();
-			lpfCutoffModDepths = new float[lpfCutoffModMixer.getDepths().length];
-			svfCutoffModDepths = new float[svfCutoffModMixer.getDepths().length];
 //			delay = new SingleTapDelay(4410);
 			float ampTracking = amplifierVars.getVelocityTrack();
 			ampT = velocity == 0 ? 0f : (1 - ampTracking * (1 - amplitude));
@@ -181,32 +179,24 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			osc1WidthModDepths = osc1WidthModMixer.getDepths();
 			osc2WidthModDepths = osc2WidthModMixer.getDepths();
 			osc3WidthModDepths = osc3WidthModMixer.getDepths();
-			float[] rawDepths = lpfCutoffModMixer.getDepths();
-			// normalise filter cutoff modulation depths so cutoff never below osc pitch
-			for ( int i = 0; i < rawDepths.length; i++ ) {				
-				lpfCutoffModDepths[i] = rawDepths[i] * (rawDepths[i] < 0 ? flpstatic : 1-flpstatic);
-			}
-			rawDepths = svfCutoffModMixer.getDepths();
-			for ( int i = 0; i < rawDepths.length; i++ ) {
-				svfCutoffModDepths[i] = rawDepths[i] * (rawDepths[i] < 0 ? fsvstatic : 1-fsvstatic);
-			}
+			lpfCutoffModDepths = lpfCutoffModMixer.getDepths();
+			svfCutoffModDepths = svfCutoffModMixer.getDepths();
 			vibModDepths = vibModMixer.getDepths();
-			// Vel, Key, AT and Wheel mod per buffer
+			// Vel, AT and Wheel mod per buffer
 			modSamples[4] = amplitude;
-			modSamples[5] = frequency * 2 / sampleRate;
-			modSamples[6] = getChannelPressure() / 128;
-			modSamples[7] = getController(Controller.MODULATION) / 128;
-			vibModPre = modSamples[6] * vibModDepths[1] +						// AT
-						modSamples[7] * vibModDepths[2];						// Wheel
+			modSamples[5] = getChannelPressure() / 128;
+			modSamples[6] = getController(Controller.MODULATION) / 128;
+			vibModPre = modSamples[5] * vibModDepths[1] +						// AT
+						modSamples[6] * vibModDepths[2];						// Wheel
 			lpfEnabled = lpfOsc1Level + lpfOsc2Level + lpfOsc3Level > 0.01f;   
 			if ( lpfEnabled ) {
-				float lpfMod = modulation(4, 4, lpfCutoffModDepths);
-				flpstatic = lpFilter.update(frequency + lpfMod * sampleRate  / 2);
+				flpstatic = modulation(4, 3, lpfCutoffModDepths);
+				flpstatic += lpFilter.update();
 			}
 			svfEnabled = svfOsc1Level + svfOsc2Level + svfOsc3Level > 0.01f;
 			if ( svfEnabled ) { 
-				float svfMod = modulation(4, 4, svfCutoffModDepths);
-				fsvstatic = svFilter.update(frequency + svfMod * sampleRate  / 2);
+				fsvstatic = modulation(4, 3, svfCutoffModDepths);
+				fsvstatic += svFilter.update();
 			}
 			ampLevel = amplifierVars.getLevel() * ampT;
 			return super.mix(buffer);
@@ -236,12 +226,14 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			// filters
 			if ( lpfEnabled ) {
 				sample = s1 * lpfOsc1Level + s2 * lpfOsc2Level + s3 * lpfOsc3Level;
-				sample = lpFilter.filter(sample, modulation(0, 4, lpfCutoffModDepths));
+				float f = pitch + modulation(0, 4, lpfCutoffModDepths) + flpstatic;
+				sample = lpFilter.filter(sample, midiFreq(f) * inverseNyquist);
 			}
 			if ( svfEnabled ) {
 				float 
 				sample2 = s1 * svfOsc1Level + s2 * svfOsc2Level + s3 * svfOsc3Level;
-				sample += svFilter.filter(sample2, modulation(0, 4, svfCutoffModDepths));
+				float f = pitch + modulation(0, 4, svfCutoffModDepths) + fsvstatic;
+				sample += svFilter.filter(sample2, midiFreq(f) * inverseNyquist);
 			}
 			// amplifier
 			return sample * ampLevel * envelopeA.getEnvelope(release);				   
@@ -252,8 +244,6 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			for ( int i = start; i < start + len; i++ ) {
 				sample += modSamples[i] * depths[i];
 			}
-			if ( sample < -1f ) return -1f;
-			else if ( sample > 1f ) return 1f;
 			return sample;
 		}
 		

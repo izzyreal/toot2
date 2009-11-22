@@ -11,16 +11,15 @@ import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
-import uk.org.toot.control.LogLaw;
 import uk.org.toot.control.LinearLaw;
 
 public class FilterControls extends CompoundControl 
 	implements FilterVariables
 {
-	private FloatControl frequencyControl;
+	private FloatControl cutoffControl;
 	private FloatControl resonanceControl;
 	
-	private float frequency, resonance;
+	private float cutoff, resonance;
 	
 	protected int idOffset = 0;
 	
@@ -43,18 +42,19 @@ public class FilterControls extends CompoundControl
 
 	protected void deriveControl(int id) {
 		switch ( id ) {
-		case FREQUENCY: frequency = deriveFrequency(); break;
+		case FREQUENCY: cutoff = deriveCutoff(); break;
 		case RESONANCE: resonance = deriveResonance(); break;
 		}		
 	}
 	
 	protected void createControls() {
-		add(frequencyControl = createFrequencyControl());
+		add(cutoffControl = createCutoffControl());
 		add(resonanceControl = createResonanceControl());
 	}
 
 	protected void deriveSampleRateIndependentVariables() {
 		resonance = deriveResonance();
+		cutoff = deriveCutoff();
 	}
 
 	protected float deriveResonance() {
@@ -62,16 +62,15 @@ public class FilterControls extends CompoundControl
 	}
 
 	protected void deriveSampleRateDependentVariables() {
-		frequency = deriveFrequency();
 	}
 
-	protected float deriveFrequency() {
-		return frequencyControl.getValue() * 2 / sampleRate;
+	protected float deriveCutoff() {
+		return cutoffControl.getValue();
 	}
 
-	protected FloatControl createFrequencyControl() {
-        ControlLaw law = new LogLaw(20, 20000, "Hz");
-        FloatControl control = new FloatControl(FREQUENCY+idOffset, getString("Frequency"), law, 1f, 1000f);
+	protected FloatControl createCutoffControl() {
+        ControlLaw law = new LinearLaw(-48, 96, "semitones");
+        FloatControl control = new FloatControl(FREQUENCY+idOffset, getString("Cutoff"), law, 1f, 0f);
         control.setInsertColor(Color.yellow);
         return control;		
 	}
@@ -83,8 +82,8 @@ public class FilterControls extends CompoundControl
         return control;				
 	}
 
-	public float getFrequency() {
-		return frequency;
+	public float getCutoff() {
+		return cutoff;
 	}
 
 	public float getResonance() {

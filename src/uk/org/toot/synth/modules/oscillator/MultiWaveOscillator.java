@@ -66,7 +66,7 @@ public class MultiWaveOscillator
 		float sample = wave.get(index);
 		float w = width + wmod;
 		if ( w > 0.99f ) w = 0.99f;
-		else if ( w < 0.01f ) w = 0.01f;
+		else if ( w < 0.01f ) w = 0.01f;		// TODO wrap instead of clamp?
 		float ixShift = index + waveSize * w;
 		if ( ixShift >= waveSize ) ixShift -= waveSize;
 		sample -= wave.get(ixShift);  			// inverted phase shifted for PWM etc.

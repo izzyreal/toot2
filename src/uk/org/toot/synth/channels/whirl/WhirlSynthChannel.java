@@ -30,11 +30,11 @@ public class WhirlSynthChannel extends MonophonicSynthChannel
 	private float mainWidthLFODepth, mainWidthEnvDepth;
 	private float subWidthLFODepth, subWidthEnvDepth;
 	private float[] cutoffDepths;
+	private float slowCutoffMod;
 	
 	private float ampT; // amp tracking factor
 	private float ampLevel;
 	private boolean release = false;
-	private float fstatic = 0f; // the normalised static filter frequency
 	
 	public WhirlSynthChannel(WhirlSynthControls controls) {
 		super("Whirl");
@@ -53,7 +53,7 @@ public class WhirlSynthChannel extends MonophonicSynthChannel
 		subPWMMod = controls.getModulationMixerVariables(2);
 		cutoffMod = controls.getModulationMixerVariables(3);
 		glideVars = controls.getGlideVariables();
-		cutoffDepths = new float[cutoffMod.getDepths().length]; // LFO, Env, Vel, Key, AT, Wheel
+		cutoffDepths = new float[cutoffMod.getDepths().length]; // LFO, Env, Vel, AT, Wheel
 	}
 
 	@Override
@@ -93,22 +93,14 @@ public class WhirlSynthChannel extends MonophonicSynthChannel
 		mainWidthEnvDepth = mainPWMMod.getDepth(1);
 		subWidthLFODepth = subPWMMod.getDepth(0);
 		subWidthEnvDepth = subPWMMod.getDepth(1);
-		float[] rawDepths = cutoffMod.getDepths(); 	// LFO, Env, Vel, Key, AT, Wheel
-		float negCutoffDepth = fstatic;				// min is frequency, so min depth is fstatic
-		float posCutoffDepth = 1f - fstatic;		// approx, not as critical as min
-		for( int i = 0; i < rawDepths.length; i++ ) {
-			cutoffDepths[i] = rawDepths[i] * (rawDepths[i] < 0 ? negCutoffDepth : posCutoffDepth);
-		}
-		float cutoffMod = amplitude * cutoffDepths[2] +
-							fstatic * cutoffDepths[3] +	// !!! TODO ???
-							getChannelPressure() / 128 * cutoffDepths[4] +
-							getController(Controller.MODULATION) / 128 * cutoffDepths[5];
-		if ( cutoffMod > posCutoffDepth ) cutoffMod = posCutoffDepth;
-		else if ( cutoffMod < -negCutoffDepth ) cutoffMod = -negCutoffDepth;
+		cutoffDepths = cutoffMod.getDepths(); 	// LFO, Env, Vel, AT, Wheel
+		slowCutoffMod = amplitude * cutoffDepths[2] +								  // Vel
+						getChannelPressure() / 128 * cutoffDepths[3] +				  // AT
+						getController(Controller.MODULATION) / 128 * cutoffDepths[4]; // Wheel
 		lfo.update();
 		mainOsc.update(frequency);
 		subOsc.update(frequency * 0.5f);
-		fstatic = filter.update(frequency + cutoffMod * sampleRate  / 2);
+		slowCutoffMod += filter.update();
 		ampLevel = ampVars.getLevel() * ampT;
 	}
 
@@ -117,19 +109,19 @@ public class WhirlSynthChannel extends MonophonicSynthChannel
 		// modulation sources
 		float lfoSample = (1f + lfo.getSample()) / 2f; 	// 0..1
 		float envSample = modEnv.getEnvelope(release);	// 0..1
-		float envSampleSquared = envSample * envSample; // 0..1
 		// modulation destinations
 		float vibMod = 1f; // + vibDepth * vibSample / 50; // TODO AT? Wheel?
-		float syncMod = mainSyncLFODepth * lfoSample + mainSyncEnvDepth * envSampleSquared;
+		float syncMod = mainSyncLFODepth * lfoSample + mainSyncEnvDepth * envSample * envSample;
 		float subWidthMod = subWidthLFODepth * lfoSample + subWidthEnvDepth * envSample;
 		float mainWidthMod = mainWidthLFODepth * lfoSample + mainWidthEnvDepth * envSample;
-		float cutoffMod = cutoffDepths[0] * lfoSample + cutoffDepths[1] * envSampleSquared;
+		float cutoffMod = cutoffDepths[0] * lfoSample + cutoffDepths[1] * envSample +
+							slowCutoffMod;
 		// oscillators
 		float sample = subOsc.getSample(vibMod, subWidthMod, oscControl);
 		sample += mainOsc.getSample(vibMod + syncMod, mainWidthMod, oscControl); // syncs to sub
 		oscControl.sync = false;
 		// filter
-		sample = filter.filter(sample, cutoffMod);
+		sample = filter.filter(sample, midiFreq(semitones+cutoffMod) * inverseNyquist);
 		// amplifier
 		return sample * ampEnv.getEnvelope(release) * ampLevel;
 	}

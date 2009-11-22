@@ -19,7 +19,6 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 
 	private List<Voice> voices = new java.util.ArrayList<Voice>();
 	private List<Voice> finished = new java.util.ArrayList<Voice>();
-	protected int sampleRate = 44100;
 	private int polyphony = 8;
 	private AudioBuffer.MetaInfo info;
 	private String name;

@@ -13,6 +13,7 @@ import static uk.org.toot.midi.misc.Controller.*;
 public abstract class SynthChannel implements MidiChannel
 {
 	protected int sampleRate = 44100; // for open()
+	protected float inverseNyquist = 2f / sampleRate;
 	
 	private int rawBend = 8192;
 	private int bendRange = 2; 		// max bend in semitones
@@ -24,18 +25,40 @@ public abstract class SynthChannel implements MidiChannel
 	
 	private byte[] controller = new byte[128];
 	
+	private static float[] freqTable = new float[140];
+	
+	static {
+		createFreqTable();
+	}
+	
 	public SynthChannel() {
 	}
 	
 	public void setLocation(String location) {	
 	}
 	
-	public static float midiFreq(int pitch) { 
+	private static void createFreqTable() {
+		for ( int i = 0; i < freqTable.length; i++ ) {
+			freqTable[i] = midiFreqImpl(i);
+		}
+	}
+	
+	public static float midiFreq(float pitch) {
+		if ( pitch < 0 ) return freqTable[0];
+		if ( pitch >= freqTable.length-1 ) return freqTable[freqTable.length-2];
+		int idx = (int)pitch;
+		float frac = pitch - idx;
+		return freqTable[idx] * (1 - frac) + freqTable[idx+1] * frac;
+	}
+	
+	
+	private static float midiFreqImpl(int pitch) { 
 		return (float)(440.0 * Math.pow( 2.0, ((double)pitch - 69.0) / 12.0 )); 
 	}
 	 
 	protected void setSampleRate(int rate) {
 		sampleRate = rate;
+		inverseNyquist = 2f / sampleRate;
 	}
 	
 	// implement MidiChannel ------------------------------------
