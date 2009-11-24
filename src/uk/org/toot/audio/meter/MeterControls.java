@@ -171,7 +171,7 @@ public class MeterControls extends AudioControls
             return floatValues[i];
         }
 
-        public boolean isWidthLimited() { return false; }
+        public int getWidthLimit() { return 127; }
     }
 
     /**
@@ -189,7 +189,7 @@ public class MeterControls extends AudioControls
 			resetMaxima();
     	}
 
-        public boolean isWidthLimited() { return false; }
+        public int getWidthLimit() { return 127; }
     }
 
     /**
@@ -241,7 +241,7 @@ public class MeterControls extends AudioControls
 //            return Float.valueOf((String)getValue());
         }
 
-        public boolean isWidthLimited() { return false; }
+        public int getWidthLimit() { return 127; }
     }
 
 

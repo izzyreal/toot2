@@ -25,6 +25,7 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	protected float amplitude;
 	protected float semitones;
 	private float targetSemitones;
+	private float semitoneIncrement;
 
 	public MonophonicSynthChannel(String name) {
 		this.name = name;
@@ -56,8 +57,8 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 		} else { 										// fingered portamento
 			int nblocks = getGlideMilliseconds() * sampleRate / 1000 / sampleCount;				
 			glideFactor = (float)Math.pow(targetFrequency/frequency, 1.0/nblocks);
+			semitoneIncrement = (targetSemitones - semitones) / nblocks;
 			gliding = true;
-			semitones = targetSemitones; // TODO semitones glide
 		}
 	}
 
@@ -96,15 +97,18 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	}
 	
 	private void glide() {
+		semitones += semitoneIncrement;
 		frequency *= glideFactor;
 		if ( glideFactor < 1f ) {
 			if ( frequency <= targetFrequency ) {
 				frequency = targetFrequency;
+				semitones = targetSemitones;
 				gliding = false;
 			}
 		} else {
 			if ( frequency >= targetFrequency ) {
 				frequency = targetFrequency;
+				semitones = targetSemitones;
 				gliding = false;				
 			}
 		}

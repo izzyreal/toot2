@@ -88,7 +88,7 @@ public abstract class EnumControl extends Control
         return getValues().indexOf(getValue());
     }
 
-    public boolean isWidthLimited() { return true; }
+    public int getWidthLimit() { return 40; }
     
     public boolean hasLabel() { return false; }
 }

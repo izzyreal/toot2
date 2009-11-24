@@ -39,7 +39,7 @@ public class WhirlSynthControls extends CompoundControl
 	
 
 	private DualMultiWaveOscillatorControls[] oscillatorControls;
-	private StateVariableFilterControls[] filterControls;
+	private DualStateVariableFilterControls[] filterControls;
 	private EnvelopeControls[] envelopeControls;
 	private AmplifierControls amplifierControls;
 	private ModulationMixerControls[] modulationControls;
@@ -50,7 +50,7 @@ public class WhirlSynthControls extends CompoundControl
 		super(WHIRL_CHANNEL_ID, NAME);
 		
 		oscillatorControls = new DualMultiWaveOscillatorControls[2];
-		filterControls = new StateVariableFilterControls[2];
+		filterControls = new DualStateVariableFilterControls[2];
 		envelopeControls = new EnvelopeControls[2];
 		modulationControls = new ModulationMixerControls[4];
 		lfoControls = new LFOControls[1];
@@ -66,7 +66,7 @@ public class WhirlSynthControls extends CompoundControl
 		row1.add(oscillatorControls[0]);
 		oscillatorControls[1] = new DualMultiWaveOscillatorControls(1, "Sub Osc", OSC2_OFFSET, true);
 		row1.add(oscillatorControls[1]);
-		filterControls[0] = new StateVariableFilterControls(0, "Filter", SVF_OFFSET);
+		filterControls[0] = new DualStateVariableFilterControls(0, "Filter", SVF_OFFSET);
 		row1.add(filterControls[0]);
 		amplifierControls = new AmplifierControls(0, getString("Amplifier"), AMP_OFFSET);
 		row1.add(amplifierControls);
@@ -105,7 +105,7 @@ public class WhirlSynthControls extends CompoundControl
 		return oscillatorControls[instance];
 	}
 	
-	public StateVariableFilterVariables getFilterVariables(int instance) {
+	public DualStateVariableFilterVariables getFilterVariables(int instance) {
 		return filterControls[instance];
 	}
 	

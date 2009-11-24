@@ -6,7 +6,7 @@ import uk.org.toot.synth.modules.GlideVariables;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.EnvelopeGenerator;
 import uk.org.toot.synth.modules.envelope.EnvelopeVariables;
-import uk.org.toot.synth.modules.filter.StateVariableFilter;
+import uk.org.toot.synth.modules.filter.DualStateVariableFilter;
 import uk.org.toot.synth.modules.mixer.ModulationMixerVariables;
 import uk.org.toot.synth.modules.oscillator.LFO;
 import uk.org.toot.synth.modules.oscillator.DualMultiWaveOscillator;
@@ -19,7 +19,7 @@ public class WhirlSynthChannel extends MonophonicSynthChannel
 
 	private OscillatorControl oscControl;
 	private DualMultiWaveOscillator mainOsc, subOsc;
-	private StateVariableFilter filter;
+	private DualStateVariableFilter filter;
 	private EnvelopeGenerator modEnv, ampEnv;
 	private LFO lfo;
 	
@@ -41,7 +41,7 @@ public class WhirlSynthChannel extends MonophonicSynthChannel
 		oscControl = new OscillatorControl();
 		mainOsc = new DualMultiWaveOscillator(this, controls.getOscillatorVariables(0));
 		subOsc = new DualMultiWaveOscillator(this, controls.getOscillatorVariables(1));
-		filter = new StateVariableFilter(controls.getFilterVariables(0));
+		filter = new DualStateVariableFilter(controls.getFilterVariables(0));
 		ampVars = controls.getAmplifierVariables();
 		modEnvVars = controls.getEnvelopeVariables(1);
 		modEnv = new EnvelopeGenerator(modEnvVars);

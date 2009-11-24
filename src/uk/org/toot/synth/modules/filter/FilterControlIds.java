@@ -6,7 +6,7 @@ public interface FilterControlIds
 	public final static int RESONANCE = 1;
 	public final static int DRIVE = 2;
 	//
-	//
+	public final static int TYPE = 4;		// for dual svf
 	public final static int MODE_MIX  = 5;
 	public final static int BAND_MODE = 6;
 }

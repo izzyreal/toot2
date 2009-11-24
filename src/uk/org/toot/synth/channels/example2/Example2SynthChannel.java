@@ -91,8 +91,8 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 		private MultiWaveOscillator oscillator1;
 		private MultiWaveOscillator oscillator2;
 		private MultiWaveOscillator oscillator3;
-		private Filter lpFilter;
-		private Filter svFilter;
+		private MoogFilter2 lpFilter;
+		private StateVariableFilter svFilter;
 		private EnvelopeGenerator envelopeA;
 		private EnvelopeGenerator envelope1;
 		private EnvelopeGenerator envelope2;

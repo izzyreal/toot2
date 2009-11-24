@@ -1,6 +1,6 @@
 package uk.org.toot.synth.modules.filter;
 
-public class StateVariableFilterElement implements FilterElement
+public class StateVariableFilterElement
 {
 	private float prev = 0f;
 	private float low, high, band, notch;

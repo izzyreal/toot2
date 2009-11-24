@@ -32,11 +32,7 @@ public class BooleanControlPanel extends ControlPanel
 	        	@Override
     	        public Dimension getMaximumSize() {
     	            Dimension size = super.getPreferredSize();
-                    if ( control.isWidthLimited() ) {
-	                	size.width = small ? 21 : 42;
-                    } else {
-                        size.width = 128;
-                    }
+    	            size.width = small ? 21 : control.getWidthLimit();
                 	return size;
             	}
 	        	@Override
@@ -60,11 +56,7 @@ public class BooleanControlPanel extends ControlPanel
 	        	@Override
     	        public Dimension getMaximumSize() {
     	            Dimension size = super.getPreferredSize();
-                    if ( control.isWidthLimited() ) {
-		                size.width = 45;
-                    } else {
-                        size.width = 128;
-                    }
+    	            size.width = control.getWidthLimit()+3;
                 	return size;
             	}
         	};

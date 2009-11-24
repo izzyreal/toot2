@@ -1,7 +1,7 @@
 package uk.org.toot.synth.modules.filter;
 
 //http://musicdsp.org/archive.php?classid=3#26
-public class MoogFilterElement implements FilterElement
+public class MoogFilterElement
 {
 	private double in1, in2, in3, in4, out1, out2, out3, out4;
 

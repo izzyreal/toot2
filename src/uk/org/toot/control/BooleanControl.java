@@ -118,5 +118,5 @@ public class BooleanControl extends Control
 
     public int getIntValue() { return getValue() ? 1 : 0; }
 
-    public boolean isWidthLimited() { return true; }
+    public int getWidthLimit() { return 42; }
 }

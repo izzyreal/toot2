@@ -84,7 +84,6 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 			public List getValues() {
 				return MultiWaves.getNames();
 			}
-//		    public boolean isWidthLimited() { return false; }
 		};
 	}
 
