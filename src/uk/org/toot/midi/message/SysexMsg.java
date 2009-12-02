@@ -7,7 +7,7 @@ import javax.sound.midi.SysexMessage;
 import javax.sound.midi.InvalidMidiDataException;
 
 /**
- * The class for creating accessing and mutating arbitrary length MidiMessages
+ * The class for creating, accessing and mutating arbitrary length MidiMessages
  * representing System Exclusive messages without knowledge of the
  * implementation class. 
  */
