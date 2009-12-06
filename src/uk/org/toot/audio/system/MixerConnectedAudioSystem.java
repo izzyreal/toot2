@@ -93,7 +93,7 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
 	// to enable auto connection
     protected void createConnection(AudioOutput from, AudioMixerStrip to, int flags) {
     	if ( getConnectionFrom(from.getName(), from.getLocation()) != null ) {
-    		throw new IllegalStateException(from.getName()+" is already connected");
+    		return; //throw new IllegalStateException(from.getName()+" is already connected");
     	}
     	AudioConnection connection = new MixerInputConnection(from, to, flags);
     	connections.add(connection);
