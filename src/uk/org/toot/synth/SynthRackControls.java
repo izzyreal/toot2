@@ -35,8 +35,10 @@ public class SynthRackControls extends CompoundControl
 			remove(old);
 		}
 		if ( controls != null ) {
-	        if ( find(controls.getName()) != null ) {
+			String name = controls.getName();
+	        if ( find(name) != null ) {
 	        	disambiguate(controls);
+	        	controls.setAnnotation(name); // annotation isn't disambiguated
 	        }
 			add(controls);			
 		}

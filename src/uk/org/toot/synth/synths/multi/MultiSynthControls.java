@@ -20,8 +20,10 @@ public class MultiSynthControls extends ChannelledSynthControls
 			remove(old);
 		}
 		if ( c != null ) {
-	        if ( find(c.getName()) != null ) {
+			String name = c.getName();
+	        if ( find(name) != null ) {
 	        	disambiguate(c);
+	        	c.setAnnotation(name); // annotation isn't disambiguated
 	        }
 		}
 		super.setChannelControls(chan, c);
