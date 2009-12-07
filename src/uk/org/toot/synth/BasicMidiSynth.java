@@ -10,6 +10,9 @@ import uk.org.toot.audio.system.AudioOutput;
 import uk.org.toot.midi.core.AbstractMidiDevice;
 import uk.org.toot.midi.message.*;
 
+import static uk.org.toot.midi.message.ChannelMsg.*;
+import static uk.org.toot.midi.misc.Controller.*;
+
 /**
  * A BasicMidiSynth is a MidiSynth with 16 SynthChannels which may be set by the user.
  * So it is multitimbral and each SynthChannel may be a different implementation,
@@ -56,7 +59,7 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 	}
 	
 	public void transport(MidiMessage msg, long timestamp) {
-		if ( ChannelMsg.isChannel(msg) ) {
+		if ( isChannel(msg) ) {
 			int chan = ChannelMsg.getChannel(msg);
 			SynthChannel synthChannel = synthChannels[chan];
 			if ( synthChannel == null ) return;
@@ -70,16 +73,25 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 					synthChannel.noteOff(pitch, velocity);
 				}
 			} else {
-				int cmd = ChannelMsg.getCommand(msg);
+				int cmd = getCommand(msg);
 				switch ( cmd ) {
-				case ChannelMsg.PITCH_BEND:
-					synthChannel.setPitchBend(ChannelMsg.getData1and2(msg));
+				case PITCH_BEND:
+					synthChannel.setPitchBend(getData1and2(msg));
 					break;
-				case ChannelMsg.CONTROL_CHANGE:
-					synthChannel.controlChange(ChannelMsg.getData1(msg), ChannelMsg.getData2(msg));
+				case CONTROL_CHANGE:
+					int controller = getData1(msg);
+					if ( controller == ALL_CONTROLLERS_OFF ) {
+						synthChannel.resetAllControllers();
+					} else if ( controller == ALL_NOTES_OFF ) {
+						synthChannel.allNotesOff();
+					} else if ( controller == ALL_SOUND_OFF ) {
+						synthChannel.allSoundOff();
+					} else {
+						synthChannel.controlChange(controller, getData2(msg));
+					}
 					break;
 				case ChannelMsg.CHANNEL_PRESSURE:
-					synthChannel.setChannelPressure(ChannelMsg.getData1(msg));
+					synthChannel.setChannelPressure(getData1(msg));
 					break;
 				}
 			}

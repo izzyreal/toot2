@@ -116,8 +116,7 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	
 	@Override
 	public void allNotesOff() {
-		// TODO Auto-generated method stub
-		
+		release();
 	}
 
 	@Override
