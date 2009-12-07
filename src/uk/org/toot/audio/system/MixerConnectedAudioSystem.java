@@ -23,6 +23,7 @@ import uk.org.toot.audio.mixer.MixerControls;
  * When an output port is removed the connection to the mixer strip is closed.
  * But auto connect should be disabled during snapshot configuration,
  * because connections will be restored somewhere else.
+ * However auto disconnect should still be allowed during snapshot configuration.
  * Each port may only have a single connection.
  */
 public class MixerConnectedAudioSystem extends DefaultAudioSystem
@@ -43,7 +44,6 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
      */
     @Override
     public void notifyObservers(Object obj) {
-    	if ( !autoConnect ) return;
     	if ( obj instanceof AudioDevice ) {
     		AudioDevice device = (AudioDevice)obj;
     		boolean added = getAudioDevices().contains(device);
@@ -53,7 +53,9 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
    			for ( AudioOutput output : outputs ) {
    				if ( added ) {
 //   	   				System.out.println("AudioOutput "+output.getName()+" already present");
-   					createConnectionFrom(output);
+   					if ( autoConnect ) {
+   						createConnectionFrom(output);
+   					}
    				} else {
    					closeConnectionFrom(output);
    				}
@@ -63,9 +65,11 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
     		boolean added = getAudioOutputs().contains(output);
 //    		String change = added ? "added" : "removed";
 //    		System.out.println("AudioOutput "+output.getName()+" "+change);
-    		if ( added )
-    			createConnectionFrom(output);
-    		else {
+    		if ( added ) {
+    			if ( autoConnect ) {
+    				createConnectionFrom(output);
+    			}
+    		} else {
     			closeConnectionFrom(output);
     		}
     	}
@@ -240,7 +244,7 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
         	if ( from == null || to == null ) {
         		throw new IllegalArgumentException("MixerInputConnection constructor null argument");
         	}
-        	System.out.println("create AudioConnection from "+nameAndLocation(from)+" to "+to.getName());
+//        	System.out.println("create AudioConnection from "+nameAndLocation(from)+" to "+to.getName());
             this.from = from;
             this.to = to;
             try {
@@ -251,7 +255,7 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
         }
 
         public void close() {
-        	System.out.println("close AudioConnection from "+nameAndLocation(from)+" to "+to.getName());
+//        	System.out.println("close AudioConnection from "+nameAndLocation(from)+" to "+to.getName());
         	try {
         		to.setInputProcess(null);
         	} catch ( Exception e ) {
