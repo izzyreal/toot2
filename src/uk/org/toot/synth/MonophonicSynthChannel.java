@@ -117,6 +117,7 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	@Override
 	public void allNotesOff() {
 		release();
+		noteCount = 0;
 	}
 
 	@Override
