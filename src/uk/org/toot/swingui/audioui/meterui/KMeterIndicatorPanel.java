@@ -63,7 +63,7 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
         	add(movement[1] = new MeterMovement(indicator)); // front right
         	add(movement[3] = new MeterMovement(indicator)); // rear right
         	add(scale = new MeterScale());
-        	add(movement[5] = new MeterMovement(indicator)); // center
+        	add(movement[5] = new MeterMovement(indicator)); // LF
         }
     }
 
@@ -184,6 +184,7 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
         // note maximum marker is always at or above peak marker
         // note peak marker is always at or above average bar
         // which simplifies undrawing/drawing
+        // ACTUALLY NOT GUARANTEED DUE TO RACE CONDITIONS !!!
         public void updateState(MeterControls.ChannelState state) {
             averageBar.setdB(dBK(state.average));
             maxAverageMarker.setdB(dBK(state.maxAverage));
@@ -192,7 +193,8 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
         }
 
 
-        protected class Marker {
+        protected class Marker 
+        {
             protected Color color;
             protected int prevY = 2000; // for undrawing, component coordinate
             protected float prevdB = -150; // dB
@@ -224,7 +226,8 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
         }
 
 
-        protected class AverageBar extends Marker {
+        protected class AverageBar extends Marker 
+        {
             public AverageBar() {
                 super(Color.green); // !!!
             }
@@ -232,13 +235,18 @@ public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
             protected void indicate(float dB) {
                 float mindB = controls.getMindB();
                 if ( dB < mindB && prevdB < mindB ) return;
+                
                 prevdB = dB;
+                int y = dBtoY(dB);
+                if ( y == prevY ) return; // no change so do nothing
+                if ( y  < 0 ) y = 0;
+                
                 Graphics g = getGraphics(); // !!!
                 int w = getWidth() - 2;
                 int h = getHeight() - 1;
-                int y = dBtoY(dB);
-                // if less dB (more y) just blank difference
+            
                 if ( y > prevY ) {
+                    // if less dB (more y) just blank difference
                 	g.setColor(Color.DARK_GRAY);
        	           	g.fillRect(1, prevY, w, y-prevY);
 	                prevY = y;

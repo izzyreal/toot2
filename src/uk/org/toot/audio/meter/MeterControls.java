@@ -114,6 +114,7 @@ public class MeterControls extends AudioControls
     public void setAverage(int chan, float average) {
         if ( invalidChannel(chan) ) return;
         ChannelState state = channelState[chan];
+        if ( average != average ) average = 0; // NaN protection
         // average at least 1024 samples to avoid LF wobble !!! !!!
 		state.average += averageSmooth * (average - state.average);
         if ( state.average > state.maxAverage ) {
