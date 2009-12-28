@@ -10,4 +10,5 @@ import static uk.org.toot.audio.id.TootAudioControlsId.TOOL_BASE_ID;
 class ToolIds
 {
     final static int DENORMAL_ID = TOOL_BASE_ID + 1;
+    final static int NAN_TECTOR_ID = TOOL_BASE_ID + 2;
 }
