@@ -82,6 +82,9 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             // default compound UI
             return createCompoundComponent(cc, a, null, this, true, hasHeader);
         } else if ( control instanceof FloatControl ) {
+        	if ( control.isIndicator() ) {
+        		return new FloatIndicatorPanel((FloatControl)control);
+        	}
             JPanel floatPanel;
             floatPanel = new FloatControlPanel((FloatControl)control, axis);
    	        floatPanel.setAlignmentY(0.25f); // ??? !!!
