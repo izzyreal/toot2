@@ -254,7 +254,7 @@ public class MeterControls extends AudioControls
     {
         // I'm linear in terms of dB
         public MeterIndicator(String name) {
-            super(METER_INDICATOR, name, meterLaw, 0.5f, -100f);
+            super(METER_INDICATOR, name, meterLaw, 0.5f, -60f);
             indicator = true;
         }
     }
