@@ -148,9 +148,9 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                     String name = AudioServices.lookupModuleName(
                         tin.getProviderId(), tin.getModuleId());
                     if ( name == null || name.length() == 0 ) {
-/*                        System.err.println("configure: no name to lookup for "
+                        System.err.println("configure: no name to lookup for "
                             +tin.getProviderId()+"/"+tin.getModuleId()+"/"+ii+
-                            " in "+stripName); */
+                            " in "+stripName); 
                         n += 1;
                         continue;
                     }
@@ -216,7 +216,7 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                     instanceIndex = ii;
                 }
                 if ( module == null ) {
-	                System.out.println("recall: no module "+providerId+"/"+moduleId+"/"+instanceIndex+" in "+stripName);
+	                System.err.println("recall: no module "+providerId+"/"+moduleId+"/"+instanceIndex+" in "+stripName);
                     continue;
                 }
                 Control control = module.deepFind(cid);
