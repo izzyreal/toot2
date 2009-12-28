@@ -57,6 +57,7 @@ abstract public class AudioServiceProvider extends ServiceProvider
      */
     protected void addControls(Class clazz, int moduleId, String name, String description, 
     		String version) {
+    	assert moduleId < 0x80; // required for midi persistence
         add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version));
     }
 
