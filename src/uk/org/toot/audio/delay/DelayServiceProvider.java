@@ -46,11 +46,20 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         	getString("BPM.Delay"),
         	family,
         	"0.1");
+        addControls(
+            PhaserControls.class,
+            DelayIds.PHASER_ID,
+            getString("Phaser"),
+            family,
+            "0.1",
+            ChannelFormat.MONO,
+            null);
 
         add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.1");
         add(StereoModulatedDelayProcess.class, getString("Stereo.Modulated.Delay"), family, "0.1");
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
         add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.1");
+        add(PhaserProcess.class, getString("Phaser"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -67,6 +76,8 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             return new MultiTapDelayProcess(new ImageSourceDesign((RoomSimulatorControls)c));
         } else if ( c instanceof TempoDelayControls ) {
         	return new TempoDelayProcess((TempoDelayControls)c);
+        } else if ( c instanceof PhaserControls ) {
+        	return new PhaserProcess((PhaserControls)c);
         }
         return null; // caller then tries another provider
     }
