@@ -9,8 +9,7 @@ public class NaNTectorControls extends AudioControls
 {
 	private final static int NAN_PERCENT_ID = 1;
 	private final static float ALPHA = 0.99f;
-	
-	private ControlLaw percentLaw = new LinearLaw(0, 100, "%");
+	private final static ControlLaw percentLaw = new LinearLaw(0, 100, "%");
 	
 	private float nanAverage = 0f;
 	

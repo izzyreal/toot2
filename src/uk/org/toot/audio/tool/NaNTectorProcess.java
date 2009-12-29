@@ -24,8 +24,7 @@ public class NaNTectorProcess extends SimpleAudioProcess
 		int nans = 0;
 		float[] samples;
 		float f;
-		
-		
+				
 		for ( int c = 0; c < nc; c++ ) {
 			samples = buffer.getChannel(c);
 			for ( int s = 0; s < ns; s++ ) {
@@ -34,10 +33,8 @@ public class NaNTectorProcess extends SimpleAudioProcess
 				samples[s] = 0;
 				nans++;
 			}
-		}
-		
-		controls.setNaNFactor((float)nans / sc);
-		
+		}		
+		controls.setNaNFactor((float)nans / sc);		
 		return AUDIO_OK;
 	}
 }

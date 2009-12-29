@@ -6,38 +6,39 @@
 package uk.org.toot.audio.tool;
 
 import uk.org.toot.audio.core.AudioControls;
-import uk.org.toot.control.*;
-import java.util.List;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.FloatControl;
+import uk.org.toot.control.LinearLaw;
 
 public class DenormalControls extends AudioControls
 {
-    private static int MODE_ID = 1;
-
-    private static List<Object> modeValues;
-
-    static {
-        modeValues = new java.util.ArrayList<Object>();
-        modeValues.add("Count");
-        modeValues.add("Zero");
-    }
-
+	private final static int DENORM_PERCENT_ID = 1;
+	private final static float ALPHA = 0.99f;	
+	private final static ControlLaw percentLaw = new LinearLaw(0, 100, "%");
+	
+	private float denormAverage = 0f;
+	
     public DenormalControls() {
         super(ToolIds.DENORMAL_ID, "Denorm");
-        add(new ModeControl());
-        IntegerLaw law = new IntegerLaw(3, 7, "");
-        add(new IntegerControl(ToolIds.DENORMAL_ID+1, "Chan", law, 0f, 5));
+        add(new DenormIndicator());
     }
 
     public boolean canBypass() { return true; }
 
-    private class ModeControl extends EnumControl
+    public void setDenormFactor(float factor) {
+    	denormAverage = (ALPHA * denormAverage) + (1f - ALPHA) * factor;
+    }
+    
+    private class DenormIndicator extends FloatControl
     {
-        public ModeControl() {
-            super(MODE_ID, "Mode", "Zero");
-        }
-
-        public List getValues() {
-            return modeValues;
-        }
+		public DenormIndicator() {
+			super(DENORM_PERCENT_ID, "Denorms", percentLaw, 0.1f, 0f);
+			indicator = true;
+		}
+    	
+	    @Override
+		public float getValue() {
+			return denormAverage * 100;
+		}
     }
 }
