@@ -84,8 +84,8 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         	if ( isPeak ) {
         		for ( int c = 0; c < nc; c++ ) {
         			key = Math.max(key, Math.abs(samples[c][i]));
-            		targetGain = function(key);
         		}
+        		targetGain = function(key);
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
         		// the rms side chain calculations, every millisecond
         		// rms should be square, lowpass, root
