@@ -72,15 +72,18 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         int len = buffer.getSampleCount();
         int mslen = (int)(buffer.getSampleRate() / 1000);
 
-        float[] samples;
         float targetGain = 1f; // unity
         float gain = targetGain * makeupGain;
 
+        float[][] samples = new float[nc][];
+		for ( int c = 0; c < nc; c++ ) {
+			samples[c] = buffer.getChannel(c);
+		}
         for ( int i = 0; i < len; i++ ) {
         	float key = 0;
         	if ( isPeak ) {
         		for ( int c = 0; c < nc; c++ ) {
-        			key = Math.max(key, Math.abs(buffer.getChannel(c)[i]));
+        			key = Math.max(key, Math.abs(samples[c][i]));
             		targetGain = function(key);
         		}
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
@@ -89,9 +92,8 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         		float sample;
         		float sumOfSquares = 0f;
         		for ( int c = 0; c < nc; c++ ) {
-        			samples = buffer.getChannel(c);
         			for ( int j = 0; j < mslen; j++ ) {
-        				sample = samples[i+j];
+        				sample = samples[c][i+j];
         				sumOfSquares += sample * sample;
         			}
         		}
@@ -102,7 +104,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         	gain = dynamics(targetGain) * makeupGain;
         	// affect all channels identically to preserve positional image
         	for ( int c = 0; c < nc; c++ ) {
-        		buffer.getChannel(c)[i] *= gain;
+        		samples[c][i] *= gain;
         	}
         }
         // we only announce the final value at the end of the buffer
