@@ -23,6 +23,8 @@ public class Limiter extends DynamicsProcess
         public Controls() {
             super(DynamicsIds.LIMITER_ID, getString("Limiter"));
         }
+        
+		protected boolean hasGainReductionIndicator() { return true; }
     }
 }
 

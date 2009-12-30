@@ -54,7 +54,7 @@ public class GainReductionIndicatorPanel extends AbstractMeterIndicatorPanel
         public MeterMovement() {
             setBackground(Color.darkGray);
         	setMaximumSize(new Dimension(128, 10));
-    	    setPreferredSize(new Dimension(100, 10));
+    	    setPreferredSize(new Dimension(64, 10));
 	        setMinimumSize(new Dimension(24, 6));
         }
 
@@ -85,24 +85,24 @@ public class GainReductionIndicatorPanel extends AbstractMeterIndicatorPanel
                 int x1 = dBtoX(-12); // !!!
                 if ( x > prevX ) {
                 	g.setColor(Color.darkGray);
-                	g.fillRect(prevX, 1, x-1, h);
+                	g.fillRect(prevX, 1, x-prevX, h);
+                } else {
+                	g.setColor(Color.green);
+                	if ( dB > -6 ) {
+                		g.fillRect(x, 1, w-x, h);
+                	} else if ( dB > -12 ) {
+                		g.fillRect(x0, 1, w-x0, h);
+                		g.setColor(Color.yellow);
+                		g.fillRect(x, 1, x0-x, h);
+                	} else {
+                		g.fillRect(x0, 1, w-x0, h);
+                		g.setColor(Color.yellow);
+                		g.fillRect(x1, 1, x0-x1, h);
+                		g.setColor(Color.red);
+                		g.fillRect(x, 1, x1-x, h);
+                	}
                 }
                 prevX = x;
-
-                g.setColor(Color.green);
-                if ( dB > -6 ) {
-       	           	g.fillRect(x, 1, w-x, h);
-                } else if ( dB > -12 ) {
-       	           	g.fillRect(x0, 1, w-x0, h);
-                    g.setColor(Color.yellow);
-       	           	g.fillRect(x, 1, x0-x, h);
-                } else {
-       	           	g.fillRect(x0, 1, w-x0, h);
-                    g.setColor(Color.yellow);
-       	           	g.fillRect(x1, 1, x0-x1, h);
-                    g.setColor(Color.red);
-       	           	g.fillRect(x, 1, x1-x, h);
-                }
 
                 // draw the scales
                 g.setColor(Color.darkGray);

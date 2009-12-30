@@ -71,7 +71,8 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
 	// http://www.musicdsp.org/showArchiveComment.php?ArchiveID=136
     // return per millisecond factor for 99% in specified milliseconds
     protected float deriveTimeFactor(float milliseconds) {
-        float k = LOG_0_01 / milliseconds ; // k, per millisecond
+    	float ns = milliseconds * sampleRate / 1000;
+        float k = LOG_0_01 / ns ; // k, per sampler
         return (float)Math.exp(k);
     }
 

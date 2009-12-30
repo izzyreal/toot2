@@ -72,52 +72,46 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         int len = buffer.getSampleCount();
         int mslen = (int)(buffer.getSampleRate() / 1000);
 
-        float[]/*[]*/ samples; // = getAllChannelsSamples(buffer); // !!!
-        float dynamicGain = 1f; // unity
-        float gain = dynamicGain * makeupGain;
+        float[] samples;
+        float targetGain = 1f; // unity
+        float gain = targetGain * makeupGain;
 
-        for (int i = 0; i < len; i++) {
-            // the side chain calculations, every millisecond
-            if ( (i % mslen) == 0 && (i + mslen) < len ) {
-	            double key = 0;
-                if ( isPeak ) {
-   	    	    	for ( int c = 0; c < nc; c++ ) {
-    					samples = buffer.getChannel(c);
-	                	for ( int j = 0; j < mslen; j++ ) {
-        		        	key = Math.max(key, Math.abs(samples[i+j]));
-    	        		}
-	                }
-                } else { // rms
-                	float sample;
-                	float sumOfSquares = 0f;
-  	    	    	for ( int c = 0; c < nc; c++ ) {
-    					samples = buffer.getChannel(c);
-	                	for ( int j = 0; j < mslen; j++ ) {
-        		        	sample = samples[i+j];
-                            sumOfSquares += sample * sample;
-    	        		}
-	                }
-                	key = Math.sqrt(sumOfSquares / (mslen * nc));
-                }
-		        dynamicGain = evaluateSideChain((float)(key));
-	            gain = dynamicGain * makeupGain;
-            }
-            // affect all channels identically to preserve positional image
-            for ( int c = 0; c < nc; c++ ) {
-                buffer.getChannel(c)[i] *= gain;
-            }
+        for ( int i = 0; i < len; i++ ) {
+        	float key = 0;
+        	if ( isPeak ) {
+        		for ( int c = 0; c < nc; c++ ) {
+        			key = Math.max(key, Math.abs(buffer.getChannel(c)[i]));
+            		targetGain = function(key);
+        		}
+        	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
+        		// the rms side chain calculations, every millisecond
+        		// rms should be square, lowpass, root
+        		float sample;
+        		float sumOfSquares = 0f;
+        		for ( int c = 0; c < nc; c++ ) {
+        			samples = buffer.getChannel(c);
+        			for ( int j = 0; j < mslen; j++ ) {
+        				sample = samples[i+j];
+        				sumOfSquares += sample * sample;
+        			}
+        		}
+        		key = (float)Math.sqrt(sumOfSquares / (mslen * nc));
+        		targetGain = function(key);
+        	}
+
+        	gain = dynamics(targetGain) * makeupGain;
+        	// affect all channels identically to preserve positional image
+        	for ( int c = 0; c < nc; c++ ) {
+        		buffer.getChannel(c)[i] *= gain;
+        	}
         }
         // we only announce the final value at the end of the buffer
         // this effectively subsamples the dynamic gain
         // but typically attack and release will provide sufficient smoothing
         // for the avoidance of aliasing
-		vars.setDynamicGain(dynamicGain);
+		vars.setDynamicGain(gain);
         wasBypassed = bypassed;
         return AUDIO_OK;
-    }
-
-	protected float evaluateSideChain(float key) {
-        return dynamics(function(key));
     }
 
     // effect of comparison of detected against threshold - subclass issue
