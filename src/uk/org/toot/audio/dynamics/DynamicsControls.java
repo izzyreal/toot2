@@ -54,13 +54,13 @@ abstract public class DynamicsControls extends AudioControls
         add(g1);
 
         ControlColumn g2 = new ControlColumn();
-        attackControl = createAttackControl(0.1f, 100f, 1f);
+        attackControl = createAttackControl(getMinimumAttack(), 100f, 20f);
         g2.add(attackControl);
         if ( hasHold() ) {
 	        holdControl = createHoldControl(0, 1000, 10);
     	    g2.add(holdControl);
         }
-        releaseControl = createReleaseControl(2, 2000, 200);
+        releaseControl = createReleaseControl(getMinimumRelease(), 2000, 200);
         g2.add(releaseControl);
 		add(g2);
 
@@ -84,6 +84,14 @@ abstract public class DynamicsControls extends AudioControls
         return -40f; // -60 in Expander, Gate !!!
     }
 
+    protected float getMinimumAttack() {
+    	return 0.1f;
+    }
+    
+    protected float getMinimumRelease() {
+    	return 2f;
+    }
+    
     protected FloatControl createThresholdControl(float min) {
         LinearLaw law = new LinearLaw(min, 20f, "dB");
         FloatControl threshold = new FloatControl(THRESHOLD+idOffset, getString("Threshold"), law, 0.1f, 0f);
@@ -94,7 +102,7 @@ abstract public class DynamicsControls extends AudioControls
     protected boolean hasRatio() { return false; }
 
     protected FloatControl createRatioControl() {
-        ControlLaw law = new LogLaw(1f, 10f, "");
+        ControlLaw law = new LogLaw(1.5f, 10f, "");
         FloatControl ratio = new FloatControl(RATIO+idOffset, getString("Ratio"), law, 0.1f, 2f);
         ratio.setInsertColor(java.awt.Color.magenta.darker());
         return ratio;

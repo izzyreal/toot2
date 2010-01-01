@@ -2,7 +2,6 @@
 
 package uk.org.toot.audio.dynamics;
 
-import uk.org.toot.audio.core.KVolumeUtils;
 import org.tritonus.share.sampled.TVolumeUtils;
 
 import static uk.org.toot.misc.Localisation.*;
@@ -15,15 +14,12 @@ public class Compressor extends DynamicsProcess
 
     protected float function(float value) {
         if ( value > threshold ) { // -knee/2 etc. interpolate around knee !!!
-        	float valdB = (float)KVolumeUtils.lin2log(value);
-            float overdB = valdB - thresholddB;
-            float gainReductiondB = -overdB * (ratio - 1f) / ratio;
-            float gain = (float)TVolumeUtils.log2lin(gainReductiondB);
-            return gain;
+        	float overdB = (float)TVolumeUtils.lin2log(value/threshold);
+            return (float)TVolumeUtils.log2lin(overdB * ratio2);
         }
         return 1f;
     }
-
+    
     public static class Controls extends DynamicsControls
     {
         public Controls() {
@@ -39,5 +35,9 @@ public class Compressor extends DynamicsProcess
 	    protected boolean hasRatio() { return true; }
 
 	    protected boolean hasGain() { return true; }
+
+	    protected float getMinimumAttack() { return 20f; }
+	    
+	    protected float getMinimumRelease() { return 200f; }	    
     }
 }

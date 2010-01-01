@@ -69,10 +69,10 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
     private static float LOG_0_01 = (float)Math.log(0.01);
     // http://www.physics.uoguelph.ca/tutorials/exp/Q.exp.html
 	// http://www.musicdsp.org/showArchiveComment.php?ArchiveID=136
-    // return per millisecond factor for 99% in specified milliseconds
+    // return per sample factor for 99% in specified milliseconds
     protected float deriveTimeFactor(float milliseconds) {
     	float ns = milliseconds * sampleRate / 1000;
-        float k = LOG_0_01 / ns ; // k, per sampler
+        float k = LOG_0_01 / ns ; // k, per sample
         return (float)Math.exp(k);
     }
 

@@ -15,12 +15,17 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
     protected float ratio;
     protected float attack, release;
     protected float makeupGain;
+    protected float ratio2;
 
     protected ProcessVariables vars;
 
     private boolean wasBypassed;
 
     private int sampleRate = 0;
+
+    private int NSQUARESUMS = 10;
+    private float[] squaresums = new float[NSQUARESUMS];
+    private int nsqsum = 0;
     
     public DynamicsProcess(ProcessVariables vars) {
         this(vars, false);
@@ -48,6 +53,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         attack = vars.getAttack();
         release = vars.getRelease();
         makeupGain = vars.getGain();
+        ratio2 = (1f - ratio) / ratio;
     }
 
     /**
@@ -73,7 +79,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         int mslen = (int)(buffer.getSampleRate() / 1000);
 
         float targetGain = 1f; // unity
-        float gain = targetGain * makeupGain;
+        float gain = makeupGain; // keeps compiler happy
 
         float[][] samples = new float[nc][];
 		for ( int c = 0; c < nc; c++ ) {
@@ -88,7 +94,6 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         		targetGain = function(key);
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
         		// the rms side chain calculations, every millisecond
-        		// rms should be square, lowpass, root
         		float sample;
         		float sumOfSquares = 0f;
         		for ( int c = 0; c < nc; c++ ) {
@@ -97,14 +102,20 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         				sumOfSquares += sample * sample;
         			}
         		}
-        		key = (float)Math.sqrt(sumOfSquares / (mslen * nc));
+        		squaresums[nsqsum] = sumOfSquares / (mslen * nc);
+        		float mean = 0;
+        		for ( int s = 0; s < NSQUARESUMS; s++ ) {
+        			mean += squaresums[s];
+        		}
+        		if ( ++nsqsum >= NSQUARESUMS ) nsqsum = 0;
+        		key = (float)Math.sqrt(mean/NSQUARESUMS);
         		targetGain = function(key);
         	}
 
-        	gain = dynamics(targetGain) * makeupGain;
+        	gain = dynamics(targetGain);
         	// affect all channels identically to preserve positional image
         	for ( int c = 0; c < nc; c++ ) {
-        		samples[c][i] *= gain;
+        		samples[c][i] *= gain * makeupGain;
         	}
         }
         // we only announce the final value at the end of the buffer
