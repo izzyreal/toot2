@@ -45,7 +45,10 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 	private ModulationMixerVariables svfCutoffModMixer;
 	private ModulationMixerVariables vibModMixer;
 	
-
+	static {
+		MultiWaves.init();
+	}
+	
 	public Example2SynthChannel(Example2SynthControls controls) {
 		super(controls.getName());
 		oscillator1Vars = controls.getOscillatorVariables(1-1);
@@ -69,6 +72,7 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 		lpfCutoffModMixer = controls.getModulationMixerVariables(3);
 		svfCutoffModMixer = controls.getModulationMixerVariables(4);
 		vibModMixer = controls.getModulationMixerVariables(5);
+		createVoice(42, 0, 44100);
 	}
 
 	protected void setSampleRate(int rate) {
