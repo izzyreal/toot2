@@ -72,40 +72,46 @@ public class Example2SynthControls extends CompoundControl
 		vibratoConfig.deviationMax = 2f;
 		vibratoConfig.deviation = 1.5f;		
 
-		String[] widthLabels = { "LFO 1", "LFO 2" };
+		String lfoString = getString("LFO");
+		String[] widthLabels = { lfoString+" 1", lfoString+" 2" };
 
+		String widthModString = getString("Width")+" "+getString("Mod");
+		String oscillatorString = getString("Oscillator");
 		ControlRow oscRow = new ControlRow();
-		oscillatorControls[0] = new MultiWaveOscillatorControls(0, "Oscillator 1", OSC1_OFFSET, false);
+		oscillatorControls[0] = new MultiWaveOscillatorControls(0, oscillatorString+" 1", OSC1_OFFSET, false);
 		oscRow.add(oscillatorControls[0]);
-		modulationControls[0] = new ModulationMixerControls(0, "Width Mod", OSC1_MOD_OFFSET, widthLabels, true);
+		modulationControls[0] = new ModulationMixerControls(0, widthModString, OSC1_MOD_OFFSET, widthLabels, true);
 		oscRow.add(modulationControls[0]);
-		oscillatorControls[1] = new MultiWaveOscillatorControls(1, "Oscillator 2", OSC2_OFFSET, false);
+		oscillatorControls[1] = new MultiWaveOscillatorControls(1, oscillatorString+" 2", OSC2_OFFSET, false);
 		oscRow.add(oscillatorControls[1]);
-		modulationControls[1] = new ModulationMixerControls(1, "Width Mod", OSC2_MOD_OFFSET, widthLabels, true);
+		modulationControls[1] = new ModulationMixerControls(1, widthModString, OSC2_MOD_OFFSET, widthLabels, true);
 		oscRow.add(modulationControls[1]);
-		oscillatorControls[2] = new MultiWaveOscillatorControls(2, "Oscillator 3", OSC3_OFFSET, false);
+		oscillatorControls[2] = new MultiWaveOscillatorControls(2, oscillatorString+" 3", OSC3_OFFSET, false);
 		oscRow.add(oscillatorControls[2]);
-		modulationControls[2] = new ModulationMixerControls(2, "Width Mod", OSC3_MOD_OFFSET, widthLabels, true);
+		modulationControls[2] = new ModulationMixerControls(2, widthModString, OSC3_MOD_OFFSET, widthLabels, true);
 		oscRow.add(modulationControls[2]);
 		add(oscRow);
 		
-		String[] cutoffLabels = { "LFO 1", "LFO 2", "Env 1", "Env 2", "Vel", "AT", "Wheel" };
+		String envString = getString("Env");
+		String[] cutoffLabels = { lfoString+" 1", lfoString+" 2", 
+									envString+" 1", envString+" 2", 
+									getString("Vel"), getString("AT"), getString("Wheel") };
 
 		ControlRow lpfRow = new ControlRow();		
-		mixerControls[0] = new MixerControls(0, "LPF Oscillator Mix", LPFMIX_OFFSET, 3);
+		mixerControls[0] = new MixerControls(0, getString("LPF")+" "+oscillatorString+" "+getString("Mix"), LPFMIX_OFFSET, 3);
 		lpfRow.add(mixerControls[0]);
-		filterControls[0] = new MoogFilterControls(0, "Low Pass Filter", LPF_OFFSET);
+		filterControls[0] = new MoogFilterControls(0, getString("Low.Pass")+" "+getString("Filter"), LPF_OFFSET);
 		lpfRow.add(filterControls[0]);
-		modulationControls[3] = new ModulationMixerControls(3, "Cutoff Mod", LPF_MOD_OFFSET, cutoffLabels, true, 64, "semitones");
+		modulationControls[3] = new ModulationMixerControls(3, getString("Cutoff")+" "+getString("Mod"), LPF_MOD_OFFSET, cutoffLabels, true, 64, "semitones");
 		lpfRow.add(modulationControls[3]);
 		add(lpfRow);
 
 		ControlRow svfRow = new ControlRow();		
-		mixerControls[1] = new MixerControls(1, "SVF Oscillator Mix", SVFMIX_OFFSET, 3);
+		mixerControls[1] = new MixerControls(1, getString("SVF")+" "+oscillatorString+" "+getString("Mix"), SVFMIX_OFFSET, 3);
 		svfRow.add(mixerControls[1]);
-		filterControls[1] = new StateVariableFilterControls(0, "State Variable Filter", SVF_OFFSET);
+		filterControls[1] = new StateVariableFilterControls(0, getString("State.Variable")+" "+getString("Filter"), SVF_OFFSET);
 		svfRow.add(filterControls[1]);
-		modulationControls[4] = new ModulationMixerControls(4, "Cutoff Mod", SVF_MOD_OFFSET, cutoffLabels, true, 64, "semitones");
+		modulationControls[4] = new ModulationMixerControls(4, getString("Cutoff")+" "+getString("Mod"), SVF_MOD_OFFSET, cutoffLabels, true, 64, "semitones");
 		svfRow.add(modulationControls[4]);
 		add(svfRow);
 
@@ -124,16 +130,16 @@ public class Example2SynthControls extends CompoundControl
 		String[] vibLabels = { "Env", "AT", "Wheel" };
 
 		ControlRow lfoRow = new ControlRow();
-		lfoControls[1] = new LFOControls(1, "LFO 1", LFO1_OFFSET, widthLFOConfig);
+		lfoControls[1] = new LFOControls(1, lfoString+" 1", LFO1_OFFSET, widthLFOConfig);
 		lfoRow.add(lfoControls[1]);
-		lfoControls[2] = new LFOControls(2, "LFO 2", LFO2_OFFSET, widthLFOConfig);
+		lfoControls[2] = new LFOControls(2, lfoString+" 2", LFO2_OFFSET, widthLFOConfig);
 		lfoRow.add(lfoControls[2]);
 		lfoControls[0] = new LFOControls(0, getString("Vibrato"), LFOVIB_OFFSET, vibratoConfig);
 		lfoRow.add(lfoControls[0]);
 		envelopeControls[3] = 
 			new EnvelopeControls(3, getString("Vibrato")+" "+getString("Envelope"), VIBENV_OFFSET, "D", 5f); 
 		lfoRow.add(envelopeControls[3]);
-		modulationControls[5] = new ModulationMixerControls(5, "Vibrato Mod", VIB_MOD_OFFSET, vibLabels, false);
+		modulationControls[5] = new ModulationMixerControls(5, getString("Vibrato")+" "+getString("Mod"), VIB_MOD_OFFSET, vibLabels, false);
 		lfoRow.add(modulationControls[5]);
 		add(lfoRow);
 		

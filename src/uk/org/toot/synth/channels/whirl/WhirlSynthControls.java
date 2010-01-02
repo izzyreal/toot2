@@ -62,32 +62,32 @@ public class WhirlSynthControls extends CompoundControl
 		lfoConfig.deviationMax = 0f;
 
 		ControlRow row1 = new ControlRow();
-		oscillatorControls[0] = new DualMultiWaveOscillatorControls(0, "Main Osc", OSC1_OFFSET, false);
+		oscillatorControls[0] = new DualMultiWaveOscillatorControls(0, getString("Main")+" "+getString("Osc"), OSC1_OFFSET, false);
 		row1.add(oscillatorControls[0]);
-		oscillatorControls[1] = new DualMultiWaveOscillatorControls(1, "Sub Osc", OSC2_OFFSET, true);
+		oscillatorControls[1] = new DualMultiWaveOscillatorControls(1, getString("Sub")+" "+getString("Osc"), OSC2_OFFSET, true);
 		row1.add(oscillatorControls[1]);
-		filterControls[0] = new DualStateVariableFilterControls(0, "Filter", SVF_OFFSET);
+		filterControls[0] = new DualStateVariableFilterControls(0, getString("Filter"), SVF_OFFSET);
 		row1.add(filterControls[0]);
 		amplifierControls = new AmplifierControls(0, getString("Amplifier"), AMP_OFFSET);
 		row1.add(amplifierControls);
 		add(row1);
 		
 		ControlRow row2 = new ControlRow();
-		String[] labels = { "LFO", "Env" };
-		modulationControls[0] = new ModulationMixerControls(0, "Sync Mod", OSC1_TUNING_MOD_OFFSET, labels, false);
+		String[] labels = { getString("LFO"), getString("Env") };
+		modulationControls[0] = new ModulationMixerControls(0, getString("Sync")+" "+getString("Mod"), OSC1_TUNING_MOD_OFFSET, labels, false);
 		row2.add(modulationControls[0]);
-		modulationControls[1] = new ModulationMixerControls(0, "Main PWM", OSC1_PWM_MOD_OFFSET, labels, true);
+		modulationControls[1] = new ModulationMixerControls(0, getString("Main")+" "+getString("PWM"), OSC1_PWM_MOD_OFFSET, labels, true);
 		row2.add(modulationControls[1]);
-		modulationControls[2] = new ModulationMixerControls(0, "Sub PWM", OSC2_PWM_MOD_OFFSET, labels, true);
+		modulationControls[2] = new ModulationMixerControls(0, getString("Sub")+" "+getString("PWM"), OSC2_PWM_MOD_OFFSET, labels, true);
 		row2.add(modulationControls[2]);
-		String[] flabels = { "LFO", "Env", "Vel", "AT", "Wheel" };
-		modulationControls[3] = new ModulationMixerControls(0, "Filter Cutoff Mod", SVF_CUTOFF_MOD_OFFSET, 
-				flabels, true, 64, "semitones");
+		String[] flabels = { getString("LFO"), getString("Env"), getString("Vel"), getString("AT"), getString("Wheel") };
+		modulationControls[3] = new ModulationMixerControls(0, getString("Filter")+" "+getString("Cutoff")+" "+getString("Mod"), SVF_CUTOFF_MOD_OFFSET, 
+				flabels, true, 64, getString("semitones"));
 		row2.add(modulationControls[3]);
 		add(row2);
 		
 		ControlRow row3 = new ControlRow();
-		lfoControls[0] = new LFOControls(0, "LFO", LFOVIB_OFFSET, lfoConfig);
+		lfoControls[0] = new LFOControls(0, getString("LFO"), LFOVIB_OFFSET, lfoConfig);
 		row3.add(lfoControls[0]);
 		envelopeControls[1] = 
 			new EnvelopeControls(1, getString("Modulation")+" "+getString("Envelope"), MODENV_OFFSET);

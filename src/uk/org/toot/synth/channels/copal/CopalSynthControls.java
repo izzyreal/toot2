@@ -36,7 +36,7 @@ public class CopalSynthControls extends CompoundControl
 	public CopalSynthControls() {
 		super(COPAL_CHANNEL_ID, NAME);
 		ControlRow row = new ControlRow();
-		mixerControls = new MixerControls(0, "Oscillators", MIX_OFFSET, 3) {
+		mixerControls = new MixerControls(0, getString("Oscillators"), MIX_OFFSET, 3) {
 		    public boolean isAlwaysVertical() { return true; }
 			protected FloatControl createLevelControl(int i) {
 				FloatControl c = super.createLevelControl(i);
@@ -48,15 +48,15 @@ public class CopalSynthControls extends CompoundControl
 			}
 		};
 		row.add(mixerControls);
-		lphpControls = new LP1pHP1pControls(0, 0, "Filter", LPHP_OFFSET) {
+		lphpControls = new LP1pHP1pControls(0, 0, getString("Filter"), LPHP_OFFSET) {
 		    public boolean isAlwaysVertical() { return true; }
 		};
 		row.add(lphpControls);
-		envelopeControls = new ASREnvelopeControls(0, "Envelope", AMPENV_OFFSET) {
+		envelopeControls = new ASREnvelopeControls(0, getString("Envelope"), AMPENV_OFFSET) {
 		    public boolean isAlwaysVertical() { return true; }
 		};
 		row.add(envelopeControls);
-		formantControls = new FormantFilterControls(0, getString("Formant.Filter"), FORMANT_OFFSET);
+		formantControls = new FormantFilterControls(0, getString("Formant")+" "+getString("Filter"), FORMANT_OFFSET);
 		row.add(formantControls);
 		amplifierControls = new AmplifierControls(0, getString("Amplifier"), AMP_OFFSET) {
 		    public boolean isAlwaysVertical() { return true; }

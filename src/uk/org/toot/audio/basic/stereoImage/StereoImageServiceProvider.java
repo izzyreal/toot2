@@ -20,7 +20,7 @@ import static uk.org.toot.misc.Localisation.*;
 public class StereoImageServiceProvider extends TootAudioServiceProvider
 {
     public StereoImageServiceProvider() {
-        super(getString("Stereo Image"), "0.1");
+        super(getString("Stereo.Image"), "0.1");
         String family = getString("Basic");
         addControls(StereoImageControls.class, StereoImageControls.STEREO_IMAGE, 
         		getString("Stereo.Image"), family, "0.1", ChannelFormat.STEREO, null);
