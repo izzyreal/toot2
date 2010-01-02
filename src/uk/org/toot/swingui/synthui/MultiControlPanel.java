@@ -202,6 +202,7 @@ public abstract class MultiControlPanel extends DisposablePanel
 				ui = createUI(controls);
 				if ( ui != null ) {
 					centerPanel.add(ui, cardId);
+					centerPanel.validate();
 				}
 				showSelection();					
 			} else {
