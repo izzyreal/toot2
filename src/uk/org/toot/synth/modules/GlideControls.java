@@ -20,6 +20,8 @@ import uk.org.toot.control.LogLaw;
 
 public class GlideControls extends CompoundControl implements GlideVariables
 {
+	private final static ControlLaw TIME_LAW = new LogLaw(10f, 1000f, "ms");
+
 	public final static int ENABLE = 0;
 	public final static int TIME = 1;
 	
@@ -76,10 +78,7 @@ public class GlideControls extends CompoundControl implements GlideVariables
 	}
 	
 	protected FloatControl createTimeControl() {
-		ControlLaw law = new LogLaw(10f, 1000f, "ms");
-		FloatControl control = new FloatControl(TIME+idOffset, "Time", law, 1f, 100f);
-		control.setInsertColor(Color.RED.darker());
-		return control;				
+		return new FloatControl(TIME+idOffset, "Time", TIME_LAW, 1f, 100f);
 	}
 
 	public int getGlideMilliseconds() {

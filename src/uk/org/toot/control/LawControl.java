@@ -12,6 +12,8 @@ import java.awt.Color;
  */
 public class LawControl extends Control
 {
+    private static InsertColorer colorer = new DefaultInsertColorer();
+
     /**
      * @link aggregationByValue
      * @supplierCardinality 1 
@@ -25,7 +27,7 @@ public class LawControl extends Control
     private float precision;
 
     private Color insertColor;
-
+    
     private String valueFormat;
 
     public LawControl(int id, String name, ControlLaw law, float precision, float initialValue) {
@@ -36,6 +38,7 @@ public class LawControl extends Control
         assert initialValue >= law.getMinimum();
         assert initialValue <= law.getMaximum();
         valueFormat = "%1$."+calculateDecimalPlaces()+"f %2$s";
+        insertColor = colorer.getColor(this);
     }
 
     protected int calculateDecimalPlaces() {
@@ -107,5 +110,9 @@ public class LawControl extends Control
 	}
 
 	public void applyPreset(String name) {
+	}
+	
+	public static void setInsertColorer(InsertColorer aColorer) {
+		colorer = aColorer;
 	}
 }

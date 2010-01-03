@@ -34,7 +34,7 @@ public class StereoImageControls extends AudioControls
     public StereoImageControls() {
         super(STEREO_IMAGE, getString("Stereo"));
         width = new FloatControl(LR_WIDTH, getString("Width"), WIDTH_LAW, 0.01f, 1f);
-        width.setInsertColor(Color.orange);
+        width.setInsertColor(Color.WHITE);
         add(width);
         swap = new BooleanControl(LR_SWAP, getString("Swap"), false); // initially not swapped
         swap.setStateColor(true, Color.red);

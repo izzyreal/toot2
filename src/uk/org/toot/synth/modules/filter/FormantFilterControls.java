@@ -23,6 +23,9 @@ import static uk.org.toot.synth.modules.filter.FilterIds.FORMANT_FILTER_ID;
 public class FormantFilterControls extends CompoundControl 
 	implements FormantFilterVariables
 {
+	private final static ControlLaw FREQ_LAW = new LogLaw(100, 5000, "Hz");
+    private final static ControlLaw SHIFT_LAW = new LogLaw(0.25f, 4f, "");
+
 	private final static int RESONANCE = 0;
 	private final static int FREQSHIFT = 1;
 	private final static int FREQUENCY = 2; // ..4..6..8 etc.
@@ -122,29 +125,19 @@ public class FormantFilterControls extends CompoundControl
 	}
 
 	protected FloatControl createFrequencyControl(int n) {
-        ControlLaw law = new LogLaw(100, 5000, "Hz");
-        FloatControl control = new FloatControl(n+n+FREQUENCY+idOffset, getString("Frequency"), law, 1f, 250 * (int)Math.pow(2, n));
-        control.setInsertColor(Color.yellow);
-        return control;		
+        return new FloatControl(n+n+FREQUENCY+idOffset, getString("Frequency"), FREQ_LAW, 1f, 250 * (int)Math.pow(2, n));
 	}
 
 	protected FloatControl createLevelControl(int n) {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(n+n+LEVEL+idOffset, getString("Level"), law, 0.01f, 1f);
-        control.setInsertColor(Color.BLACK);
-        return control;				
+        return new FloatControl(n+n+LEVEL+idOffset, getString("Level"), LinearLaw.UNITY, 0.01f, 1f);
 	}
 
 	protected FloatControl createResonanceControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(RESONANCE+idOffset, getString("Resonance"), law, 0.01f, 0.25f);
-        control.setInsertColor(Color.orange);
-        return control;				
+        return new FloatControl(RESONANCE+idOffset, getString("Resonance"), LinearLaw.UNITY, 0.01f, 0.25f);
 	}
 
 	protected FloatControl createFrequencyShiftControl() {
-        ControlLaw law = new LogLaw(0.25f, 4f, "");
-        FloatControl control = new FloatControl(FREQSHIFT+idOffset, getString("Shift"), law, 0.1f, 1f);
+        FloatControl control = new FloatControl(FREQSHIFT+idOffset, getString("Shift"), SHIFT_LAW, 0.1f, 1f);
         control.setInsertColor(Color.yellow);
         return control;		
 	}

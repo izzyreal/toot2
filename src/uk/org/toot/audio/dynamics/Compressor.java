@@ -35,9 +35,5 @@ public class Compressor extends DynamicsProcess
 	    protected boolean hasRatio() { return true; }
 
 	    protected boolean hasGain() { return true; }
-
-	    protected float getMinimumAttack() { return 20f; }
-	    
-	    protected float getMinimumRelease() { return 200f; }	    
     }
 }

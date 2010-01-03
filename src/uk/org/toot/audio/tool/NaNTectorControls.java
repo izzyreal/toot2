@@ -14,7 +14,7 @@ public class NaNTectorControls extends AudioControls
 {
 	private final static int NAN_PERCENT_ID = 1;
 	private final static float ALPHA = 0.99f;
-	private final static ControlLaw percentLaw = new LinearLaw(0, 100, "%");
+	private final static ControlLaw PERCENT_LAW = new LinearLaw(0, 100, "%");
 	
 	private float nanAverage = 0f;
 	
@@ -33,7 +33,7 @@ public class NaNTectorControls extends AudioControls
     private class NaNIndicator extends FloatControl
     {
 		public NaNIndicator() {
-			super(NAN_PERCENT_ID, "NaN", percentLaw, 0.1f, 0f);
+			super(NAN_PERCENT_ID, "NaN", PERCENT_LAW, 0.1f, 0f);
 			indicator = true;
 		}
     	

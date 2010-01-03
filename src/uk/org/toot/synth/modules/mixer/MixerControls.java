@@ -11,7 +11,6 @@ import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
-import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 
@@ -68,8 +67,7 @@ public class MixerControls extends CompoundControl implements MixerVariables
 	}
 
 	protected FloatControl createLevelControl(int i) {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(i+LEVEL+idOffset, String.valueOf(i+1), law, 0.01f, i > 0 ? 0f : 1f);
+        FloatControl control = new FloatControl(i+LEVEL+idOffset, String.valueOf(i+1), LinearLaw.UNITY, 0.01f, i > 0 ? 0f : 1f);
         control.setInsertColor(Color.BLACK);
         return control;				
 	}

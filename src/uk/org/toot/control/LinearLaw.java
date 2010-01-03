@@ -10,6 +10,11 @@ package uk.org.toot.control;
  */
 public class LinearLaw extends AbstractLaw
 {
+	/*
+	 * A unitless LinearLaw from zero to one (unity)
+	 */
+	public final static LinearLaw UNITY = new LinearLaw(0, 1, "");
+	
     public LinearLaw(float min, float max, String units) {
         super(min, max, units);
     }

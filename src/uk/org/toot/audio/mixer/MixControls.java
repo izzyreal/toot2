@@ -205,9 +205,6 @@ public class MixControls extends AudioControls
      */
     public abstract static class LCRControl extends FloatControl
     {
-        // this isn't a pan/balance law, just a linear 0..1 control law
-        protected static final LinearLaw linLaw = new LinearLaw(0f, 1f, "");
-
         private static final String[] presetNames = {
             getString("Center"), getString("Left"), getString("Right")
         };
@@ -245,7 +242,7 @@ public class MixControls extends AudioControls
         private float right = HALF_ROOT_TWO; 	// -3dB centre
 
         public PanControl() {
-            super(getString("Pan"), linLaw,
+            super(getString("Pan"), LinearLaw.UNITY,
                 0.01f,   	// precision
                 0.5f		// initially center
                 );
@@ -276,7 +273,7 @@ public class MixControls extends AudioControls
         private float right = 1;
 
         public BalanceControl() {
-            super(getString("Balance"), linLaw,
+            super(getString("Balance"), LinearLaw.UNITY,
                 0.01f,   	// precision
                 0.5f		// initially center
                 );
@@ -304,15 +301,12 @@ public class MixControls extends AudioControls
         private float front = HALF_ROOT_TWO; // -3dB center
         private float rear = HALF_ROOT_TWO;
 
-        // this isn't a pan/balance law, just a linear 0..1 control law
-        protected static final LinearLaw linLaw = new LinearLaw(0f, 1f, "");
-
         private static final String[] presetNames = {
             getString("Front"), getString("Middle"), getString("Rear")
         };
 
         public FrontRearControl() {
-            super(FRONT_SURROUND, getString("F.S"), linLaw,
+            super(FRONT_SURROUND, getString("F.S"), LinearLaw.UNITY,
                 0.01f,   	// precision
                 0.5f		// initially middle
                 );

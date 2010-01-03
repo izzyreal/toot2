@@ -47,26 +47,14 @@ public class ClassicFilterControls extends AudioControls
 	public ClassicFilterControls(String name, int id,
         Filter.Type typevalue, boolean typefixed,
         float fmin, float fmax, float fvalue, boolean ffixed,
-        float qmin, float qmax, float qvalue, boolean qfixed,
-        float dBmin, float dBmax, float dBvalue, boolean dBfixed
+        ControlLaw qLaw, float qvalue, boolean qfixed,
+        ControlLaw levelLaw, float dBvalue, boolean dBfixed
         ) {
         super(0, name); // ??? ???
         type = typevalue;
-        add(res = createResonanceControl(id+2, qmin, qmax, qvalue, qfixed));
+        add(res = createResonanceControl(id+2, qLaw, qvalue, qfixed));
         add(freq = createFrequencyControl(id+1, fmin, fmax, fvalue, ffixed));
-        add(leveldB = createLevelControl(id, dBmin, dBmax, dBvalue, dBfixed));
-    }
-
-    /**
-     * Simple construction with few specified values and many defaults.
-     */
-    public ClassicFilterControls(String name, int id,
-        Filter.Type typevalue, float freq, float q, float leveldB) {
-        this(name, id,
-            typevalue, true,
-            40f, 20000f, freq, false,
-            0.5f, 5f, q, q > 1.05f,
-            -15f, 15f, leveldB, false);
+        add(leveldB = createLevelControl(id, levelLaw, dBvalue, dBfixed));
     }
 
     public boolean isAlwaysVertical() { return true; }
@@ -128,13 +116,11 @@ public class ClassicFilterControls extends AudioControls
 	protected FloatControl createFrequencyControl(int id, float min, float max, float initial, boolean fixed) {
         ControlLaw law = new LogLaw(min, max, "Hz");
         FloatControl freq = new FloatControl(id, getString("Frequency"), law, 1f, initial);
-        freq.setInsertColor(java.awt.Color.yellow);
         freq.setHidden(fixed);
         return freq;
     }
 
-	protected FloatControl createLevelControl(int id, float min, float max, float initial, boolean fixed) {
-        ControlLaw law = new LinearLaw(min, max, "dB"); // lin(dB) is log(val) !
+	protected FloatControl createLevelControl(int id, ControlLaw law, float initial, boolean fixed) {
         FloatControl lev = new FloatControl(id, getString("Level"), law, 0.1f, initial) {
             private /*static*/ String[] presetNames = { getString("Flat") };
             public boolean isRotary() {
@@ -149,15 +135,12 @@ public class ClassicFilterControls extends AudioControls
                 }
             }
         };
-        lev.setInsertColor(java.awt.Color.white);
         lev.setHidden(fixed);
         return lev;
     }
 
-	protected FloatControl createResonanceControl(int id, float min, float max, float initial, boolean fixed) {
-        ControlLaw law = new LogLaw(min, max, "");
+	protected FloatControl createResonanceControl(int id, ControlLaw law, float initial, boolean fixed) {
         FloatControl lev = new FloatControl(id, getString("Resonance"), law, 0.1f, initial);
-        lev.setInsertColor(java.awt.Color.orange);
         lev.setHidden(fixed);
         return lev;
     }

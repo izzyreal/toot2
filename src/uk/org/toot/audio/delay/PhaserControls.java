@@ -17,10 +17,10 @@ import static uk.org.toot.misc.Localisation.*;
 
 public class PhaserControls extends AudioControls implements PhaserVariables
 {
-    protected static final ControlLaw UNITY_LIN_LAW = new LinearLaw(0f, 1f, "");
-    private final static int RATE_ID = 1;
-    private final static int DEPTH_ID = 2;
-    private final static int FEEDBACK_ID = 3;
+	protected final static ControlLaw rateLaw = new LogLaw(0.1f, 2f, "Hz");
+    protected final static int RATE_ID = 1;
+    protected final static int DEPTH_ID = 2;
+    protected final static int FEEDBACK_ID = 3;
 
 	private FloatControl rateControl;
 	private FloatControl depthControl;
@@ -29,9 +29,9 @@ public class PhaserControls extends AudioControls implements PhaserVariables
     public PhaserControls() {
 		super(DelayIds.PHASER_ID, getString("Phaser"));
 		ControlColumn cc = new ControlColumn();
-		cc.add(createRateControl());
-		cc.add(createDepthControl());
-		cc.add(createFeedbackControl());
+		cc.add(rateControl = createRateControl());
+		cc.add(depthControl = createDepthControl());
+		cc.add(feedbackControl = createFeedbackControl());
 		add(cc);
 	}
 
@@ -39,22 +39,17 @@ public class PhaserControls extends AudioControls implements PhaserVariables
 	public boolean canBypass() { return true; }
 
     protected FloatControl createRateControl() {
-    	ControlLaw rateLaw = new LogLaw(0.1f, 2f, "Hz");
- 		rateControl = new FloatControl(RATE_ID, getString("Rate"), rateLaw, 0.01f, 0.5f);
-        rateControl.setInsertColor(Color.MAGENTA.darker());
-        return rateControl;
+ 		return new FloatControl(RATE_ID, getString("Rate"), rateLaw, 0.01f, 0.5f);
  	}
 
     protected FloatControl createDepthControl() {
- 		depthControl = new FloatControl(DEPTH_ID, getString("Depth"), UNITY_LIN_LAW, 0.01f, 1f);
-        depthControl.setInsertColor(Color.WHITE);
-        return depthControl;
+ 		FloatControl c = new FloatControl(DEPTH_ID, getString("Depth"), LinearLaw.UNITY, 0.01f, 1f);
+        c.setInsertColor(Color.LIGHT_GRAY);
+        return c;
  	}
 
     protected FloatControl createFeedbackControl() {
- 		feedbackControl = new FloatControl(FEEDBACK_ID, getString("Resonance"), UNITY_LIN_LAW, 0.01f, 0f);
-        feedbackControl.setInsertColor(Color.ORANGE);
-        return feedbackControl;
+ 		return new FloatControl(FEEDBACK_ID, getString("Resonance"), LinearLaw.UNITY, 0.01f, 0f);
  	}
 
 	public float getDepth() {

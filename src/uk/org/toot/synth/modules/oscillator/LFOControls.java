@@ -7,7 +7,6 @@ package uk.org.toot.synth.modules.oscillator;
 
 import static uk.org.toot.misc.Localisation.getString;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -88,7 +87,6 @@ public class LFOControls extends CompoundControl implements LFOVariables
         ControlLaw law = new LogLaw(config.rateMin, config.rateMax, "Hz");
         FloatControl control = 
         	new FloatControl(FREQUENCY+idOffset, getString("Frequency"), law, 0.1f, config.rate);
-        control.setInsertColor(Color.YELLOW);
         return control;				
 	}
 
@@ -97,7 +95,6 @@ public class LFOControls extends CompoundControl implements LFOVariables
         ControlLaw law = new LinearLaw(0f, config.deviationMax, "Hz");
         FloatControl control = 
         	new FloatControl(FREQUENCY+idOffset, getString("Deviation"), law, 0.1f, config.deviation);
-        control.setInsertColor(Color.YELLOW.darker());
         return control;				
 	}
 

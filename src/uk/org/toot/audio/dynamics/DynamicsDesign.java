@@ -151,7 +151,6 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
         boolean isBypassed();
         float getThresholddB();
         float getRatio();
-        float getKneedB();
         float getAttackMilliseconds();
         float getHoldMilliseconds(); // gate
         float getReleaseMilliseconds();

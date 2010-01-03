@@ -20,7 +20,7 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
 {
     private List<MultiTapDelayControls> perChannelControls;
     private float msMax;
-    private static ControlLaw delayFactorLaw = new LogLaw(0.2f, 5f, "");
+    private final static ControlLaw DELAY_FACTOR_LAW = new LogLaw(0.2f, 5f, "");
     private FloatControl delayFactorControl;
 
     public MultiTapDelayStereoControls() {
@@ -37,7 +37,7 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
             add(c);
             perChannelControls.add(c);
         }
-        delayFactorControl = new FloatControl(DELAY_FACTOR_ID, getString("Delay"), delayFactorLaw, 0.01f, 1f);
+        delayFactorControl = new FloatControl(DELAY_FACTOR_ID, getString("Delay"), DELAY_FACTOR_LAW, 0.01f, 1f);
         delayFactorControl.setInsertColor(Color.RED.darker());
         add(delayFactorControl);
         // feedback

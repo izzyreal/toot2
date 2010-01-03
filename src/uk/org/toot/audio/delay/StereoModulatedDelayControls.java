@@ -14,7 +14,7 @@ import static uk.org.toot.misc.Localisation.*;
 
 public class StereoModulatedDelayControls extends ModulatedDelayControls implements StereoModulatedDelayVariables
 {
-    private static final ControlLaw phaseLaw = new LinearLaw(0f, 180f, "degrees");
+    private static final ControlLaw PHASE_LAW = new LinearLaw(0f, 180f, "degrees");
     private FloatControl phaseControl;
 
     public StereoModulatedDelayControls() {
@@ -26,7 +26,7 @@ public class StereoModulatedDelayControls extends ModulatedDelayControls impleme
     }
 
     protected ControlColumn createControlColumn1() {
-        phaseControl = new FloatControl(PHASE_ID, getString("Phase"), phaseLaw, 1f, 0f);
+        phaseControl = new FloatControl(PHASE_ID, getString("Phase"), PHASE_LAW, 1f, 0f);
         phaseControl.setInsertColor(Color.BLUE.darker());
         ControlColumn cc = super.createControlColumn1();
 		cc.add(phaseControl);

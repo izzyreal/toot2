@@ -21,7 +21,7 @@ public class ModulationMixerControls extends CompoundControl implements Modulati
 {
 	public final static int DEPTH = 0;
 	
-	private ControlLaw law;
+	private final ControlLaw law;
 	private FloatControl[] depthControl;
 	private float[] depth;
 	

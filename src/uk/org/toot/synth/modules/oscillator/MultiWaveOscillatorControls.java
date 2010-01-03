@@ -22,6 +22,9 @@ import uk.org.toot.control.LinearLaw;
 
 public class MultiWaveOscillatorControls extends CompoundControl implements MultiWaveOscillatorVariables 
 {
+	private final static ControlLaw TUNING_LAW = new LinearLaw(0.99f, 1.01f, "");
+    private final static ControlLaw WIDTH_LAW = new LinearLaw(0.01f, 0.99f, "");
+
 	public final static int WAVE = 0; // TODO move to OscillatorControlIds.java
 	public final static int WIDTH = 1;
 	public final static int DETUNE = 2;
@@ -78,8 +81,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	}
 
 	protected FloatControl createDetuneControl() {
-        ControlLaw law = new LinearLaw(0.99f, 1.01f, "");
-        FloatControl control = new FloatControl(DETUNE+idOffset, getString("Detune"), law, 0.0001f, 1f);
+        FloatControl control = new FloatControl(DETUNE+idOffset, getString("Detune"), TUNING_LAW, 0.0001f, 1f);
         control.setInsertColor(Color.MAGENTA);
         return control;						
 	}
@@ -94,8 +96,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 
 	
 	protected FloatControl createWidthControl() {
-        ControlLaw law = new LinearLaw(0.01f, 0.99f, "");
-        FloatControl control = new FloatControl(WIDTH+idOffset, getString("Width"), law, 0.01f, 0.5f){
+        FloatControl control = new FloatControl(WIDTH+idOffset, getString("Width"), WIDTH_LAW, 0.01f, 0.5f){
             private final String[] presetNames = { "50%" };
 
             public String[] getPresetNames() {

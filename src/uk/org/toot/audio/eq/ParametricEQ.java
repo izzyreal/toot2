@@ -6,6 +6,9 @@
 package uk.org.toot.audio.eq;
 
 import uk.org.toot.audio.filter.Filter;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
+import uk.org.toot.control.LogLaw;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -33,30 +36,31 @@ public class ParametricEQ extends AbstractParallelEQ
      */
     static public class Controls extends EQ.Controls
     {
-        protected float R = 15f;	// dB range, +/-
-
+        private final static float R = 15f;	// dB range, +/-
+        private final static ControlLaw GAIN_LAW = new LinearLaw(-R, R, "dB"); // lin(dB) is log(val) !
+        private final static ControlLaw Q_LAW = new LogLaw(0.5f, 10f, "");
         public Controls() {
             super(EQIds.PARAMETRIC_EQ_ID, getString("Parametric.EQ"));
             add(new ClassicFilterControls(getString("Low"), 0,
                 	Filter.Type.LPF, true,
                     40f, 3000f, 80, false,
-                    1f, 1f, 1f, true,
-                    -R, R, 0f, false));
+                    Q_LAW, 1f, true,
+                    GAIN_LAW, 0f, false));
             add(new ClassicFilterControls(getString("Lo.Mid"), 4,
                 	Filter.Type.BPF, true,
                     40f, 3000f, 600, false,
-                    0.5f, 10f, 1f, false,
-                    -R, R, 0f, false));
+                    Q_LAW, 1f, false,
+                    GAIN_LAW, 0f, false));
             add(new ClassicFilterControls(getString("Hi.Mid"), 8,
                 	Filter.Type.BPF, true,
                     3000f, 20000f, 4000, false,
-                    0.5f, 10f, 1f, false,
-                    -R, R, 0f, false));
+                    Q_LAW, 1f, false,
+                    GAIN_LAW, 0f, false));
             add(new ClassicFilterControls(getString("High"), 16,
                 	Filter.Type.HPF, true,
                     3000f, 20000f, 12000, false,
-                    1f, 1f, 1f, true,
-                    -R, R, 0f, false));
+                    Q_LAW, 1f, true,
+                    GAIN_LAW, 0f, false));
         }
     }
 }

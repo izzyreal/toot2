@@ -154,44 +154,33 @@ public class EnvelopeControls extends CompoundControl
 
 	protected FloatControl createDelayControl(float min, float max, float init) {
         ControlLaw law = new LinearLaw(min, max, "ms");
-        FloatControl delayControl = new FloatControl(DELAY+idOffset, getString("Delay"), law, 1f, init);
-        delayControl.setInsertColor(Color.red.darker());
-        return delayControl;
+        return new FloatControl(DELAY+idOffset, getString("Delay"), law, 1f, init);
 	}
 
     protected FloatControl createAttackControl(float min, float max, float init) {
         ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl attackControl = new FloatControl(ATTACK+idOffset, getString("Attack"), law, 0.1f, init);
-        attackControl.setInsertColor(Color.red.darker());
-        return attackControl;
+        return new FloatControl(ATTACK+idOffset, getString("Attack"), law, 0.1f, init);
     }
 
     protected FloatControl createHoldControl(float min, float max, float init) {
         ControlLaw law = new LinearLaw(min, max, "ms");
-        FloatControl holdControl = new FloatControl(HOLD+idOffset, getString("Hold"), law, 1f, init);
-        holdControl.setInsertColor(Color.red.darker());
-        return holdControl;
+        return new FloatControl(HOLD+idOffset, getString("Hold"), law, 1f, init);
     }
 
 	protected FloatControl createDecayControl(float min, float max, float init) {
         ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl decayControl = new FloatControl(DECAY+idOffset, getString("Decay"), law, 1f, init);
-        decayControl.setInsertColor(Color.red.darker());
-        return decayControl;
+        return new FloatControl(DECAY+idOffset, getString("Decay"), law, 1f, init);
 	}
 
 	protected FloatControl createSustainControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl sustainControl = new FloatControl(SUSTAIN+idOffset, getString("Sustain"), law, 0.01f, 0.5f);
+        FloatControl sustainControl = new FloatControl(SUSTAIN+idOffset, getString("Sustain"), LinearLaw.UNITY, 0.01f, 0.5f);
         sustainControl.setInsertColor(Color.lightGray);
         return sustainControl;
 	}
 
     protected FloatControl createReleaseControl(float min, float max, float init) {
         ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl releaseControl = new FloatControl(RELEASE+idOffset, getString("Release"), law, 1f, init);
-        releaseControl.setInsertColor(Color.red.darker());
-        return releaseControl;
+        return new FloatControl(RELEASE+idOffset, getString("Release"), law, 1f, init);
     }
 
 	public int getDelayCount() {

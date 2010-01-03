@@ -6,6 +6,9 @@
 package uk.org.toot.audio.eq;
 
 import uk.org.toot.audio.filter.Filter;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
+import uk.org.toot.control.LogLaw;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -33,30 +36,32 @@ public class FormantEQ extends AbstractParallelEQ
      */
     static public class Controls extends EQ.Controls
     {
-        protected float R = 15f;	// dB range, +/-
+        private final static float R = 15f;	// dB range, +/-
+        private final static ControlLaw GAIN_LAW = new LinearLaw(-R, R, "dB"); // lin(dB) is log(val) !
+        private final static ControlLaw Q_LAW = new LogLaw(0.5f, 10f, "");
 
         public Controls() {
             super(EQIds.FORMANT_EQ_ID, getString("Formant.EQ"));
             add(new ClassicFilterControls("1", 0,
                 	Filter.Type.BPF, true,
                     125f, 500f, 250, false,
-                    0.5f, 10f, 2f, false,
-                    -R, R, 0f, false));
+                    Q_LAW, 2f, false,
+                    GAIN_LAW, 0f, false));
             add(new ClassicFilterControls("2", 4,
                 	Filter.Type.BPF, true,
                     250f, 1000f, 500, false,
-                    0.5f, 10f, 2f, false,
-                    -R, R, 0f, false));
+                    Q_LAW, 2f, false,
+                    GAIN_LAW, 0f, false));
             add(new ClassicFilterControls("3", 8,
                 	Filter.Type.BPF, true,
                     500f, 2000f, 1000, false,
-                    0.5f, 10f, 2f, false,
-                    -R, R, 0f, false));
+                    Q_LAW, 2f, false,
+                    GAIN_LAW, 0f, false));
             add(new ClassicFilterControls("4", 16,
                 	Filter.Type.BPF, true,
                     1000f, 4000f, 2000, false,
-                    0.5f, 10f, 2f, false,
-                    -R, R, 0f, false));
+                    Q_LAW, 2f, false,
+                    GAIN_LAW, 0f, false));
         }
     }
 }

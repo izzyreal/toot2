@@ -11,7 +11,6 @@ import static uk.org.toot.synth.modules.filter.FilterControlIds.*;
 import java.awt.Color;
 
 import uk.org.toot.control.BooleanControl;
-import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 
@@ -63,8 +62,7 @@ public class StateVariableFilterControls extends FilterControls
 	}
 	
 	protected FloatControl createModeMixControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(MODE_MIX+idOffset, getString("Mix"), law, 0.01f, 0f);
+        FloatControl control = new FloatControl(MODE_MIX+idOffset, getString("Mix"), LinearLaw.UNITY, 0.01f, 0f);
         control.setInsertColor(Color.LIGHT_GRAY);
         return control;				
 	}

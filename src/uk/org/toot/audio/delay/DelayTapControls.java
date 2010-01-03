@@ -7,30 +7,25 @@ package uk.org.toot.audio.delay;
 
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioControls;
-import java.awt.Color;
 
 import static uk.org.toot.misc.Localisation.*;
 
 public class DelayTapControls extends AudioControls
     implements DelayTap
 {
-    private static final ControlLaw levelLaw = new LinearLaw(0f, 1f, ""); // !!! should be log but from zero!
     private FloatControl delayControl;
     private FloatControl levelControl;
 
     // because we're used more than once
     // our user has to tell us our id
     // which should be incremented by 2 for each one of us
-    public DelayTapControls(int id, float msMax) {
+    public DelayTapControls(int id, ControlLaw law) {
         super(id, ""); // ??? ??? id ??? and used below
         // add delay control (ms)
-        ControlLaw delayLaw = new LinearLaw(0.1f, msMax, "ms"); // !!! pass from superclass
-        delayControl = new FloatControl(id, getString("Delay"), delayLaw, 0.1f, msMax/4); // !!! initial value
-        delayControl.setInsertColor(Color.red.darker());
+        delayControl = new FloatControl(id, getString("Delay"), law, 0.1f, law.getMaximum()/4); // !!! initial value
         add(delayControl);
         // add feedback control
-        levelControl = new FloatControl(id+1, getString("Level"), levelLaw, 0.01f, 0f);
-        levelControl.setInsertColor(Color.black);
+        levelControl = new FloatControl(id+1, getString("Level"), LinearLaw.UNITY, 0.01f, 0f);
         add(levelControl);
     }
 

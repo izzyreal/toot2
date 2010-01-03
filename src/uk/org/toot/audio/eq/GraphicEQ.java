@@ -6,6 +6,9 @@
 package uk.org.toot.audio.eq;
 
 import uk.org.toot.audio.filter.Filter;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
+import uk.org.toot.control.LogLaw;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -34,7 +37,9 @@ public class GraphicEQ extends AbstractParallelEQ {
      */
     static public class Controls extends EQ.Controls
     {
+        private final static ControlLaw GAIN_LAW = new LinearLaw(-12, 12, "dB"); // lin(dB) is log(val) !
         private static final float Q = 1.4f;
+        private final static ControlLaw Q_LAW = new LogLaw(Q, Q, "");
 
         /**
          * Create default controls with ISO standard frequencies.
@@ -51,8 +56,8 @@ public class GraphicEQ extends AbstractParallelEQ {
                 add(new ClassicFilterControls(String.valueOf(fc), id,
                     	Filter.Type.BPF, true,
                         fc, fc, fc, true,
-                        Q, Q, Q, true,
-                        -12f, 12f, 0f, false));
+                        Q_LAW, Q, true,
+                        GAIN_LAW, 0f, false));
                 fc += fc;
                 id += 4; // !!! !!! 4 FFS!
             }

@@ -13,8 +13,8 @@ import static uk.org.toot.misc.Localisation.*;
 public class ModulatedDelayControls extends AbstractDelayControls
     implements ModulatedDelayVariables
 {
-    private static final ControlLaw delayLaw = new LogLaw(0.1f, 25f, "ms");
-    private static final ControlLaw rateLaw = new LogLaw(0.02f, 2f, "Hz");
+    private static final ControlLaw DELAY_LAW = new LogLaw(0.1f, 25f, "ms");
+    private static final ControlLaw RATE_LAW = new LogLaw(0.02f, 2f, "Hz");
 // !!! abstract?
 //    private static final ControlLaw filterFreqLaw = new LogLaw(100f, 10000f, "Hz");
     private FloatControl delayControl;
@@ -44,12 +44,11 @@ public class ModulatedDelayControls extends AbstractDelayControls
 
         // shape, rate
         shapeControl = new ShapeControl(SHAPE_ID);
-        rateControl = new FloatControl(RATE_ID, getString("Rate"), rateLaw, 0.01f, 0.2f);
-        rateControl.setInsertColor(Color.magenta.darker());
+        rateControl = new FloatControl(RATE_ID, getString("Rate"), RATE_LAW, 0.01f, 0.2f);
         // link (internal), depth
         linkControl = new BooleanControl(LINK_ID, getString("Link"), false);
         linkControl.setStateColor(true, Color.LIGHT_GRAY);
-        depthControl = new FloatControl(DEPTH_ID, getString("Depth"), UNITY_LIN_LAW, 0.01f, 0.5f);
+        depthControl = new FloatControl(DEPTH_ID, getString("Depth"), LinearLaw.UNITY, 0.01f, 0.5f);
    		depthControl.setInsertColor(Color.lightGray);
 
         ControlColumn g2 = new ControlColumn();
@@ -74,8 +73,7 @@ public class ModulatedDelayControls extends AbstractDelayControls
         // tape, delay
         tapeControl = new BooleanControl(TAPE_ID, getString("Tape"), false);
         tapeControl.setStateColor(true, Color.pink);
-        delayControl = new FloatControl(DELAY_ID, getString("Delay"), delayLaw, 0.1f, 2f);
-        delayControl.setInsertColor(Color.red.darker());
+        delayControl = new FloatControl(DELAY_ID, getString("Delay"), DELAY_LAW, 0.1f, 2f);
 
         ControlColumn g1 = new ControlColumn();
         g1.add(tapeControl);

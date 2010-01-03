@@ -12,17 +12,23 @@ import static uk.org.toot.misc.Localisation.*;
 abstract public class DynamicsControls extends AudioControls
     implements DynamicsDesign.DesignVariables
 {
+	private final static ControlLaw THRESH_LAW = new LinearLaw(-40f, 20f, "dB");
+    private final static ControlLaw RATIO_LAW = new LogLaw(1.5f, 10f, "");
+    private final static ControlLaw ATTACK_LAW = new LogLaw(20f, 100f, "ms");
+    private final static ControlLaw HOLD_LAW = new LogLaw(1f, 1000f, "ms");
+    private final static ControlLaw RELEASE_LAW = new LogLaw(200f, 2000f, "ms");
+    private final static ControlLaw GAIN_LAW = new LinearLaw(-12f, 12f, "dB");
+    private final static ControlLaw DEPTH_LAW = new LinearLaw(-80f, 0f, "dB");
+
     private GainReductionIndicator gainReductionIndicator;
     private FloatControl thresholdControl;
     private FloatControl ratioControl;
-    private FloatControl kneeControl;
     private FloatControl attackControl;
     private FloatControl holdControl;
     private FloatControl releaseControl;
     private FloatControl gainControl;
     private FloatControl depthControl;
 
-    private float kneedB = 0f;
     private int idOffset = 0;
 
     public DynamicsControls(int id, String name) {
@@ -38,36 +44,32 @@ abstract public class DynamicsControls extends AudioControls
         }
         ControlColumn g1 = new ControlColumn();
         if ( hasDepth() ) {
-            depthControl = createDepthControl(-80);
+            depthControl = createDepthControl();
             g1.add(depthControl);
         }
         if ( hasRatio() ) {
-	        if ( kneedB > 0 ) {
-    	        kneeControl = createKneeControl(kneedB);
-        		g1.add(kneeControl);
-        	}
 	        ratioControl = createRatioControl();
     	    g1.add(ratioControl);
         }
-        thresholdControl = createThresholdControl(getMinimumThreshold());
+        thresholdControl = createThresholdControl();
         g1.add(thresholdControl);
         add(g1);
 
         ControlColumn g2 = new ControlColumn();
-        attackControl = createAttackControl(getMinimumAttack(), 100f, 20f);
+        attackControl = createAttackControl();
         g2.add(attackControl);
         if ( hasHold() ) {
-	        holdControl = createHoldControl(0, 1000, 10);
+	        holdControl = createHoldControl();
     	    g2.add(holdControl);
         }
-        releaseControl = createReleaseControl(getMinimumRelease(), 2000, 200);
+        releaseControl = createReleaseControl();
         g2.add(releaseControl);
 		add(g2);
 
         ControlColumn g3 = new ControlColumn();
         boolean useg3 = false;
         if ( hasGain() ) {
-            gainControl = createGainControl(-12, 12);
+            gainControl = createGainControl();
             g3.add(gainControl);
             useg3 = true;
         }
@@ -80,77 +82,68 @@ abstract public class DynamicsControls extends AudioControls
 
 	protected boolean hasGainReductionIndicator() { return false; }
 
-    protected float getMinimumThreshold() {
-        return -40f; // -60 in Expander, Gate !!!
-    }
+	protected ControlLaw getThresholdLaw() {
+		return THRESH_LAW;
+	}
 
-    protected float getMinimumAttack() {
-    	return 0.1f;
-    }
-    
-    protected float getMinimumRelease() {
-    	return 2f;
-    }
-    
-    protected FloatControl createThresholdControl(float min) {
-        LinearLaw law = new LinearLaw(min, 20f, "dB");
-        FloatControl threshold = new FloatControl(THRESHOLD+idOffset, getString("Threshold"), law, 0.1f, 0f);
-        threshold.setInsertColor(Color.white);
-        return threshold;
+	protected FloatControl createThresholdControl() {
+        return new FloatControl(THRESHOLD+idOffset, getString("Threshold"), getThresholdLaw(), 0.1f, 0f);
     }
 
     protected boolean hasRatio() { return false; }
 
     protected FloatControl createRatioControl() {
-        ControlLaw law = new LogLaw(1.5f, 10f, "");
-        FloatControl ratio = new FloatControl(RATIO+idOffset, getString("Ratio"), law, 0.1f, 2f);
-        ratio.setInsertColor(java.awt.Color.magenta.darker());
+        FloatControl ratio = new FloatControl(RATIO+idOffset, getString("Ratio"), RATIO_LAW, 0.1f, 2f);
+        ratio.setInsertColor(java.awt.Color.BLUE);
         return ratio;
     }
 
-    protected FloatControl createKneeControl(float kneedB) {
-        ControlLaw law = new LinearLaw(0f, kneedB, "dB");
-        FloatControl knee = new FloatControl(KNEE+idOffset, getString("Knee"), law, 0.1f, kneedB / 2);
-        return knee;
+    protected ControlLaw getAttackLaw() {
+    	return ATTACK_LAW;
     }
-
-    protected FloatControl createAttackControl(float min, float max, float init) {
-        ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl attack = new FloatControl(ATTACK+idOffset, getString("Attack"), law, 0.1f, init);
-        attack.setInsertColor(Color.red.darker());
-        return attack;
+    
+    protected FloatControl createAttackControl() {
+        ControlLaw law = getAttackLaw();
+        return new FloatControl(ATTACK+idOffset, getString("Attack"), law, 0.1f, law.getMinimum());
     }
 
     protected boolean hasHold() { return false; }
 
-    protected FloatControl createHoldControl(float min, float max, float init) {
-        ControlLaw law = new LinearLaw(min, max, "ms");
-        FloatControl hold = new FloatControl(HOLD+idOffset, getString("Hold"), law, 1f, init);
-        hold.setInsertColor(Color.red.darker());
-        return hold;
+    protected ControlLaw getHoldLaw() {
+    	return HOLD_LAW;
+    }
+    
+    protected FloatControl createHoldControl() {
+        return new FloatControl(HOLD+idOffset, getString("Hold"), getHoldLaw(), 1f, 10f);
     }
 
-    protected FloatControl createReleaseControl(float min, float max, float init) {
-        ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl release = new FloatControl(RELEASE+idOffset, getString("Release"), law, 1f, init);
-        release.setInsertColor(Color.red.darker());
-        return release;
+    protected ControlLaw getReleaseLaw() {
+    	return RELEASE_LAW;
+    }
+    
+    protected FloatControl createReleaseControl() {
+        ControlLaw law = getReleaseLaw();
+        return new FloatControl(RELEASE+idOffset, getString("Release"), law, 1f, law.getMinimum());
     }
 
     protected boolean hasGain() { return false; }
 
-    protected FloatControl createGainControl(float min, float max) {
-        ControlLaw law = new LinearLaw(min, max, "dB");
-        FloatControl gain = new FloatControl(GAIN+idOffset, getString("Gain"), law, 1f, 0);
-        gain.setInsertColor(Color.white);
-        return gain;
+    protected ControlLaw getGainLaw() {
+    	return GAIN_LAW;
+    }
+    
+    protected FloatControl createGainControl() {
+        return new FloatControl(GAIN+idOffset, getString("Gain"), getGainLaw(), 1f, 0);
     }
 
     protected boolean hasDepth() { return false; }
 
-    protected FloatControl createDepthControl(float depth) {
-        ControlLaw law = new LinearLaw(depth, 0, "dB");
-        FloatControl depthC = new FloatControl(DEPTH+idOffset, getString("Depth"), law, 1f, -40);
+    protected ControlLaw getDepthLaw() {
+    	return DEPTH_LAW;
+    }
+    
+    protected FloatControl createDepthControl() {
+        FloatControl depthC = new FloatControl(DEPTH+idOffset, getString("Depth"), getDepthLaw(), 1f, -40);
         depthC.setInsertColor(Color.lightGray);
         return depthC;
     }
@@ -174,11 +167,6 @@ abstract public class DynamicsControls extends AudioControls
     public float getRatio() {
         if ( ratioControl == null ) return 1f;
         return ratioControl.getValue();
-    }
-
-    public float getKneedB() {
-        if ( kneeControl == null ) return 0f; // 0dB span, totally hard knee
-        return kneeControl.getValue(); // !!! !!! return converted
     }
 
     public float getAttackMilliseconds() {

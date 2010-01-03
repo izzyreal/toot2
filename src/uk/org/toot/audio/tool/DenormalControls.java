@@ -14,7 +14,7 @@ public class DenormalControls extends AudioControls
 {
 	private final static int DENORM_PERCENT_ID = 1;
 	private final static float ALPHA = 0.99f;	
-	private final static ControlLaw percentLaw = new LinearLaw(0, 100, "%");
+	private final static ControlLaw PERCENT_LAW = new LinearLaw(0, 100, "%");
 	
 	private float denormAverage = 0f;
 	
@@ -32,7 +32,7 @@ public class DenormalControls extends AudioControls
     private class DenormIndicator extends FloatControl
     {
 		public DenormIndicator() {
-			super(DENORM_PERCENT_ID, "Denorms", percentLaw, 0.1f, 0f);
+			super(DENORM_PERCENT_ID, "Denorms", PERCENT_LAW, 0.1f, 0f);
 			indicator = true;
 		}
     	

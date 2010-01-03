@@ -19,6 +19,9 @@ import uk.org.toot.control.LinearLaw;
 
 public class DualMultiWaveOscillatorControls extends CompoundControl implements DualMultiWaveOscillatorVariables 
 {
+    private final static ControlLaw TUNING_LAW = new LinearLaw(1f, 3f, "");
+    private final static ControlLaw WIDTH_LAW = new LinearLaw(0.01f, 0.99f, "");
+    
 	public final static int SAW_LEVEL = 0;
 	public final static int SQR_LEVEL = 1;
 	public final static int WIDTH = 2;
@@ -71,15 +74,13 @@ public class DualMultiWaveOscillatorControls extends CompoundControl implements 
 	}
 
 	protected FloatControl createLevelControl(int id, String name) {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(id+idOffset, getString(name), law, 0.01f, 0.5f);
+        FloatControl control = new FloatControl(id+idOffset, getString(name), LinearLaw.UNITY, 0.01f, 0.5f);
         control.setInsertColor(Color.BLACK);
         return control;
 	}
 	
 	protected FloatControl createWidthControl() {
-        ControlLaw law = new LinearLaw(0.01f, 0.99f, "");
-        FloatControl control = new FloatControl(WIDTH+idOffset, getString("Width"), law, 0.01f, 0.5f){
+        FloatControl control = new FloatControl(WIDTH+idOffset, getString("Width"), WIDTH_LAW, 0.01f, 0.5f){
             private final String[] presetNames = { "50%" };
 
             public String[] getPresetNames() {
@@ -98,8 +99,7 @@ public class DualMultiWaveOscillatorControls extends CompoundControl implements 
 	}
 
 	protected FloatControl createTuningControl() {
-        ControlLaw law = new LinearLaw(1f, 3f, "");
-        FloatControl control = new FloatControl(TUNING+idOffset, getString("Sync"), law, 0.01f, 1f);
+        FloatControl control = new FloatControl(TUNING+idOffset, getString("Sync"), TUNING_LAW, 0.01f, 1f);
         control.setInsertColor(Color.YELLOW);
         return control;		
 	}

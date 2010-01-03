@@ -20,8 +20,6 @@ public class AbstractDelayControls extends AudioControls
     private static final int MIX_ID = 124;
     protected static final int DELAY_FACTOR_ID = 125;
 
-    protected static final ControlLaw UNITY_LIN_LAW = new LinearLaw(0f, 1f, "");
-
     private BooleanControl feedbackInvertControl;
     private FloatControl feedbackControl;
     private BooleanControl mixInvertControl;
@@ -38,8 +36,7 @@ public class AbstractDelayControls extends AudioControls
     }
 
     protected FloatControl createFeedbackControl() {
- 		feedbackControl = new FloatControl(FEEDBACK_ID, getString("Resonance"), UNITY_LIN_LAW, 0.01f, 0f);
-        feedbackControl.setInsertColor(Color.orange);
+ 		feedbackControl = new FloatControl(FEEDBACK_ID, getString("Resonance"), LinearLaw.UNITY, 0.01f, 0f);
         return feedbackControl;
  	}
 
@@ -92,7 +89,7 @@ public class AbstractDelayControls extends AudioControls
         };
 
         public MixControl() {
-            super(MIX_ID, getString("Mix"), UNITY_LIN_LAW, 0.01f, 0.5f);
+            super(MIX_ID, getString("Mix"), LinearLaw.UNITY, 0.01f, 0.5f);
             setInsertColor(Color.white);
         }
 

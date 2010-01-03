@@ -8,7 +8,6 @@ package uk.org.toot.synth.modules.filter;
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.filter.FilterControlIds.*;
 
-import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -21,6 +20,8 @@ import uk.org.toot.control.LinearLaw;
 public class FilterControls extends CompoundControl 
 	implements FilterVariables
 {
+    private final static ControlLaw SEMITONE_LAW = new LinearLaw(-48, 96, "semitones");
+    
 	private FloatControl cutoffControl;
 	private FloatControl resonanceControl;
 	
@@ -74,17 +75,11 @@ public class FilterControls extends CompoundControl
 	}
 
 	protected FloatControl createCutoffControl() {
-        ControlLaw law = new LinearLaw(-48, 96, "semitones");
-        FloatControl control = new FloatControl(FREQUENCY+idOffset, getString("Cutoff"), law, 1f, 0f);
-        control.setInsertColor(Color.yellow);
-        return control;		
+        return new FloatControl(FREQUENCY+idOffset, getString("Cutoff"), SEMITONE_LAW, 1f, 0f);
 	}
 
 	protected FloatControl createResonanceControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(RESONANCE+idOffset, getString("Resonance"), law, 0.01f, 0.25f);
-        control.setInsertColor(Color.orange);
-        return control;				
+        return new FloatControl(RESONANCE+idOffset, getString("Resonance"), LinearLaw.UNITY, 0.01f, 0.25f);
 	}
 
 	public float getCutoff() {

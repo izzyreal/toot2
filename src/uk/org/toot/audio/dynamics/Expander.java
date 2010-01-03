@@ -3,6 +3,8 @@
 package uk.org.toot.audio.dynamics;
 
 import static uk.org.toot.misc.Localisation.*;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
 
 public class Expander extends DynamicsProcess
 {
@@ -25,11 +27,13 @@ public class Expander extends DynamicsProcess
 
     public static class Controls extends DynamicsControls
     {
-        public Controls() {
+    	private final static ControlLaw THRESH_LAW = new LinearLaw(-60f, 20f, "dB");
+
+    	public Controls() {
             super(DynamicsIds.EXPANDER_ID, getString("Expander"));
         }
 
-        protected float getMinimumThreshold() { return -60f; }
+        protected ControlLaw getThresholdLaw() { return THRESH_LAW; }
 
 	    protected boolean hasRatio() { return true; }
     }

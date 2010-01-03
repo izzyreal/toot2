@@ -22,6 +22,8 @@ import uk.org.toot.control.LogLaw;
 public class AmplifierControls extends CompoundControl 
 	implements AmplifierVariables
 {
+	private final static ControlLaw LEVEL_LAW = new LogLaw(0.01f, 1f, "");
+	
 	private FloatControl velocityTrackControl;
 	private FloatControl levelControl;
 	
@@ -76,17 +78,13 @@ public class AmplifierControls extends CompoundControl
 	}
 
 	protected FloatControl createVelocityTrackControl() {
-        ControlLaw law = new LinearLaw(0f, 1f, "");
-        FloatControl control = new FloatControl(VEL_TRACK+idOffset, getString("Velocity"), law, 0.01f, 0.5f);
+        FloatControl control = new FloatControl(VEL_TRACK+idOffset, getString("Velocity"), LinearLaw.UNITY, 0.01f, 0.5f);
         control.setInsertColor(Color.BLUE);
         return control;				
 	}
 
 	protected FloatControl createLevelControl() {
-		ControlLaw law = new LogLaw(0.01f, 1f, "");
-        FloatControl control = new FloatControl(LEVEL+idOffset, getString("Level"), law, 0.01f, 0.1f);
-        control.setInsertColor(Color.BLACK);
-        return control;						
+        return new FloatControl(LEVEL+idOffset, getString("Level"), LEVEL_LAW, 0.01f, 0.1f);
 	}
 	
 	public float getVelocityTrack() {

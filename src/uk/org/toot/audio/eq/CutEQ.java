@@ -6,6 +6,9 @@
 package uk.org.toot.audio.eq;
 
 import uk.org.toot.audio.filter.Filter;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
+import uk.org.toot.control.LogLaw;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -34,21 +37,23 @@ public class CutEQ extends AbstractSerialEQ
      */
     public static class Controls extends EQ.Controls
     {
+        private final static ControlLaw GAIN_LAW = new LinearLaw(0, 0, "dB"); // lin(dB) is log(val) !
+        private final static float Q = 1.1f;
+        private final static ControlLaw Q_LAW = new LogLaw(Q, Q, "");
+
         public Controls() {
             super(EQIds.CUT_EQ_ID, getString("Cut.EQ"));
-            float Q = 1.1f;
-            float L = 0f;
             ControlColumn g = new ControlColumn();
             g.add(new ClassicFilterControls("High", 4, // !!! !!!
                 	Filter.Type.LPF, true,
                     40f, 12000f, 12000f, false,
-                    Q, Q, Q, true,
-                    L, L, L, true));
+                    Q_LAW, Q, true,
+                    GAIN_LAW, 0, true));
             g.add(new ClassicFilterControls("Low", 0, // !!! !!!
                 	Filter.Type.HPF, true,
                     20f, 5000f, 20f, false,
-                    Q, Q, Q, true,
-                    L, L, L, true));
+                    Q_LAW, Q, true,
+                    GAIN_LAW, 0, true));
             add(g);
         }
     }

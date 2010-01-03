@@ -90,8 +90,7 @@ public class Example3SynthControls extends CompoundControl
 		}
 
 		private FloatControl createControl(int id, String name) {
-			LinearLaw law = new LinearLaw(0f, 1f, "");
-			FloatControl control = new FloatControl(id, name, law, 0.001f, 0.2f);
+			FloatControl control = new FloatControl(id, name, LinearLaw.UNITY, 0.001f, 0.2f);
 			control.setInsertColor(Color.WHITE);
 			return control;
 		}

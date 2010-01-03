@@ -3,6 +3,8 @@
 package uk.org.toot.audio.dynamics;
 
 import static uk.org.toot.misc.Localisation.*;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
 
 public class Gate extends DynamicsProcess
 {
@@ -42,11 +44,13 @@ public class Gate extends DynamicsProcess
 
     public static class Controls extends DynamicsControls
     {
+    	private final static ControlLaw THRESH_LAW = new LinearLaw(-80f, 20f, "dB");
+
         public Controls() {
             super(DynamicsIds.GATE_ID, getString("Gate"));
         }
 
-        protected float getMinimumThreshold() { return -60f; }
+        protected ControlLaw getThresholdLaw() { return THRESH_LAW; }
 
 	    protected boolean hasHold() { return true; }
 

@@ -6,6 +6,9 @@
 package uk.org.toot.audio.delay;
 
 import uk.org.toot.audio.core.AudioControls;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LinearLaw;
+
 import java.util.List;
 
 public class MultiTapDelayControls extends AudioControls
@@ -15,8 +18,9 @@ public class MultiTapDelayControls extends AudioControls
     public MultiTapDelayControls(int idOffset, int ntaps, float msMax, String name) {
         super(idOffset, name);
         taps = new java.util.ArrayList<DelayTap>();
+    	ControlLaw law = new LinearLaw(0.1f, msMax, "ms");
         for ( int t = 0; t < ntaps; t++ ) {
-            DelayTapControls controls = new DelayTapControls(idOffset+t+t, msMax);
+            DelayTapControls controls = new DelayTapControls(idOffset+t+t, law);
             add(controls);
             taps.add(controls);
         }

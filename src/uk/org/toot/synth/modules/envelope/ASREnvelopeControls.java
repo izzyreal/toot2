@@ -8,7 +8,6 @@ package uk.org.toot.synth.modules.envelope;
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.envelope.EnvelopeControlIds.*;
 
-import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -108,9 +107,7 @@ public class ASREnvelopeControls extends CompoundControl
 
     protected FloatControl createAttackControl(float min, float max, float init) {
         ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl attackControl = new FloatControl(ATTACK+idOffset, getString("Attack"), law, 0.1f, init);
-        attackControl.setInsertColor(Color.red.darker());
-        return attackControl;
+        return new FloatControl(ATTACK+idOffset, getString("Attack"), law, 0.1f, init);
     }
 
 	protected BooleanControl createSustainControl() {
@@ -120,9 +117,7 @@ public class ASREnvelopeControls extends CompoundControl
 
     protected FloatControl createReleaseControl(float min, float max, float init) {
         ControlLaw law = new LogLaw(min, max, "ms");
-        FloatControl releaseControl = new FloatControl(RELEASE+idOffset, getString("Release"), law, 1f, init);
-        releaseControl.setInsertColor(Color.red.darker());
-        return releaseControl;
+        return new FloatControl(RELEASE+idOffset, getString("Release"), law, 1f, init);
     }
 
 	public float getAttackCoeff() {

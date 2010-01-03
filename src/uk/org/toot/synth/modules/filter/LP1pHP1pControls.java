@@ -20,6 +20,8 @@ import uk.org.toot.control.LogLaw;
 public class LP1pHP1pControls extends CompoundControl 
 	implements LP1pHP1pVariables
 {
+    private final static ControlLaw LP_LAW = new LogLaw(1f, 16f, "");
+    private final static ControlLaw HP_LAW = new LogLaw(0.25f, 4f, "");
 	private final static int LPRATIO = 0;
 	private final static int HPRATIO = 1;
 	
@@ -76,15 +78,13 @@ public class LP1pHP1pControls extends CompoundControl
 	}
 
 	protected FloatControl createLPRatioControl() {
-        ControlLaw law = new LogLaw(1f, 16f, "");
-        FloatControl control = new FloatControl(LPRATIO+idOffset, getString("LP"), law, 1f, 4);
+        FloatControl control = new FloatControl(LPRATIO+idOffset, getString("LP"), LP_LAW, 1f, 4);
         control.setInsertColor(Color.yellow);
         return control;		
 	}
 
 	protected FloatControl createHPRatioControl() {
-        ControlLaw law = new LogLaw(0.25f, 4f, "");
-        FloatControl control = new FloatControl(HPRATIO+idOffset, getString("HP"), law, 0.1f, 1f);
+        FloatControl control = new FloatControl(HPRATIO+idOffset, getString("HP"), HP_LAW, 0.1f, 1f);
         control.setInsertColor(Color.yellow);
         return control;		
 	}
