@@ -14,7 +14,7 @@ public class DualStateVariableFilterElement
 	public float low, high, band, notch;
 	
 	public float filter(float in, DualStateVariableFilterConfig config) {
-		float i1 = (prev + in) / 2; // linearly interpolated double sampled
+		float i1 = (prev + in) * 0.5f; // linearly interpolated double sampled
 		prev = in;
 		
 		// first filter, interpolated sample

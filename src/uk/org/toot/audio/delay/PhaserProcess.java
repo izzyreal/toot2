@@ -51,7 +51,7 @@ public class PhaserProcess extends SimpleAudioProcess
         
         for ( int i = 0; i < ns; i++ ) {
         	// calculate and update sweep lfo...
-            float d  = dmin + (dmax - dmin) * ((FastMath.sin( lfoPhase ) + 1f) / 2f);
+            float d  = dmin + (dmax - dmin) * ((FastMath.sin( lfoPhase ) + 1f) * 0.5f);
             lfoPhase += _lfoInc;
             if ( lfoPhase >= Math.PI )
             	lfoPhase -= Math.PI * 2;

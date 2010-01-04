@@ -14,7 +14,7 @@ public class StateVariableFilterElement
 	float mix = 0f;
 	
 	public float filter(float in, float freq, float damp) {
-		float i1 = (prev + in) / 2; // linearly interpolated double sampled
+		float i1 = (prev + in) * 0.5f; // linearly interpolated double sampled
 		prev = in;
 		notch = i1 - damp * band;
 		low   = low + freq * band;								
