@@ -13,6 +13,11 @@ import java.util.List;
 
 public class MultiTapDelayControls extends AudioControls
 {
+    /**
+     * @link aggregationByValue
+     * @supplierCardinality 1 
+     */
+    /*#protected DelayTap linkProcesses;*/
     private List<DelayTap> taps;
 
     public MultiTapDelayControls(int idOffset, int ntaps, float msMax, String name) {

@@ -11,9 +11,12 @@ import uk.org.toot.control.CompoundControl;
 import static uk.org.toot.control.id.ProviderId.TOOT_PROVIDER_ID;;
 
 /**
- * A List of SynthControls
+ * A List of SynthControls.
+ * The root of the tree of all synth controls.
+ * This class contains SynthControls, they contain CompoundControls for each channel.
+ * These channel CompoundControls typically contain other CompoundControls for different
+ * modules but ultimately the leaves of the tree are Controls.
  * @author st
- *
  */
 public class SynthRackControls extends CompoundControl
 {

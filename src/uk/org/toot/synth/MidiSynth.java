@@ -11,11 +11,15 @@ import uk.org.toot.midi.core.MidiInput;
 
 /**
  * A MidiSynth is a MidiDevice which is a MidiInput.
- * An implementation may implement AudioProcess at any level, so this is not defined here.
+ * It is also an AudioDevice, it may implement AudioProcess at any level.
  * @author st
- *
  */
 public interface MidiSynth extends MidiDevice, MidiInput, AudioDevice
 {
-	public void setLocation(String location); /// !!! called once by SynthRack
+	/**
+	 * Set a unique location in a system for this MidiSynth to allow
+	 * disambiguation of multiple synths of the same type.
+	 * @param location the unique location
+	 */
+	public void setLocation(String location);	
 }

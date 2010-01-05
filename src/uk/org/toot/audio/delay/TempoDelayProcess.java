@@ -23,6 +23,10 @@ public class TempoDelayProcess implements AudioProcess
      */
     private DelayBuffer delayBuffer;
 
+    /**
+     * @link aggregationByValue
+     * @supplierCardinality 1 
+     */
     private DelayBuffer tappedBuffer; // just for conform()
 
     private PluginSupport support;

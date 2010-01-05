@@ -39,8 +39,7 @@ public abstract class SynthChannel implements MidiChannel
 	public SynthChannel() {
 	}
 	
-	public void setLocation(String location) {	
-	}
+	public abstract void setLocation(String location);	
 	
 	private static void createFreqTable() {
 		for ( int i = 0; i < freqTable.length; i++ ) {

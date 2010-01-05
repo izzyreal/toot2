@@ -7,7 +7,12 @@ package uk.org.toot.synth;
 
 import uk.org.toot.control.CompoundControl;
 
-public class SynthControls extends CompoundControl
+/**
+ * This class represents the controls for a synth.
+ * All of the children of SynthRackControls must extend this class.
+ * @author st
+ */
+public abstract class SynthControls extends CompoundControl
 {
 	public SynthControls(int id, String name) {
 		super(id, name);

@@ -17,10 +17,14 @@ public class MultiTapDelayProcess implements AudioProcess
 {
     /**
      * @link aggregationByValue
-     * @supplierCardinality 1 
+     * @supplierCardinality 1
      */
     private DelayBuffer delayBuffer;
 
+    /**
+     * @link aggregationByValue
+     * @supplierCardinality 1
+     */
     private DelayBuffer tappedBuffer; // just for conform()
 
     /**

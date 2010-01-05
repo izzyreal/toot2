@@ -7,6 +7,11 @@ package uk.org.toot.synth;
 
 import uk.org.toot.control.CompoundControl;
 
+/**
+ * This class represents SynthControls that are comprised of global and
+ * per channel CompoundControls.
+ * @author st
+ */
 public class ChannelledSynthControls extends SynthControls
 {
 	private CompoundControl globalControls;

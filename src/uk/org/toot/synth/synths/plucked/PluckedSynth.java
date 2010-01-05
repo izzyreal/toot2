@@ -15,6 +15,12 @@ import uk.org.toot.dsp.jSTK.instrument.PluckedString;
 import uk.org.toot.synth.BasicMidiSynth;
 import uk.org.toot.synth.SynthChannel;
 
+/**
+ * This class models a plucked string instrument.
+ * Each string has its own channel to allow different strings to play the same notes.
+ * @author st
+ *
+ */
 public class PluckedSynth extends BasicMidiSynth implements AudioOutput
 {
 	private PluckedSynthControls controls;
@@ -100,8 +106,7 @@ public class PluckedSynth extends BasicMidiSynth implements AudioOutput
 
 		@Override
 		public void allNotesOff() {
-			// TODO Auto-generated method stub
-			
+			string.noteOff(0.1f); // !!!
 		}
 
 		@Override
@@ -109,5 +114,9 @@ public class PluckedSynth extends BasicMidiSynth implements AudioOutput
 			// TODO Auto-generated method stub
 			
 		}
+
+		public void setLocation(String location) {
+			// we don't need a location
+		}		
 	}
 }

@@ -14,7 +14,6 @@ import uk.org.toot.audio.system.AudioOutput;
  * A SynthChannel which is monophonic.
  * Supports glide, i.e. fingered portamento
  * @author st
- *
  */
 public abstract class MonophonicSynthChannel extends SynthChannel implements AudioOutput 
 {

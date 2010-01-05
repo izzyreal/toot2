@@ -18,9 +18,6 @@ public class CompoundControlMidiPersistence implements CompoundControlPersistenc
 {
     private File root;
 
-    /** @link dependency */
-    /*#MidiPersistence lnkMidiPersistence;*/
-
     public CompoundControlMidiPersistence(File root) {
         this.root = root;
     }

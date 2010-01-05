@@ -23,7 +23,6 @@ import static uk.org.toot.midi.misc.Controller.*;
  * So it is multitimbral and each SynthChannel may be a different implementation,
  * think a multitimbral synth with channel 1 a TX81Z, channel 2 a Moog etc.
  * @author st
- *
  */
 abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiSynth
 {

@@ -13,8 +13,8 @@ import uk.org.toot.service.*;
 import uk.org.toot.synth.spi.SynthChannelServiceProvider;
 
 /**
- * SynthServices specialises Services with static methods to simplify the
- * provision of plugin synth services extending SynthChannel and SynthControls.
+ * SynthChannelServices specialises Services with static methods to simplify the
+ * provision of synth channel plugins.
  */
 public class SynthChannelServices extends Services
 {

@@ -14,11 +14,9 @@ import uk.org.toot.midi.core.MidiSystem;
 
 /**
  * A SynthRack is an array of MidiSynths.
- * It adds its MidiSynths to a MidiSystem as MidiInputs.
- * It adds one or more AudioOutputs to an AudioSystem.
+ * It adds its MidiSynths to a MidiSystem and an AudioSystem.
  * 
  * @author st
- *
  */
 public class SynthRack
 {

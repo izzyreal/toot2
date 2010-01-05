@@ -13,6 +13,12 @@ public class LinearLaw extends AbstractLaw
 	/*
 	 * A unitless LinearLaw from zero to one (unity)
 	 */
+
+    /**
+     * @link aggregationByValue
+     * @supplierCardinality 1
+     * @label UNITY 
+     */
 	public final static LinearLaw UNITY = new LinearLaw(0, 1, "");
 	
     public LinearLaw(float min, float max, String units) {

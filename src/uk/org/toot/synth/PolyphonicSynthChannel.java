@@ -17,7 +17,6 @@ import uk.org.toot.audio.system.AudioOutput;
  * It is polyphonic, supporting multiple Voices.
  * 
  * @author st
- *
  */
 abstract public class PolyphonicSynthChannel extends SynthChannel implements AudioOutput
 {
@@ -178,7 +177,7 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 			if ( stop ) return false;
 			float[] samples = buffer.getChannel(0);
 			int nsamples = buffer.getSampleCount();
-			for ( int i = 0; i < nsamples; i++ ) {	// TODO !!!
+			for ( int i = 0; i < nsamples; i++ ) {
 				samples[i] += getSample();
 			}
 			return !isComplete();
