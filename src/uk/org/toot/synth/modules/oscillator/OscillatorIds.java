@@ -14,4 +14,5 @@ public class OscillatorIds
     final static int LFO_ID = OSCILLATOR_BASE_ID + 3;
     final static int ENHANCED_LFO_ID = OSCILLATOR_BASE_ID + 4;
     final static int DUAL_MULTI_WAVE_OSCILLATOR_ID = OSCILLATOR_BASE_ID + 5;
+    final static int DSF_OSCILLATOR_ID = OSCILLATOR_BASE_ID + 6;
 }
