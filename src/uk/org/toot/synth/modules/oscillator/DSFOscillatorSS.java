@@ -5,34 +5,35 @@
 
 package uk.org.toot.synth.modules.oscillator;
 
+import uk.org.toot.audio.core.FloatDenormals;
 import uk.org.toot.dsp.Cosine;
 import uk.org.toot.dsp.Sine;
 
 /**
  * This class implements an Oscillator using the Discrete Summation Formula 
- * by Moorer, 1975, as modified by Stilson & Smith.
+ * by Moorer, 1975, as specified by Stilson & Smith.
  * @author st
  */
 public class DSFOscillatorSS
 {
 	private float a;
 	private int np;
-	private Sine sine1, sine2, sine3, sine4;
+	private Sine s1, s2, s3, s4;
 	private Cosine cosine;
 	private float aNm1;
 	
 	/**
 	 * Create a Discrete Summation Formula Oscillator with a spectrum of
-	 * a fundamental frequency and N partial frequencies with amplitude rolling 
-	 * off with respect to the fundamental.
+	 * a fundamental frequency, wn, and np-1 partial frequencies separated by wp, 
+	 * with amplitude rolling off exponentially with increasing frequency.
 	 * 
-	 * @param wn - fundamental normalised frequency
-	 * @param wp - partial separation normalised frequency, not zero!
+	 * @param wn - fundamental normalised frequency, > 0, < PI 
+	 * @param wp - partial separation normalised frequency > 0
 	 * @param a - partial rolloff weight 0..1
 	 * @param np - number of partials, 1..
 	 */
 	public DSFOscillatorSS(float wn, float wp, int np, float a) {
-		assert ( wn > 0f && wn < 0.5f );
+		assert ( wn > 0f && wn < Math.PI );
 		assert wp > 0f;
 		assert np > 0;
 		assert ( a >= 0 && a < 1f );
@@ -41,10 +42,10 @@ public class DSFOscillatorSS
 		if ( wn + wp * np >= Math.PI ) np = (int)((Math.PI - wn) / wp);
 		this.np = np;
 		aNm1 = (float)Math.pow(a, np-1);
-		sine1 = new Sine(wn + wp * (np-1));
-		sine2 = new Sine(wn + wp * np); 	
-		sine3 = new Sine(wn - wp); 
-		sine4 = new Sine(wn);
+		s1 = new Sine(wn + wp * (np-1));
+		s2 = new Sine(wn + wp * np); 	
+		s3 = new Sine(wn - wp); 
+		s4 = new Sine(wn);
 		cosine = new Cosine(wp);
 	}
 	
@@ -54,7 +55,8 @@ public class DSFOscillatorSS
 	}
 	
 	public float getSample() {
-		return (sine4.out() - a * (sine3.out() + aNm1 * (sine2.out() - a * sine1.out()))) /
-					(1 - 2 * a * cosine.out() + a * a);
+		float denom = (1 - 2 * a * cosine.out() + a * a);
+		if ( FloatDenormals.isDenormalOrZero(denom) ) return 0f;
+		return (s4.out() - a * (s3.out() + aNm1 * (s2.out() - a * s1.out()))) /	denom;
 	}
 }

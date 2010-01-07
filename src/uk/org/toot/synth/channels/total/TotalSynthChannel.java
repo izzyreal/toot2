@@ -12,6 +12,7 @@ import uk.org.toot.synth.modules.envelope.EnvelopeGenerator;
 import uk.org.toot.synth.modules.envelope.EnvelopeVariables;
 import uk.org.toot.synth.modules.oscillator.DSFOscillatorSS;
 import uk.org.toot.synth.modules.oscillator.DSFOscillatorVariables;
+import uk.org.toot.synth.modules.oscillator.UnisonVariables;
 
 /**
  * @author st
@@ -19,12 +20,14 @@ import uk.org.toot.synth.modules.oscillator.DSFOscillatorVariables;
 public class TotalSynthChannel extends PolyphonicSynthChannel
 {
 	private DSFOscillatorVariables oscVars;
+	private UnisonVariables unisonVars;
 	private EnvelopeVariables envAVars;
 	private AmplifierVariables ampVars;
 	
 	public TotalSynthChannel(TotalSynthControls controls) {
 		super(controls.getName());
 		oscVars = controls.getOscillatorVariables();
+		unisonVars = controls.getUnisonVariables();
 		envAVars = controls.getEnvelopeVariables(0);
 		ampVars = controls.getAmplifierVariables();
 	}
@@ -41,17 +44,41 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 
 	public class TotalVoice extends AbstractVoice
 	{
-		private DSFOscillatorSS osc;
+		private DSFOscillatorSS[] osc;
 		private EnvelopeGenerator envelopeA;
+		private int nosc;
 		
 		public TotalVoice(int pitch, int velocity) {
 			super(pitch, velocity);
+			nosc = unisonVars.getOscillatorCount();
+			if ( (nosc & 1) == 0 ) nosc += 1; // force odd TODO Even/Odd IntegerLaws
+			osc = new DSFOscillatorSS[nosc];
 			float wn = (float)(frequency * 2 * Math.PI / sampleRate);
 			float ratio = (float)oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
-			float wp = wn * ratio;
 			int np = oscVars.getPartialCount();
 			float a  = oscVars.getPartialRolloffFactor();
-			osc = new DSFOscillatorSS(wn, wp, np, a);
+			
+			osc[0] = new DSFOscillatorSS(wn, wn * ratio, np, a);
+			
+			float detune = unisonVars.getPitchSpread() * 0.02f * wn;
+			float offset = unisonVars.getPhaseSpread() * (float)Math.PI / wn;
+			int npairs = (nosc - 1) / 2;
+			float wo, ws;
+			int off;
+			DSFOscillatorSS osct;
+			for ( int o = 0; o < npairs; o++ ) {
+				wo = detune * (float)(npairs - o) / npairs;
+				ws = wn + wo;
+				osct = osc[o+o+1] = new DSFOscillatorSS(ws, ws * ratio, np, a);
+				off = (int)(offset * Math.random());
+				while ( off-- > 0 ) osct.getSample();
+				ws = wn - wo;
+				osct = osc[o+o+2] = new DSFOscillatorSS(ws, ws * ratio, np, a);				
+				off = (int)(offset * Math.random());
+				while ( off-- > 0 ) osct.getSample();
+			}
+			
+			
 			envelopeA = new EnvelopeGenerator(envAVars);
 			envelopeA.trigger();
 		}
@@ -63,13 +90,20 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		
 		@Override
 		public boolean mix(AudioBuffer buffer) {
-			osc.update(oscVars.getPartialRolloffFactor());
+			float a = oscVars.getPartialRolloffFactor();
+			for ( int i = 0; i < nosc; i++ ) {
+				osc[i].update(a);
+			}
 			return super.mix(buffer);
 		}
 		
 		@Override
 		protected float getSample() {
-			return osc.getSample() * 0.1f * envelopeA.getEnvelope(release);
+			float sample = 0f;
+			for ( int i = 0; i < nosc; i++ ) {
+				sample += osc[i].getSample();
+			}
+			return sample * 0.1f * envelopeA.getEnvelope(release);
 		}
 
 		@Override
