@@ -5,6 +5,7 @@
 
 package uk.org.toot.synth.modules.oscillator;
 
+import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -70,16 +71,19 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 
 	protected IntegerControl createRatioControl(int id, String name) {
 		IntegerControl control = new IntegerControl(id+idOffset, name, RATIO_LAW, 1f, 1);
+		control.setInsertColor(Color.GREEN);
 		return control;
 	}
 	
 	protected IntegerControl createPartialsControl(int id) {
 		IntegerControl control = new IntegerControl(id+idOffset, getString("Partials"), PARTIAL_LAW, 1f, 10);
+		control.setInsertColor(Color.BLUE);
 		return control;		
 	}
 	
 	protected FloatControl createRolloffControl(int id) {
 		FloatControl control = new FloatControl(id+idOffset, getString("Rolloff"), LinearLaw.UNITY, 1f, 0.5f);
+		control.setInsertColor(Color.WHITE);
 		return control;
 	}
 
@@ -103,7 +107,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	}
 	
 	protected float deriveRolloffFactor() {
-		return rolloffControl.getValue();
+		return rolloffControl.getValue() * 0.99f;
 	}
 	
 	public int getPartialCount() {

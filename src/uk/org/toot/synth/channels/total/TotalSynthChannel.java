@@ -9,7 +9,7 @@ import uk.org.toot.synth.PolyphonicSynthChannel;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.EnvelopeGenerator;
 import uk.org.toot.synth.modules.envelope.EnvelopeVariables;
-import uk.org.toot.synth.modules.oscillator.DSFOscillator;
+import uk.org.toot.synth.modules.oscillator.DSFOscillatorSS;
 import uk.org.toot.synth.modules.oscillator.DSFOscillatorVariables;
 
 /**
@@ -40,7 +40,7 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 
 	public class TotalVoice extends AbstractVoice
 	{
-		private DSFOscillator osc;
+		private DSFOscillatorSS osc;
 		private EnvelopeGenerator envelopeA;
 		
 		public TotalVoice(int pitch, int velocity) {
@@ -48,9 +48,9 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			float wn = (float)(frequency * 2 * Math.PI / sampleRate);
 			float ratio = (float)oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
 			float wp = wn * ratio;
-			float np = oscVars.getPartialCount();
+			int np = oscVars.getPartialCount();
 			float a  = oscVars.getPartialRolloffFactor();
-			osc = new DSFOscillator(wn, wp, np, a);
+			osc = new DSFOscillatorSS(wn, wp, np, a);
 			envelopeA = new EnvelopeGenerator(envAVars);
 			envelopeA.trigger();
 		}
