@@ -5,6 +5,7 @@
 
 package uk.org.toot.synth.channels.total;
 
+import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.synth.PolyphonicSynthChannel;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.EnvelopeGenerator;
@@ -58,6 +59,12 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 
 		public void setSampleRate(int sr) {
 			// can't change sample rate dynamically !!!
+		}
+		
+		@Override
+		public boolean mix(AudioBuffer buffer) {
+			osc.update(oscVars.getPartialRolloffFactor());
+			return super.mix(buffer);
 		}
 		
 		@Override

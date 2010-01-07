@@ -16,6 +16,7 @@ import uk.org.toot.dsp.Sine;
 public class DSFOscillatorSS
 {
 	private float a;
+	private int np;
 	private Sine sine1, sine2, sine3, sine4;
 	private Cosine cosine;
 	private float aNm1;
@@ -35,18 +36,21 @@ public class DSFOscillatorSS
 		assert wp > 0f;
 		assert np > 0;
 		assert ( a >= 0 && a < 1f );
-		this.a = a; 						// !!! SHOULDN'T BE CONSTANT
+		this.a = a;
 		// ensure the highest partial is below nyquist
 		if ( wn + wp * np >= Math.PI ) np = (int)((Math.PI - wn) / wp);
-		aNm1 = (float)Math.pow(a, np-1); 	// !!! EXPENSIVE
-		System.out.println("wn="+wn+", wp="+wp+", np="+np+", a="+a+", aNm1="+aNm1);
-		// x represents the fundamental frequency, wp
-		// fi represents the partial separation frequency, wn
+		this.np = np;
+		aNm1 = (float)Math.pow(a, np-1);
 		sine1 = new Sine(wn + wp * (np-1));
 		sine2 = new Sine(wn + wp * np); 	
 		sine3 = new Sine(wn - wp); 
 		sine4 = new Sine(wn);
 		cosine = new Cosine(wp);
+	}
+	
+	public void update(float a) {
+		this.a = a;
+		aNm1 = (float)Math.pow(a, np-1); 	// !!! EXPENSIVE		
 	}
 	
 	public float getSample() {

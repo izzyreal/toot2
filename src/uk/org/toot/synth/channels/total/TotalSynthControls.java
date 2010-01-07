@@ -34,6 +34,7 @@ public class TotalSynthControls extends CompoundControl
 
 	public TotalSynthControls() {
 		super(TOTAL_CHANNEL_ID, NAME);
+		envelopeControls = new EnvelopeControls[2];
 
 		ControlRow oscRow = new ControlRow();
 		oscillatorControls = new DSFOscillatorControls(0, getString("Oscillator"), OSC1_OFFSET);
@@ -41,7 +42,6 @@ public class TotalSynthControls extends CompoundControl
 		add(oscRow);
 		
 		ControlRow envRow = new ControlRow();
-		envelopeControls = new EnvelopeControls[2];
 		envelopeControls[0] = 
 			new EnvelopeControls(0, getString("Amplifier")+" "+getString("Envelope"), AMPENV_OFFSET); 
 		envRow.add(envelopeControls[0]);

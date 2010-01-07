@@ -76,13 +76,13 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	}
 	
 	protected IntegerControl createPartialsControl(int id) {
-		IntegerControl control = new IntegerControl(id+idOffset, getString("Partials"), PARTIAL_LAW, 1f, 10);
+		IntegerControl control = new IntegerControl(id+idOffset, getString("Purity"), PARTIAL_LAW, 1f, 10);
 		control.setInsertColor(Color.BLUE);
 		return control;		
 	}
 	
 	protected FloatControl createRolloffControl(int id) {
-		FloatControl control = new FloatControl(id+idOffset, getString("Rolloff"), LinearLaw.UNITY, 1f, 0.5f);
+		FloatControl control = new FloatControl(id+idOffset, getString("Brightness"), LinearLaw.UNITY, 1f, 0.5f);
 		control.setInsertColor(Color.WHITE);
 		return control;
 	}
