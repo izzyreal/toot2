@@ -26,10 +26,10 @@ public class TotalSynthControls extends CompoundControl
 	
 	// OFFSETS MUST NOT BE CHANGED TO PRESERVE PERSISTENCE PORTABILITY
 	// OFFSETS ARE SLIGHTLY SPARSE TO ALLOW EXTENSION OF EXISTING MODULES
-	private final static int OSC1_OFFSET 	= 0x00; // 8, 5 used, 3 free
+	private final static int OSC1_OFFSET 	= 0x00;
 	private final static int UNISON_OFFSET  = 0x30;
-	private final static int AMP_OFFSET 	= 0x38; // 2, 2 used
-	private final static int AMPENV_OFFSET 	= 0x40; // 8, 6 used, 2 free
+	private final static int AMP_OFFSET 	= 0x38;
+	private final static int AMPENV_OFFSET 	= 0x40;
 
 	private DSFOscillatorControls oscillatorControls;
 	private UnisonControls unisonControls;

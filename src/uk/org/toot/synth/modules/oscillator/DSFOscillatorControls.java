@@ -42,6 +42,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	private int ratioDenominator;
 	private int partialCount;
 	private float rolloffFactor;
+	private int rolloffInt;
 	
 	public DSFOscillatorControls(int instanceIndex, String name, final int idOffset) {
 		super(DSF_OSCILLATOR_ID, instanceIndex, name);
@@ -56,7 +57,8 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 				case RATIO_N: ratioNumerator = deriveRatioNumerator(); break;
 				case RATIO_D: ratioDenominator = deriveRatioDenominator(); break;
 				case PARTIALS: partialCount = derivePartialCount(); break;
-				case ROLLOFF: rolloffFactor = deriveRolloffFactor(); break;
+				case ROLLOFF: rolloffFactor = deriveRolloffFactor(); 
+							  rolloffInt = deriveRolloffInt(); break;
 				}
 			}
 		});
@@ -77,7 +79,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	
 	protected IntegerControl createPartialsControl(int id) {
 		IntegerControl control = new IntegerControl(id+idOffset, getString("Partials"), PARTIAL_LAW, 1f, 10);
-		control.setInsertColor(Color.BLUE);
+		control.setInsertColor(Color.LIGHT_GRAY);
 		return control;		
 	}
 	
@@ -107,7 +109,11 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	}
 	
 	protected float deriveRolloffFactor() {
-		return rolloffControl.getValue() * 0.99f;
+		return rolloffControl.getValue() * 0.98f;
+	}
+	
+	protected int deriveRolloffInt() {
+		return rolloffControl.getIntValue();
 	}
 	
 	public int getPartialCount() {
@@ -118,6 +124,10 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 		return rolloffFactor;
 	}
 
+	public int getPartialRolloffInt() {
+		return rolloffInt;
+	}
+	
 	public int getRatioDenominator() {
 		return ratioDenominator;
 	}

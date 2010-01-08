@@ -67,7 +67,7 @@ public class UnisonControls extends CompoundControl implements UnisonVariables
 	
 	protected IntegerControl createOscillatorCountControl() {
 		IntegerControl control = new IntegerControl(OSC_COUNT+idOffset, getString("Oscs"), OSC_COUNT_LAW, 1f, 1);
-		control.setInsertColor(Color.WHITE);
+		control.setInsertColor(Color.CYAN.darker());
 		return control;
 	}
 	

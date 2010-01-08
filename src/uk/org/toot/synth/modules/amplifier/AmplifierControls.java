@@ -12,17 +12,17 @@ import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.tritonus.share.sampled.TVolumeUtils;
+
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
-import uk.org.toot.control.LogLaw;
 
-public class AmplifierControls extends CompoundControl 
-	implements AmplifierVariables
+public class AmplifierControls extends CompoundControl implements AmplifierVariables
 {
-	private final static ControlLaw LEVEL_LAW = new LogLaw(0.01f, 1f, "");
+	private final static ControlLaw LEVEL_LAW = new LinearLaw(-40f, 0f, "dB");
 	
 	private FloatControl velocityTrackControl;
 	private FloatControl levelControl;
@@ -71,7 +71,7 @@ public class AmplifierControls extends CompoundControl
 	}
 
 	protected float deriveLevel() {
-		return levelControl.getValue();
+		return (float)TVolumeUtils.log2lin(levelControl.getValue());
 	}
 	
 	protected void deriveSampleRateDependentVariables() {
@@ -84,7 +84,7 @@ public class AmplifierControls extends CompoundControl
 	}
 
 	protected FloatControl createLevelControl() {
-        return new FloatControl(LEVEL+idOffset, getString("Level"), LEVEL_LAW, 0.01f, 0.1f);
+        return new FloatControl(LEVEL+idOffset, getString("Level"), LEVEL_LAW, 0.01f, -20f);
 	}
 	
 	public float getVelocityTrack() {

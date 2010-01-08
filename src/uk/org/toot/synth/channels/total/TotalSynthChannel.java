@@ -15,6 +15,8 @@ import uk.org.toot.synth.modules.oscillator.DSFOscillatorVariables;
 import uk.org.toot.synth.modules.oscillator.UnisonVariables;
 
 /**
+ * A synth channel based on Discrete Summation Formulae, hence named Total, the
+ * result of summation.
  * @author st
  */
 public class TotalSynthChannel extends PolyphonicSynthChannel
@@ -23,6 +25,8 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 	private UnisonVariables unisonVars;
 	private EnvelopeVariables envAVars;
 	private AmplifierVariables ampVars;
+	
+	private int rolloffInt = -1;
 	
 	public TotalSynthChannel(TotalSynthControls controls) {
 		super(controls.getName());
@@ -47,6 +51,8 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		private DSFOscillatorSS[] osc;
 		private EnvelopeGenerator envelopeA;
 		private int nosc;
+		private float ampT; // amp tracking factor
+		private float ampLevel;
 		
 		public TotalVoice(int pitch, int velocity) {
 			super(pitch, velocity);
@@ -60,7 +66,9 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			
 			osc[0] = new DSFOscillatorSS(wn, wn * ratio, np, a);
 			
-			float detune = unisonVars.getPitchSpread() * 0.02f * wn;
+			// maximum detune more than 50 cents
+			float detune = unisonVars.getPitchSpread() * 0.03f * wn;
+			// maximum offset in samples, should be doubled but works well
 			float offset = unisonVars.getPhaseSpread() * (float)Math.PI / wn;
 			int npairs = (nosc - 1) / 2;
 			float wo, ws;
@@ -78,9 +86,11 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 				while ( off-- > 0 ) osct.getSample();
 			}
 			
-			
 			envelopeA = new EnvelopeGenerator(envAVars);
 			envelopeA.trigger();
+
+			float ampTracking = ampVars.getVelocityTrack();
+			ampT = velocity == 0 ? 0f : (1 - ampTracking * (1 - amplitude));
 		}
 
 
@@ -90,10 +100,16 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		
 		@Override
 		public boolean mix(AudioBuffer buffer) {
-			float a = oscVars.getPartialRolloffFactor();
-			for ( int i = 0; i < nosc; i++ ) {
-				osc[i].update(a);
+			int ro = oscVars.getPartialRolloffInt();
+			if ( rolloffInt != ro ) {
+				// rolloff factor has changed
+				float a = oscVars.getPartialRolloffFactor();
+				for ( int i = 0; i < nosc; i++ ) {
+					osc[i].update(a);
+				}
+				rolloffInt = ro;
 			}
+			ampLevel = ampVars.getLevel() * ampT;
 			return super.mix(buffer);
 		}
 		
@@ -103,7 +119,7 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			for ( int i = 0; i < nosc; i++ ) {
 				sample += osc[i].getSample();
 			}
-			return sample * 0.1f * envelopeA.getEnvelope(release);
+			return sample * ampLevel * envelopeA.getEnvelope(release);
 		}
 
 		@Override

@@ -14,4 +14,5 @@ public interface DSFOscillatorVariables
 	int getRatioDenominator();
 	int getPartialCount();				// np
 	float getPartialRolloffFactor();	// a
+	int getPartialRolloffInt();			// a as raw int to simplify change detection
 }
