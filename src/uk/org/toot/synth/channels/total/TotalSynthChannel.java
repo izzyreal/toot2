@@ -10,8 +10,10 @@ import uk.org.toot.synth.PolyphonicSynthChannel;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.EnvelopeGenerator;
 import uk.org.toot.synth.modules.envelope.EnvelopeVariables;
+import uk.org.toot.synth.modules.oscillator.DSFOscillator;
 import uk.org.toot.synth.modules.oscillator.DSFOscillatorSS;
 import uk.org.toot.synth.modules.oscillator.DSFOscillatorVariables;
+import uk.org.toot.synth.modules.oscillator.DSFOscillatorW;
 import uk.org.toot.synth.modules.oscillator.UnisonVariables;
 
 /**
@@ -48,23 +50,26 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 
 	public class TotalVoice extends AbstractVoice
 	{
-		private DSFOscillatorSS[] osc;
+		private DSFOscillator[] osc;
 		private EnvelopeGenerator envelopeA;
 		private int nosc;
+		private float ratio;
 		private float ampT; // amp tracking factor
 		private float ampLevel;
+		private boolean canUseWolfram;
 		
 		public TotalVoice(int pitch, int velocity) {
 			super(pitch, velocity);
 			nosc = unisonVars.getOscillatorCount();
 			if ( (nosc & 1) == 0 ) nosc += 1; // force odd TODO Even/Odd IntegerLaws
-			osc = new DSFOscillatorSS[nosc];
+			osc = new DSFOscillator[nosc];
 			float wn = (float)(frequency * 2 * Math.PI / sampleRate);
-			float ratio = (float)oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
+			ratio = (float)oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
 			int np = oscVars.getPartialCount();
 			float a  = oscVars.getPartialRolloffFactor();
+			canUseWolfram = oscVars.canUseWolfram();
 			
-			osc[0] = new DSFOscillatorSS(wn, wn * ratio, np, a);
+			osc[0] = createOscillator(wn, wn * ratio, np, a);
 			
 			// maximum detune more than 50 cents
 			float detune = unisonVars.getPitchSpread() * 0.03f * wn;
@@ -73,15 +78,15 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			int npairs = (nosc - 1) / 2;
 			float wo, ws;
 			int off;
-			DSFOscillatorSS osct;
+			DSFOscillator osct;
 			for ( int o = 0; o < npairs; o++ ) {
 				wo = detune * (float)(npairs - o) / npairs;
 				ws = wn + wo;
-				osct = osc[o+o+1] = new DSFOscillatorSS(ws, ws * ratio, np, a);
+				osct = osc[o+o+1] = createOscillator(ws, ws * ratio, np, a);
 				off = (int)(offset * Math.random());
 				while ( off-- > 0 ) osct.getSample();
 				ws = wn - wo;
-				osct = osc[o+o+2] = new DSFOscillatorSS(ws, ws * ratio, np, a);				
+				osct = osc[o+o+2] = createOscillator(ws, ws * ratio, np, a);				
 				off = (int)(offset * Math.random());
 				while ( off-- > 0 ) osct.getSample();
 			}
@@ -94,6 +99,13 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		}
 
 
+		private DSFOscillator createOscillator(float wn, float wp, int np, float a) {
+			if ( canUseWolfram && ratio == 1f ) {
+				return new DSFOscillatorW(wn, wp, np, a);
+			}
+			return new DSFOscillatorSS(wn, wp, np, a);
+		}
+		
 		public void setSampleRate(int sr) {
 			// can't change sample rate dynamically !!!
 		}

@@ -11,14 +11,16 @@ import uk.org.toot.dsp.Sine;
 /**
  * This class implements an Oscillator using the Discrete Summation Formula 
  * as detailed by Wolfram.
+ * http://functions.wolfram.com/ElementaryFunctions/Sin/23/01/0008/
  * @author st
  */
-public class DSFOscillatorW
+public class DSFOscillatorW implements DSFOscillator
 {
-	private float a;
+	private double a;
 	private Sine sine1, sine2, sine3;
 	private Cosine cosine;
 	private double aN;
+	private int np;
 	
 	/**
 	 * Create a Discrete Summation Formula Oscillator with a spectrum of
@@ -31,22 +33,27 @@ public class DSFOscillatorW
 	 * @param np - number of partials, 1..
 	 */
 	public DSFOscillatorW(float wn, float wp, int np, float a) {
-		assert ( wn > 0f && wn < 0.5f );
+		assert ( wn > 0f && wn < Math.PI );
 		assert np > 0;
 		assert ( a >= 0 && a < 1f );
-		this.a = a; 						// !!! SHOULDN'T BE CONSTANT
+		this.np = np; 
 		// ensure the highest partial is below nyquist
 		if ( wn * np >= Math.PI ) np = (int)(Math.PI / wn);
-		aN = Math.pow(a, np); 	// !!! EXPENSIVE
-		System.out.println("wn="+wn+", np="+np+", a="+a+", aN="+aN);
 		sine1 = new Sine(wn * (np+1));
 		sine2 = new Sine(wn * np); 	
 		sine3 = new Sine(wn); 			
-		cosine = new Cosine(wn); 			
+		cosine = new Cosine(wn); 
+		update(a);
+	}
+	
+	public void update(float a) {
+		this.a = a;
+		aN = Math.pow(a, np); // !!! EXPENSIVE
 	}
 	
 	public float getSample() {
-		return (float)((((a * sine2.out() - sine1.out()) * aN + sine3.out()) * a) /
-								(1 - 2 * a * cosine.out() + a * a));
+		double denom = (1 - 2*a*cosine.out() + a*a);
+		if ( denom == 0 ) return 0f; // ??
+		return (float)((((a * sine2.out() - sine1.out()) * aN + sine3.out()) * a) / denom);
 	}
 }

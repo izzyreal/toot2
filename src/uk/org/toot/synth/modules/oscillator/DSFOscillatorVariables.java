@@ -15,4 +15,5 @@ public interface DSFOscillatorVariables
 	int getPartialCount();				// np
 	float getPartialRolloffFactor();	// a
 	int getPartialRolloffInt();			// a as raw int to simplify change detection
+	boolean canUseWolfram();
 }

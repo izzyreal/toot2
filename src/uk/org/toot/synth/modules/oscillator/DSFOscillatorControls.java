@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
+import uk.org.toot.control.BooleanControl;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.FloatControl;
@@ -28,6 +29,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	public final static int RATIO_D = 1;
 	public final static int PARTIALS = 2;
 	public final static int ROLLOFF = 3;
+	public final static int WOLFRAM = 4;
 	
 	private final static IntegerLaw RATIO_LAW = new IntegerLaw(1, 9, "");
 	private final static IntegerLaw PARTIAL_LAW = new IntegerLaw(1, 200, "");
@@ -36,6 +38,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	private IntegerControl ratioDenominatorControl;
 	private IntegerControl partialsControl;
 	private FloatControl   rolloffControl;
+	private BooleanControl wolframControl;
 	
 	private int idOffset;
 	private int ratioNumerator;
@@ -43,6 +46,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	private int partialCount;
 	private float rolloffFactor;
 	private int rolloffInt;
+	private boolean canUseWolfram;
 	
 	public DSFOscillatorControls(int instanceIndex, String name, final int idOffset) {
 		super(DSF_OSCILLATOR_ID, instanceIndex, name);
@@ -59,12 +63,14 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 				case PARTIALS: partialCount = derivePartialCount(); break;
 				case ROLLOFF: rolloffFactor = deriveRolloffFactor(); 
 							  rolloffInt = deriveRolloffInt(); break;
+				case WOLFRAM: canUseWolfram = deriveWolfram(); break;
 				}
 			}
 		});
 	}
 	
 	private void createControls() {
+		add(wolframControl = createWolframControl(WOLFRAM));
 		add(ratioNumeratorControl = createRatioControl(RATIO_N, "N"));
 		add(ratioDenominatorControl = createRatioControl(RATIO_D, "D"));
 		add(partialsControl = createPartialsControl(PARTIALS));
@@ -89,11 +95,19 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 		return control;
 	}
 
+	protected BooleanControl createWolframControl(int id) {
+		BooleanControl control = new BooleanControl(id, "W", false);
+		control.setStateColor(false, Color.GREEN);
+		control.setStateColor(true, Color.YELLOW);
+		return control;
+	}
+	
 	private void deriveSampleRateIndependentVariables() {
 		ratioDenominator = deriveRatioDenominator();
 		ratioNumerator = deriveRatioNumerator();
 		partialCount = derivePartialCount();
 		rolloffFactor = deriveRolloffFactor();
+		canUseWolfram = deriveWolfram();
 	}
 	
 	protected int deriveRatioDenominator() {
@@ -116,6 +130,10 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 		return rolloffControl.getIntValue();
 	}
 	
+	protected boolean deriveWolfram() {
+		return wolframControl.getValue();
+	}
+	
 	public int getPartialCount() {
 		return partialCount;
 	}
@@ -134,5 +152,9 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 
 	public int getRatioNumerator() {
 		return ratioNumerator;
+	}
+	
+	public boolean canUseWolfram() {
+		return canUseWolfram;
 	}
 }
