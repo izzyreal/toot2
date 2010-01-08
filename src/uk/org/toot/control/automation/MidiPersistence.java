@@ -32,7 +32,7 @@ public class MidiPersistence
             } else {
 		        try {
 		        	int id = c.getId();
-                    if ( !c.isIndicator() && id > 0 && id < 128 ) {
+                    if ( !c.isIndicator() && id >= 0 && id < 128 ) {
 	    		    	MidiMessage msg = createControl(
    		        			providerId, moduleId, instanceIndex, id, c.getIntValue());
 	                	t.add(new MidiEvent(msg, 0L));
