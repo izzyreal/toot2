@@ -3,5 +3,7 @@ uk.org.toot.synth.channels.example3.Example3SynthServiceProvider
 uk.org.toot.synth.channels.copal.CopalSynthServiceProvider
 uk.org.toot.synth.channels.whirl.WhirlSynthServiceProvider
 uk.org.toot.synth.channels.total.TotalSynthServiceProvider
+uk.org.toot.synth.channels.nine.NineSynthServiceProvider
+
 
 

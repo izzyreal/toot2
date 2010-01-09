@@ -10,9 +10,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Hashtable;
 import uk.org.toot.audio.fader.FaderControl;
+import uk.org.toot.swingui.controlui.SliderKnobColor;
+
 import javax.swing.*;
 
-public class Fader extends JSlider implements Observer
+public class Fader extends JSlider implements Observer, SliderKnobColor
 {
     private final FaderControl control;
     private Runnable updater;

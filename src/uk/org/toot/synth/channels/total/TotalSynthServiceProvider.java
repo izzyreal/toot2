@@ -8,10 +8,10 @@ import static uk.org.toot.synth.id.TootSynthControlsId.TOTAL_CHANNEL_ID;
 public class TotalSynthServiceProvider extends TootSynthChannelServiceProvider
 {
 	public TotalSynthServiceProvider() {
-		super("Whirl", "0.1");
+		super("Total", "0.1");
 		String name = TotalSynthControls.NAME;
 		addControls(TotalSynthControls.class, TOTAL_CHANNEL_ID, name, "", "0.1");
-		add(TotalSynthChannel.class, name, "Whirl", "0.2");
+		add(TotalSynthChannel.class, name, "Total", "0.1");
 	}
 
 	public PolyphonicSynthChannel createSynthChannel(CompoundControl c) {

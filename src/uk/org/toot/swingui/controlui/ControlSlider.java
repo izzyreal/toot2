@@ -6,14 +6,16 @@
 package uk.org.toot.swingui.controlui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
 import uk.org.toot.control.*;
 import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 
-public class ControlSlider extends JSlider implements Observer
+public class ControlSlider extends JSlider implements Observer, SliderKnobColor
 {
+    private final static Dimension maxSize = new Dimension(32, 200);
     private final FloatControl control;
     private Runnable updater;
 
@@ -29,6 +31,10 @@ public class ControlSlider extends JSlider implements Observer
    		}; 
 	}
 
+	public Dimension getMaximumSize() {
+		return maxSize;
+	}
+	
 	public void addNotify() {
         super.addNotify();
         control.addObserver(this);

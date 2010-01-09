@@ -17,7 +17,7 @@ public class FloatControlPanel extends ControlPanel
         super(control);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.control = control;
-        boolean rotary = control.isRotary() || axis == BoxLayout.X_AXIS; // !!! simple heuristic
+        boolean rotary = control.isRotary(); // || axis == BoxLayout.X_AXIS; // !!! simple heuristic
         if ( rotary ) {
             pot = new ControlKnob(control);
 			addMenu(); // doesn't work with JSlider

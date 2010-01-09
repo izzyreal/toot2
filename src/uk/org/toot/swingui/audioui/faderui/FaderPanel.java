@@ -17,10 +17,6 @@ public class FaderPanel extends ControlPanel
 
     private static Font font = new Font("Arial", Font.PLAIN, 10);
 
-    static {
-        UIManager.put("Slider.verticalThumbIcon", new FaderKnobIcon());
-    }
-
     public FaderPanel(final FaderControl control, boolean rotary) {
         super(control);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

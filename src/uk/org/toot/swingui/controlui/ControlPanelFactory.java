@@ -27,6 +27,10 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
     }
 
+    static {
+        UIManager.put("Slider.verticalThumbIcon", new SliderKnobIcon());
+    }
+
     public JComponent layout(CompoundControl control, int axis, boolean hasBorder, JComponent parent, boolean hasHeader) {
 //        if ( control.getType() == null ) return parent;
         parent.setLayout(new BoxLayout(parent, BoxLayout.Y_AXIS));
