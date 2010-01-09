@@ -10,7 +10,8 @@ import uk.org.toot.dsp.Sine;
 
 /**
  * This class implements an Oscillator using the Discrete Summation Formula 
- * as detailed by Wolfram.
+ * as detailed by Wolfram. Not that Wolfram discovered it but they were kind
+ * enough to detail it on the web so that's where I found it.
  * http://functions.wolfram.com/ElementaryFunctions/Sin/23/01/0008/
  * @author st
  */
@@ -32,7 +33,7 @@ public class DSFOscillatorW implements DSFOscillator
 	 * @param a - partial rolloff weight 0..1
 	 * @param np - number of partials, 1..
 	 */
-	public DSFOscillatorW(float wn, float wp, int np, float a) {
+	public DSFOscillatorW(double wn, double wp, int np, float a) {
 		assert ( wn > 0f && wn < Math.PI );
 		assert np > 0;
 		assert ( a >= 0 && a < 1f );

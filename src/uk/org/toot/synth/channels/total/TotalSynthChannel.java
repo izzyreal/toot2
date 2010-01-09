@@ -53,7 +53,7 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		private DSFOscillator[] osc;
 		private EnvelopeGenerator envelopeA;
 		private int nosc;
-		private float ratio;
+		private double ratio;
 		private float ampT; // amp tracking factor
 		private float ampLevel;
 		private boolean canUseWolfram;
@@ -63,8 +63,8 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			nosc = unisonVars.getOscillatorCount();
 			if ( (nosc & 1) == 0 ) nosc += 1; // force odd TODO Even/Odd IntegerLaws
 			osc = new DSFOscillator[nosc];
-			float wn = (float)(frequency * 2 * Math.PI / sampleRate);
-			ratio = (float)oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
+			double wn = frequency * 2 * Math.PI / sampleRate;
+			ratio = oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
 			int np = oscVars.getPartialCount();
 			float a  = oscVars.getPartialRolloffFactor();
 			canUseWolfram = oscVars.canUseWolfram();
@@ -72,11 +72,11 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			osc[0] = createOscillator(wn, wn * ratio, np, a);
 			
 			// maximum detune more than 50 cents
-			float detune = unisonVars.getPitchSpread() * 0.03f * wn;
+			double detune = unisonVars.getPitchSpread() * 0.03f * wn;
 			// maximum offset in samples, should be doubled but works well
-			float offset = unisonVars.getPhaseSpread() * (float)Math.PI / wn;
+			float offset = unisonVars.getPhaseSpread() * (float)(Math.PI / wn);
 			int npairs = (nosc - 1) / 2;
-			float wo, ws;
+			double wo, ws;
 			int off;
 			DSFOscillator osct;
 			for ( int o = 0; o < npairs; o++ ) {
@@ -99,8 +99,8 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		}
 
 
-		private DSFOscillator createOscillator(float wn, float wp, int np, float a) {
-			if ( canUseWolfram && ratio == 1f ) {
+		private DSFOscillator createOscillator(double wn, double wp, int np, float a) {
+			if ( canUseWolfram && ratio == 1 ) {
 				return new DSFOscillatorW(wn, wp, np, a);
 			}
 			return new DSFOscillatorSS(wn, wp, np, a);

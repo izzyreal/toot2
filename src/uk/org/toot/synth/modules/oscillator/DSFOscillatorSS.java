@@ -9,19 +9,10 @@ import uk.org.toot.dsp.Cosine;
 import uk.org.toot.dsp.Sine;
 
 /**
- * This class implements an Oscillator using the Discrete Summation Formula 
- * by Moorer, 1975, as specified by Stilson & Smith. Theoretically the
- * oscillator should be properly bandlimited but see below.
- * 
+ * This class implements a properly band limited Oscillator using the Discrete 
+ * Summation Formula by Moorer, 1975, as specified by Stilson & Smith, 1996.
  * Efficient Sine and Cosine phasors are used to avoid costly evaluation of standard
  * trigonometric methods.
- * 
- * With high 'a', aliasing still occcurs, but is usually usefully suppressed at lower 'a'.
- * The formula in getSample() seems to be very sensitive to numerical accuracy and
- * although doubles are used it may be that a less efficient factorisation reduces
- * aliasing. For example, the first line to calculate the denominator causes a huge
- * loss of brightness and level if 'a' is factored out from the second and third 
- * expressions.
  * @author st
  */
 public class DSFOscillatorSS implements DSFOscillator
@@ -42,7 +33,7 @@ public class DSFOscillatorSS implements DSFOscillator
 	 * @param a - partial rolloff weight 0..1
 	 * @param np - number of partials, 1..
 	 */
-	public DSFOscillatorSS(float wn, float wp, int np, float a) {
+	public DSFOscillatorSS(double wn, double wp, int np, float a) {
 		assert ( wn > 0f && wn < Math.PI );
 		assert wp > 0f;
 		assert np > 0;
