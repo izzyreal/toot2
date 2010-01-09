@@ -64,7 +64,7 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 			if ( (nosc & 1) == 0 ) nosc += 1; // force odd TODO Even/Odd IntegerLaws
 			osc = new DSFOscillator[nosc];
 			double wn = frequency * 2 * Math.PI / sampleRate;
-			ratio = oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
+			ratio = (float)oscVars.getRatioNumerator() / oscVars.getRatioDenominator();
 			int np = oscVars.getPartialCount();
 			float a  = oscVars.getPartialRolloffFactor();
 			canUseWolfram = oscVars.canUseWolfram();

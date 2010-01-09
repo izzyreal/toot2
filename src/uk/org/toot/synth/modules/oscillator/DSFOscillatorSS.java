@@ -34,10 +34,10 @@ public class DSFOscillatorSS implements DSFOscillator
 	 * @param np - number of partials, 1..
 	 */
 	public DSFOscillatorSS(double wn, double wp, int np, float a) {
-		assert ( wn > 0f && wn < Math.PI );
-		assert wp > 0f;
-		assert np > 0;
-		assert ( a >= 0 && a < 1f );
+		assert ( wn > 0f && wn < Math.PI ) : "wn="+wn;
+		assert wp > 0f : "wp="+wp;
+		assert np > 0 : "np="+np;
+		assert ( a >= 0 && a < 1f ): "a="+a;
 		// ensure the highest partial is below nyquist
 		if ( wn + wp * np >= Math.PI ) np = (int)((Math.PI - wn) / wp);
 		this.np = np;
