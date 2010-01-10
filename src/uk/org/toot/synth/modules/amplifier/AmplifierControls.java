@@ -12,8 +12,7 @@ import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.tritonus.share.sampled.TVolumeUtils;
-
+import uk.org.toot.audio.core.KVolumeUtils;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
@@ -22,7 +21,7 @@ import uk.org.toot.control.LinearLaw;
 
 public class AmplifierControls extends CompoundControl implements AmplifierVariables
 {
-	private final static ControlLaw LEVEL_LAW = new LinearLaw(-40f, 0f, "dB");
+	private final static ControlLaw LEVEL_LAW = new LinearLaw(-20f, 20f, "dB");
 	
 	private FloatControl velocityTrackControl;
 	private FloatControl levelControl;
@@ -32,18 +31,22 @@ public class AmplifierControls extends CompoundControl implements AmplifierVaria
 	
 	private int idOffset = 0;
 	
-	private int sampleRate = 44100;
+	private boolean hasVelocity;
 	
 	public AmplifierControls(int instanceIndex, String name, int idOffset) {
-		this(AmplifierIds.AMPLIFIER_ID , instanceIndex, name, idOffset);
+		this(AmplifierIds.AMPLIFIER_ID, instanceIndex, name, idOffset, "V");
 	}
 	
-	public AmplifierControls(int id, int instanceIndex, String name, final int idOffset) {
+	public AmplifierControls(int instanceIndex, String name, int idOffset, String options) {
+		this(AmplifierIds.AMPLIFIER_ID, instanceIndex, name, idOffset, options);
+	}
+	
+	public AmplifierControls(int id, int instanceIndex, String name, final int idOffset, String options) {
 		super(id, instanceIndex, name);
 		this.idOffset = idOffset;
+		hasVelocity = options.contains("V");
 		createControls();
 		deriveSampleRateIndependentVariables();
-		deriveSampleRateDependentVariables();
 		addObserver(new Observer() {
 			public void update(Observable obs, Object obj) {
 				Control c = (Control) obj;
@@ -57,7 +60,9 @@ public class AmplifierControls extends CompoundControl implements AmplifierVaria
 	}
 
 	protected void createControls() {
-		add(velocityTrackControl = createVelocityTrackControl());
+		if ( hasVelocity ) {
+			add(velocityTrackControl = createVelocityTrackControl());
+		}
 		add(levelControl = createLevelControl());
 	}
 
@@ -67,16 +72,13 @@ public class AmplifierControls extends CompoundControl implements AmplifierVaria
 	}
 
 	protected float deriveVelocityTrack() {
-		return velocityTrackControl.getValue();
+		return hasVelocity ? velocityTrackControl.getValue() : 1;
 	}
 
 	protected float deriveLevel() {
-		return (float)TVolumeUtils.log2lin(levelControl.getValue());
+		return (float)KVolumeUtils.log2lin(levelControl.getValue());
 	}
 	
-	protected void deriveSampleRateDependentVariables() {
-	}
-
 	protected FloatControl createVelocityTrackControl() {
         FloatControl control = new FloatControl(VEL_TRACK+idOffset, getString("Velocity"), LinearLaw.UNITY, 0.01f, 0.5f);
         control.setInsertColor(Color.BLUE);
@@ -84,7 +86,7 @@ public class AmplifierControls extends CompoundControl implements AmplifierVaria
 	}
 
 	protected FloatControl createLevelControl() {
-        return new FloatControl(LEVEL+idOffset, getString("Level"), LEVEL_LAW, 0.01f, -20f);
+        return new FloatControl(LEVEL+idOffset, getString("Level"), LEVEL_LAW, 0.01f, 0f);
 	}
 	
 	public float getVelocityTrack() {
@@ -94,12 +96,4 @@ public class AmplifierControls extends CompoundControl implements AmplifierVaria
 	public float getLevel() {
 		return level;
 	}
-	
-	public void setSampleRate(int rate) {
-		if ( sampleRate != rate ) {
-			sampleRate = rate;
-			deriveSampleRateDependentVariables();
-		}
-	}
-
 }

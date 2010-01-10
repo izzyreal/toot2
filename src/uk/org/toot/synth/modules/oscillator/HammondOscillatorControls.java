@@ -5,6 +5,7 @@
 
 package uk.org.toot.synth.modules.oscillator;
 
+import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.oscillator.OscillatorIds.DSF_OSCILLATOR_ID;
 
 import java.awt.Color;
@@ -35,7 +36,7 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 		{ "16'", "5 1/3", "8'", "4'", "2 2/3'", "2'", "1 3/5'", "1 1/3'", "1'"};
 	
 	private final static LinearLaw LEVEL_LAW = new LinearLaw(0, 8, "");
-	private final static Color BROWN = new Color(160, 82, 45);
+	private final static Color BROWN = new Color(200, 100, 50);
 	
 	public HammondOscillatorControls(int instanceIndex, String name, final int idOffset) {
 		super(DSF_OSCILLATOR_ID, instanceIndex, name);
@@ -57,12 +58,16 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 	
 	private void createControls() {
 		Color color;
+		SliderColumn cc;
 		ControlRow row = new ControlRow();
 		for ( int i = 0; i < names.length; i++ ) {
 			if ( i < 2 ) color = BROWN;
 			else if ( names[i].length() > 2 ) color = Color.DARK_GRAY;
 			else color = Color.WHITE;
-			row.add(levelControls[i] = createLevelControl(i+idOffset, names[i], color));
+			levelControls[i] = createLevelControl(i+idOffset, getString("Level"), color);
+			cc = new SliderColumn(names[i]);
+			cc.add(levelControls[i]);
+			row.add(cc);
 		}
 		add(row);
 	}
@@ -101,4 +106,19 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 	public float[] getLevels() {
 		return levels;
 	}
+	
+    protected static class SliderColumn extends CompoundControl
+    {
+        public SliderColumn(String name) {
+            super(0, name);
+        }
+
+        public void add(Control c) { // make public
+            super.add(c);
+        }
+
+        public boolean isAlwaysVertical() { return true; }
+    }
+
+
 }
