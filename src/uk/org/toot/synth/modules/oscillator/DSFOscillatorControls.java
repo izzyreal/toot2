@@ -70,7 +70,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	}
 	
 	private void createControls() {
-		add(wolframControl = createWolframControl(WOLFRAM));
+//		add(wolframControl = createWolframControl(WOLFRAM));
 		add(ratioNumeratorControl = createRatioControl(RATIO_N, "N"));
 		add(ratioDenominatorControl = createRatioControl(RATIO_D, "D"));
 		add(partialsControl = createPartialsControl(PARTIALS));
@@ -131,6 +131,7 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 	}
 	
 	protected boolean deriveWolfram() {
+		if ( wolframControl == null ) return false;
 		return wolframControl.getValue();
 	}
 	

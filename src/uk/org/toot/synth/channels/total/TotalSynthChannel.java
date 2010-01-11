@@ -107,7 +107,7 @@ public class TotalSynthChannel extends PolyphonicSynthChannel
 		}
 		
 		public void setSampleRate(int sr) {
-			// can't change sample rate dynamically !!!
+			stop(); // can't change sample rate dynamically !!!
 		}
 		
 		@Override

@@ -16,7 +16,7 @@ import uk.org.toot.synth.modules.oscillator.HammondOscillatorVariables;
 /**
  * A model of a Hammond Drawbar organ.
  * Called nine because, well, draw is slang for cannabis and a bar is 9 oz.
- * And typically there just happens to be 9 drawbars :)
+ * And typically there just happen to be 9 drawbars :)
  * @author st
  */
 public class NineSynthChannel extends PolyphonicSynthChannel
@@ -29,12 +29,9 @@ public class NineSynthChannel extends PolyphonicSynthChannel
 		super(controls.getName());
 		oscVars = controls.getHammondVariables();
 		envVars = new ASREnvelopeVariables() {
-			public float getAttackCoeff() {	return 0.1f; }
-
-			public float getReleaseCoeff() { return 0.01f; }
-
+			public float getAttackCoeff() {	return 0.05f; }
+			public float getReleaseCoeff() { return 0.03f; }
 			public boolean getSustain() { return true; }
-
 			public void setSampleRate(int rate) {}			
 		};
 		ampVars = controls.getAmplifierVariables();
@@ -59,7 +56,7 @@ public class NineSynthChannel extends PolyphonicSynthChannel
 		}
 
 		public void setSampleRate(int sr) {
-			// can't change sample rate dynamically !!!
+			stop(); // can't change sample rate dynamically !!!
 		}
 
 		@Override

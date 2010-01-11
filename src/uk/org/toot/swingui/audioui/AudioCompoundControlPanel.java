@@ -34,7 +34,7 @@ public class AudioCompoundControlPanel extends CompoundControlPanel implements O
         }
         super.create();
         if ( axis != BoxLayout.Y_AXIS ) return;
-        // we need to add vertical glue if
+        // we need to add vertical glue and strut if
         // there aren't any child components
        	if ( target.getComponentCount() == 0 ) {
             target.add(Box.createVerticalGlue());
@@ -43,6 +43,7 @@ public class AudioCompoundControlPanel extends CompoundControlPanel implements O
         } else if ( target.getComponentCount() == 1 && (control instanceof AudioControlsChain) ) {
 	        // or there's just one and it's too small
             if ( target.getComponent(0).getMaximumSize().height < 200 ) {
+            	// if a fader isn't present ensure (FX, AUX) other stuff is at top
 	            target.add(Box.createVerticalGlue());
 //	            System.out.println(control.getControlPath()+" VGlue in ACCP.create()");
             }

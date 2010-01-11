@@ -14,6 +14,7 @@ import java.util.Observer;
 
 import org.tritonus.share.sampled.TVolumeUtils;
 
+import uk.org.toot.control.BooleanControl;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.FloatControl;
@@ -25,12 +26,17 @@ import uk.org.toot.control.LinearLaw;
  */
 public class HammondOscillatorControls extends CompoundControl implements HammondOscillatorVariables
 {
+	private final static int CLICK = 12; // leaving room for 2 or 3 extra drawbars
+	
 	private int idOffset;
 
 	private float[] levels;
+	private boolean click;
+	
 	private static float gain1 = gain(1);
 	
 	private FloatControl[] levelControls;
+	private BooleanControl clickControl;
 	
 	private final static String[] names = 
 		{ "16'", "5 1/3", "8'", "4'", "2 2/3'", "2'", "1 3/5'", "1 1/3'", "1'"};
@@ -49,9 +55,10 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 			public void update(Observable obs, Object obj) {
 				Control c = (Control) obj;
 				int n = c.getId()-idOffset;
-				levels[n] = deriveLevel(n);
-//				switch ( c.getId()-idOffset ) {
-//				}
+				switch ( n ) {
+				case CLICK: click = deriveClick(); break;
+				default: levels[n] = deriveLevel(n); break;
+				}
 			}
 		});
 	}
@@ -69,6 +76,9 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 			cc.add(levelControls[i]);
 			row.add(cc);
 		}
+/*		ControlColumn col = new ControlColumn();
+		col.add(clickControl = createClickControl(CLICK, getString("Click")));
+		row.add(col); */
 		add(row);
 	}
 	
@@ -80,10 +90,17 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 		return control;
 	}
 	
+	protected BooleanControl createClickControl(int id, String name) {
+		BooleanControl control = new BooleanControl(id, name, true);
+		control.setStateColor(true, Color.YELLOW);
+		return control;
+	}
+	
 	private void deriveSampleRateIndependentVariables() {
 		for ( int i = 0; i < names.length; i++ ) {
 			levels[i] = deriveLevel(i);
 		}
+		click = deriveClick();
 	}
 
 	/*
@@ -103,8 +120,17 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 		return (float)TVolumeUtils.log2lin(3f * (value - 8f));
 	}
 	
+	protected boolean deriveClick() {
+		if ( clickControl == null ) return false;
+		return clickControl.getValue();
+	}
+	
 	public float[] getLevels() {
 		return levels;
+	}
+	
+	public boolean canClick() {
+		return click;
 	}
 	
     protected static class SliderColumn extends CompoundControl

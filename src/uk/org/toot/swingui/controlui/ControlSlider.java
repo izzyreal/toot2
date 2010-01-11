@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 
 public class ControlSlider extends JSlider implements Observer, SliderKnobColor
 {
-    private final static Dimension maxSize = new Dimension(32, 200);
+    private final static Dimension maxSize = new Dimension(32, 150);
     private final FloatControl control;
     private Runnable updater;
 
