@@ -12,6 +12,7 @@ import uk.org.toot.control.*;
 import uk.org.toot.control.automation.MidiPersistence;
 import uk.org.toot.control.automation.MidiSequenceSnapshotAutomation;
 import uk.org.toot.synth.ChannelledSynthControls;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.SynthChannelServices;
@@ -51,7 +52,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
         Track[] tracks = snapshot.getTracks();
         Track track;
         SynthControls synthControls;
-        CompoundControl channelControls;
+        SynthChannelControls channelControls;
         int instanceIndex = -1;
         String trackName;
         
@@ -124,9 +125,21 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
             if ( ns != null && ns.canPersistMidi() ) {
             	ns.recall(track, 2);
             } else if ( synthControls instanceof ChannelledSynthControls ) {
-               	CompoundControl channelControls = null;
+               	SynthChannelControls channelControls = null;
             	for ( int i = 2; i < track.size(); i++ ) {
             		msg = track.get(i).getMessage();
+            		// if Note recall to SynthChannelControls Controller/Control map
+            		if ( isNote(msg) ) {
+        				int controller = getData1(msg);
+        				int cid = getData2(msg);
+            			if ( channelControls != null ) {
+            				channelControls.setMappedControlId(controller, cid);
+            			} else {
+            				System.err.println(
+            						"Synth recall: no channelControl to map controller "+
+            						controller+" to "+cid);
+            			}
+            		}
             		if ( !isControl(msg) ) continue;
             		if ( instanceIndex != getInstanceIndex(msg) ) {
             			instanceIndex = getInstanceIndex(msg);
@@ -156,6 +169,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     			moduleId = synthControls.getId();
             	for ( int i = 2; i < track.size(); i++ ) {
             		msg = track.get(i).getMessage();
+            		// TODO if Note recall to SynthControls Controller/Control map
             		if ( !isControl(msg) ) continue;
             		if ( getProviderId(msg) != providerId || 
             				getModuleId(msg) != moduleId ) continue;
@@ -197,7 +211,7 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
                 msg = off(0, synthControls.getProviderId(), synthControls.getId());
                 t.add(new MidiEvent(msg, 0L));
     		} catch ( InvalidMidiDataException imde ) {
-    			System.err.println("Synth store: error storing synth "+synthControls.getName());
+    			System.err.println("Synth store: failed to store synth "+synthControls.getName());
     		}
     		NativeSupport ns = synthControls.getNativeSupport();
     		if ( ns != null && ns.canPersistMidi() ) {
@@ -205,14 +219,15 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     		} else if ( synthControls instanceof ChannelledSynthControls ) {
     			ChannelledSynthControls channelledControls = 
     				(ChannelledSynthControls)synthControls;
-    			CompoundControl cc = channelledControls.getGlobalControls();
-    			if ( cc != null ) {
-    				providerId = cc.getProviderId();
-    				moduleId = cc.getId();
+    			CompoundControl gc = channelledControls.getGlobalControls();
+    			if ( gc != null ) {
+    				providerId = gc.getProviderId();
+    				moduleId = gc.getId();
     				instanceIndex = 0;
-    				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
+    				MidiPersistence.store(providerId, moduleId, instanceIndex, gc, t);
     			}
 
+    			SynthChannelControls cc;
     			for ( int chan = 0; chan < 16; chan++ ) {
     				cc = channelledControls.getChannelControls(chan);
     				if ( cc == null ) continue;
@@ -220,12 +235,24 @@ public class SynthRackControlsMidiSequenceSnapshotAutomation
     				moduleId = cc.getId();
     				instanceIndex = 1+chan; //cc.getInstanceIndex();
     				MidiPersistence.store(providerId, moduleId, instanceIndex, cc, t);
+    				// store SynthChannelControls Controller/Control map as Notes
+    				for ( int i = 0; i < 128; i++ ) {
+    					try {
+    						int cid = cc.getMappedControlId(i);
+    						if ( cid < 0 ) continue;
+    						MidiMessage msg = on(chan, i, cid);
+    		    			t.add(new MidiEvent(msg, 0L));
+    					} catch ( InvalidMidiDataException imde ) {
+    						System.err.println("Synth store: failed on mapping controller"+i);
+    					}
+    				}
     			}
     		} else { // just an unchannelled synth controls
 				providerId = synthControls.getProviderId();
 				moduleId = synthControls.getId();
 				instanceIndex = 0;
 				MidiPersistence.store(providerId, moduleId, instanceIndex, synthControls, t);
+				// TODO store Controller/Control map as Notes
     			
     		}
         }

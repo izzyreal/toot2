@@ -2,8 +2,8 @@ package uk.org.toot.synth.channels.copal;
 
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.id.TootSynthControlsId.COPAL_CHANNEL_ID;
-import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.FloatControl;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.ASREnvelopeControls;
@@ -15,7 +15,7 @@ import uk.org.toot.synth.modules.filter.LP1pHP1pVariables;
 import uk.org.toot.synth.modules.mixer.MixerControls;
 import uk.org.toot.synth.modules.mixer.MixerVariables;
 
-public class CopalSynthControls extends CompoundControl
+public class CopalSynthControls extends SynthChannelControls
 {
 	public static String NAME = "Cepal";
 

@@ -10,6 +10,7 @@ import java.util.Vector;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.service.ServiceDescriptor;
 import uk.org.toot.service.ServiceVisitor;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.SynthChannelServices;
 import uk.org.toot.synth.synths.multi.MultiSynthControls;
 
@@ -55,7 +56,7 @@ public class MultiSynthPanel extends MultiControlPanel
 	
 	protected void setControls(int chan, CompoundControl controls) {
 		try {
-			getControls().setChannelControls(chan, controls);
+			getControls().setChannelControls(chan, (SynthChannelControls)controls);
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}

@@ -45,11 +45,11 @@ abstract public class SynthChannelServiceProvider extends ServiceProvider
         return null;
     }
 
-    public CompoundControl createControls(int moduleId) {
+    public SynthChannelControls createControls(int moduleId) {
         for ( ServiceDescriptor d : controls ) {
             try {
 	            if ( ((ControlServiceDescriptor)d).getModuleId() == moduleId ) {
-    	            return (CompoundControl)d.getServiceClass().newInstance();
+    	            return (SynthChannelControls)d.getServiceClass().newInstance();
         	    }
             } catch ( Exception e ) {
                 e.printStackTrace();
@@ -66,11 +66,11 @@ abstract public class SynthChannelServiceProvider extends ServiceProvider
         add(new SynthControlServiceDescriptor(clazz, moduleId, name, description, version));
     }
 
-    public CompoundControl createControls(String name) {
+    public SynthChannelControls createControls(String name) {
         for ( ServiceDescriptor d : controls ) {
             try {
 	            if ( d.getName().equals(name) ) {
-    	            return (CompoundControl)d.getServiceClass().newInstance();
+    	            return (SynthChannelControls)d.getServiceClass().newInstance();
         	    }
             } catch ( Exception e ) {
                 e.printStackTrace();

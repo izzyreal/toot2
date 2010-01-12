@@ -15,7 +15,7 @@ import uk.org.toot.control.CompoundControl;
 public class ChannelledSynthControls extends SynthControls
 {
 	private CompoundControl globalControls;
-	private CompoundControl[] channelControls = new CompoundControl[16];
+	private SynthChannelControls[] channelControls = new SynthChannelControls[16];
 	
 	public ChannelledSynthControls(int id, String name) {
 		super(id, name);
@@ -25,7 +25,7 @@ public class ChannelledSynthControls extends SynthControls
 		return globalControls;
 	}
 	
-	public CompoundControl getChannelControls(int chan) {
+	public SynthChannelControls getChannelControls(int chan) {
 		return channelControls[chan];
 	}
 
@@ -34,7 +34,7 @@ public class ChannelledSynthControls extends SynthControls
 		add(controls);
 	}
 	
-	protected void setChannelControls(int chan, CompoundControl controls) {
+	protected void setChannelControls(int chan, SynthChannelControls controls) {
 		channelControls[chan] = controls;
 		add(controls);
 	}

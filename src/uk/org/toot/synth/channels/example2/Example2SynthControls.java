@@ -1,7 +1,7 @@
 package uk.org.toot.synth.channels.example2;
 
 import static uk.org.toot.misc.Localisation.getString;
-import uk.org.toot.control.CompoundControl;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.*;
@@ -17,7 +17,7 @@ import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_CHANNEL_ID;
  * @author st
  *
  */
-public class Example2SynthControls extends CompoundControl
+public class Example2SynthControls extends SynthChannelControls
 {
 	public static String NAME = "Ex2Syn";
 	

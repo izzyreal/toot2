@@ -9,9 +9,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import uk.org.toot.audio.system.AudioOutput;
-import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.BasicMidiSynth;
 import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.SynthChannelServices;
 
 /**
@@ -29,7 +29,7 @@ public class MultiMidiSynth extends BasicMidiSynth
 					if ( obj instanceof Integer ) {
 						int chan = ((Integer)obj).intValue();
 						if ( chan < 0 || chan > 15 ) return;
-						CompoundControl channelControls = controls.getChannelControls(chan);
+						SynthChannelControls channelControls = controls.getChannelControls(chan);
 						if ( channelControls != null ) {
 							// SPI lookup plugin SynthChannel for these controls
 							SynthChannel synthChannel = SynthChannelServices.createSynthChannel(channelControls);
@@ -37,6 +37,7 @@ public class MultiMidiSynth extends BasicMidiSynth
 								System.err.println("No SynthChannel for SynthControls "+channelControls.getName());
 							} else {
 								synthChannel.setLocation(MultiMidiSynth.this.getLocation()+" Channel "+(1+chan));
+								synthChannel.addObserver(channelControls);
 							}
 							setChannel(chan, synthChannel);
 						} else {

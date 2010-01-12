@@ -5,6 +5,8 @@
 
 package uk.org.toot.synth;
 
+import java.util.Observable;
+
 import javax.sound.midi.MidiChannel;
 
 import static uk.org.toot.midi.misc.Controller.*;
@@ -15,7 +17,7 @@ import static uk.org.toot.midi.misc.Controller.*;
  * @author st
  *
  */
-public abstract class SynthChannel implements MidiChannel
+public abstract class SynthChannel extends Observable implements MidiChannel
 {
 	protected int sampleRate = 44100; // for open()
 	protected float inverseNyquist = 2f / sampleRate;
@@ -83,6 +85,8 @@ public abstract class SynthChannel implements MidiChannel
 		controller[arg0] = (byte)arg1;
 		// reset the LSB if a MSB is set
 		if ( arg0 < 0x20 ) controller[arg0+0x20] = 0;
+		setChanged();
+		notifyObservers(new ControlChange(arg0, arg1));
 	}
 
 	public int getController(int arg0) {
@@ -186,5 +190,4 @@ public abstract class SynthChannel implements MidiChannel
 	public float getBendFactor() {
 		return bendFactor;
 	}
-
 }

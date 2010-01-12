@@ -215,6 +215,12 @@ public abstract class CompoundControl extends Control
 
     public boolean hasCustomUI() { return false; }
     
+    public boolean canLearn() { return false; }
+    
+    public boolean getLearn() { return false; }
+    
+    public void setLearn(boolean learn) {}
+    
     // return a domain specific string for preset organisation
     // i.e. audio, synth
     public String getPersistenceDomain() {
@@ -247,6 +253,8 @@ public abstract class CompoundControl extends Control
 		c.instanceIndex = --index;
 	}
 
+	public void close() {}
+	
 	/**
      * A ControlColumn groups certain Controls vertically.
      * It is always vertical and never bordered.

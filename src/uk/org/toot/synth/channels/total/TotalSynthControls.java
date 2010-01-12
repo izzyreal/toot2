@@ -7,7 +7,7 @@ package uk.org.toot.synth.channels.total;
 
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.id.TootSynthControlsId.TOTAL_CHANNEL_ID;
-import uk.org.toot.control.CompoundControl;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.EnvelopeControls;
@@ -20,7 +20,7 @@ import uk.org.toot.synth.modules.oscillator.UnisonVariables;
 /**
  * @author st
  */
-public class TotalSynthControls extends CompoundControl
+public class TotalSynthControls extends SynthChannelControls
 {
 	public static String NAME = "Total";
 	

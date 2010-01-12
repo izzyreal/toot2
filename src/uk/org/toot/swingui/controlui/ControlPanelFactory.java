@@ -226,6 +226,12 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         			add(new LoadMenu(control));
         			add(new SaveAction(control));
         		}
+        		if ( control.canLearn() ) {
+        			addSeparator();
+        			JCheckBoxMenuItem item = new JCheckBoxMenuItem(new LearnAction(control));
+        			item.setSelected(control.getLearn());
+        			add(item);
+        		}
             }
             if ( control.canBeMinimized() && !control.isAlwaysVertical() ) {
             	String minOrMax = isMinimised(name) ?
@@ -401,5 +407,20 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         	toggleMinimised(name);
         }
     }
+    
+	static protected class LearnAction extends AbstractAction
+    {
+        private CompoundControl control;
+
+        public LearnAction(CompoundControl control) {
+            super(getString("Learn"));
+            this.control = control;
+        }
+
+    	public void actionPerformed(ActionEvent e) {
+            control.setLearn(!control.getLearn());
+        }
+    }
+
 
 }

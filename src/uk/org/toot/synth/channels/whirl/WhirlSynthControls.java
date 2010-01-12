@@ -1,7 +1,7 @@
 package uk.org.toot.synth.channels.whirl;
 
 import static uk.org.toot.misc.Localisation.getString;
-import uk.org.toot.control.CompoundControl;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.GlideControls;
 import uk.org.toot.synth.modules.GlideVariables;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
@@ -17,7 +17,7 @@ import static uk.org.toot.synth.id.TootSynthControlsId.WHIRL_CHANNEL_ID;
  * @author st
  *
  */
-public class WhirlSynthControls extends CompoundControl
+public class WhirlSynthControls extends SynthChannelControls
 {
 	public static String NAME = "Whirl";
 	

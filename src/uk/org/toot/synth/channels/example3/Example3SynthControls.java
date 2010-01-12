@@ -6,6 +6,7 @@ import java.awt.Color;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 //import uk.org.toot.synth.oscillator.*;
 import static uk.org.toot.misc.Localisation.getString;
@@ -15,7 +16,7 @@ import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_3_CHANNEL_ID;
  * @author st
  *
  */
-public class Example3SynthControls extends CompoundControl
+public class Example3SynthControls extends SynthChannelControls
 {
 	public static String NAME = "Ex3Syn";
 	

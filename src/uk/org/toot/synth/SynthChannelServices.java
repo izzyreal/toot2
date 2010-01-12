@@ -8,7 +8,6 @@ package uk.org.toot.synth;
 import java.util.Iterator;
 import java.util.List;
 
-import uk.org.toot.control.CompoundControl;
 import uk.org.toot.service.*;
 import uk.org.toot.synth.spi.SynthChannelServiceProvider;
 
@@ -41,8 +40,8 @@ public class SynthChannelServices extends Services
         return null;
     }
 
-    public static CompoundControl createControls(String name) {
-        CompoundControl controls;
+    public static SynthChannelControls createControls(String name) {
+        SynthChannelControls controls;
 		for ( SynthChannelServiceProvider provider : providers ) {
             controls = provider.createControls(name);
             if ( controls != null ) {
@@ -53,11 +52,13 @@ public class SynthChannelServices extends Services
         return null;
     }
 
-    public static SynthChannel createSynthChannel(CompoundControl controls) {
+    public static SynthChannel createSynthChannel(SynthChannelControls controls) {
         SynthChannel process;
 		for ( SynthChannelServiceProvider provider : providers ) {
             process = provider.createSynthChannel(controls);
-            if ( process != null ) return process;
+            if ( process != null ) {
+            	return process;
+            }
         }
         return null;
     }

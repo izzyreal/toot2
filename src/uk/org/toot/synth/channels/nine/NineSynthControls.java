@@ -7,7 +7,7 @@ package uk.org.toot.synth.channels.nine;
 
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.id.TootSynthControlsId.NINE_CHANNEL_ID;
-import uk.org.toot.control.CompoundControl;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.oscillator.HammondOscillatorControls;
@@ -17,7 +17,7 @@ import uk.org.toot.synth.modules.oscillator.HammondOscillatorVariables;
  * @author st
  *
  */
-public class NineSynthControls extends CompoundControl
+public class NineSynthControls extends SynthChannelControls
 {
 	public static String NAME = "Nine";
 	
