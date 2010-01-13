@@ -55,7 +55,7 @@ abstract public class AudioServiceProvider extends ServiceProvider
      * Adds a ControlServiceDescriptor for the matching service.
      * The service can cope with any channel format.
      */
-    protected void addControls(Class clazz, int moduleId, String name, String description, 
+    protected void addControls(Class<? extends AudioControls> clazz, int moduleId, String name, String description, 
     		String version) {
     	assert moduleId < 0x80; // required for midi persistence
         add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version));
@@ -66,7 +66,7 @@ abstract public class AudioServiceProvider extends ServiceProvider
      * The channel format required is specified, otherwise the service
      * will not require specific channel formats
      */
-    protected void addControls(Class clazz, int moduleId, String name, String description, 
+    protected void addControls(Class<? extends AudioControls> clazz, int moduleId, String name, String description, 
     		String version, ChannelFormat format, String path) {
         add(new AudioControlServiceDescriptor(clazz, moduleId, name, description, version, 
         		format, path));

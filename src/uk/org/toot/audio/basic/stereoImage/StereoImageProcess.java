@@ -26,6 +26,7 @@ public class StereoImageProcess extends SimpleAudioProcess
     }
 
     public int processAudio(AudioBuffer buffer) {
+		if ( vars.isBypassed() ) return AUDIO_OK;
         int nsamples = buffer.getSampleCount();
         if ( buffer.getChannelCount() < 2 ) // mono in
             buffer.convertTo(ChannelFormat.STEREO);

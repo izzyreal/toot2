@@ -14,4 +14,5 @@ public interface StereoImageProcessVariables
 {
     float getWidthFactor(); // +1..-1 for Mono..Wide
     boolean isLRSwapped();
+    boolean isBypassed();
 }

@@ -6,11 +6,11 @@
 package uk.org.toot.synth.spi;
 
 import uk.org.toot.control.spi.ControlServiceDescriptor;
-import uk.org.toot.synth.SynthControls;
+import uk.org.toot.synth.SynthChannelControls;
 
-public class SynthControlServiceDescriptor extends ControlServiceDescriptor
+public class SynthChannelControlServiceDescriptor extends ControlServiceDescriptor
 {
-    public SynthControlServiceDescriptor(Class<? extends SynthControls> clazz, int moduleId,
+    public SynthChannelControlServiceDescriptor(Class<? extends SynthChannelControls> clazz, int moduleId,
         	String name, String description, String version) {
         super(clazz, moduleId, name, description, version);
     }

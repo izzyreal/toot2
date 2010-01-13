@@ -62,8 +62,8 @@ abstract public class SynthChannelServiceProvider extends ServiceProvider
      * Adds a ControlServiceDescriptor for the matching service.
      * The service can cope with any channel format.
      */
-    protected void addControls(Class clazz, int moduleId, String name, String description, String version) {
-        add(new SynthControlServiceDescriptor(clazz, moduleId, name, description, version));
+    protected void addControls(Class<? extends SynthChannelControls> clazz, int moduleId, String name, String description, String version) {
+        add(new SynthChannelControlServiceDescriptor(clazz, moduleId, name, description, version));
     }
 
     public SynthChannelControls createControls(String name) {

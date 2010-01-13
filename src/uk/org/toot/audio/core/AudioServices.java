@@ -101,11 +101,6 @@ public class AudioServices extends Services
         } catch ( Exception e ) {
             e.printStackTrace();
         }
-        try {
-            System.in.read();
-        } catch ( Exception e ) {
-            e.printStackTrace();
-        }
     }
 }
 
