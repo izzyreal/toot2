@@ -5,7 +5,7 @@
 
 package uk.org.toot.synth.modules.filter;
 
-import uk.org.toot.dsp.FastMath;
+import static uk.org.toot.dsp.FastMath.*;
 
 public class StateVariableFilter extends AbstractFilter
 {
@@ -32,9 +32,9 @@ public class StateVariableFilter extends AbstractFilter
 	 */
 	public float filter(float sample, float f) {
 		// the /4 is because it's double sampled
-		float f1 = 2f * FastMath.sin((float)(Math.PI * Math.min(0.24f, f*0.25f)));  
+		float f1 = 2f * sin((float)(Math.PI * min(0.24f, f*0.25f)));  
 		// Thanks to Laurent de Soras for the stability limit
-		return element.filter(sample, f1, Math.min(res, (float)Math.min(1.9f, 2f/f1 - f1*0.5)));
+		return element.filter(sample, f1, min(res, min(1.9f, 2f/f1 - f1*0.5f)));
 	}
 
 }

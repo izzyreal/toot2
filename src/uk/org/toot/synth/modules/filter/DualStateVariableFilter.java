@@ -5,7 +5,7 @@
 
 package uk.org.toot.synth.modules.filter;
 
-import uk.org.toot.dsp.FastMath;
+import static uk.org.toot.dsp.FastMath.*;
 
 public class DualStateVariableFilter extends AbstractFilter
 {
@@ -32,14 +32,14 @@ public class DualStateVariableFilter extends AbstractFilter
 	 */
 	public float filter(float sample, float fn1) {
 		// Thanks to Laurent de Soras for the stability limit
-		float f1 = 2f * FastMath.sin((float)(Math.PI * Math.min(0.24f, fn1*0.25f)));
+		float f1 = 2f * sin((float)(Math.PI * min(0.24f, fn1*0.25f)));
 		config.freq1 = f1;
-		config.damp1 = Math.min(res, (float)Math.min(1.9f, 2f/f1 - f1*0.5));
+		config.damp1 = min(res, min(1.9f, 2f/f1 - f1*0.5f));
 		if ( config.type2 > FilterType.OFF && config.f2ratio != 1f ) {
 			float fn2 = fn1 * config.f2ratio;
-			float f2 = 2f * FastMath.sin((float)(Math.PI * Math.min(0.24f, fn2*0.25f)));
+			float f2 = 2f * sin((float)(Math.PI * min(0.24f, fn2*0.25f)));
 			config.freq2 = f2;
-			config.damp2 = Math.min(res, (float)Math.min(1.9f, 2f/f2 - f2*0.5));
+			config.damp2 = min(res, min(1.9f, 2f/f2 - f2*0.5f));
 		} else {
 			config.freq2 = config.freq1;
 			config.damp2 = config.damp1;

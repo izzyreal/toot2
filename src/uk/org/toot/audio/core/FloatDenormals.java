@@ -5,6 +5,8 @@
 
 package uk.org.toot.audio.core;
 
+import static uk.org.toot.dsp.FastMath.abs;
+
 /**
  * Provides ways to deal with FPU denormals, which, if left
  * in audio data tend to cause exceptionally high CPU uage.
@@ -29,7 +31,7 @@ public class FloatDenormals
      * Faster than isDenormal() if appropriate.
      */
     public static boolean isDenormalOrZero(float x) {
-        return Math.abs(x) < THRESHOLD;
+        return abs(x) < THRESHOLD;
     }
 
     /**

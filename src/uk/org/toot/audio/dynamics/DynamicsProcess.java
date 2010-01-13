@@ -85,16 +85,18 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
 		for ( int c = 0; c < nc; c++ ) {
 			samples[c] = buffer.getChannel(c);
 		}
+		float sample;
         for ( int i = 0; i < len; i++ ) {
         	float key = 0;
         	if ( isPeak ) {
         		for ( int c = 0; c < nc; c++ ) {
-        			key = Math.max(key, Math.abs(samples[c][i]));
+        			sample = samples[c][i];
+        			sample = sample < 0 ? -sample : sample;
+        			key = key > sample ? key : sample;
         		}
         		targetGain = function(key);
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
         		// the rms side chain calculations, every millisecond
-        		float sample;
         		float sumOfSquares = 0f;
         		for ( int c = 0; c < nc; c++ ) {
         			for ( int j = 0; j < mslen; j++ ) {
