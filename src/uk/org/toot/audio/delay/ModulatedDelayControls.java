@@ -14,7 +14,7 @@ public class ModulatedDelayControls extends AbstractDelayControls
     implements ModulatedDelayVariables
 {
     private static final ControlLaw DELAY_LAW = new LogLaw(0.1f, 25f, "ms");
-    private static final ControlLaw RATE_LAW = new LogLaw(0.02f, 2f, "Hz");
+    private static final ControlLaw RATE_LAW = new LogLaw(0.02f, 7f, "Hz");
 // !!! abstract?
 //    private static final ControlLaw filterFreqLaw = new LogLaw(100f, 10000f, "Hz");
     private FloatControl delayControl;

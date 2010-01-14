@@ -33,7 +33,7 @@ public class Distort1Process extends SimpleAudioProcess
 		return AUDIO_OK;
 	}
 	
-	public float distort(float x) {
+	private static final float distort(float x) {
 		return 1.5f * x - 0.5f * x * x * x;
 	}
 
