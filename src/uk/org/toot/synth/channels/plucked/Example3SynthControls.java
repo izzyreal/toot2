@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.example3;
+package uk.org.toot.synth.channels.plucked;
 
 //import static uk.org.toot.localisation.Localisation.getString;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.example3;
+package uk.org.toot.synth.channels.plucked;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.PolyphonicSynthChannel;

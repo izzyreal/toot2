@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.example2;
+package uk.org.toot.synth.channels.valor;
 
 import static uk.org.toot.misc.Localisation.getString;
 import uk.org.toot.synth.SynthChannelControls;

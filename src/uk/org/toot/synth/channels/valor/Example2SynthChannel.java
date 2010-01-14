@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.example2;
+package uk.org.toot.synth.channels.valor;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.midi.misc.Controller;

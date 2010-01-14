@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.example3;
+package uk.org.toot.synth.channels.plucked;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.FloatDenormals;
