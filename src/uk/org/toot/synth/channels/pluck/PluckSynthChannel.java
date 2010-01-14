@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.plucked;
+package uk.org.toot.synth.channels.pluck;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.FloatDenormals;
@@ -8,11 +8,11 @@ import uk.org.toot.synth.PolyphonicSynthChannel;
  * from pluck.c - elementary waveguide simulation of plucked strings - JOS 6/6/92
  * @author st
  */
-public class Example3SynthChannel extends PolyphonicSynthChannel
+public class PluckSynthChannel extends PolyphonicSynthChannel
 {
-	private Example3SynthControls controls;
+	private PluckSynthControls controls;
 
-	public Example3SynthChannel(Example3SynthControls controls) {
+	public PluckSynthChannel(PluckSynthControls controls) {
 		super(controls.getName());
 		this.controls = controls;
 	}

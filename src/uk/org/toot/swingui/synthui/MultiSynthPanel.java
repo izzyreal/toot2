@@ -22,11 +22,11 @@ public class MultiSynthPanel extends MultiControlPanel
 		selectionNames.add(NONE);
 		try {
 			SynthChannelServices.accept(
-					new ServiceVisitor() {
-						public void visitDescriptor(ServiceDescriptor d) {
-							selectionNames.add(d.getName());
-						}
-					}, CompoundControl.class
+				new ServiceVisitor() {
+					public void visitDescriptor(ServiceDescriptor d) {
+						selectionNames.add(d.getName());
+					}
+				}, SynthChannelControls.class
 			);
 		} catch ( Exception e ) {
 			e.printStackTrace();

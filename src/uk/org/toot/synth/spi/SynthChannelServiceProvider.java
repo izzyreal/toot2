@@ -6,10 +6,11 @@
 package uk.org.toot.synth.spi;
 
 import java.util.List;
-import uk.org.toot.service.*;
-import uk.org.toot.control.CompoundControl;
-import uk.org.toot.control.spi.*;
-import uk.org.toot.synth.*;
+import uk.org.toot.service.ServiceDescriptor;
+import uk.org.toot.service.ServiceProvider;
+import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.SynthChannelControls;
+import uk.org.toot.control.spi.ControlServiceDescriptor;
 
 abstract public class SynthChannelServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,7 @@ abstract public class SynthChannelServiceProvider extends ServiceProvider
      */
     public SynthChannelServiceProvider(int providerId, String providerName, String description, String version) {
         super(providerId, providerName, description, version);
-        controls = service(CompoundControl.class);
+        controls = service(SynthChannelControls.class);
     }
 
     public String lookupName(int moduleId) {
@@ -79,7 +80,7 @@ abstract public class SynthChannelServiceProvider extends ServiceProvider
         return null;
     }
 
-	public abstract SynthChannel createSynthChannel(CompoundControl controls2);
+	public abstract SynthChannel createSynthChannel(SynthChannelControls controls2);
 
 /*    public Iterator<ServiceDescriptor> controlsDescriptors() {
         return controls.iterator();

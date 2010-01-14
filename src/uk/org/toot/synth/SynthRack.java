@@ -9,7 +9,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import uk.org.toot.audio.system.AudioSystem;
-import uk.org.toot.control.CompoundControl;
 import uk.org.toot.midi.core.MidiSystem;
 
 /**
@@ -34,7 +33,7 @@ public class SynthRack
 					if ( obj instanceof Integer ) {
 						int nsynth = ((Integer)obj).intValue();
 						if ( nsynth < 0 || nsynth >= synths.length ) return;
-						CompoundControl synthControls = controls.getSynthControls(nsynth);
+						SynthControls synthControls = controls.getSynthControls(nsynth);
 						if ( synthControls != null ) {
 							// SPI lookup plugin Synth for these controls
 							MidiSynth synth = SynthServices.createSynth(synthControls);

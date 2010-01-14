@@ -1,7 +1,7 @@
 package uk.org.toot.synth.channels.total;
 
-import uk.org.toot.control.CompoundControl;
-import uk.org.toot.synth.PolyphonicSynthChannel;
+import uk.org.toot.synth.SynthChannel;
+import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.spi.TootSynthChannelServiceProvider;
 import static uk.org.toot.synth.id.TootSynthControlsId.TOTAL_CHANNEL_ID;
 
@@ -14,7 +14,7 @@ public class TotalSynthServiceProvider extends TootSynthChannelServiceProvider
 		add(TotalSynthChannel.class, name, "Total", "0.1");
 	}
 
-	public PolyphonicSynthChannel createSynthChannel(CompoundControl c) {
+	public SynthChannel createSynthChannel(SynthChannelControls c) {
 		if ( c instanceof TotalSynthControls ) {
 			return new TotalSynthChannel((TotalSynthControls)c);
 		}

@@ -1,4 +1,4 @@
-package uk.org.toot.synth.channels.plucked;
+package uk.org.toot.synth.channels.pluck;
 
 //import static uk.org.toot.localisation.Localisation.getString;
 import java.awt.Color;
@@ -8,17 +8,16 @@ import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.modules.amplifier.AmplifierControls;
-//import uk.org.toot.synth.oscillator.*;
 import static uk.org.toot.misc.Localisation.getString;
-import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_3_CHANNEL_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.PLUCK_CHANNEL_ID;
 
 /**
  * @author st
  *
  */
-public class Example3SynthControls extends SynthChannelControls
+public class PluckSynthControls extends SynthChannelControls
 {
-	public static String NAME = "Ex3Syn";
+	public static String NAME = "Pluck";
 	
 	// OFFSETS MUST NOT BE CHANGED TO PRESERVE PERSISTENCE PORTABILITY
 	// OFFSETS ARE SLIGHTLY SPARSE TO ALLOW EXTENSION OF EXISTING MODULES
@@ -31,8 +30,8 @@ public class Example3SynthControls extends SynthChannelControls
 
 //	private DelayedLFOControls[] lfoControls;
 	
-	public Example3SynthControls() {
-		super(EXAMPLE_3_CHANNEL_ID, NAME);
+	public PluckSynthControls() {
+		super(PLUCK_CHANNEL_ID, NAME);
 		
 /*		lfoControls = new DelayedLFOControls[1];
 		

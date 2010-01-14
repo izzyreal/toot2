@@ -7,9 +7,9 @@ package uk.org.toot.synth.spi;
 
 import java.util.List;
 import uk.org.toot.service.*;
-import uk.org.toot.control.CompoundControl;
+import uk.org.toot.synth.MidiSynth;
+import uk.org.toot.synth.SynthControls;
 import uk.org.toot.control.spi.*;
-import uk.org.toot.synth.*;
 
 abstract public class SynthServiceProvider extends ServiceProvider
 {
@@ -80,5 +80,5 @@ abstract public class SynthServiceProvider extends ServiceProvider
         return null;
     }
     
-	public abstract MidiSynth createSynth(CompoundControl controls);
+	public abstract MidiSynth createSynth(SynthControls controls);
 }

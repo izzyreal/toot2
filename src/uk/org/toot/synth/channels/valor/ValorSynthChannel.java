@@ -21,7 +21,7 @@ import uk.org.toot.synth.modules.oscillator.*;
  * 
  * @author st
  */
-public class Example2SynthChannel extends PolyphonicSynthChannel
+public class ValorSynthChannel extends PolyphonicSynthChannel
 {
 	private MultiWaveOscillatorVariables oscillator1Vars;
 	private MultiWaveOscillatorVariables oscillator2Vars;
@@ -49,7 +49,7 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 		MultiWaves.init();
 	}
 	
-	public Example2SynthChannel(Example2SynthControls controls) {
+	public ValorSynthChannel(ValorSynthControls controls) {
 		super(controls.getName());
 		oscillator1Vars = controls.getOscillatorVariables(1-1);
 		oscillator2Vars = controls.getOscillatorVariables(2-1);
@@ -135,9 +135,9 @@ public class Example2SynthChannel extends PolyphonicSynthChannel
 			super(pitch, velocity);
 			lfo1 = new LFO(lfo1Vars, (float)(-Math.PI / 2)); // start at minimum
 			lfo2 = new LFO(lfo2Vars, (float)(-Math.PI / 2)); // start at minimum
-			oscillator1 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator1Vars, frequency);
-			oscillator2 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator2Vars, frequency);
-			oscillator3 = new MultiWaveOscillator(Example2SynthChannel.this, oscillator3Vars, frequency);
+			oscillator1 = new MultiWaveOscillator(ValorSynthChannel.this, oscillator1Vars, frequency);
+			oscillator2 = new MultiWaveOscillator(ValorSynthChannel.this, oscillator2Vars, frequency);
+			oscillator3 = new MultiWaveOscillator(ValorSynthChannel.this, oscillator3Vars, frequency);
 			envelopeA = new EnvelopeGenerator(envelopeAVars);
 			envelopeA.trigger();
 			envelope1 = new EnvelopeGenerator(envelope1Vars);

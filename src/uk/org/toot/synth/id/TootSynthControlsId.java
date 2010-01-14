@@ -16,9 +16,8 @@ public interface TootSynthControlsId
 	final static int VSTI_SYNTH_ID = 127;
 	
 	// ids of the plugin synth channels
-	final static int EXAMPLE_1_CHANNEL_ID = 1;
-	final static int EXAMPLE_2_CHANNEL_ID = 2;
-	final static int EXAMPLE_3_CHANNEL_ID = 3;
+	final static int VALOR_CHANNEL_ID = 2;
+	final static int PLUCK_CHANNEL_ID = 3;
 	final static int COPAL_CHANNEL_ID = 4;
 	final static int WHIRL_CHANNEL_ID = 5;
 	final static int TOTAL_CHANNEL_ID = 6;

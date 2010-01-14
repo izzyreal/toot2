@@ -8,7 +8,6 @@ package uk.org.toot.synth;
 import java.util.Iterator;
 import java.util.List;
 
-import uk.org.toot.control.CompoundControl;
 import uk.org.toot.service.*;
 import uk.org.toot.synth.spi.SynthServiceProvider;
 
@@ -53,7 +52,7 @@ public class SynthServices extends Services
         return null;
     }
 
-    public static MidiSynth createSynth(CompoundControl controls) {
+    public static MidiSynth createSynth(SynthControls controls) {
         MidiSynth synth;
 		for ( SynthServiceProvider provider : providers ) {
             synth = provider.createSynth(controls);
@@ -70,24 +69,19 @@ public class SynthServices extends Services
         }
     }
 
-    public static void accept(ServiceVisitor v, Class<?> clazz) {
+    public static void accept(ServiceVisitor v, Class<? extends SynthControls> clazz) {
 		for ( SynthServiceProvider provider : providers ) {
             provider.accept(v, clazz);
         }
 	}
 
-	public static void printServiceDescriptors(Class<?> clazz) {
+	public static void printServiceDescriptors(Class<? extends SynthControls> clazz) {
         accept(new ServicePrinter(), clazz);
     }
 
     public static void main(String[] args) {
         try {
 	        printServiceDescriptors(null);
-        } catch ( Exception e ) {
-            e.printStackTrace();
-        }
-        try {
-            System.in.read();
         } catch ( Exception e ) {
             e.printStackTrace();
         }

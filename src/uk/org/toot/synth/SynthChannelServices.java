@@ -71,13 +71,13 @@ public class SynthChannelServices extends Services
         }
     }
 
-    public static void accept(ServiceVisitor v, Class<?> clazz) {
+    public static void accept(ServiceVisitor v, Class<? extends SynthChannelControls> clazz) {
 		for ( SynthChannelServiceProvider provider : providers ) {
             provider.accept(v, clazz);
         }
 	}
 
-	public static void printServiceDescriptors(Class<?> clazz) {
+	public static void printServiceDescriptors(Class<? extends SynthChannelControls> clazz) {
         accept(new ServicePrinter(), clazz);
     }
 

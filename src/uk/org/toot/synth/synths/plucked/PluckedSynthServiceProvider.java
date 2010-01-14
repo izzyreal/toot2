@@ -5,8 +5,8 @@
 
 package uk.org.toot.synth.synths.plucked;
 
-import uk.org.toot.control.CompoundControl;
 import uk.org.toot.synth.MidiSynth;
+import uk.org.toot.synth.SynthControls;
 import uk.org.toot.synth.spi.SynthServiceProvider;
 
 import static uk.org.toot.control.id.ProviderId.TOOT_PROVIDER_ID;
@@ -32,7 +32,7 @@ public class PluckedSynthServiceProvider extends SynthServiceProvider
 		add(PluckedSynth.class, "Plucked Synth", "", "0.1");
 	}
 
-	public MidiSynth createSynth(CompoundControl c) {
+	public MidiSynth createSynth(SynthControls c) {
 		if ( c instanceof PluckedSynthControls ) {
 			return new PluckedSynth((PluckedSynthControls)c);
 		}

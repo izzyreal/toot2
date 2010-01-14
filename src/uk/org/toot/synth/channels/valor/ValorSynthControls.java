@@ -11,15 +11,15 @@ import uk.org.toot.synth.modules.mixer.MixerVariables;
 import uk.org.toot.synth.modules.mixer.ModulationMixerControls;
 import uk.org.toot.synth.modules.mixer.ModulationMixerVariables;
 import uk.org.toot.synth.modules.oscillator.*;
-import static uk.org.toot.synth.id.TootSynthControlsId.EXAMPLE_2_CHANNEL_ID;
+import static uk.org.toot.synth.id.TootSynthControlsId.VALOR_CHANNEL_ID;
 
 /**
  * @author st
  *
  */
-public class Example2SynthControls extends SynthChannelControls
+public class ValorSynthControls extends SynthChannelControls
 {
-	public static String NAME = "Ex2Syn";
+	public static String NAME = "Valor";
 	
 	// OFFSETS MUST NOT BE CHANGED TO PRESERVE PERSISTENCE PORTABILITY
 	// OFFSETS ARE SLIGHTLY SPARSE TO ALLOW EXTENSION OF EXISTING MODULES
@@ -54,8 +54,8 @@ public class Example2SynthControls extends SynthChannelControls
 	private MixerControls[] mixerControls;
 	private ModulationMixerControls[] modulationControls;
 	
-	public Example2SynthControls() {
-		super(EXAMPLE_2_CHANNEL_ID, NAME);
+	public ValorSynthControls() {
+		super(VALOR_CHANNEL_ID, NAME);
 		
 		oscillatorControls = new MultiWaveOscillatorControls[4];
 		filterControls = new FilterControls[2];
