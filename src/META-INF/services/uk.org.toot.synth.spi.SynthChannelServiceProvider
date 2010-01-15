@@ -1,9 +1,4 @@
-uk.org.toot.synth.channels.valor.ValorSynthServiceProvider
-uk.org.toot.synth.channels.pluck.PluckSynthServiceProvider
-uk.org.toot.synth.channels.copal.CopalSynthServiceProvider
-uk.org.toot.synth.channels.whirl.WhirlSynthServiceProvider
-uk.org.toot.synth.channels.total.TotalSynthServiceProvider
-uk.org.toot.synth.channels.nine.NineSynthServiceProvider
+uk.org.toot.synth.channels.AllTootSynthChannelsServiceProvider
 
 
 
