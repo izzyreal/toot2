@@ -5,10 +5,10 @@
 
 package uk.org.toot.audio.eq;
 
-import uk.org.toot.audio.filter.Filter;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.LogLaw;
+import uk.org.toot.dsp.filter.FilterShape;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -54,7 +54,7 @@ public class GraphicEQ extends AbstractParallelEQ {
             int id = 1;
             while ( fc < 20001 ) {
                 add(new ClassicFilterControls(String.valueOf(fc), id,
-                    	Filter.Type.BPF, true,
+                    	FilterShape.BPF, true,
                         fc, fc, fc, true,
                         Q_LAW, Q, true,
                         GAIN_LAW, 0f, false));

@@ -16,12 +16,12 @@ public class FIRFilter extends AbstractFilter
     public float filterSample(float sample, FIRState s) {
         float y = 0.0f;
         int taps = a.length;
+        for ( int k = taps - 1; k > 0; k-- ) {
+            s.x[k] = s.x[k - 1];
+        }
         s.x[0] = sample;
         for ( int k = 0; k < taps; k++ ) {
             y += a[k] * s.x[k];
-        }
-        for ( int k = taps - 1; k > 0; k-- ) {
-            s.x[k] = s.x[k - 1];
         }
         return y;
 	}

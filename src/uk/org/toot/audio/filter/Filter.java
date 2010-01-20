@@ -7,19 +7,6 @@ package uk.org.toot.audio.filter;
 
 public interface Filter
 {
-	/**
-     * Classic filter types
-     */
-    public enum Type{
-        LPF, 	/* low pass filter */
-        HPF, 	/* High pass filter */
-        BPF, 	/* band pass filter */
-        NOTCH, 	/* Notch Filter */
-        PEQ, 	/* Peaking band EQ filter */
-        LSH, 	/* Low shelf filter */
-        HSH 	/* High shelf filter */
-    };
-
     /**
      * Open this Filter, acquire resources, addObservers etc.
      */

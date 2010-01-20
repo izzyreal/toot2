@@ -22,22 +22,28 @@ public class AllTootSynthChannelsServiceProvider extends TootSynthChannelService
 		super("Toot Synth Channels", "0.2");
 		String name;
 		name = ValorSynthControls.NAME;
-		addControls(ValorSynthControls.class, VALOR_CHANNEL_ID, name, "", "0.2");
+		addControls(ValorSynthControls.class, VALOR_CHANNEL_ID, name, 
+				"Virtual Analog Polyphonic", "0.2");
 		add(ValorSynthChannel.class, name, "Valor", "0.2");
 		name = PluckSynthControls.NAME;
-		addControls(PluckSynthControls.class, PLUCK_CHANNEL_ID, name, "", "0.1");
+		addControls(PluckSynthControls.class, PLUCK_CHANNEL_ID, name, 
+				"Physically Modelled Plucked String", "0.1");
 		add(PluckSynthChannel.class, name, "Pluck", "0.1");
 		name = CopalSynthControls.NAME;
-		addControls(CopalSynthControls.class, COPAL_CHANNEL_ID, name, "", "0.2");
+		addControls(CopalSynthControls.class, COPAL_CHANNEL_ID, name, 
+				"Paraphonic Sring Ensemble", "0.2");
 		add(CopalSynthChannel.class, name, "Cepal", "0.2");
 		name = WhirlSynthControls.NAME;
-		addControls(WhirlSynthControls.class, WHIRL_CHANNEL_ID, name, "", "0.2");
+		addControls(WhirlSynthControls.class, WHIRL_CHANNEL_ID, name, 
+				"Virtual Analog Monophonic", "0.2");
 		add(WhirlSynthChannel.class, name, "Whirl", "0.2");
 		name = TotalSynthControls.NAME;
-		addControls(TotalSynthControls.class, TOTAL_CHANNEL_ID, name, "", "0.1");
+		addControls(TotalSynthControls.class, TOTAL_CHANNEL_ID, name, 
+				"Digital Polyphonic", "0.1");
 		add(TotalSynthChannel.class, name, "Total", "0.1");
 		name = NineSynthControls.NAME;
-		addControls(NineSynthControls.class, NINE_CHANNEL_ID, name, "", "0.1");
+		addControls(NineSynthControls.class, NINE_CHANNEL_ID, name, 
+				"Hammond Drawbar Organ", "0.1");
 		add(NineSynthChannel.class, name, "Nine", "0.1");
 	}
 

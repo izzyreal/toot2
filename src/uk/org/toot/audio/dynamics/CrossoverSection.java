@@ -6,8 +6,8 @@
 package uk.org.toot.audio.dynamics;
 
 import java.util.Observer;
-import uk.org.toot.audio.filter.Filter;
 import uk.org.toot.audio.filter.FilterSpecification;
+import uk.org.toot.dsp.filter.FilterShape;
 
 class CrossoverSection
     implements FilterSpecification
@@ -17,16 +17,16 @@ class CrossoverSection
      * @link aggregation 
      */
     private CrossoverControl control;
-    private Filter.Type type;
+    private FilterShape shape;
 
-    public CrossoverSection(CrossoverControl control, Filter.Type type) {
+    public CrossoverSection(CrossoverControl control, FilterShape type) {
         this.control = control;
-        this.type = type;
+        this.shape = type;
     }
 
     public int getFrequency() { return control.getFrequency(); }
 
-	public Filter.Type getClassicType() { return type; }
+	public FilterShape getShape() { return shape; }
 
     public float getResonance() { return 0.707f; }
 

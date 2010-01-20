@@ -5,6 +5,8 @@
 
 package uk.org.toot.audio.filter;
 
+import uk.org.toot.dsp.filter.FilterShape;
+
 /* Simple implementation of Biquad filters -- Tom St Denis
  *
  * Based on the work
@@ -29,10 +31,11 @@ public class BiQuadDesign extends AbstractFilterDesign
 
     public void design(int sampleRate) {
         // we design for 0dB gain
-        design(spec.getClassicType(), 0f, spec.getFrequency(), (float)sampleRate, FilterTools.getOctaveBandwidth(spec.getResonance()));
+        design(spec.getShape(), 0f, spec.getFrequency(), (float)sampleRate, FilterTools.getOctaveBandwidth(spec.getResonance()));
     }
 
-    public void design(Filter.Type type, float dbGain, float freq, float srate, float bandwidth) {
+    // TODO move to dsp.filter.BiquadDesigner
+    public void design(FilterShape type, float dbGain, float freq, float srate, float bandwidth) {
 //        System.out.println("design t="+type+", f="+freq+", sr="+srate+", obw="+bandwidth);
         double A, omega, sn, cs, alpha, beta;
         double a0, a1, a2, b0, b1, b2;

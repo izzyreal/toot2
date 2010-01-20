@@ -5,10 +5,10 @@
 
 package uk.org.toot.audio.eq;
 
-import uk.org.toot.audio.filter.Filter;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.LogLaw;
+import uk.org.toot.dsp.filter.FilterShape;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -43,22 +43,22 @@ public class FormantEQ extends AbstractParallelEQ
         public Controls() {
             super(EQIds.FORMANT_EQ_ID, getString("Formant.EQ"));
             add(new ClassicFilterControls("1", 0,
-                	Filter.Type.BPF, true,
+                	FilterShape.BPF, true,
                     125f, 500f, 250, false,
                     Q_LAW, 2f, false,
                     GAIN_LAW, 0f, false));
             add(new ClassicFilterControls("2", 4,
-                	Filter.Type.BPF, true,
+                	FilterShape.BPF, true,
                     250f, 1000f, 500, false,
                     Q_LAW, 2f, false,
                     GAIN_LAW, 0f, false));
             add(new ClassicFilterControls("3", 8,
-                	Filter.Type.BPF, true,
+                	FilterShape.BPF, true,
                     500f, 2000f, 1000, false,
                     Q_LAW, 2f, false,
                     GAIN_LAW, 0f, false));
             add(new ClassicFilterControls("4", 16,
-                	Filter.Type.BPF, true,
+                	FilterShape.BPF, true,
                     1000f, 4000f, 2000, false,
                     Q_LAW, 2f, false,
                     GAIN_LAW, 0f, false));

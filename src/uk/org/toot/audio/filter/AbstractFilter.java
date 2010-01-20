@@ -17,13 +17,14 @@ abstract public class AbstractFilter implements Filter
     private Observer specObserver = null;
 
     private boolean doUpdate = true; // for first time
-    private final static int MAX_CHANNELS = 2; // !!! !!! STEREO LIMITATION
+    private final static int MAX_CHANNELS = 6;
     private Filter.State[] states = new State[MAX_CHANNELS];
     protected float amplitudeAdj = 0f;
     protected int sampleRate = -1; // force initial update
     private float levelOffset;
 
     public AbstractFilter(FilterSpecification spec, boolean relative) {
+    	// graphic eq and parametric eq are relative, formant eq isn't
     	levelOffset = relative ? 1f : 0f;
         // create an appropriate FilterDesign for the implementation
         design = createDesign(spec);
@@ -61,7 +62,7 @@ abstract public class AbstractFilter implements Filter
 
     protected Filter.State getState(int chan) {
         if ( chan >= MAX_CHANNELS || chan < 0 ) return null;
-        // act on asynchrounous redesign notification
+        // act on asynchronous redesign notification
         if ( doUpdate ) {
             updateFilterCoefficients();
             doUpdate = false;

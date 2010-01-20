@@ -7,9 +7,11 @@ package uk.org.toot.audio.filter;
 
 import java.util.Observer;
 
+import uk.org.toot.dsp.filter.FilterShape;
+
 public interface FilterSpecification
 {
-    Filter.Type getClassicType();
+    FilterShape getShape();
     int getFrequency();
     float getResonance();
     float getLeveldB();

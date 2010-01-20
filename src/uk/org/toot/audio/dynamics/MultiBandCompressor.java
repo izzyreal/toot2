@@ -4,6 +4,7 @@ package uk.org.toot.audio.dynamics;
 
 import java.util.List;
 import uk.org.toot.control.*;
+import uk.org.toot.dsp.filter.FilterShape;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;
@@ -178,8 +179,8 @@ public class MultiBandCompressor implements AudioProcess
     }
 
     protected Crossover createCrossover(CrossoverControl c) {
-        return new IIRCrossover(new CrossoverSection(c, Filter.Type.LPF),
-            					new CrossoverSection(c, Filter.Type.HPF));
+        return new IIRCrossover(new CrossoverSection(c, FilterShape.LPF),
+            					new CrossoverSection(c, FilterShape.HPF));
     }
 
     protected void updateSampleRate(int rate) {

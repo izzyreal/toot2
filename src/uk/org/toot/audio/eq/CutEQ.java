@@ -5,10 +5,10 @@
 
 package uk.org.toot.audio.eq;
 
-import uk.org.toot.audio.filter.Filter;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.LogLaw;
+import uk.org.toot.dsp.filter.FilterShape;
 
 import static uk.org.toot.misc.Localisation.*;
 
@@ -45,12 +45,12 @@ public class CutEQ extends AbstractSerialEQ
             super(EQIds.CUT_EQ_ID, getString("Cut.EQ"));
             ControlColumn g = new ControlColumn();
             g.add(new ClassicFilterControls("High", 4, // !!! !!!
-                	Filter.Type.LPF, true,
+                	FilterShape.LPF, true,
                     40f, 12000f, 12000f, false,
                     Q_LAW, Q, true,
                     GAIN_LAW, 0, true));
             g.add(new ClassicFilterControls("Low", 0, // !!! !!!
-                	Filter.Type.HPF, true,
+                	FilterShape.HPF, true,
                     20f, 5000f, 20f, false,
                     Q_LAW, Q, true,
                     GAIN_LAW, 0, true));

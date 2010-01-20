@@ -7,6 +7,7 @@ package uk.org.toot.audio.eq;
 
 import java.util.List;
 import uk.org.toot.control.*;
+import uk.org.toot.dsp.filter.FilterShape;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.filter.*;
 
@@ -21,7 +22,7 @@ import static uk.org.toot.misc.Localisation.*;
 public class ClassicFilterControls extends AudioControls
     implements FilterSpecification
     {
-    private Filter.Type type;
+    private FilterShape shape;
 
     /**
      * @supplierCardinality 1
@@ -45,13 +46,13 @@ public class ClassicFilterControls extends AudioControls
      * Construct with all specified values.
      */
 	public ClassicFilterControls(String name, int id,
-        Filter.Type typevalue, boolean typefixed,
+        FilterShape shape, boolean typefixed,
         float fmin, float fmax, float fvalue, boolean ffixed,
         ControlLaw qLaw, float qvalue, boolean qfixed,
         ControlLaw levelLaw, float dBvalue, boolean dBfixed
         ) {
         super(0, name); // ??? ???
-        type = typevalue;
+        this.shape = shape;
         add(res = createResonanceControl(id+2, qLaw, qvalue, qfixed));
         add(freq = createFrequencyControl(id+1, fmin, fmax, fvalue, ffixed));
         add(leveldB = createLevelControl(id, levelLaw, dBvalue, dBfixed));
@@ -59,8 +60,8 @@ public class ClassicFilterControls extends AudioControls
 
     public boolean isAlwaysVertical() { return true; }
 
-    public Filter.Type getClassicType() {
-        return type;
+    public FilterShape getShape() {
+        return shape;
     }
 
     public int getFrequency() {
