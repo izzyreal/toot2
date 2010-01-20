@@ -11,6 +11,10 @@ package uk.org.toot.dsp.filter;
  */
 public class FIRDesigner
 {
+	public static float[] designLowPass(float frequency, float ft, float dBattenuation) {
+		return design(FilterShape.LPF, frequency, ft, dBattenuation, -1);
+	}
+	
     /**
      * @param frequency normalised to Nyquist
      * @param ft normalised to Nyquist

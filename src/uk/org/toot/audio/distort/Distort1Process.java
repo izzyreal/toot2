@@ -5,71 +5,38 @@
 
 package uk.org.toot.audio.distort;
 
-import java.util.Observer;
-
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
-import uk.org.toot.audio.filter.FIRDesign;
-import uk.org.toot.audio.filter.FilterSpecification;
+import uk.org.toot.dsp.filter.FIRDesigner;
 import uk.org.toot.dsp.filter.FIROverSampler;
-import uk.org.toot.dsp.filter.FilterShape;
 import uk.org.toot.dsp.filter.OverSampler;
 
+/*
+ * A distortion effect which uses 4x oversampling to significantly reduce aliasing.
+ */
 public class Distort1Process extends SimpleAudioProcess
 {
 	private Distort1Variables vars;
 	private OverSampler overSampler;
+	private int sampleRate = -1;
 	
 	public Distort1Process(Distort1Variables vars) {
 		this.vars = vars;
-		final int R = 4;
-		final int A = 60;
-		final int SR = 44100;
-		final int nyquist = SR / 2;
-		FilterSpecification iSpec = new FilterSpecification() {
-			public void addObserver(Observer observer) {}
-			public void deleteObserver(Observer observer) {}
-			public FilterShape getShape() {	return FilterShape.LPF;	}
-			public int getFrequency() {	return 7000; }
-			public float getLevelFactor() {	return 1f; }
-			public float getLeveldB() {	return 0f; }
-			public float getResonance() { return 0.707f; }
-		};
-		FIRDesign iDesign = new FIRDesign(iSpec);
-		iDesign.setTransitionBandwidth(nyquist - iSpec.getFrequency());
-		iDesign.setAttenuation(A);
-		iDesign.design(SR*R);
-		float ia[] = iDesign.getCoefficients();
-		System.out.println("I "+ia.length+" taps");
-		scale(ia);
-		
-		FilterSpecification dSpec = new FilterSpecification() {
-			public void addObserver(Observer observer) {}
-			public void deleteObserver(Observer observer) {}
-			public FilterShape getShape() {	return FilterShape.LPF;	}
-			public int getFrequency() {	return 14000; }
-			public float getLevelFactor() {	return 1f; }
-			public float getLeveldB() {	return 0f; }
-			public float getResonance() { return 0.707f; }
-		};
-		FIRDesign dDesign = new FIRDesign(dSpec);
-		dDesign.setTransitionBandwidth(nyquist - dSpec.getFrequency());
-		dDesign.setAttenuation(A);
-		dDesign.design(SR*R);
-		float da[] = dDesign.getCoefficients();
-		System.out.println("D "+da.length+" taps");
-		scale(da);
-
-		overSampler = new FIROverSampler(4, 2, iDesign.getCoefficients(), dDesign.getCoefficients());
 	}
 
-	private float[] scale(float[] coeffs) {
-		float sum = 0;
-		for ( int i = 0; i < coeffs.length; i++ ) {
-			sum += coeffs[i];
-		}
-		System.out.println("Sum "+sum);
-		return coeffs;
+	private void design() {
+		final int R = 4;				// oversample Rate
+		final int A = 60;				// Attenuation
+		final int NN = sampleRate / 2;	// Nyquist Normal
+		final int NO = NN * R;			// Nyquist Oversampled
+		
+		final float FI = 7000f;		
+		float[] ia = FIRDesigner.designLowPass(FI/NO, (NN-FI)/NO, A);
+		
+		final float FD = 14000f;
+		float[] da = FIRDesigner.designLowPass(FD/NO, (NN-FD)/NO, A);
+
+		overSampler = new FIROverSampler(R, 2, ia, da); // !!! STEREO		
 	}
 	
 	/**
@@ -80,6 +47,11 @@ public class Distort1Process extends SimpleAudioProcess
 	 */
 	public int processAudio(AudioBuffer buffer) {
 		if ( vars.isBypassed() ) return AUDIO_OK;
+		int srate = (int)buffer.getSampleRate();
+		if ( srate != sampleRate ) {
+			sampleRate = srate;
+			design();
+		}
         int nsamples = buffer.getSampleCount();
         int nchans = buffer.getChannelCount();
         float gain = vars.getGain() * 10f;
@@ -101,7 +73,7 @@ public class Distort1Process extends SimpleAudioProcess
 	}
 	
 	/**
-	 * Distort an input sample.
+	 * Distort an input sample using the pade-approximation to tanh.
 	 * public static to allow external code to call it.
 	 * final to allow it to be inlined in processAudio().
 	 * @param x input
