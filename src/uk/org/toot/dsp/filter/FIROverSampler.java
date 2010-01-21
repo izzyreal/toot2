@@ -42,7 +42,7 @@ public class FIROverSampler extends OverSampler
 		assert nchan >= 0 && nchan < NC;
 		float[] x = ix[nchan];
 		float[] samples = new float[R];
-		samples[0] = sample;
+		samples[0] = sample * R;		// compensate for interpolation loss!
 		for ( int i = 0; i < R; i++ ) {
 			float y = 0;
 			// shift to make space for a new sample

@@ -25,7 +25,7 @@ public class Distort1Process extends SimpleAudioProcess
 	}
 
 	private void design() {
-		final int R = 4;				// oversample Rate
+		final int R = 5;				// oversample Rate
 		final int A = 60;				// Attenuation
 		final int NN = sampleRate / 2;	// Nyquist Normal
 		final int NO = NN * R;			// Nyquist Oversampled
@@ -56,7 +56,6 @@ public class Distort1Process extends SimpleAudioProcess
         int nchans = buffer.getChannelCount();
         float gain = vars.getGain() * 10f;
         float inverseGain = 1f / gain;
-        gain *= 6; // oversampling rate + 1 ?
         float[] samples;
         float[] upSamples;
         for ( int c = 0; c < nchans; c++ ) {
