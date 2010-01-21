@@ -50,8 +50,10 @@ public class NineSynthChannel extends PolyphonicSynthChannel
 
 		public NineVoice(int pitch, int velocity) {
 			super(pitch, velocity);
+//			System.out.println(frequency);
 			float wn = frequency * 2 * (float)Math.PI / sampleRate;
-			osc = new HammondOscillator(wn, oscVars.getLevels());
+			float wmax = 5925 * 2 * (float)Math.PI / sampleRate;
+			osc = new HammondOscillator(wn, wmax, oscVars.getLevels());
 			env = new ASREnvelopeGenerator(envVars);
 		}
 

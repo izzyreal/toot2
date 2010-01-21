@@ -6,6 +6,7 @@
 package uk.org.toot.synth.modules.oscillator;
 
 import uk.org.toot.dsp.Phasor;
+import uk.org.toot.dsp.Sine;
 
 /**
  * A model of an oscillator for a Hammond drawbar organ, even though a
@@ -35,19 +36,24 @@ public class HammondOscillator
 	 * Ideally each Phasor would start at different times, high frequencies first,
 	 * over a 1 to 40ms period depending on key velocity. 
 	 */
-	public HammondOscillator(float wn, float[] levels) {
+	public HammondOscillator(float wn, float wmax, float[] levels) {
 		this.levels = levels;
 		nsines = levels.length;
 		sines = new Phasor[nsines];
-		sines[0] = new Phasor(wn * 0.5, 		0);
-		sines[1] = new Phasor(wn * 1.498823530, 0); 	
-		sines[2] = new Phasor(wn, 				0);
-		sines[3] = new Phasor(wn * 2, 			0);
-		sines[4] = new Phasor(wn * 2.997647060, 0);
-		sines[5] = new Phasor(wn * 4, 			0);
-		sines[6] = new Phasor(wn * 5.040941178, 0);
-		sines[7] = new Phasor(wn * 5.995294120, 0);
-		sines[8] = new Phasor(wn * 8, 			0);
+		sines[0] = createPhasor(wmax, wn * 0.5);
+		sines[1] = createPhasor(wmax, wn * 1.498823530); 	
+		sines[2] = createPhasor(wmax, wn);
+		sines[3] = createPhasor(wmax, wn * 2);
+		sines[4] = createPhasor(wmax, wn * 2.997647060);
+		sines[5] = createPhasor(wmax, wn * 4);
+		sines[6] = createPhasor(wmax, wn * 5.040941178);
+		sines[7] = createPhasor(wmax, wn * 5.995294120);
+		sines[8] = createPhasor(wmax, wn * 8);
+	}
+	
+	public Phasor createPhasor(float wmax, double w) {
+		while ( w > wmax ) w *= 0.5f;
+		return new Sine(w);
 	}
 	
 	public float getSample() {
