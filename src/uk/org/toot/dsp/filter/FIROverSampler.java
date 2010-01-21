@@ -36,6 +36,7 @@ public class FIROverSampler extends OverSampler
 	 * non-zero and thus the product with their weight is zero and oes not
 	 * need to be calculated.
 	 * i.e. the output samples only comprise 1 in R multiply accumulates.
+	 * Note that zero insertions cause attenuation by the factor R.
 	 */
 	@Override
 	public float[] interpolate(float sample, int nchan) {
@@ -72,8 +73,8 @@ public class FIROverSampler extends OverSampler
 		assert nchan >= 0 && nchan < NC;
 		float[] x = dx[nchan];
 		// shift to make space for R new samples
-        for ( int k = ndtaps - 1; k > R; k-- ) {
-            x[k] = x[k-1-R];
+        for ( int k = ndtaps - 1; k >= R; k-- ) {
+            x[k] = x[k - R];
         }
         // insert R new samples
 		for ( int i = 0; i < R; i++ ) {

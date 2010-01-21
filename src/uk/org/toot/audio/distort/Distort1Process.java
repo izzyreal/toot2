@@ -56,6 +56,7 @@ public class Distort1Process extends SimpleAudioProcess
         int nchans = buffer.getChannelCount();
         float gain = vars.getGain() * 10f;
         float inverseGain = 1f / gain;
+        if ( inverseGain < 0.07f ) inverseGain = 0.07f;
         float[] samples;
         float[] upSamples;
         for ( int c = 0; c < nchans; c++ ) {

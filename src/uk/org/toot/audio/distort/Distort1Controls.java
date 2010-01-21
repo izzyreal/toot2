@@ -21,7 +21,7 @@ public class Distort1Controls extends AudioControls implements Distort1Variables
 	public static final int DISTORT1 = DISTORT_BASE_ID; 
 	private static final int GAIN = 0;
 	
-	private final static LinearLaw GAIN_LAW = new LinearLaw(-20, 20, "dB");
+	private final static LinearLaw GAIN_LAW = new LinearLaw(0, 30, "dB");
 	
 	private float gain = 1f;
 	
