@@ -23,7 +23,7 @@ public class FloatDenormals
      * Detect a denormal float (excluding zero).
      */
     public static boolean isDenormal(float x) {
-        return x != 0f && isDenormalOrZero(x);
+        return x != 0f && abs(x) < THRESHOLD;
     }
 
     /**
@@ -38,9 +38,7 @@ public class FloatDenormals
      * Replace a denormal float with zero.
      */
     public static float zeroDenorm(float x) {
-        // isDenormalOrZero is slightly more efficient in this use.
-        // the test is quicker but the result is the same.
-        return isDenormalOrZero(x) ? 0f : x;
+        return abs(x) < THRESHOLD ? 0f : x;
     }
 
     /**
