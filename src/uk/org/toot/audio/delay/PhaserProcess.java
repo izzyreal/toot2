@@ -20,11 +20,12 @@ public class PhaserProcess extends SimpleAudioProcess
 	private final static int N = 6;
 	
 	private AllPass[] allpass = new AllPass[N];
-	private float zm1 = 0f;
+	private float zm1 = 0f;			// previous output
 	private float lfoPhase = 0f;
 	private float dmin, dmax;
 	private int sampleRate = -1;
 	private PhaserVariables vars;
+	private float a1;				// shared allpass coeff
 	
 	public PhaserProcess(PhaserVariables vars) {
 		this.vars = vars;
@@ -57,31 +58,25 @@ public class PhaserProcess extends SimpleAudioProcess
             	lfoPhase -= Math.PI * 2;
 
             // calculate allpass output
+        	a1 = (1f - d) / (1f + d);
             float y = samples[i] + zm1 * fb; 
             for ( int a = 0; a < N; a++ ) {
-            	allpass[a].setDelay(d);
             	y = allpass[a].update(y);
             }
-            if ( isDenormal(y) ) y = 0f;
-       		zm1 = y;
-       		samples[i] += y * depth;
+            zm1 = zeroDenorm(y);
+       		samples[i] += zm1 * depth;
         }
         
 		return AUDIO_OK;
 	}
 
-	private static class AllPass
+	private class AllPass
 	{
-		private float a1;
 		private float zm1 = 0f;
-		
-		public void setDelay(float delay) {
-        	a1 = (1f - delay) / (1f + delay);
-		}
 		
 		public float update(float in) {
         	float y = in * -a1 + zm1;
-        	zm1 = y * a1 + in;
+        	zm1 = zeroDenorm(y * a1 + in);
             return y;
 		}
 	}
