@@ -38,11 +38,10 @@ public class BiQuadFilter extends AbstractFilter
         float y;
         for (int index = 0; index < length; index++) {
             sample = buffer[index];
-	        if ( isDenormal(sample) ) sample = 0f; // anti-denormal
         	y = (float)(a0 * sample + a1 * s.x1 + a2 * s.x2 -
                  					  a3 * s.y1 - a4 * s.y2);
 
-	        if ( isDenormal(y) ) y = 0f; // anti-denormal helps
+	        y = zeroDenorm(y); // anti-denormal helps
 
 		    /* shift x1 to x2, sample to x1 */
     	    s.x2 = s.x1;

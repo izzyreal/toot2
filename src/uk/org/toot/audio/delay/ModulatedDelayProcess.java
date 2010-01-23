@@ -109,10 +109,9 @@ public class ModulatedDelayProcess implements AudioProcess
                 buf = buffer.getChannel(ch);
 		        float modulatedDelay = modulation(ch) * scaledDepth;
                 out = wetBuffer.out(ch, staticDelay + modulatedDelay);
-                if ( isDenormal(out) ) out = 0f; // solves internal denormal
+                out = zeroDenorm(out); // solves internal denormal
                 float fb = feedback * out;
                 in = buf[s];
-                if ( isDenormal(in) ) in = 0f; // ??? doesn't seem to help
                 wetBuffer.append(ch, in + fb); // input + feedback
                 buf[s] = out * wetMix; // wet output rewrites buffer
             }
