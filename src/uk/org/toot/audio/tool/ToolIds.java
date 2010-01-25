@@ -11,4 +11,5 @@ class ToolIds
 {
     final static int DENORMAL_ID = TOOL_BASE_ID + 1;
     final static int NAN_TECTOR_ID = TOOL_BASE_ID + 2;
+    final static int FORMAT_ID = TOOL_BASE_ID + 3;
 }

@@ -101,10 +101,7 @@ public class ControlPanelFactory extends Observable implements PanelFactory
             }
         } else if ( control instanceof EnumControl ) {
             if ( control.isIndicator() ) {
-                JLabel label = new JLabel(((EnumControl)control).getValue().toString());
-				label.setBorder(BorderFactory.createEmptyBorder(3, 1, 2, 2));
-                label.setAlignmentX(0.5f);
-                return label;
+            	return new EnumIndicatorPanel((EnumControl)control);
             } else {
 	            return new EnumControlPanel((EnumControl)control);
             }

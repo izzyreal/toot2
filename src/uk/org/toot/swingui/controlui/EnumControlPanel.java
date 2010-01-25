@@ -30,7 +30,7 @@ public class EnumControlPanel extends ControlPanel
         super(control);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.control = control;
-        final String name = abbreviate(control.getValue().toString());
+        final String name = abbreviate(control.getValueString());
         buttonText = name;
         button = new JButton(name) {
         	@Override
@@ -84,7 +84,7 @@ public class EnumControlPanel extends ControlPanel
     }
 
     public void update(Observable obs, Object obj) {
-        buttonText = abbreviate(control.getValue().toString());
+        buttonText = abbreviate(control.getValueString());
        	button.repaint();
     }
 

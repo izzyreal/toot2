@@ -18,10 +18,11 @@ public class ToolServiceProvider extends TootAudioServiceProvider
 		String family = description;
         addControls(DenormalControls.class, ToolIds.DENORMAL_ID, "Denormaliser", family, "0.1");
         addControls(NaNTectorControls.class, ToolIds.NAN_TECTOR_ID, "NaN Tector", family, "0.1");
+        addControls(FormatControls.class, ToolIds.FORMAT_ID, "Format", family, "0.1");
 
         add(DenormalProcess.class, "Denormaliser", family, "0.1");
         add(NaNTectorProcess.class, "NaN Tector", family, "0.1");
-
+        add(FormatProcess.class, "Format", family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -29,6 +30,8 @@ public class ToolServiceProvider extends TootAudioServiceProvider
             return new DenormalProcess((DenormalControls)c);
         } else if ( c instanceof NaNTectorControls ) {
             return new NaNTectorProcess((NaNTectorControls)c);
+        } else if ( c instanceof FormatControls ) {
+            return new FormatProcess((FormatControls)c);
         }
         return null; // caller then tries another provider
     }

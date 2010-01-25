@@ -53,7 +53,7 @@ public class Distort1Process extends SimpleAudioProcess
 			design();
 		}
         int nsamples = buffer.getSampleCount();
-        int nchans = buffer.getChannelCount();
+        int nchans = buffer.getChannelCount() > 2 ? 2 : 1; // only mono or stereo
         float gain = vars.getGain() * 10f;
         float inverseGain = 1f / gain;
         // attempt to maintain contant rms level as signal saturates
