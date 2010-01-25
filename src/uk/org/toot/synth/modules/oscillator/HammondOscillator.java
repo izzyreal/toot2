@@ -51,8 +51,8 @@ public class HammondOscillator
 		sines[8] = createPhasor(wmax, wn * 8);
 	}
 	
-	public Phasor createPhasor(float wmax, double w) {
-		while ( w > wmax ) w *= 0.5f;
+	protected Phasor createPhasor(float wmax, double w) {
+		while ( w > wmax ) w *= 0.5f; // foldback, may loop once or twice
 		return new Sine(w);
 	}
 	

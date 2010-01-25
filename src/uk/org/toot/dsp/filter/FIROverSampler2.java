@@ -9,14 +9,16 @@ import java.util.Arrays;
 
 /**
  * A multi channel OverSampler making efficient use of FIR filters.
+ * We avoid rotating the history per sample by maintaining heads into the arrsys.
  * @author st
  */
-public class FIROverSampler extends OverSampler
+public class FIROverSampler2 extends OverSampler
 {
-	private int nitaps, ndtaps; // number of taps
-	private float[][] ix, dx;	// history, per channel
-	private float[] ia, da;		// filter coefficients
-	private float[] isamples;	// interpolated samples
+	private int nitaps, ndtaps; // number of taps, interpolation/decimation
+	private int ih, dh;			// heads of x, interpolation/decimation
+	private float[][] ix, dx;	// history, per channel, interpolation/decimation
+	private float[] ia, da;		// filter coefficients, interpolation/decimation
+	private float[] isamples;
 	
 	/**
 	 * @param rate oversampling rate 2..64
@@ -24,7 +26,7 @@ public class FIROverSampler extends OverSampler
 	 * @param iCoeffs the interpolator coefficients
 	 * @param dCoeffs the decimator coefficients
 	 */
-	public FIROverSampler(int rate, int nchans, float[] iCoeffs, float[] dCoeffs) {
+	public FIROverSampler2(int rate, int nchans, float[] iCoeffs, float[] dCoeffs) {
 		super(rate, nchans);
 		// setup interpolation
 		ia = iCoeffs;
@@ -38,7 +40,7 @@ public class FIROverSampler extends OverSampler
 	}
 
 	/**
-	 * We can optimise interpolation by noting that only 1 in R samples is
+	 * We optimise interpolation by noting that only 1 in R samples is
 	 * non-zero and thus the product with their weight is zero and oes not
 	 * need to be calculated.
 	 * i.e. the output samples only comprise 1 in R multiply accumulates.
@@ -50,47 +52,65 @@ public class FIROverSampler extends OverSampler
 		float[] x = ix[nchan];
 		Arrays.fill(isamples, 0);
 		isamples[0] = sample * R;		// compensate for interpolation loss!
-		for ( int i = 0; i < R; i++ ) {
-			float y = 0;
-			// shift to make space for a new sample
-	        for ( int k = nitaps - 1; k > 0; k-- ) {
-	            x[k] = x[k - 1];
-	        }
+		int k0 = ih > 0 ? ih-1 : nitaps-1;	// index of the non-zero sample
+		int i = 0;
+		while ( i < R ) {
 	        // insert a new sample
-			x[0] = isamples[i];
+			if ( ih == 0 ) ih = nitaps;
+			x[--ih] = isamples[i];
 			// derive an output sample
-	        for ( int k = i; k < nitaps; k += R ) {
-	            y += ia[k] * x[k];
-	        }
-	        isamples[i] = y;
+			float y = 0;
+			int j = 0;
+			int k = k0;
+			while ( k < nitaps ) {
+				y += ia[j] * x[k];
+				j += R;
+				k += R;
+			}
+			k -= nitaps;
+			while ( j < nitaps ) {
+				y += ia[j] * x[k];
+				j += R;
+				k += R;
+			}
+	        isamples[i++] = y;
 		}
 		return isamples;
 	}
 
 	/**
-	 * We can optimise decimation by noting that we discard all but 1 in R
+	 * We optimise decimation by noting that we discard all but 1 in R
 	 * samples. Since a FIR is not recursive we can simply avoid calculating
 	 * the output except 1 in R times.
-	 * We can also do all R shifts in a single pass.
 	 */
 	@Override
 	public float decimate(float[] samples, int nchan) {
 		assert samples.length == R;
 		assert nchan >= 0 && nchan < NC;
+		assert dh >= 0 && dh < ndtaps;
 		float[] x = dx[nchan];
-		// shift to make space for R new samples
-        for ( int k = ndtaps - 1; k >= R; k-- ) {
-            x[k] = x[k - R];
-        }
-        // insert R new samples
-		for ( int i = 0; i < R; i++ ) {
-			x[i] = samples[R-i-1];
+		// insert R new samples
+		int i = 0;
+		if ( dh < R ) {
+			while ( dh > 0 ) {			// 0 .. R-1 iterations before wrap
+				x[--dh] = samples[i++];
+			}
+			dh = ndtaps;				// wrap for predecrement
 		}
+		while ( i < R ) {
+			x[--dh] = samples[i++];		// R .. 1 iterations	
+		}			
 		// output decimated sample
 		float y = 0;
-        for ( int k = 0; k < ndtaps; k++ ) {
-            y += da[k] * x[k];
-        }
+		int j = 0;
+		int k = dh;
+		while ( k < ndtaps ) {
+			y += da[j++] * x[k++];		// 1 .. ndtaps iterations
+		}
+		k = 0;							// wrap (unnecessary if dh was 0)
+		while ( j < ndtaps ) {
+			y += da[j++] * x[k++];		// ndtaps-1 .. 0 iterations
+		}
 		return y;
 	}
 }

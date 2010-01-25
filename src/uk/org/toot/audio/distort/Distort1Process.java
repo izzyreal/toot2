@@ -8,11 +8,11 @@ package uk.org.toot.audio.distort;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
 import uk.org.toot.dsp.filter.FIRDesigner;
-import uk.org.toot.dsp.filter.FIROverSampler;
+import uk.org.toot.dsp.filter.FIROverSampler2;
 import uk.org.toot.dsp.filter.OverSampler;
 
 /*
- * A distortion effect which uses 4x oversampling to significantly reduce aliasing.
+ * A distortion effect which uses oversampling to significantly reduce aliasing.
  */
 public class Distort1Process extends SimpleAudioProcess
 {
@@ -25,7 +25,7 @@ public class Distort1Process extends SimpleAudioProcess
 	}
 
 	private void design() {
-		final int R = 5;				// oversample Rate
+		final int R = 8;				// oversample Rate
 		final int A = 60;				// Attenuation
 		final int NN = sampleRate / 2;	// Nyquist Normal
 		final int NO = NN * R;			// Nyquist Oversampled
@@ -36,7 +36,7 @@ public class Distort1Process extends SimpleAudioProcess
 		final float FD = 14000f;
 		float[] da = FIRDesigner.designLowPass(FD/NO, (NN-FD)/NO, A);
 
-		overSampler = new FIROverSampler(R, 2, ia, da); // !!! STEREO		
+		overSampler = new FIROverSampler2(R, 2, ia, da); // !!! STEREO		
 	}
 	
 	/**
@@ -56,6 +56,7 @@ public class Distort1Process extends SimpleAudioProcess
         int nchans = buffer.getChannelCount();
         float gain = vars.getGain() * 10f;
         float inverseGain = 1f / gain;
+        // attempt to maintain contant rms level as signal saturates
         if ( inverseGain < 0.07f ) inverseGain = 0.07f;
         float[] samples;
         float[] upSamples;
@@ -84,7 +85,7 @@ public class Distort1Process extends SimpleAudioProcess
 		// we clamp at 3 because that's where output is unity and C1/C2 continuous
 		if ( x < -3 ) return -1;
 		if ( x > 3 ) return 1;
-		float x2 = x * x;
+		final float x2 = x * x;
 		return x * (27 + x2) / (27 + 9 * x2);
 	}
 
