@@ -67,12 +67,8 @@ public class AudioControlsChain extends CompoundControlChain
         return AudioServices.createControls(name);
     }
 
-	protected void checkInstanceIndex(int index) {
-        if ( index < 0 )
-            throw new IllegalArgumentException(getName()+" instance "+index+" < 0!");
-//        if ( index > 127 )
-//            throw new IllegalArgumentException(getName()+" instance "+index+" > 127!");
-    }
+    // no real limit but lets be sensible
+	protected int getMaxInstance() { return 1024-1; }
 
     protected boolean isCompatibleDescriptor(ServiceDescriptor d) {
         if ( constraintChannelFormat == null ) return true; // we're not fixed format

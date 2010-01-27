@@ -35,6 +35,7 @@ public class CompoundControlChain extends CompoundControl
         control.parent = this;
     }
 
+    // called for manual insertions, not safe for automation
     public void insert(String insertName, String insertBeforeName) {
         CompoundControl controlToInsert = createControl(insertName);
         if ( controlToInsert == null ) {
@@ -42,15 +43,19 @@ public class CompoundControlChain extends CompoundControl
         	return;
         }
         if ( find(insertName) != null ) disambiguate(controlToInsert);
+        insert(controlToInsert, insertBeforeName);
+    }
+    
+    public void insert(Control controlToInsert, String insertBeforeName) {
         int insertionIndex = controls.size(); // init for insert at end
         if ( insertBeforeName != null ) {
 	        CompoundControl controlToInsertBefore = (CompoundControl)find(insertBeforeName);
     	    if ( controlToInsertBefore == null ) {
-                System.err.println(getName()+": insert "+insertName+", "+insertBeforeName+" not found to insert before");
+                System.err.println(getName()+": insert "+controlToInsert.getName()+", "+insertBeforeName+" not found to insert before");
     			return;
     		}
             if ( !controlToInsertBefore.canBeInsertedBefore() ) {
-                System.err.println(getName()+": insert "+insertName+" before "+insertBeforeName+" not allowed");
+                System.err.println(getName()+": insert "+controlToInsert.getName()+" before "+insertBeforeName+" not allowed");
                 return;
             }
 //        	System.out.println(getControlPath()+" Inserting "+controlToInsert.getName()+" before "+insertBeforeName);
@@ -124,7 +129,7 @@ public class CompoundControlChain extends CompoundControl
         public static final int MOVE = 3; // equiv delete then insert
         public static final int COMMENCE = 4;
         public static final int COMPLETE = 5;
-
+        
         public static final ChainMutation COMMENCE_INSTANCE =
             new ChainMutation(COMMENCE);
 

@@ -19,12 +19,12 @@ import uk.org.toot.midi.message.SysexMsg;
  * is only 8 bytes long. Also, this message cannot be used in
  * a Type 0 Standard MIDI File with multiple automated things.
  * 
- *     // encode  <provider-id><module-id><instance><control-id><value>
- *     // 0 range 127, 		 127,		127,	  127,    32767
+ *     // encode<provider-id><module-id><instance><control-id><value>
+ *     // 0 range 127, 		 127,		127,	  		127,    32767
  *     //         small		 small      too big   ok      too big
+ *     // actual						7
  *     // could potentially redistribute a few spare bits for extension
- *     //		   +3			            -4
- *     //		   1023,		 127,		7,
+ *     //		   				        4
  *     // but basically see what runs out first
  *     // e.g.    1,            17,        2,        3,       242
  *     //         Toot,		 Mod Delay, #2,       Rate,    242
@@ -57,7 +57,7 @@ public class ControlSysexMsg extends SysexMsg
         data[1] = ID_NON_COMMERCIAL;
         data[2] = (byte)(providerId & 0x7f);
         data[3] = (byte)(moduleId & 0x7f);
-        data[4] = (byte)(instanceIndex & 0x1f); // only use 5 bits, 2 spare
+        data[4] = (byte)(instanceIndex & 0x07); // only use 3 bits, 4 spare
         data[5] = (byte)(controlId & 0x7f);
         data[6] = (byte)(value & 0x7f);
         data[7] = (byte)((value >> 7) & 0x7f); 	// could borrow 2 bits here
@@ -75,7 +75,7 @@ public class ControlSysexMsg extends SysexMsg
     }
 
     public static int getInstanceIndex(MidiMessage msg) {
-        return getMessage(msg)[4] & 0x7F;
+        return getMessage(msg)[4] & 0x07;
     }
 
     public static int getControlId(MidiMessage msg) {

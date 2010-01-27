@@ -39,22 +39,23 @@ public class AudioServices extends Services
         return null;
     }
 
-/*    public static AudioControls createControls(int providerId, int moduleId) {
-        AudioServiceProvider provider;
-        AudioControls controls;
-        Iterator<AudioServiceProvider> it = providers();
-        while ( it.hasNext() ) {
-            provider = it.next();
+    public static AudioControls createControls(int providerId, int moduleId, int instanceIndex) {
+    	AudioControls controls;
+		for ( AudioServiceProvider provider : providers ) {
             if ( provider.getProviderId() == providerId ) {
 	            controls = provider.createControls(moduleId);
     	        if ( controls != null ) {
-        	        controls.providerId = providerId;
+    	        	if ( instanceIndex > 0 ) {
+    	        		// properly disambiguate the name
+    	        		controls.setName(controls.getName()+" #"+(instanceIndex+1));
+    	        		controls.setInstanceIndex(instanceIndex);
+    	        	}
             	    return controls;
             	}
             }
         }
         return null;
-    } */
+    }
 
     public static AudioControls createControls(String name) {
         AudioControls controls;

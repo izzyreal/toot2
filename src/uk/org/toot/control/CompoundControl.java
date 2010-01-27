@@ -56,11 +56,13 @@ public abstract class CompoundControl extends Control
     // overridden by some subclasses
 	protected void checkInstanceIndex(int index) {
         if ( index < 0 )
-            throw new IllegalArgumentException(getName()+" instance "+index+" < 0!");
-        if ( index > 31 )
-            throw new IllegalArgumentException(getName()+" instance "+index+" > 31!");
+            throw new IllegalArgumentException(getName()+" instance "+index+" < 0");
+        if ( index > getMaxInstance() )
+            throw new IllegalArgumentException(getName()+" instance "+index+" > "+getMaxInstance());
     }
 
+	protected int getMaxInstance() { return 8-1; }
+	
 	/*
 	 * a subclass should provide a public add() method
 	 * which accepts a specific subtype of Control.
@@ -241,16 +243,21 @@ public abstract class CompoundControl extends Control
 	    providerId = id;
 	}
 
+	public void setInstanceIndex(int idx) {
+		instanceIndex = idx;
+	}
+	
 	protected void disambiguate(CompoundControl c) {
 		String original = c.getName();
-		int index = 2; // we start at two since this must be the second
+		if ( find(original) == null ) return;
+		int index = 1;
 		String str;
 		do {
-			str = original+" #"+index;
 			index++;
+			str = original+" #"+index;
 		} while ( find(str) != null ) ;
 		c.setName(str);
-		c.instanceIndex = --index;
+		c.setInstanceIndex(index-1);
 	}
 
 	public void close() {}

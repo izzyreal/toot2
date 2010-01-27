@@ -114,54 +114,44 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 }
             }
 
-            // inserts, loop incrementing instanceIndex
+            // inserts
             // assumes deletes and moves have been done
             // !!! but they may not have been, so cope! !!! !!!
-            int ii = 0;
-			AutomationIndices tin;
+            AutomationIndices tin;
             AutomationIndices tia;
             CompoundControl cc;
-            boolean missing = true; // assume some missing to start with
-            while ( missing && ii < 10 ) {
-                missing = false; // assume we'll finish on this pass
-	            for ( int n = 0, a = 0; n < needed.size(); ) {
-                    cc = a >= stripControls.getControls().size() ? null :
-                        (CompoundControl)stripControls.getControls().get(a);
-                    tin = needed.get(n);
-                    if ( cc != null ) {
-	                    tia = new AutomationIndices(cc);
-        	            if ( tia.equals(tin) ) { // already matched
-            	            a += 1;
-                            n += 1;
-                	        continue;
-                    	} else if ( !cc.canBeInsertedBefore() ) {
-        	                a += 1;
-    	                    continue;
-	                    }
-                    }
-                    if ( tin.getInstanceIndex() != ii ) { // delay insertion
-                        missing = true; // need another pass
-                        n += 1;
-                        continue;
-                    }
-                    // to be inserted now
-                    String name = AudioServices.lookupModuleName(
-                        tin.getProviderId(), tin.getModuleId());
-                    if ( name == null || name.length() == 0 ) {
-                        System.err.println("configure: no name to lookup for "
-                            +tin.getProviderId()+"/"+tin.getModuleId()+"/"+ii+
-                            " in "+stripName); 
-                        n += 1;
-                        continue;
-                    }
-                    stripControls.insert(name, cc == null ? null : cc.getName());
-                    n += 1;
-                    a += 1;
-    	        }
-                ii += 1; // next instanceIndex
-        	}
+            for ( int n = 0, a = 0; n < needed.size(); ) {
+            	cc = a >= stripControls.getControls().size() ? null :
+            		(CompoundControl)stripControls.getControls().get(a);
+            	tin = needed.get(n);
+            	if ( cc != null ) {
+            		tia = new AutomationIndices(cc);
+            		if ( tia.equals(tin) ) { // already matched
+            			a += 1;
+            			n += 1;
+            			continue;
+            		} else if ( !cc.canBeInsertedBefore() ) {
+            			a += 1;
+            			continue;
+            		}
+            	}
+            	// to be inserted now
+            	Control cInsert = AudioServices.createControls(
+            			tin.getProviderId(), tin.getModuleId(), tin.getInstanceIndex());
+            	if ( cInsert == null ) {
+            		System.err.println("configure: no service for "
+            				+tin.getProviderId()+"/"+tin.getModuleId()+"/"+tin.getInstanceIndex()+
+            				" in "+stripName); 
+            		n += 1;
+            		continue;
+            	}
+            	stripControls.insert(cInsert, cc == null ? null : cc.getName());
+//            	System.out.println(stripName+": inserted "+cInsert.getName()+" before "+cc.getName());
+            	n += 1;
+            	a += 1;
+            }
             if ( stripControls.getControls().size() < needed.size() ) {
-                System.err.println(stripName+": only configured "+stripControls.getControls().size()+" of "+needed.size()+" needed modules");
+            	System.err.println(stripName+": only configured "+stripControls.getControls().size()+" of "+needed.size()+" needed modules");
             }
             stripControls.setMutating(false);
         }
