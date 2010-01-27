@@ -51,6 +51,10 @@ public abstract class AbstractAudioServerDecorator implements AudioServer
 		return server.createAudioBuffer(name);
 	}
 
+	public void removeAudioBuffer(AudioBuffer buffer) {
+		server.removeAudioBuffer(buffer);
+	}
+	
 	public int getInputLatencyFrames() {
 		return server.getInputLatencyFrames();
 	}

@@ -155,6 +155,11 @@ public class NonRealTimeAudioServer
 		return buffer;
     }
 
+    public void removeAudioBuffer(AudioBuffer buffer) {
+    	server.removeAudioBuffer(buffer);
+    	buffers.remove(buffer);
+    }
+    
     public List<String> getAvailableOutputNames() {
         return server.getAvailableOutputNames();
     }

@@ -92,6 +92,8 @@ public interface AudioServer
     void closeAudioInput(IOAudioProcess input);
 
     AudioBuffer createAudioBuffer(String name);
+    
+    void removeAudioBuffer(AudioBuffer buffer);
 
     float getSampleRate();
 
