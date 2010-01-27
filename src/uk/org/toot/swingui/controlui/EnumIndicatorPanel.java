@@ -22,9 +22,8 @@ public class EnumIndicatorPanel extends ControlPanel
         super(control);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.control = control;
-        final String name = control.getValueString();
-        labelText = name;
-        label = new JLabel(name, JLabel.CENTER) {
+        labelText = control.getValueString();
+        label = new JLabel(labelText, JLabel.CENTER) {
         	@Override
             public Dimension getMaximumSize() {
                 Dimension size = super.getPreferredSize();

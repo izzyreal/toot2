@@ -100,6 +100,7 @@ public class AudioBuffer extends FloatSampleBuffer
      * May call setChannelCount accordingly
      */
     public void setChannelFormat(ChannelFormat format) {
+    	if ( channelFormat == format ) return;
         channelFormat = format;
         if ( channelFormat != null ) {
         	setChannelCount(channelFormat.getCount());
