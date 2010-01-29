@@ -38,6 +38,7 @@ public class MidiPersistence
 	                	t.add(new MidiEvent(msg, 0L));
                     }
 		        } catch ( InvalidMidiDataException imde ) {
+		        	System.err.println("Failed to store "+c.getControlPath());
         		}
             }
         }

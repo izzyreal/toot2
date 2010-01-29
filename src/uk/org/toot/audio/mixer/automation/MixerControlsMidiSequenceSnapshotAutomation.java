@@ -211,7 +211,7 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 }
                 Control control = module.deepFind(cid);
                 if ( control == null ) {
-/*	                System.out.println("recall: no control "+cid+" in "+module.getControlPath()+" ?"+stripName);
+	                System.err.println("recall: no control "+cid+" in "+module.getControlPath()+" ?"+stripName);
                     for ( Control c : module.getControls() ) {
                         if ( c instanceof CompoundControl ) {
 		                    for ( Control c2 : ((CompoundControl)c).getControls() ) {
@@ -220,12 +220,12 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                         } else {
 	                        System.out.println(" "+c.getName()+" "+c.getId());
                         }
-                    } */
+                    }
                     continue;
                 }
+//                System.out.println("recall: "+control.getControlPath());
                 int newValue = getValue(msg);
 		        if ( newValue == control.getIntValue() ) continue;
-//                System.out.println("recall: "+control.getControlPath());
                 control.setIntValue(newValue);
             }
         }

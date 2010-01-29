@@ -26,7 +26,12 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
     private int NSQUARESUMS = 10;
     private float[] squaresums = new float[NSQUARESUMS];
     private int nsqsum = 0;
-    
+
+    private float[][] samples = new float[6][];
+    private float[][] tapSamples = new float[6][];
+	private float[][] keySamples;
+	
+
     public DynamicsProcess(ProcessVariables vars) {
         this(vars, false);
         wasBypassed = !vars.isBypassed(); // force update
@@ -74,23 +79,36 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         	vars.update(sr); // rederives attack, release
         }
         cacheProcessVariables();
-        int nc = buffer.getChannelCount();
-        int len = buffer.getSampleCount();
-        int mslen = (int)(buffer.getSampleRate() / 1000);
-
         float targetGain = 1f; // unity
         float gain = makeupGain; // keeps compiler happy
 
-        float[][] samples = new float[nc][];
+        int len = buffer.getSampleCount();
+        int mslen = (int)(buffer.getSampleRate() / 1000);
+        
+        int nc = buffer.getChannelCount();
 		for ( int c = 0; c < nc; c++ ) {
 			samples[c] = buffer.getChannel(c);
 		}
+
+		int nck;
+		AudioBuffer keyBuffer = vars.getKeyBuffer();
+		if ( keyBuffer == null ) {
+			keySamples = samples;
+			nck = nc;
+		} else {
+			nck = keyBuffer.getChannelCount();
+			for ( int c = 0; c < nck; c++ ) {
+				tapSamples[c] = keyBuffer.getChannel(c);
+			}
+			keySamples = tapSamples;
+		}
+		
 		float sample;
         for ( int i = 0; i < len; i++ ) {
         	float key = 0;
         	if ( isPeak ) {
-        		for ( int c = 0; c < nc; c++ ) {
-        			sample = samples[c][i];
+        		for ( int c = 0; c < nck; c++ ) {
+        			sample = keySamples[c][i];
         			sample = sample < 0 ? -sample : sample;
         			key = key > sample ? key : sample;
         		}
@@ -98,13 +116,13 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
         		// the rms side chain calculations, every millisecond
         		float sumOfSquares = 0f;
-        		for ( int c = 0; c < nc; c++ ) {
+        		for ( int c = 0; c < nck; c++ ) {
         			for ( int j = 0; j < mslen; j++ ) {
-        				sample = samples[c][i+j];
+        				sample = keySamples[c][i+j];
         				sumOfSquares += sample * sample;
         			}
         		}
-        		squaresums[nsqsum] = sumOfSquares / (mslen * nc);
+        		squaresums[nsqsum] = sumOfSquares / (mslen * nck);
         		float mean = 0;
         		for ( int s = 0; s < NSQUARESUMS; s++ ) {
         			mean += squaresums[s];
@@ -157,5 +175,6 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         float getDepth();		//	NOT dB, the actual level
         float getGain();		// 	NOT dB, the actual static makeup gain
         void setDynamicGain(float gain); // NOT dB, the actual (sub sampled) dynamic gain
+        AudioBuffer getKeyBuffer();
     }
 }

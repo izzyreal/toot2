@@ -2,7 +2,9 @@
 
 package uk.org.toot.audio.dynamics;
 
+import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioControls;
+import uk.org.toot.audio.core.Taps.TapControl;
 import uk.org.toot.control.*;
 import java.awt.Color;
 
@@ -28,6 +30,7 @@ abstract public class DynamicsControls extends AudioControls
     private FloatControl releaseControl;
     private FloatControl gainControl;
     private FloatControl depthControl;
+    private TapControl keyControl;
 
     private int idOffset = 0;
 
@@ -68,10 +71,15 @@ abstract public class DynamicsControls extends AudioControls
 
         ControlColumn g3 = new ControlColumn();
         boolean useg3 = false;
+        if ( hasKey() ) {
+        	keyControl = createKeyControl();
+        	g3.add(keyControl);
+        	useg3 = true;
+        }
         if ( hasGain() ) {
             gainControl = createGainControl();
             g3.add(gainControl);
-            useg3 = true;
+        	useg3 = true;
         }
         if ( useg3 ) {
         	add(g3);
@@ -148,11 +156,16 @@ abstract public class DynamicsControls extends AudioControls
         return depthC;
     }
 
+    protected boolean hasKey() { return false; }
+    
+    protected TapControl createKeyControl() {
+    	return new TapControl(KEY+idOffset, "Key");
+    }
+    
     static public class GainReductionIndicator extends FloatControl
     {
         public GainReductionIndicator() {
-//            super(0, "Gain Reduction", new LinearLaw(-20f, 0, "dB"), 3f, 0f);
-            super(0, "Gain Reduction", new LinearLaw(-20f, 0, "dB"), 3f, 0f);
+            super(-1, "Gain Reduction", new LinearLaw(-20f, 0, "dB"), 3f, 0f);
             indicator = true;
             setHidden(true); // prevent normal layout
         }
@@ -196,5 +209,10 @@ abstract public class DynamicsControls extends AudioControls
     public void setGainReduction(float dB) {
         if ( gainReductionIndicator == null ) return;
         gainReductionIndicator.setValue(dB);
+    }
+    
+    public AudioBuffer getKeyBuffer() {
+    	if ( keyControl == null ) return null;
+    	return keyControl.getBuffer();
     }
 }

@@ -4,6 +4,8 @@ package uk.org.toot.audio.dynamics;
 
 import java.util.Observer;
 import java.util.Observable;
+
+import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.KVolumeUtils;
 import uk.org.toot.control.Control; // !!! !!! poor coupling
 import uk.org.toot.misc.IObservable;
@@ -17,6 +19,7 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
     private float threshold, knee, attack, release, gain, depth;
     private int hold;
     private float sampleRate;
+    private AudioBuffer key;
 
     public DynamicsDesign(DesignVariables vars) {
         designVars = vars;
@@ -27,6 +30,7 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
                 	Control c = (Control)obj;
                     if ( c.isIndicator() ) return;
                 	switch ( c.getId() % 10 ) { // %10 hack for multi-band
+                		case KEY: deriveKey(); break;
 		                case THRESHOLD: deriveThreshold(); break;
 		                case KNEE: deriveKnee(); break;
 		                case ATTACK: deriveAttack(); break;
@@ -42,6 +46,7 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
 	}
 
     protected void deriveSampleRateIndependentVariables() {
+    	deriveKey();
         deriveThreshold();
         deriveKnee();
         deriveGain();
@@ -58,6 +63,10 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
         }
     }
 
+	protected void deriveKey() {
+		key = designVars.getKeyBuffer();
+	}
+	
     protected void deriveThreshold() {
 		threshold = (float)KVolumeUtils.log2lin(designVars.getThresholddB());
 //        System.out.println("threshold="+threshold);
@@ -146,6 +155,10 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
         designVars.setGainReduction((float)(20*Math.log(dynamicGain)));
     }
 
+    public AudioBuffer getKeyBuffer() {
+    	return key;
+    }
+    
     public static interface DesignVariables extends IObservable
     {
         boolean isBypassed();
@@ -158,5 +171,6 @@ public class DynamicsDesign implements DynamicsProcess.ProcessVariables
         float getDepthdB(); // gate
     //        float getMix(); // dry/wet mix
     	void setGainReduction(float dB);
+    	AudioBuffer getKeyBuffer();
     }
 }

@@ -43,7 +43,7 @@ public abstract class Control extends Observable
      * @supplierCardinality 0..1
      * @link aggregation
      */
-    CompoundControl parent = null;
+    private CompoundControl parent = null;
 
     private String name;
 	private String annotation;
@@ -83,6 +83,10 @@ public abstract class Control extends Observable
         return parent;
     }
 
+    protected void setParent(CompoundControl c) {
+    	parent = c;
+    }
+    
     protected void notifyParent(Control obj) {
         setChanged();
         notifyObservers(obj);

@@ -32,7 +32,7 @@ public class CompoundControlChain extends CompoundControl
     public void add(int index, CompoundControl control) {
         if ( controls == null ) return;
         controls.add(index, control);
-        control.parent = this;
+        control.setParent(this);
     }
 
     // called for manual insertions, not safe for automation
@@ -62,7 +62,7 @@ public class CompoundControlChain extends CompoundControl
         	insertionIndex = controls.indexOf(controlToInsertBefore);
         }
         controls.add(insertionIndex, controlToInsert);
-        controlToInsert.parent = this; // !!! superclass responsibility?
+        controlToInsert.setParent(this); // !!! superclass responsibility?
         setChanged();
         // observer insert something equivalent to controlToInsert which is now at insertionIndex
         notifyObservers(

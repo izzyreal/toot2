@@ -74,7 +74,7 @@ public abstract class CompoundControl extends Control
             controls = new java.util.ArrayList<Control>();
         }
         controls.add(control);
-        control.parent = this;
+        control.setParent(this);
     }
 
 	/*
@@ -85,7 +85,7 @@ public abstract class CompoundControl extends Control
     protected void remove(Control control) {
         if ( control == null ) return;
         controls.remove(control);
-        control.parent = null;
+        control.setParent(null);
     }
 
     /**
@@ -226,7 +226,7 @@ public abstract class CompoundControl extends Control
     // return a domain specific string for preset organisation
     // i.e. audio, synth
     public String getPersistenceDomain() {
-    	return parent.getPersistenceDomain();
+    	return getParent().getPersistenceDomain();
     }
     
     // one level of the hierarchy should override and return true

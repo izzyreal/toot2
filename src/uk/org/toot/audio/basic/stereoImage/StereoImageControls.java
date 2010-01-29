@@ -13,6 +13,7 @@ import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LinearLaw;
 
 import static uk.org.toot.misc.Localisation.*;
+import static uk.org.toot.audio.basic.BasicIds.STEREO_IMAGE;
 
 /**
  * Implements stereo image controls and obeys the process variables contract
@@ -22,7 +23,6 @@ import static uk.org.toot.misc.Localisation.*;
 public class StereoImageControls extends AudioControls
     implements StereoImageProcessVariables
 {
-    public static final int STEREO_IMAGE = 0x30;
     public static final int LR_SWAP = 1;
     public static final int LR_WIDTH = 2;
 

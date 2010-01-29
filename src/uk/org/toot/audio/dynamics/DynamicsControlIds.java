@@ -7,6 +7,7 @@ package uk.org.toot.audio.dynamics;
 
 public class DynamicsControlIds
 {
+    public static final int KEY = 0;
     public static final int THRESHOLD = 1;
     public static final int RATIO = 2;
     public static final int KNEE = 3;

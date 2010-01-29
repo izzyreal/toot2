@@ -35,5 +35,7 @@ public class Compressor extends DynamicsProcess
 	    protected boolean hasRatio() { return true; }
 
 	    protected boolean hasGain() { return true; }
+	    
+	    protected boolean hasKey() { return true; }
     }
 }
