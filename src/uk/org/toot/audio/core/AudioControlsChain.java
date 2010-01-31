@@ -11,6 +11,8 @@ import uk.org.toot.control.CompoundControlChain;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.audio.spi.AudioControlServiceDescriptor;
 
+import static uk.org.toot.misc.Localisation.getString;
+
 /**
  * AudioControlsChain extends CompoundControlChain to provide
  * information regarding audio control services which may be plugged in.
@@ -71,6 +73,10 @@ public class AudioControlsChain extends CompoundControlChain
 	protected int getMaxInstance() { return 1024-1; }
 
     protected boolean isCompatibleDescriptor(ServiceDescriptor d) {
+    	// !!! nasty heuristic so reverbs only appear in FX strips
+    	if ( d.getDescription().equals(getString("Reverb")) && getName().indexOf("FX") < 0 ) {
+    		return false;
+    	}
         if ( constraintChannelFormat == null ) return true; // we're not fixed format
         if ( d instanceof AudioControlServiceDescriptor ) {
             AudioControlServiceDescriptor acsd =
