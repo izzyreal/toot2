@@ -33,6 +33,8 @@ public class PlateProcess extends SimpleAudioProcess
 	private float damping, decay;
 	private float decayDiffusion1, decayDiffusion2;
 	
+	private float[] samplesL, samplesR;
+	
 	public PlateProcess(PlateVariables vars) {
 		this.vars = vars;
 		tank1 = new Tank(true);
@@ -65,15 +67,17 @@ public class PlateProcess extends SimpleAudioProcess
 			buffer.convertTo(ChannelFormat.STEREO);
 			if ( nc > 2 ) nc = 2;
 		}
+		samplesL = buffer.getChannel(0);
+		samplesR = buffer.getChannel(1);
 		for ( int i = 0; i < ns; i++ ) {
-			float in = buffer.getChannel(0)[i];
+			float in = samplesL[i];
 			if ( nc == 2 ) {
-				in += buffer.getChannel(1)[i];
+				in += samplesR[i];
 				in *= 0.5f;
 			}
 			reverb(in * 0.6f);
-			buffer.getChannel(0)[i] = tank1.output(0) + tank2.output(0);
-			buffer.getChannel(1)[i] = tank1.output(1) + tank2.output(1);
+			samplesL[i] = tank1.output(0) + tank2.output(0);
+			samplesR[i] = tank1.output(1) + tank2.output(1);
 		}
 		return AUDIO_OK;
 	}
@@ -86,16 +90,19 @@ public class PlateProcess extends SimpleAudioProcess
 	private float idiffuse(float sample) {
 		// pre delay
 		ipd.delay(sample);
-		sample = ipd.tap(preDelaySamples);
-		// TODO
 		// bandwidth
-		sample = bw.filter(sample, 1-bandwidth);
 		// input diffusion 1 x 2
-		sample = id1a.diffuse(sample, inputDiffusion1);
-		sample = id1b.diffuse(sample, inputDiffusion2);
 		// input diffusion 2 x 2
-		sample = id2a.diffuse(sample, inputDiffusion2);
-		return id2b.diffuse(sample, inputDiffusion2);
+		return id2b.diffuse(
+				id2a.diffuse(
+					id1b.diffuse(
+						id1a.diffuse(
+							bw.filter(
+								ipd.tap(preDelaySamples), 1-bandwidth), 
+								inputDiffusion1), 
+								inputDiffusion1), 
+								inputDiffusion2), 
+								inputDiffusion2);
 	}
 	
 	private class Tank
@@ -116,17 +123,15 @@ public class PlateProcess extends SimpleAudioProcess
 		}
 		
 		public float tick(float sample) {
-			// decay diffusion 1, note sign
-			sample = dif1.diffuse(sample, -decayDiffusion1);
-			// delay
-			sample = del1.delay(sample);
+			// decay diffusion 1, note sign, and delay
 			// damping
-			sample = filter.filter(sample, damping) * decay;
-			// decay diffusion 2
-			sample = dif2.diffuse(sample, decayDiffusion2);
-			// delay
-			sample = del2.delay(sample);
-			return sample * decay;			
+			// decay diffusion 2 and delay
+			return decay * del2.delay(
+				dif2.diffuse(
+					filter.filter(
+						del1.delay(
+							dif1.diffuse(sample, -decayDiffusion1)), 
+							damping) * decay, decayDiffusion2));
 		}
 		
 		public float output(int chan) {
@@ -195,7 +200,7 @@ public class PlateProcess extends SimpleAudioProcess
 		public float diffuse(float sample, float k) {
 			float a = sample - k * b;
 			float out = k * a + b;
-			b = delay(a);
+			b = zeroDenorm(delay(a));
 			return out;
 		}
 	}
