@@ -14,6 +14,7 @@ public interface TootAudioControlsId
     final static int DYNAMICS_BASE_ID = 0x20;
     final static int BASIC_BASE_ID = 0x30;
 
+    final static int REVERB_BASE_ID = 0x50;
     final static int TOOL_BASE_ID = 0x60; // !!!
     final static int DISTORT_BASE_ID = 0x70;
     // AUTOMATION_ID = 119
