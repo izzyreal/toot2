@@ -23,6 +23,7 @@ public class PlateProcess extends SimpleAudioProcess
 	private float tank1zm1 = 0f;
 	private Tank tank1, tank2;
 	
+	private Delay ipd;
 	private Filter bw;
 	private Diffuser id1a, id1b, id2a, id2b;
 	
@@ -36,6 +37,7 @@ public class PlateProcess extends SimpleAudioProcess
 		this.vars = vars;
 		tank1 = new Tank(true);
 		tank2 = new Tank(false);
+		ipd = new Delay(1+vars.getMaxPreDelaySamples());
 		bw = new Filter();
 		id1a = new Diffuser(142);
 		id1b = new Diffuser(107);
@@ -83,6 +85,8 @@ public class PlateProcess extends SimpleAudioProcess
 	
 	private float idiffuse(float sample) {
 		// pre delay
+		ipd.delay(sample);
+		sample = ipd.tap(preDelaySamples);
 		// TODO
 		// bandwidth
 		sample = bw.filter(sample, 1-bandwidth);

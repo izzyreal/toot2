@@ -12,6 +12,7 @@ package uk.org.toot.audio.reverb;
 public interface PlateVariables
 {
 	boolean isBypassed();
+	int getMaxPreDelaySamples();
 	int getPreDelaySamples();
 	float getBandwidth();		// 0..1
 	float getInputDiffusion1();	// 0..1

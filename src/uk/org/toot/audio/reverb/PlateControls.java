@@ -20,7 +20,8 @@ import uk.org.toot.control.LinearLaw;
  */
 public class PlateControls extends AudioControls implements PlateVariables
 {
-	private final static ControlLaw PRE_DELAY_LAW = new LinearLaw(0, 200, "ms");
+	private final static int MAX_PRE_DELAY_MS = 200;
+	private final static ControlLaw PRE_DELAY_LAW = new LinearLaw(0, MAX_PRE_DELAY_MS, "ms");
 	private final static int PRE_DELAY = 0;
 	private final static int BANDWIDTH = 1;
 	private final static int INPUT_DIFFUSION_1 = 2;
@@ -89,7 +90,7 @@ public class PlateControls extends AudioControls implements PlateVariables
 	}
 	
 	protected FloatControl createPreDelayControl() {
-		FloatControl control = new FloatControl(PRE_DELAY, "Pre", PRE_DELAY_LAW, 0.1f, 50f);
+		FloatControl control = new FloatControl(PRE_DELAY, "Pre", PRE_DELAY_LAW, 0.1f, 20f);
 		return control;
 	}
 	
@@ -176,6 +177,10 @@ public class PlateControls extends AudioControls implements PlateVariables
 	
 	protected float deriveDecayDiffusion2() {
 		return decayDiffusion2Control.getValue();
+	}
+	
+	public int getMaxPreDelaySamples() {
+		return 44100 * MAX_PRE_DELAY_MS / 1000;
 	}
 	
 	public int getPreDelaySamples() {
