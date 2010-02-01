@@ -135,6 +135,7 @@ public class AudioMixer implements AudioClient
         }
         this.controls = controls;
         this.server = server; // should be an audio buffer factory !!! !!!
+        Taps.setAudioServer(server);
         sharedAudioBuffer = server.createAudioBuffer("Mixer (shared)");
         mutationQueue = new ConcurrentLinkedQueue<MixerControls.Mutation>();
         strips = new java.util.ArrayList<AudioMixerStrip>();
