@@ -211,17 +211,8 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 }
                 Control control = module.deepFind(cid);
                 if ( control == null ) {
-	                System.err.println("recall: no control "+cid+" in "+module.getControlPath()+" ?"+stripName);
-                    for ( Control c : module.getControls() ) {
-                        if ( c instanceof CompoundControl ) {
-		                    for ( Control c2 : ((CompoundControl)c).getControls() ) {
-		                        System.out.println(" "+c2.getName()+" "+c2.getId());
-                            }
-                        } else {
-	                        System.out.println(" "+c.getName()+" "+c.getId());
-                        }
-                    }
-                    continue;
+	                System.err.println("recall: no control "+cid+" in "+module.getControlPath()+" in "+stripName);
+	                continue;
                 }
 //                System.out.println("recall: "+control.getControlPath());
                 int newValue = getValue(msg);
@@ -229,7 +220,6 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 control.setIntValue(newValue);
             }
         }
-        // should be able to use a template of which strips/modules to recall
     }
 
     public Sequence storeSequence(String name) {

@@ -16,7 +16,7 @@ import static uk.org.toot.misc.Localisation.*;
  * Implemented to experiment with per channel control handling.
  */
 public class MultiTapDelayStereoControls extends AbstractDelayControls
-    implements MultiTapDelayVariables
+    implements MultiTapDelayProcess.Variables
 {
     private List<MultiTapDelayControls> perChannelControls;
     private float msMax;

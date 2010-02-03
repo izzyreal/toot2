@@ -24,10 +24,10 @@ public class PhaserProcess extends SimpleAudioProcess
 	private float lfoPhase = 0f;
 	private float dmin, dmax;
 	private int sampleRate = -1;
-	private PhaserVariables vars;
+	private Variables vars;
 	private float a1;				// shared allpass coeff
 	
-	public PhaserProcess(PhaserVariables vars) {
+	public PhaserProcess(Variables vars) {
 		this.vars = vars;
 		for ( int i = 0; i < N; i++ ) {
 			allpass[i] = new AllPass();
@@ -80,4 +80,13 @@ public class PhaserProcess extends SimpleAudioProcess
             return y;
 		}
 	}
+	
+	public interface Variables
+	{
+		boolean isBypassed();
+		float getRate();		// Hz
+		float getDepth();		// 0..1
+		float getFeedback();	// 0..1
+	}
+
 }

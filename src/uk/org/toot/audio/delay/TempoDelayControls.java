@@ -13,7 +13,7 @@ import static uk.org.toot.misc.Localisation.*;
 import static uk.org.toot.audio.delay.DelayIds.TEMPO_DELAY_ID;
 
 public class TempoDelayControls extends AbstractDelayControls
-	implements TempoDelayVariables
+	implements TempoDelayProcess.Variables
 {
 	private float delayFactor = 1f;
 	

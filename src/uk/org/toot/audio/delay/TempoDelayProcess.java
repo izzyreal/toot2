@@ -36,13 +36,13 @@ public class TempoDelayProcess implements AudioProcess
      * @link aggregation
      * @supplierCardinality 1 
      */
-    private final TempoDelayVariables vars;
+    private final Variables vars;
 
     private boolean wasBypassed;
 
     private float bpm = 120f;
     
-    public TempoDelayProcess(TempoDelayVariables vars) {
+    public TempoDelayProcess(Variables vars) {
         this.vars = vars;
         wasBypassed = !vars.isBypassed(); // force update
 		support = Plugin.getPluginSupport();
@@ -132,4 +132,14 @@ public class TempoDelayProcess implements AudioProcess
     protected int msToSamples(float ms, float sr) {
         return (int)((ms * sr) / 1000); // !!! !!! move elsewhere
     }
+    
+    public interface Variables extends DelayVariables
+    {
+    	float getDelayFactor(); // quarter note = 1, half note = 2 etc.
+    	
+        float getFeedback();
+
+        float getMix();
+    }
+
 }

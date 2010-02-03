@@ -11,28 +11,32 @@ import uk.org.toot.control.*;
 import static uk.org.toot.misc.Localisation.*;
 
 public class ModulatedDelayControls extends AbstractDelayControls
-    implements ModulatedDelayVariables
+    implements ModulatedDelayProcess.Variables
 {
+	private final static float HALF_ROOT_2 = 0.707f;
+	
     private static final ControlLaw DELAY_LAW = new LogLaw(0.1f, 25f, "ms");
     private static final ControlLaw RATE_LAW = new LogLaw(0.02f, 7f, "Hz");
-// !!! abstract?
-//    private static final ControlLaw filterFreqLaw = new LogLaw(100f, 10000f, "Hz");
+
+    private FloatControl dryControl;
+    private FloatControl wetControl;
     private FloatControl delayControl;
     private BooleanControl tapeControl;
     private FloatControl rateControl;
     private ShapeControl shapeControl;
     private FloatControl depthControl;
+    private BooleanControl phaseControl;
     private BooleanControl linkControl;
-//    private FloatControl filterFrequencyControl;
-//    private FilterTypeControl filterTypeControl;
 
+
+    private static final int DRY_ID = 0;
     private static final int DELAY_ID = 1;
-    private static final int TAPE_ID = 2;
+//    private static final int TAPE_ID = 2;
     private static final int RATE_ID = 3;
     private static final int SHAPE_ID = 4;
     private static final int DEPTH_ID = 5;
     private static final int LINK_ID = 6;
-    protected static final int PHASE_ID = 7; // !!!
+    protected static final int PHASE_ID = 7;
 
     public ModulatedDelayControls() {
         this(DelayIds.MODULATED_DELAY_ID, getString("Modulated.Delay"));
@@ -58,26 +62,30 @@ public class ModulatedDelayControls extends AbstractDelayControls
         g2.add(depthControl);
         add(g2);
 
-        // type, frequency
-//		filterTypeControl = new FilterTypeControl();
-//        filterFrequencyControl = new FloatControl(new Type("Frequency"), filterFreqLaw, 1f, 1000f);
-//        filterFrequencyControl.setInsertColor(Color.yellow);
-//        add(new ControlGroup(filterTypeControl, filterFrequencyControl));
-
         // invert, feedback
         // invert, mix
-        add(createCommonControlColumn(true)); // no inverts
+        ControlColumn g3 = new ControlColumn();
+        g3.add(createFeedbackInvertControl());
+        g3.add(createFeedbackControl());
+        wetControl = new FloatControl(MIX_ID, getString("Wet"), LinearLaw.UNITY, 0.1f, HALF_ROOT_2);
+        wetControl.setInsertColor(Color.white);
+        g3.add(wetControl);
+        add(g3);
     }
 
     protected ControlColumn createControlColumn1() {
-        // tape, delay
-        tapeControl = new BooleanControl(TAPE_ID, getString("Tape"), false);
-        tapeControl.setStateColor(true, Color.pink);
+    	phaseControl = new BooleanControl(PHASE_ID, "PQ", false);
+    	phaseControl.setStateColor(true, Color.YELLOW);
+        // delay
         delayControl = new FloatControl(DELAY_ID, getString("Delay"), DELAY_LAW, 0.1f, 2f);
+        dryControl = new FloatControl(DRY_ID, getString("Dry"), LinearLaw.UNITY, 0.1f, HALF_ROOT_2);
+        dryControl.setInsertColor(Color.DARK_GRAY);
 
         ControlColumn g1 = new ControlColumn();
+        g1.add(phaseControl);
         g1.add(tapeControl);
         g1.add(delayControl);
+        g1.add(dryControl);
         return g1;
     }
 
@@ -86,23 +94,20 @@ public class ModulatedDelayControls extends AbstractDelayControls
     public float getDelayMilliseconds() { return delayControl.getValue(); }
 
     public float getRate() {
-        // tape mode effectively full wave rectifies the effect of the
-        // modulation in the frequency domain and consequently sounds
-        // as if it's modulated at twice the rate, so then we divide by 2
-        return isTape() ? rateControl.getValue()/2 : rateControl.getValue();
+        return rateControl.getValue();
     }
 
     public float getDepth() { return depthControl.getValue(); }
 
-    public float getFilterFrequency(){ return 0; }
-
-    public boolean isTape() { return tapeControl.getValue(); }
-
+    public float getDry() { return dryControl.getValue(); }
+    
+    public float getWet() { return wetControl.getValue(); }
+    
     // 0 SIN, 1 TRI
     public int getLFOShape() { return shapeControl.getIntValue(); }
 
-    public int getFilterType(){ return 0; }
-
+    public boolean isPhaseQuadrature() { return phaseControl.getValue(); }
+    
     public boolean canBypass() { return true; }
 
     public static class ShapeControl extends EnumControl
@@ -123,22 +128,4 @@ public class ModulatedDelayControls extends AbstractDelayControls
         
         public boolean hasLabel() { return true; }
     }
-
-/*
-    public static class FilterTypeControl extends EnumControl
-    {
-        private static List<Object> values;
-
-        static {
-            values = new java.util.ArrayList<Object>();
-            values.add("HP");
-            values.add("LP");
-        }
-
-        public FilterTypeControl() {
-            super(new Type("Type"), values.get(0));
-        }
-
-        public List<Object> getValues() { return values; }
-    } */
 }

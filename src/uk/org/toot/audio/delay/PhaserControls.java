@@ -15,7 +15,7 @@ import uk.org.toot.control.LogLaw;
 
 import static uk.org.toot.misc.Localisation.*;
 
-public class PhaserControls extends AudioControls implements PhaserVariables
+public class PhaserControls extends AudioControls implements PhaserProcess.Variables
 {
 	protected final static ControlLaw rateLaw = new LogLaw(0.1f, 2f, "Hz");
     protected final static int RATE_ID = 1;

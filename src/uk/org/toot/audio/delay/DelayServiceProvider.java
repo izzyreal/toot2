@@ -24,14 +24,6 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             family,
             "0.1");
         addControls(
-            StereoModulatedDelayControls.class,
-            DelayIds.STEREO_MODULATED_DELAY_ID,
-            getString("Stereo.Modulated.Delay"),
-            family,
-            "0.1",
-            ChannelFormat.STEREO,
-            null);
-        addControls(
             MultiTapDelayStereoControls.class,
             DelayIds.MULTI_TAP_DELAY_ID,
             getString("Stereo.Multi.Tap.Delay"),
@@ -39,7 +31,6 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             "0.1",
             ChannelFormat.STEREO,
             null);
-//        addControls(RoomSimulatorControls.class, DelayIds.ROOM_SIMULATOR, "Room Simulator", family, "0.1");
         addControls(
         	TempoDelayControls.class,
         	DelayIds.TEMPO_DELAY_ID,
@@ -56,24 +47,16 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             null);
 
         add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.1");
-        add(StereoModulatedDelayProcess.class, getString("Stereo.Modulated.Delay"), family, "0.1");
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
         add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.1");
         add(PhaserProcess.class, getString("Phaser"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
-        if ( c instanceof StereoModulatedDelayVariables ) {
-            return new StereoModulatedDelayProcess((StereoModulatedDelayVariables)c);
-        } else if ( c instanceof ModulatedDelayVariables ) {
-            return new ModulatedDelayProcess((ModulatedDelayVariables)c);
-        } else if ( c instanceof MultiTapDelayVariables ) {
-            return new MultiTapDelayProcess((MultiTapDelayVariables)c);
-        } else if ( c instanceof RoomSimulatorControls ) {
-            // ultimately should be composed of multiple designs
-            // but this should get the Room Simulator working
-            // albeit hardcoded to a single ImageSourceDesign
-            return new MultiTapDelayProcess(new ImageSourceDesign((RoomSimulatorControls)c));
+        if ( c instanceof ModulatedDelayProcess.Variables ) {
+            return new ModulatedDelayProcess((ModulatedDelayProcess.Variables)c);
+        } else if ( c instanceof MultiTapDelayProcess.Variables ) {
+            return new MultiTapDelayProcess((MultiTapDelayProcess.Variables)c);
         } else if ( c instanceof TempoDelayControls ) {
         	return new TempoDelayProcess((TempoDelayControls)c);
         } else if ( c instanceof PhaserControls ) {

@@ -6,7 +6,6 @@
 package uk.org.toot.audio.delay;
 
 import org.tritonus.share.sampled.FloatSampleBuffer;
-import static uk.org.toot.audio.core.FloatDenormals.*;
 
 /**
  * A DelayBuffer is a FloatSampleBuffer with convenience methods for delayed
@@ -17,6 +16,7 @@ public class DelayBuffer extends FloatSampleBuffer
 {
     private int writeIndex = 0;
     private int readIndex = 0;
+    private float[] apzm1 = new float[6];
 
     public DelayBuffer(int channelCount, int sampleCount, float sampleRate) {
         super(channelCount, sampleCount, sampleRate);
@@ -25,7 +25,10 @@ public class DelayBuffer extends FloatSampleBuffer
     public void nudge(int on) {
         readIndex = writeIndex;
         writeIndex += on;
-        writeIndex %= getSampleCount();
+        int ns = getSampleCount();
+        if ( writeIndex >= ns ) {
+        	writeIndex -= ns;
+        }
     }
 
     /**
@@ -83,8 +86,6 @@ public class DelayBuffer extends FloatSampleBuffer
             for ( int i = 0; i < count; i++ ) {
                 dest[i + writeIndex] = src1[i] + level2 * src2[i];
             }
-//			System.arraycopy(source1.getChannel(ch), 0,
-//                			 getChannel(ch), writeIndex, count);
 		}
         // second part will always write from 0 and read from count (if at all)
         if ( count2 > 0 )
@@ -93,29 +94,47 @@ public class DelayBuffer extends FloatSampleBuffer
     	        float[] src1 = source1.getChannel(ch);
         	    float[] src2 = source2.getChannel(ch);
             	for ( int i = 0, j = count; i < count2; i++, j++ ) {
-                	dest[i] =
-                        src1[j] +
-                        level2 * src2[j];
+                	dest[i] = src1[j] + level2 * src2[j];
             	}
-//				System.arraycopy(source1.getChannel(ch), count,
-//        	        			 getChannel(ch), 0, count2);
 			}
 
         // finally adjust writeIndex for next time (with wrap)
         nudge(source1.getSampleCount());
 	}
 
+    // single sample uninterpolated
+    public float outU(int chan, int delay) {
+        int p = readIndex - delay;
+        if ( p < 0 ) p += getSampleCount();
+        return getChannel(chan)[p];
+    }
+
     // single sample linearly interpolated
     public float out(int chan, float delay) {
         int ns = getSampleCount();
         float[] samples = getChannel(chan);
         int d1 = (int)delay;
-        int d2 = d1 + 1;
-        float w2 = delay - d1;
-        float w1 = 1 - w2;
-        int pos = readIndex + ns;
-        return (samples[(pos - d1) % ns] * w1) +
-               (samples[(pos - d2) % ns] * w2);
+        float w = delay - d1;
+        int p1 = readIndex - d1;
+        if ( p1 < 0 ) p1 += ns;
+        int p2 = readIndex - d1 - 1;
+        if ( p2 < 0 ) p2 += ns;
+        return (samples[p1] * (1 - w)) +
+               (samples[p2] * w);
+    }
+
+    // single sample allpass interpolated, warp corrected
+    public float outA(int chan, float delay) {
+        int ns = getSampleCount();
+        float[] samples = getChannel(chan);
+        int d1 = (int)delay;
+        float w = delay - d1;
+        int p1 = readIndex - d1;
+        if ( p1 < 0 ) p1 += ns;
+        int p2 = readIndex - d1 - 1;
+        if ( p2 < 0 ) p2 += ns;
+        return apzm1[chan] = samples[p2] + 
+                            (samples[p1] - apzm1[chan]) * ((1 - w)/(1 + w));
     }
 
     // non-interpolating delay tap (same tap per channel)
@@ -132,12 +151,9 @@ public class DelayBuffer extends FloatSampleBuffer
         float[] dest = buf.getChannel(ch);
         float[] source = getChannel(ch);
         int j = readIndex - delay + ns;
-        float out;
+        // TODO optimise to 2 loops, without modulus !!!
         for ( int i = 0; i < buf.getSampleCount(); i++ ) {
-	        // cope with wrap!
-            out = source[(j+i) % ns] * weight;
-            if ( isDenormalOrZero(out) ) continue;	// anti-denormal and optmisation ??? ??? needed ???
-            dest[i] += out ;
+        	dest[i] += source[(i+j) % ns] * weight ;
         }
     }
 
@@ -153,6 +169,6 @@ public class DelayBuffer extends FloatSampleBuffer
     }
 
     public float msToSamples(float ms) {
-        return (ms * getSampleRate()) / 1000;
+        return ms * getSampleRate() * 0.001f;
     }
 }

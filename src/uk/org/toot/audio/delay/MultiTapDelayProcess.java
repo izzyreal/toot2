@@ -5,6 +5,8 @@
 
 package uk.org.toot.audio.delay;
 
+import java.util.List;
+
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.ChannelFormat;
@@ -31,11 +33,11 @@ public class MultiTapDelayProcess implements AudioProcess
      * @link aggregation
      * @supplierCardinality 1 
      */
-    private final MultiTapDelayVariables vars;
+    private final Variables vars;
 
     private boolean wasBypassed;
 
-    public MultiTapDelayProcess(MultiTapDelayVariables vars) {
+    public MultiTapDelayProcess(Variables vars) {
         this.vars = vars;
         wasBypassed = !vars.isBypassed(); // force update
     }
@@ -130,4 +132,26 @@ public class MultiTapDelayProcess implements AudioProcess
     protected int msToSamples(float ms, float sr) {
         return (int)((ms * sr) / 1000); // !!! !!! move elsewhere
     }
+    
+    public interface Variables extends DelayVariables
+    {
+
+        /**
+         * Provide a list of delay taps.
+         * Parameterisation by channel index ALLOWS per channel delay taps but
+         * also ALLOWS a single list of taps to be used for all channels.
+         * Allocation of taps to channels is the responsibility of the
+         * implementation so other allocations are also possible.
+         */
+        List<DelayTap> getTaps(int chan);
+
+        float getFeedback();
+
+        float getMix();
+
+        int getChannelCount();
+
+        float getDelayFactor();
+    }
+
 }

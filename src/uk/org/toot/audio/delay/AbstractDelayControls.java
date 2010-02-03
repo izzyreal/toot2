@@ -16,13 +16,12 @@ public class AbstractDelayControls extends AudioControls
     // reserve some id's at the top of our range for common controls
     private static final int FEEDBACK_INVERT_ID = 121;
     private static final int FEEDBACK_ID = 122;
-    private static final int MIX_INVERT_ID = 123;
-    private static final int MIX_ID = 124;
+//    private static final int MIX_INVERT_ID = 123;
+    protected static final int MIX_ID = 124;
     protected static final int DELAY_FACTOR_ID = 125;
 
     private BooleanControl feedbackInvertControl;
     private FloatControl feedbackControl;
-    private BooleanControl mixInvertControl;
     private FloatControl mixControl;
 
     public AbstractDelayControls(int id, String name) {
@@ -40,12 +39,6 @@ public class AbstractDelayControls extends AudioControls
         return feedbackControl;
  	}
 
-    protected BooleanControl createMixInvertControl() {
-        mixInvertControl = new BooleanControl(MIX_INVERT_ID, getString("Invert"), false);
-        mixInvertControl.setStateColor(true, Color.PINK);
-        return mixInvertControl;
-    }
-
     protected FloatControl createMixControl() {
         mixControl = new MixControl();
         return mixControl;
@@ -55,7 +48,6 @@ public class AbstractDelayControls extends AudioControls
         ControlColumn g = new ControlColumn();
         if ( withInverts ) g.add(createFeedbackInvertControl());
         g.add(createFeedbackControl());
-        if ( withInverts ) g.add(createMixInvertControl());
         g.add(createMixControl());
         return g;
     }
@@ -70,11 +62,6 @@ public class AbstractDelayControls extends AudioControls
         if ( feedbackControl == null ) return 0f;
         if ( isFeedbackInverted() ) return -feedbackControl.getValue();
         return feedbackControl.getValue();
-    }
-
-    public boolean isWetInverted() {
-        if ( mixInvertControl == null ) return false;
-        return mixInvertControl.getValue();
     }
 
     public float getMix() {
