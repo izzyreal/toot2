@@ -8,7 +8,7 @@ package uk.org.toot.audio.eq;
 import uk.org.toot.audio.filter.Filter;
 
 /**
- * The abstract class for serial EQ such as cuts.
+ * The abstract class for serial EQ such as parametric, graphic and cut EQs.
  */
 abstract public class AbstractSerialEQ extends AbstractEQ
 {

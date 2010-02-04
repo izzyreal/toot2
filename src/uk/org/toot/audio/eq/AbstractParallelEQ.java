@@ -9,7 +9,7 @@ import uk.org.toot.audio.filter.Filter;
 import java.util.Arrays;
 
 /**
- * The abstract class for parallel EQ such as parametrics and graphics.
+ * The abstract class for parallel EQ such as formant EQ.
  */
 abstract public class AbstractParallelEQ extends AbstractEQ
 {
