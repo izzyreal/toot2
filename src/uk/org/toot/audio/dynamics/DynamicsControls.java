@@ -86,8 +86,6 @@ abstract public class DynamicsControls extends AudioControls
         }
     }
 
-    public boolean canBypass() { return true; }
-
 	protected boolean hasGainReductionIndicator() { return false; }
 
 	protected ControlLaw getThresholdLaw() {

@@ -11,7 +11,7 @@ import uk.org.toot.control.*;
  * AudioControls are composite Controls which control an AudioProcess, defined
  * in 'user' terms. They add a bypass control.
  */
-public class AudioControls extends CompoundControl
+public abstract class AudioControls extends CompoundControl
 {
 	private CompoundControl.BypassControl bypassControl = null;
 
@@ -31,7 +31,7 @@ public class AudioControls extends CompoundControl
 
     public boolean canBeMinimized() { return true; }
     
-	public boolean canBypass() { return false; }
+	public boolean canBypass() { return true; }
 
     public void setBypassed(boolean state) {
         if ( canBypass() && bypassControl != null ) {

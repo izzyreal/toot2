@@ -53,6 +53,8 @@ public class MeterControls extends AudioControls
         add(mindBControl = new MindBControl());
     }
 
+	public boolean canBypass() { return false; }
+
     public boolean isAlwaysVertical() {
         return true;
     }

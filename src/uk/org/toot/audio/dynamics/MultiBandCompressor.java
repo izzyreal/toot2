@@ -198,8 +198,6 @@ public class MultiBandCompressor implements AudioProcess
             super(DynamicsIds.MULTI_BAND_COMPRESSOR_ID, name);
         }
 
-        public boolean canBypass() { return true; }
-
 	    public boolean hasOrderedFrequencies() { return true; } // crossover sections in frequency order
     }
 

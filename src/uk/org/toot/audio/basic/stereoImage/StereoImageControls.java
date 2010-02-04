@@ -48,6 +48,4 @@ public class StereoImageControls extends AudioControls
     public boolean isLRSwapped() {
         return swap.getValue();
     }
-	
-	public boolean canBypass() { return true; }
 }

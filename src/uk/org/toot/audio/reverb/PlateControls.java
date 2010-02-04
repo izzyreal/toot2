@@ -68,8 +68,6 @@ public class PlateControls extends AudioControls implements PlateVariables
 		);
 	}
 
-	public boolean canBypass() { return true; }
-
 	protected void createControls() {
 		ControlColumn col1 = new ControlColumn();
 		col1.add(preDelayControl = createPreDelayControl());

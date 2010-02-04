@@ -23,8 +23,6 @@ public class DenormalControls extends AudioControls
         add(new DenormIndicator());
     }
 
-    public boolean canBypass() { return true; }
-
     public void setDenormFactor(float factor) {
     	denormAverage = (ALPHA * denormAverage) + (1f - ALPHA) * factor;
     }

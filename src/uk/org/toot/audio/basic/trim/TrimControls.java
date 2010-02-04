@@ -37,7 +37,4 @@ public class TrimControls extends AudioControls
 	public float getTrim() {
 		return trim;
 	}
-	
-	@Override
-	public boolean canBypass() { return true; }
 }

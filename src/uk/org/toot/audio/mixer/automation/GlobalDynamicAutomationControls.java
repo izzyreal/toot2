@@ -19,4 +19,6 @@ public class GlobalDynamicAutomationControls extends AudioControls
     public GlobalDynamicAutomationControls() {
         super(CONTROL_STRIP_ID, "Auto");
     }
+    
+	public boolean canBypass() { return false; }
 }

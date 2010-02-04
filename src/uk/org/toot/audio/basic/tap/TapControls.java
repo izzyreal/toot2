@@ -64,8 +64,4 @@ public class TapControls extends AudioControls
     public boolean canBeDeleted() { return isInactive(); }
 	
 	boolean isInactive() { return refCount == 0; }
-	
-	// we need the bypass control otherwise we don't persist	
-	@Override
-	public boolean canBypass() { return true; }
 }

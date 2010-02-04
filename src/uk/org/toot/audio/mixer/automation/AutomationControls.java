@@ -72,6 +72,8 @@ public class AutomationControls extends AudioControls
         return storeControl.getValue();
     }
 
+	public boolean canBypass() { return false; }
+
     public boolean canBeDeleted() { return false; }
 
     public boolean canBeMoved() { return false; }

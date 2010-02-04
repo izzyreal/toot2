@@ -41,8 +41,6 @@ abstract public class EQ implements AudioProcess
             super(id, name);
         }
 
-        public boolean canBypass() { return true; } // EQ can be bypassed
-
         public boolean hasOrderedFrequencies() { return true; } // EQ sections in frequency order
 
         // implement EQ.Specification --------------------------------------------

@@ -63,6 +63,8 @@ public class BusControls extends AudioControls implements Observer
         }
     }
 
+	public boolean canBypass() { return false; }
+
     public String toString() {
         return getName()+" Bus";
     }

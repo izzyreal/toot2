@@ -116,7 +116,9 @@ public class MixControls extends AudioControls
         return busControls.getChannelFormat();
     }
 
-    public boolean isAlwaysVertical() { return true; }
+	public boolean canBypass() { return false; }
+
+	public boolean isAlwaysVertical() { return true; }
 
     public boolean canBeDeleted() { return false; }
 

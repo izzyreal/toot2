@@ -108,8 +108,6 @@ public class ModulatedDelayControls extends AbstractDelayControls
 
     public boolean isPhaseQuadrature() { return phaseControl.getValue(); }
     
-    public boolean canBypass() { return true; }
-
     public static class ShapeControl extends EnumControl
     {
         private static List<Object> values;

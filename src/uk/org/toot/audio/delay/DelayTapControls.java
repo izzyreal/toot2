@@ -6,11 +6,10 @@
 package uk.org.toot.audio.delay;
 
 import uk.org.toot.control.*;
-import uk.org.toot.audio.core.AudioControls;
 
 import static uk.org.toot.misc.Localisation.*;
 
-public class DelayTapControls extends AudioControls
+public class DelayTapControls extends CompoundControl
     implements DelayTap
 {
     private FloatControl delayControl;

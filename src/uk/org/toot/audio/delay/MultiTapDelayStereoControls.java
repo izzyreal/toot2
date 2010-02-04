@@ -45,9 +45,7 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
         add(createCommonControlColumn(false)); // no inverts
     }
 
-    public float getMaxDelayMilliseconds() { return msMax; }
-
-    public boolean canBypass() { return true; }
+    public float getMaxDelayMilliseconds() { return msMax * 5; }
 
     public List<DelayTap> getTaps(int chan) {
         // no validation, called on server thread, time critical

@@ -8,7 +8,6 @@ package uk.org.toot.audio.eq;
 import java.util.List;
 import uk.org.toot.control.*;
 import uk.org.toot.dsp.filter.FilterShape;
-import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.filter.*;
 
 import static uk.org.toot.misc.Localisation.*;
@@ -19,7 +18,7 @@ import static uk.org.toot.misc.Localisation.*;
  * all EQ forms. Particular controls may be hidden if their value is
  * immutable or otherwise not required.
  */
-public class ClassicFilterControls extends AudioControls
+public class ClassicFilterControls extends CompoundControl
     implements FilterSpecification
     {
     private FilterShape shape;

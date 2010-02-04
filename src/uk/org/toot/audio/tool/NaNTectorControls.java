@@ -23,9 +23,6 @@ public class NaNTectorControls extends AudioControls
 		add(new NaNIndicator());
 	}
 	
-    @Override
-	public boolean canBypass() { return true; }
-    
     public void setNaNFactor(float factor) {
     	nanAverage = (ALPHA * nanAverage) + (1f - ALPHA) * factor;
     }

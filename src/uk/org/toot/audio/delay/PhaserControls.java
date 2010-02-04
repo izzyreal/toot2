@@ -35,9 +35,6 @@ public class PhaserControls extends AudioControls implements PhaserProcess.Varia
 		add(cc);
 	}
 
-    @Override
-	public boolean canBypass() { return true; }
-
     protected FloatControl createRateControl() {
  		return new FloatControl(RATE_ID, getString("Rate"), rateLaw, 0.01f, 0.5f);
  	}

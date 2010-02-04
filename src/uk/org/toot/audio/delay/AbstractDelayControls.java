@@ -11,7 +11,7 @@ import java.awt.Color;
 
 import static uk.org.toot.misc.Localisation.*;
 
-public class AbstractDelayControls extends AudioControls
+public abstract class AbstractDelayControls extends AudioControls
 {
     // reserve some id's at the top of our range for common controls
     private static final int FEEDBACK_INVERT_ID = 121;

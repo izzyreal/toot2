@@ -47,6 +47,4 @@ public class Distort1Controls extends AudioControls implements Distort1Variables
 	public float getGain() {
 		return gain;
 	}
-	
-	public boolean canBypass() { return true; }
 }
