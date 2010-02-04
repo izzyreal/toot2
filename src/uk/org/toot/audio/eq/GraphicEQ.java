@@ -15,7 +15,7 @@ import static uk.org.toot.misc.Localisation.*;
 /**
  * An octave graphic EQ.
  */
-public class GraphicEQ extends AbstractParallelEQ {
+public class GraphicEQ extends AbstractSerialEQ {
 
     public GraphicEQ() {
         this(new Controls());
@@ -29,7 +29,7 @@ public class GraphicEQ extends AbstractParallelEQ {
     }
 
     public GraphicEQ(Controls c) {
-        super(c, true); // true means levels are relative (to input)
+        super(c, false); // true means levels are relative (to input)
     }
 
     /**
@@ -54,7 +54,7 @@ public class GraphicEQ extends AbstractParallelEQ {
             int id = 1;
             while ( fc < 20001 ) {
                 add(new ClassicFilterControls(String.valueOf(fc), id,
-                    	FilterShape.BPF, true,
+                    	FilterShape.PEQ, true,
                         fc, fc, fc, true,
                         Q_LAW, Q, true,
                         GAIN_LAW, 0f, false));
