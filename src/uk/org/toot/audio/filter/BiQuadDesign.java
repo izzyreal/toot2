@@ -30,8 +30,7 @@ public class BiQuadDesign extends AbstractFilterDesign
     }
 
     public void design(int sampleRate) {
-        // we design for 0dB gain
-        design(spec.getShape(), 0f, spec.getFrequency(), (float)sampleRate, FilterTools.getOctaveBandwidth(spec.getResonance()));
+        design(spec.getShape(), spec.getLeveldB(), spec.getFrequency(), (float)sampleRate, FilterTools.getOctaveBandwidth(spec.getResonance()));
     }
 
     // TODO move to dsp.filter.BiquadDesigner

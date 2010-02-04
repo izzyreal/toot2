@@ -15,7 +15,7 @@ import static uk.org.toot.misc.Localisation.*;
 /**
  * A parametric EQ.
  */
-public class ParametricEQ extends AbstractParallelEQ
+public class ParametricEQ extends AbstractSerialEQ
 {
     /**
      * Creates a default ParametricEQ object.
@@ -28,7 +28,7 @@ public class ParametricEQ extends AbstractParallelEQ
      * Creates a ParemetricEQ object with the specified controls.
      */
     public ParametricEQ(Controls spec) {
-        super(spec, true); // true means relative levels (to input)
+        super(spec, false); // true means relative levels (to input)
     }
 
     /**
@@ -42,22 +42,22 @@ public class ParametricEQ extends AbstractParallelEQ
         public Controls() {
             super(EQIds.PARAMETRIC_EQ_ID, getString("Parametric.EQ"));
             add(new ClassicFilterControls(getString("Low"), 0,
-                	FilterShape.LPF, true,
+                	FilterShape.LSH, true,
                     40f, 3000f, 80, false,
                     Q_LAW, 1f, true,
                     GAIN_LAW, 0f, false));
             add(new ClassicFilterControls(getString("Lo.Mid"), 4,
-                	FilterShape.BPF, true,
+                	FilterShape.PEQ, true,
                     40f, 3000f, 600, false,
                     Q_LAW, 1f, false,
                     GAIN_LAW, 0f, false));
             add(new ClassicFilterControls(getString("Hi.Mid"), 8,
-                	FilterShape.BPF, true,
+                	FilterShape.PEQ, true,
                     3000f, 20000f, 4000, false,
                     Q_LAW, 1f, false,
                     GAIN_LAW, 0f, false));
             add(new ClassicFilterControls(getString("High"), 16,
-                	FilterShape.HPF, true,
+                	FilterShape.HSH, true,
                     3000f, 20000f, 12000, false,
                     Q_LAW, 1f, true,
                     GAIN_LAW, 0f, false));
