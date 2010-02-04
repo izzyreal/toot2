@@ -45,6 +45,7 @@ public class AudioServices extends Services
             if ( provider.getProviderId() == providerId ) {
 	            controls = provider.createControls(moduleId);
     	        if ( controls != null ) {
+    	        	controls.setProviderId(providerId);
     	        	if ( instanceIndex > 0 ) {
     	        		// properly disambiguate the name
     	        		controls.setName(controls.getName()+" #"+(instanceIndex+1));
