@@ -62,11 +62,11 @@ public class BiQuadFilter extends AbstractFilter
 	protected void updateFilterCoefficients() {
         // synchronize coefficients from design
         BiQuadDesign d = (BiQuadDesign)getDesign();
-        a0 = d.a0;
-        a1 = d.a1;
-        a2 = d.a2;
-        a3 = d.a3;
-        a4 = d.a4;
+        a0 = d.a[0];
+        a1 = d.a[1];
+        a2 = d.a[2];
+        a3 = d.a[3];
+        a4 = d.a[4];
 //    	System.out.println("coeffs: "+a0+", "+a1+", "+a2+", "+a3+", "+a4);
     }
 
