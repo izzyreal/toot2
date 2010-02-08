@@ -15,4 +15,5 @@ class DynamicsIds
     final static int GATE_ID = DYNAMICS_BASE_ID + 4;
     final static int DEESSER_ID = DYNAMICS_BASE_ID + 5;
     final static int MULTI_BAND_COMPRESSOR_ID = DYNAMICS_BASE_ID + 6;
+    final static int TREMOLO_ID = DYNAMICS_BASE_ID + 7;
 }
