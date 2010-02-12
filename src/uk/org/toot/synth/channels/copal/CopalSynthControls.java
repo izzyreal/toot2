@@ -17,7 +17,7 @@ import uk.org.toot.synth.modules.mixer.MixerVariables;
 
 public class CopalSynthControls extends SynthChannelControls
 {
-	public static String NAME = "Cepal";
+	public static String NAME = "Copal";
 
 	// OFFSETS MUST NOT BE CHANGED TO PRESERVE PERSISTENCE PORTABILITY
 	// OFFSETS ARE SLIGHTLY SPARSE TO ALLOW EXTENSION OF EXISTING MODULES

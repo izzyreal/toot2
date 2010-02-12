@@ -13,6 +13,8 @@ import uk.org.toot.synth.modules.filter.LP1pHP1pVariables;
 import uk.org.toot.synth.modules.mixer.MixerVariables;
 import uk.org.toot.synth.modules.oscillator.SawtoothOscillator;
 
+import uk.org.toot.audio.core.FloatDenormals;
+
 /*
  * A string synth.
  * 8', 4' and 2' sawtooths are filtered with key tracking high pass and low pass filters 
@@ -46,10 +48,14 @@ public class CopalSynthChannel extends ParaphonicSynthChannel
 	protected int postProcessAudio(AudioBuffer buffer) {
 		formantFilter.update();
 		float[] samples = buffer.getChannel(0);
+		// to help prevent the formant filter descending into denormals internally
+		samples[0] += FloatDenormals.THRESHOLD;
 		int nsamples = buffer.getSampleCount();
 		for ( int i = 0; i < nsamples; i++ ) {
 			samples[i] = formantFilter.filter(samples[i]);
 		}
+		// to avoid 100% output denormals :(
+		FloatDenormals.zeroDenorms(samples, nsamples);
 		return 0;
 	}
 
