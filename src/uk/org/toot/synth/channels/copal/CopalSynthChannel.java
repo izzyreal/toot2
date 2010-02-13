@@ -1,6 +1,7 @@
 package uk.org.toot.synth.channels.copal;
 
 import uk.org.toot.audio.core.AudioBuffer;
+import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.synth.ParaphonicSynthChannel;
 import uk.org.toot.synth.modules.amplifier.AmplifierVariables;
 import uk.org.toot.synth.modules.envelope.ASREnvelopeGenerator;
@@ -13,7 +14,7 @@ import uk.org.toot.synth.modules.filter.LP1pHP1pVariables;
 import uk.org.toot.synth.modules.mixer.MixerVariables;
 import uk.org.toot.synth.modules.oscillator.SawtoothOscillator;
 
-import uk.org.toot.audio.core.FloatDenormals;
+//import uk.org.toot.audio.core.FloatDenormals;
 
 /*
  * A string synth.
@@ -45,17 +46,18 @@ public class CopalSynthChannel extends ParaphonicSynthChannel
 	}
 
 	@Override
-	protected int postProcessAudio(AudioBuffer buffer) {
+	protected int postProcessAudio(AudioBuffer buffer, int ret) {
+		if ( ret == AudioProcess.AUDIO_SILENCE ) return 0; // !!!
 		formantFilter.update();
 		float[] samples = buffer.getChannel(0);
 		// to help prevent the formant filter descending into denormals internally
-		samples[0] += FloatDenormals.THRESHOLD;
+//		samples[0] += FloatDenormals.THRESHOLD;
 		int nsamples = buffer.getSampleCount();
 		for ( int i = 0; i < nsamples; i++ ) {
 			samples[i] = formantFilter.filter(samples[i]);
 		}
 		// to avoid 100% output denormals :(
-		FloatDenormals.zeroDenorms(samples, nsamples);
+//		FloatDenormals.zeroDenorms(samples, nsamples);
 		return 0;
 	}
 
