@@ -25,10 +25,20 @@ public interface AudioProcess
     final static int AUDIO_OK = 0;
 
     /**
-     * Returned from processAudio() to indicate the buffer has not been
-     * processed so that subsequent processing may be avoided.
+     * Returned from processAudio() to indicate that the buffer has not been
+     * processed so that subsequent processing can be avoided.
      */
     final static int AUDIO_DISCONNECT = 1;
+
+    /**
+     * Returned from processAudio() to indicate that the buffer contains 
+     * silence so that subsequent processing may be avoided IF that
+     * processing has zero convolution time. Put another way, if
+     * subsequent processing contains delays or reverberation, processing
+     * must continue until those delays and reverberation have ended.
+     * A buffer may contain silence without returning this value.
+     */
+    final static int AUDIO_SILENCE = 2;
 
     /**
      * Open any resources required by this AudioProcess.
