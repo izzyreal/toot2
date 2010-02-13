@@ -143,6 +143,26 @@ public class AudioBuffer extends FloatSampleBuffer
     }
 
     /**
+     * The square of the buffer, the first part of rms calculations.
+     * The root and mean have to be done elsewhere because we cannot
+     * maintain state.
+     * @return
+     */
+    public float square() {
+        int ns = getSampleCount();
+        int nc = getChannelCount();
+		float sumOfSquares = 0f;
+		float[] samples;
+		for ( int c = 0; c < nc; c++ ) {
+			samples = getChannel(c);
+			for ( int s = 0; s < ns; s++ ) {
+				float sample = samples[s];
+				sumOfSquares += sample * sample;
+			}
+		}
+		return sumOfSquares / (nc * ns);
+    }
+    /**
      * MetaInfo holds meta information for an AudioBuffer.
      * MetaInfo is intentionally immutable.
      * 'observers' will be able to simply detect a different MetaInfo
