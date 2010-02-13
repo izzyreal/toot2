@@ -268,13 +268,11 @@ public class MixControls extends AudioControls
         public float getRight() { return right; }
 
         public void setValue(float value) {
-            super.setValue(value);
             // as AMEI / MMA RP-036
             left = (float)Math.cos(Math.PI / 2 * value);
             right = (float)Math.sin(Math.PI / 2 * value);
+            super.setValue(value);
         }
-
-        public float getPan() { return getValue(); }
     }
 
 
@@ -299,13 +297,11 @@ public class MixControls extends AudioControls
         public float getRight() { return right; }
 
         public void setValue(float value) {
-            super.setValue(value);
             left = value < 0.5f ? 1f : 2 * (1 -value);
             right = value > 0.5f ? 1f : 2 * value;
     //        System.out.println(getControlPath()+": "+value+" "+left+", "+right);
+            super.setValue(value);
         }
-
-        public float getBalance() { return getValue(); }
     }
 
     /**
@@ -333,10 +329,10 @@ public class MixControls extends AudioControls
         public float getRear() { return rear; }
 
         public void setValue(float value) {
-            super.setValue(value);
             // as AMEI / MMA RP-036
             front = (float)Math.cos(Math.PI / 2 * value);
             rear = (float)Math.sin(Math.PI / 2 * value);
+            super.setValue(value);
         }
 
         public String[] getPresetNames() {
@@ -365,18 +361,16 @@ public class MixControls extends AudioControls
     	    gain = (float)Math.pow(10.0, initialdB/20.0);
             if ( initialdB <= -FaderLaw.ATTENUATION_CUTOFF ) {
                 gain = 0f;
-    //                System.out.println("Zero gain for "+getControlPath());
             }
     	}
 
         public void setValue(float value) {
-            super.setValue(value);
             if ( value <= -FaderLaw.ATTENUATION_CUTOFF ) {
                 gain = 0f;
-    //                System.out.println("Zero gain for "+getControlPath());
             } else {
         	    gain = (float)Math.pow(10.0, value/20.0);
             }
+            super.setValue(value);
         }
 
         public float getGain() {
