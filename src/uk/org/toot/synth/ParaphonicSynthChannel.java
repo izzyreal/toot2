@@ -27,10 +27,10 @@ public abstract class ParaphonicSynthChannel extends PolyphonicSynthChannel
 	@Override
 	public int processAudio(AudioBuffer buffer) {
 		int ret = super.processAudio(buffer);
-		postProcessAudio(buffer);
+		postProcessAudio(buffer, ret);
 		return ret;
 	}
 	
-	abstract protected int postProcessAudio(AudioBuffer buffer);
+	abstract protected int postProcessAudio(AudioBuffer buffer, int ret);
 	
 }

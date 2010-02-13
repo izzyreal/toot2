@@ -82,7 +82,7 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	    buffer.setChannelFormat(ChannelFormat.MONO);
 		if ( isComplete() ) {
 			buffer.makeSilence();
-			return AudioProcess.AUDIO_OK;
+			return AudioProcess.AUDIO_SILENCE;
 		}
 		sampleCount = buffer.getSampleCount();
 		int sr = (int)buffer.getSampleRate(); 

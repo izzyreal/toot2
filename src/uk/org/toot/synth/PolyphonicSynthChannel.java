@@ -53,7 +53,8 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 	    buffer.setChannelFormat(ChannelFormat.MONO);
 		buffer.makeSilence();
 		finished.clear();
-		int sr = (int)buffer.getSampleRate(); 
+		int sr = (int)buffer.getSampleRate();
+		int nactive = 0;
 		synchronized ( voices ) {
 			if ( sr != sampleRate ) {
 				setSampleRate(sr); // method call allows overriding
@@ -64,13 +65,15 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 			for ( Voice voice : voices ) {
 				if ( !voice.mix(buffer) ) {
 					finished.add(voice);
+				} else {
+					nactive += 1;
 				}
 			}
 			for ( Voice voice : finished ) {
 				voices.remove(voice);
 			}
 		}
-		return AudioProcess.AUDIO_OK;
+		return nactive > 0 ? AudioProcess.AUDIO_OK : AudioProcess.AUDIO_SILENCE;
 	}
 
 	public void close() {
