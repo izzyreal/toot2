@@ -88,6 +88,7 @@ public abstract class Control extends Observable
     }
     
     protected void notifyParent(Control obj) {
+    	derive(obj);
         setChanged();
         notifyObservers(obj);
         // we don't broadcast indicators to parent observers
@@ -99,6 +100,14 @@ public abstract class Control extends Observable
         }
     }
 
+    /**
+     * Provided to allow ComoundControls at the level of plugin modules
+     * to easily derive process value from control values without
+     * needing to add an Observer.
+     * @param obj
+     */
+    protected void derive(Control obj) {}
+    
     /**
      * Obtains the control's name.
      * @return the control's name.
