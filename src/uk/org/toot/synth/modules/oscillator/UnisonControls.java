@@ -6,8 +6,6 @@
 package uk.org.toot.synth.modules.oscillator;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -46,23 +44,24 @@ public class UnisonControls extends CompoundControl implements UnisonVariables
 		this.idOffset = idOffset;
 		createControls();
 		deriveSampleRateIndependentVariables();
-		//deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				switch ( c.getId() - idOffset ) {
-				case OSC_COUNT: oscillatorCount = deriveOscillatorCount(); break;
-				case PITCH_SPREAD: pitchSpread = derivePitchSpread(); break;
-				case PHASE_SPREAD: phaseSpread = derivePhaseSpread(); break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId() - idOffset ) {
+		case OSC_COUNT: oscillatorCount = deriveOscillatorCount(); break;
+		case PITCH_SPREAD: pitchSpread = derivePitchSpread(); break;
+		case PHASE_SPREAD: phaseSpread = derivePhaseSpread(); break;
+		}    	
+    }
+    
 	private void createControls() {
 		add(oscillatorCountControl = createOscillatorCountControl());
 		add(pitchSpreadControl = createPitchSpreadControl());
 		add(phaseSpreadControl = createPhaseSpreadControl());
+		derive(oscillatorCountControl);
+		derive(pitchSpreadControl);
+		derive(phaseSpreadControl);
 	}
 	
 	protected IntegerControl createOscillatorCountControl() {

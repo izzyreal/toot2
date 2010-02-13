@@ -8,9 +8,6 @@ package uk.org.toot.synth.modules.envelope;
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.envelope.EnvelopeControlIds.*;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import uk.org.toot.control.BooleanControl;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -50,19 +47,17 @@ public class ASREnvelopeControls extends CompoundControl
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				switch (c.getId()-idOffset) {
-				case ATTACK: attack = deriveAttack(); break;
-				case SUSTAIN: sustain = deriveSustain(); break;
-				case RELEASE: release = deriveRelease(); break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
+		case ATTACK: attack = deriveAttack(); break;
+		case SUSTAIN: sustain = deriveSustain(); break;
+		case RELEASE: release = deriveRelease(); break;
+		}    	
+    }
+    
 	protected boolean hasDelay() {
 		return true;
 	}

@@ -44,6 +44,10 @@ public class MixControls extends AudioControls
 
     private boolean isMaster;
     private int channelCount;
+    
+    private boolean mute, solo;
+    private float gain, left, right, front, rear;
+    
     // create the bus controls for the 'crossbar' of strip/bus
     public MixControls(MixerControls mixerControls,
         					int stripId,
@@ -64,6 +68,7 @@ public class MixControls extends AudioControls
         if ( channelCount >= 4 ) {
             frontRearControl = new FrontRearControl();
             add(frontRearControl);
+            derive(frontRearControl);
         }
         // divergence (Center <-> Left/Right) ?
         if ( format.getCenter() >= 0 && channelCount > 1 ) {
@@ -79,6 +84,7 @@ public class MixControls extends AudioControls
     	        add(bc);
         	    lcrControl = bc;
         	}
+			derive(lcrControl);
         }
 
 		ControlRow enables = new ControlRow();
@@ -87,10 +93,12 @@ public class MixControls extends AudioControls
    		    enables.add(busControls.getSoloIndicator());
 	    } else {
         	enables.add(soloControl = createSoloControl());
+        	derive(soloControl);
         	soloControl.addObserver(busControls); // !!! deleteObserver? !!! !!!
         }
         // all busses have a mute control
         enables.add(muteControl = createMuteControl());
+        derive(muteControl);
         add(enables);
         // the main bus has an internal route unless it's the main strip or an aux strip
         // not really our concern, the MainMixControls subclass provides it
@@ -108,8 +116,26 @@ public class MixControls extends AudioControls
         gainControl = new GainControl(initialdB);
         gainControl.setInsertColor(isMaster ? Color.BLUE.darker() : Color.black);
         add(gainControl);
+        derive(gainControl);
     }
 
+    @Override
+    protected void derive(Control c) {
+    	switch ( c.getId() ) {
+    	case MUTE: mute = muteControl.getValue(); break;
+    	case SOLO: solo = soloControl.getValue(); break;
+    	case GAIN: gain = gainControl.getGain(); break;
+    	case LCR:
+    		left = lcrControl.getLeft();
+    		right = lcrControl.getRight();
+    		break;
+    	case FRONT_SURROUND:
+    		front = frontRearControl.getFront();
+    		rear = frontRearControl.getRear();
+    		break;
+    	}
+    }
+    
     public boolean isMaster() { return isMaster; }
 
     public ChannelFormat getChannelFormat() {
@@ -125,11 +151,11 @@ public class MixControls extends AudioControls
     public boolean hasPresets() { return false; }
 
     public boolean isSolo() {
-        return soloControl == null ? hasSolo() : soloControl.getValue();
+        return soloControl == null ? hasSolo() : solo;
     }
 
     public boolean isMute() {
-        return muteControl.getValue();
+        return mute;
     }
 
     public boolean isEnabled() {
@@ -141,11 +167,10 @@ public class MixControls extends AudioControls
     }
 
     public float getGain() {
-        return gainControl.getGain();
+        return gain;
     }
 
     public void getChannelGains(float[] dest) {
-        float g = getGain();
         switch ( channelCount ) {
         case 6: // FIVE_1
 //        	dest[5] = g * getLFE();
@@ -153,17 +178,17 @@ public class MixControls extends AudioControls
 			// intentional fall-through
         case 4: // QUAD
         	// rear
-            float r = g * frontRearControl.getRear();
-        	dest[3] = r * lcrControl.getRight();
-        	dest[2] = r * lcrControl.getLeft();
+            final float r = gain * rear;
+        	dest[3] = r * right;
+        	dest[2] = r * left;
             // front
-            float f = g * frontRearControl.getFront();
-    	    dest[1] = f * lcrControl.getRight();
-	        dest[0] = f * lcrControl.getLeft();
+            final float f = gain * front;
+    	    dest[1] = f * right;
+	        dest[0] = f * left;
             break;
         case 2: // STEREO
-    	    dest[1] = g * lcrControl.getRight();
-	        dest[0] = g * lcrControl.getLeft();
+    	    dest[1] = gain * right;
+	        dest[0] = gain * left;
             break;
         case 1: // MONO
         	dest[0] = 1f;
@@ -187,18 +212,6 @@ public class MixControls extends AudioControls
         c.setAnnotation(c.getName().substring(0, 1));
         c.setStateColor(true, Color.green);
         return c;
-    }
-
-    public BooleanControl getMuteControl() {
-        return muteControl;
-    }
-
-    public BooleanControl getSoloControl() {
-        return soloControl;
-    }
-
-    public GainControl getGainControl() {
-        return gainControl;
     }
 
     /**

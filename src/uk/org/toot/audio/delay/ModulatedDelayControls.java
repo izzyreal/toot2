@@ -21,13 +21,14 @@ public class ModulatedDelayControls extends AbstractDelayControls
     private FloatControl dryControl;
     private FloatControl wetControl;
     private FloatControl delayControl;
-    private BooleanControl tapeControl;
     private FloatControl rateControl;
     private ShapeControl shapeControl;
     private FloatControl depthControl;
     private BooleanControl phaseControl;
-    private BooleanControl linkControl;
 
+    private float dry, wet, delay, rate, depth;
+    private int shape;
+    private boolean quadrature;
 
     private static final int DRY_ID = 0;
     private static final int DELAY_ID = 1;
@@ -35,7 +36,7 @@ public class ModulatedDelayControls extends AbstractDelayControls
     private static final int RATE_ID = 3;
     private static final int SHAPE_ID = 4;
     private static final int DEPTH_ID = 5;
-    private static final int LINK_ID = 6;
+//    private static final int LINK_ID = 6;
     protected static final int PHASE_ID = 7;
 
     public ModulatedDelayControls() {
@@ -49,18 +50,18 @@ public class ModulatedDelayControls extends AbstractDelayControls
         // shape, rate
         shapeControl = new ShapeControl(SHAPE_ID);
         rateControl = new FloatControl(RATE_ID, getString("Rate"), RATE_LAW, 0.01f, 0.2f);
-        // link (internal), depth
-        linkControl = new BooleanControl(LINK_ID, getString("Link"), false);
-        linkControl.setStateColor(true, Color.LIGHT_GRAY);
+        // depth
         depthControl = new FloatControl(DEPTH_ID, getString("Depth"), LinearLaw.UNITY, 0.01f, 0.5f);
    		depthControl.setInsertColor(Color.lightGray);
 
         ControlColumn g2 = new ControlColumn();
         g2.add(shapeControl);
 		g2.add(rateControl);
-//        g2.add(linkControl);
         g2.add(depthControl);
         add(g2);
+        derive(shapeControl);
+        derive(rateControl);
+        derive(depthControl);
 
         // invert, feedback
         // invert, mix
@@ -71,8 +72,23 @@ public class ModulatedDelayControls extends AbstractDelayControls
         wetControl.setInsertColor(Color.white);
         g3.add(wetControl);
         add(g3);
+        derive(wetControl);
     }
 
+    @Override
+    protected void derive(Control c) {
+    	switch ( c.getId() ) {
+    	case DRY_ID: dry = dryControl.getValue(); break;
+    	case DELAY_ID: delay = delayControl.getValue(); break;
+    	case MIX_ID: wet = wetControl.getValue(); break;
+    	case RATE_ID: rate = rateControl.getValue(); break;
+    	case DEPTH_ID: depth = depthControl.getValue(); break;
+    	case SHAPE_ID: shape = shapeControl.getIntValue(); break;
+    	case PHASE_ID: quadrature = phaseControl.getValue(); break;
+    	default: super.derive(c); break;
+    	}
+    }
+    
     protected ControlColumn createControlColumn1() {
     	phaseControl = new BooleanControl(PHASE_ID, "PQ", false);
     	phaseControl.setStateColor(true, Color.YELLOW);
@@ -83,30 +99,31 @@ public class ModulatedDelayControls extends AbstractDelayControls
 
         ControlColumn g1 = new ControlColumn();
         g1.add(phaseControl);
-        g1.add(tapeControl);
+//        g1.add(tapeControl);
         g1.add(delayControl);
         g1.add(dryControl);
+    	derive(phaseControl);
+    	derive(delayControl);
+    	derive(dryControl);
         return g1;
     }
 
     public float getMaxDelayMilliseconds() { return 60f; }
 
-    public float getDelayMilliseconds() { return delayControl.getValue(); }
+    public float getDelayMilliseconds() { return delay; }
 
-    public float getRate() {
-        return rateControl.getValue();
-    }
+    public float getRate() { return rate; }
 
-    public float getDepth() { return depthControl.getValue(); }
+    public float getDepth() { return depth; }
 
-    public float getDry() { return dryControl.getValue(); }
+    public float getDry() { return dry; }
     
-    public float getWet() { return wetControl.getValue(); }
+    public float getWet() { return wet; }
     
     // 0 SIN, 1 TRI
-    public int getLFOShape() { return shapeControl.getIntValue(); }
+    public int getLFOShape() { return shape; }
 
-    public boolean isPhaseQuadrature() { return phaseControl.getValue(); }
+    public boolean isPhaseQuadrature() { return quadrature; }
     
     public static class ShapeControl extends EnumControl
     {

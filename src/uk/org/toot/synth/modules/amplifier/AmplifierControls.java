@@ -9,8 +9,6 @@ import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.amplifier.AmplifierControlIds.*;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.audio.core.KVolumeUtils;
 import uk.org.toot.control.CompoundControl;
@@ -47,18 +45,16 @@ public class AmplifierControls extends CompoundControl implements AmplifierVaria
 		hasVelocity = options.contains("V");
 		createControls();
 		deriveSampleRateIndependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				switch (c.getId()-idOffset) {
-				case VEL_TRACK: velocityTrack = deriveVelocityTrack() ; break;
-				case LEVEL: level = deriveLevel(); break;
-				}
-			}
-		});
 	}
 
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
+		case VEL_TRACK: velocityTrack = deriveVelocityTrack() ; break;
+		case LEVEL: level = deriveLevel(); break;
+		}
+    }
+    
 	protected void createControls() {
 		if ( hasVelocity ) {
 			add(velocityTrackControl = createVelocityTrackControl());

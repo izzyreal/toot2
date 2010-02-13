@@ -6,8 +6,6 @@
 package uk.org.toot.synth.modules.oscillator;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.BooleanControl;
 import uk.org.toot.control.CompoundControl;
@@ -54,21 +52,20 @@ public class DSFOscillatorControls extends CompoundControl implements DSFOscilla
 		createControls();
 		deriveSampleRateIndependentVariables();
 		//deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				switch (c.getId()-idOffset) {
-				case RATIO_N: ratioNumerator = deriveRatioNumerator(); break;
-				case RATIO_D: ratioDenominator = deriveRatioDenominator(); break;
-				case PARTIALS: partialCount = derivePartialCount(); break;
-				case ROLLOFF: rolloffFactor = deriveRolloffFactor(); 
-							  rolloffInt = deriveRolloffInt(); break;
-				case WOLFRAM: canUseWolfram = deriveWolfram(); break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
+		case RATIO_N: ratioNumerator = deriveRatioNumerator(); break;
+		case RATIO_D: ratioDenominator = deriveRatioDenominator(); break;
+		case PARTIALS: partialCount = derivePartialCount(); break;
+		case ROLLOFF: rolloffFactor = deriveRolloffFactor(); 
+					  rolloffInt = deriveRolloffInt(); break;
+		case WOLFRAM: canUseWolfram = deriveWolfram(); break;
+		}    	
+    }
+    
 	private void createControls() {
 //		add(wolframControl = createWolframControl(WOLFRAM));
 		add(ratioNumeratorControl = createRatioControl(RATIO_N, "N"));

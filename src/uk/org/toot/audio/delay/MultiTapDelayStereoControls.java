@@ -22,6 +22,7 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
     private float msMax;
     private final static ControlLaw DELAY_FACTOR_LAW = new LogLaw(0.2f, 5f, "");
     private FloatControl delayFactorControl;
+    private float delay;
 
     public MultiTapDelayStereoControls() {
         this(3, 2000f); // 3 taps, 2 seconds max delay
@@ -40,11 +41,20 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
         delayFactorControl = new FloatControl(DELAY_FACTOR_ID, getString("Delay"), DELAY_FACTOR_LAW, 0.01f, 1f);
         delayFactorControl.setInsertColor(Color.RED.darker());
         add(delayFactorControl);
+        derive(delayFactorControl);
         // feedback
         // mix
         add(createCommonControlColumn(false)); // no inverts
     }
 
+    @Override
+    protected void derive(Control c) {
+    	switch ( c.getId() ) {
+    	case DELAY_FACTOR_ID: delay = delayFactorControl.getValue(); break;
+    	default: super.derive(c); break;
+    	}
+    }
+    
     public float getMaxDelayMilliseconds() { return msMax * 5; }
 
     public List<DelayTap> getTaps(int chan) {
@@ -55,6 +65,6 @@ public class MultiTapDelayStereoControls extends AbstractDelayControls
     public int getChannelCount() { return 2; } // !!! !!!
 
     public float getDelayFactor() {
-		return delayFactorControl.getValue();
+		return delay;
     }
 }

@@ -9,8 +9,6 @@ import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.envelope.EnvelopeControlIds.*;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -67,22 +65,20 @@ public class EnvelopeControls extends CompoundControl
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				switch (c.getId()-idOffset) {
-				case DELAY:	delay = deriveDelay(); break;
-				case ATTACK: attack = deriveAttack(); break;
-				case HOLD: hold = deriveHold(); break;
-				case DECAY: decay = deriveDecay(); break;
-				case SUSTAIN: sustain = deriveSustain(); break;
-				case RELEASE: release = deriveRelease(); break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
+		case DELAY:	delay = deriveDelay(); break;
+		case ATTACK: attack = deriveAttack(); break;
+		case HOLD: hold = deriveHold(); break;
+		case DECAY: decay = deriveDecay(); break;
+		case SUSTAIN: sustain = deriveSustain(); break;
+		case RELEASE: release = deriveRelease(); break;
+		}
+    }
+    
 	protected void createControls() {
 		float m = timeMultiplier;
 		if ( hasDelay ) {

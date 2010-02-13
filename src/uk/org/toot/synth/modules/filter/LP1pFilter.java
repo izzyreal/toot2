@@ -5,6 +5,8 @@
 
 package uk.org.toot.synth.modules.filter;
 
+import static uk.org.toot.audio.core.FloatDenormals.zeroDenorm;
+
 /**
  * A simple single pole low pass filter with no changing parameters.
  * @author st
@@ -20,7 +22,7 @@ public class LP1pFilter
 	}
 	
 	public float filter(float sample) {
-		y1 += g*(sample - y1);
+		y1 = zeroDenorm(y1 + g*(sample - y1));
 	    return y1;	
 	}
 

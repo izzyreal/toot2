@@ -8,6 +8,7 @@ package uk.org.toot.audio.delay;
 import java.awt.Color;
 
 import uk.org.toot.audio.core.AudioControls;
+import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
@@ -25,6 +26,7 @@ public class PhaserControls extends AudioControls implements PhaserProcess.Varia
 	private FloatControl rateControl;
 	private FloatControl depthControl;
 	private FloatControl feedbackControl;
+	private float rate, depth, feedback;
 	
     public PhaserControls() {
 		super(DelayIds.PHASER_ID, getString("Phaser"));
@@ -33,8 +35,19 @@ public class PhaserControls extends AudioControls implements PhaserProcess.Varia
 		cc.add(depthControl = createDepthControl());
 		cc.add(feedbackControl = createFeedbackControl());
 		add(cc);
+		derive(rateControl);
+		derive(depthControl);
+		derive(feedbackControl);
 	}
 
+    protected void derive(Control c) {
+    	switch ( c.getId() ) {
+    	case RATE_ID: rate = rateControl.getValue(); break;
+    	case DEPTH_ID: depth = depthControl.getValue(); break;
+    	case FEEDBACK_ID: feedback = feedbackControl.getValue(); break;
+    	}
+    }
+    
     protected FloatControl createRateControl() {
  		return new FloatControl(RATE_ID, getString("Rate"), rateLaw, 0.01f, 0.5f);
  	}
@@ -50,15 +63,15 @@ public class PhaserControls extends AudioControls implements PhaserProcess.Varia
  	}
 
 	public float getDepth() {
-		return depthControl.getValue();
+		return depth;
 	}
 
 	public float getFeedback() {
-		return feedbackControl.getValue();
+		return feedback;
 	}
 	
 	public float getRate() {
-		return rateControl.getValue();
+		return rate;
 	}
 	
 }

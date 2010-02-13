@@ -5,6 +5,8 @@
 
 package uk.org.toot.audio.delay;
 
+import static uk.org.toot.audio.core.FloatDenormals.zeroDenorm;
+
 import org.tritonus.share.sampled.FloatSampleBuffer;
 
 /**
@@ -17,9 +19,15 @@ public class DelayBuffer extends FloatSampleBuffer
     private int writeIndex = 0;
     private int readIndex = 0;
     private float[] apzm1 = new float[6];
+    private Filter[] lowpass;
+    private float lowpassK = 1;
 
     public DelayBuffer(int channelCount, int sampleCount, float sampleRate) {
         super(channelCount, sampleCount, sampleRate);
+        lowpass = new Filter[8]; // !!!
+        for ( int i = 0; i < 8; i++ ) {
+        	lowpass[i] = new Filter();
+        }
     }
 
     public void nudge(int on) {
@@ -102,6 +110,45 @@ public class DelayBuffer extends FloatSampleBuffer
         nudge(source1.getSampleCount());
 	}
 
+	/**
+	 * Appends to this sample buffer, the data in <code>source1 + source2 * level2</code>
+     * It's particularly useful for multitapped delays.
+	 */
+    public void appendFiltered(FloatSampleBuffer source1, FloatSampleBuffer source2, float level2, float k) {
+		conform(source1);
+		lowpassK = k;
+		int count = source1.getSampleCount();
+        int count2 = 0;
+		// split into 2 parts to avoid wrap
+        if ( (writeIndex + count) >= getSampleCount() ) {
+            count = getSampleCount() - writeIndex;
+            count2 = source1.getSampleCount() - count;
+        }
+		for ( int ch = 0; ch < source1.getChannelCount(); ch++ ) {
+			Filter lp = lowpass[ch];
+            float[] dest = getChannel(ch);
+            float[] src1 = source1.getChannel(ch);
+            float[] src2 = source2.getChannel(ch);
+            for ( int i = 0; i < count; i++ ) {
+                dest[i + writeIndex] = src1[i] + lp.filter(level2 * src2[i]);
+            }
+		}
+        // second part will always write from 0 and read from count (if at all)
+        if ( count2 > 0 )
+			for ( int ch = 0; ch < source1.getChannelCount(); ch++ ) {
+				Filter lp = lowpass[ch];
+	            float[] dest = getChannel(ch);
+    	        float[] src1 = source1.getChannel(ch);
+        	    float[] src2 = source2.getChannel(ch);
+            	for ( int i = 0, j = count; i < count2; i++, j++ ) {
+                	dest[i] = src1[j] + lp.filter(level2 * src2[j]);
+            	}
+			}
+
+        // finally adjust writeIndex for next time (with wrap)
+        nudge(source1.getSampleCount());
+	}
+
     // single sample uninterpolated
     public float outU(int chan, int delay) {
         int p = readIndex - delay;
@@ -171,4 +218,15 @@ public class DelayBuffer extends FloatSampleBuffer
     public float msToSamples(float ms) {
         return ms * getSampleRate() * 0.001f;
     }
+    
+	private class Filter
+	{
+		private float zm1 = 0;
+		
+		public float filter(float sample) {
+			zm1 = zeroDenorm(zm1 + lowpassK * (sample - zm1));
+			return zm1;
+		}
+	}
+	
 }

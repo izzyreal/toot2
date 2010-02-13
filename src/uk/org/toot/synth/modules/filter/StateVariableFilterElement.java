@@ -5,6 +5,15 @@
 
 package uk.org.toot.synth.modules.filter;
 
+/*
+ * Classic digital state variable filter as designed by Chamblerin.
+ * 2x oversampled to assist resonance stability and cutoff tracking.
+ * Denormal handling is the responsibility of the user.
+ * In some applications multiple elements are used in parallel and
+ * denormal handling is then more efficient by not being performed here.
+ * In other cases a single element is internal to a Voice which is
+ * terminated prior to reaching silence.
+ */
 public class StateVariableFilterElement
 {
 	private float prev = 0f;

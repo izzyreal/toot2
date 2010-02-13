@@ -8,8 +8,6 @@ package uk.org.toot.synth.modules.filter;
 import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -56,15 +54,10 @@ public class FormantFilterControls extends CompoundControl
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				deriveControl(c.getId()-idOffset);
-			}
-		});
 	}
 
-	protected void deriveControl(int id) {
+	protected void derive(Control c) {
+		int id = c.getId()-idOffset;
 		switch ( id ) {
 		case RESONANCE: resonance = deriveResonance(); break;
 		case FREQSHIFT: frequencyShift = deriveFrequencyShift(); break;

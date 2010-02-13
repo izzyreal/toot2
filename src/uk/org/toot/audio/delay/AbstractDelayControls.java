@@ -7,6 +7,7 @@ package uk.org.toot.audio.delay;
 
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.control.*;
+
 import java.awt.Color;
 
 import static uk.org.toot.misc.Localisation.*;
@@ -23,9 +24,29 @@ public abstract class AbstractDelayControls extends AudioControls
     private BooleanControl feedbackInvertControl;
     private FloatControl feedbackControl;
     private FloatControl mixControl;
+    
+    private float feedback, mix = 1f;
 
     public AbstractDelayControls(int id, String name) {
         super(id, name);
+    }
+
+    protected void derive(Control c) {
+    	switch ( c.getId() ) {
+    	case FEEDBACK_INVERT_ID:
+    	case FEEDBACK_ID:
+    		feedback = isFeedbackInverted() ? -feedbackControl.getValue() :
+    										   feedbackControl.getValue();
+    		break;
+    	case MIX_ID: mix = mixControl.getValue(); break;
+    	case DELAY_FACTOR_ID: break; // handles itself
+    	}
+    	
+    }
+    
+    protected boolean isFeedbackInverted() {
+        if ( feedbackInvertControl == null ) return false;
+        return feedbackInvertControl.getValue();
     }
 
     protected BooleanControl createFeedbackInvertControl() {
@@ -36,6 +57,7 @@ public abstract class AbstractDelayControls extends AudioControls
 
     protected FloatControl createFeedbackControl() {
  		feedbackControl = new FloatControl(FEEDBACK_ID, getString("Resonance"), LinearLaw.UNITY, 0.01f, 0f);
+ 		derive(feedbackControl); // assumes invert control already created if required
         return feedbackControl;
  	}
 
@@ -52,21 +74,12 @@ public abstract class AbstractDelayControls extends AudioControls
         return g;
     }
 
-    // should be a private control matter, just negate feedback gain
-    public boolean isFeedbackInverted() {
-        if ( feedbackInvertControl == null ) return false;
-        return feedbackInvertControl.getValue();
-    }
-
     public float getFeedback() {
-        if ( feedbackControl == null ) return 0f;
-        if ( isFeedbackInverted() ) return -feedbackControl.getValue();
-        return feedbackControl.getValue();
+        return feedback;
     }
 
     public float getMix() {
-        if ( mixControl == null ) return 1.0f; // full wet, no dry
-        return mixControl.getValue();
+        return mix;
     }
 
     static public class MixControl extends FloatControl

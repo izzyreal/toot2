@@ -8,8 +8,6 @@ package uk.org.toot.synth.modules.oscillator;
 import static uk.org.toot.misc.Localisation.getString;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -47,17 +45,11 @@ public class LFOControls extends CompoundControl implements LFOVariables
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				deriveControl(c.getId()-idOffset);
-			}
-		});
-		
 	}
 
-	protected void deriveControl(int id) {
-		switch ( id ) {
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
 		case FREQUENCY:	frequency = deriveFrequency(); 	break;
 		case DEVIATION: deviation = deriveDeviation(); 	break;
 		case SHAPE: 	sine = deriveShape();	 		break;
@@ -66,9 +58,12 @@ public class LFOControls extends CompoundControl implements LFOVariables
 	
 	protected void createControls() {
 		add(shapeControl = createShapeControl());
+		derive(shapeControl);
 		add(frequencyControl = createFrequencyControl());
+		derive(frequencyControl);
 		if ( config.deviation > 0 ) {
 			add(deviationControl = createDeviationControl());
+			derive(deviationControl);
 		}
 	}
 

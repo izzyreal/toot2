@@ -8,8 +8,6 @@ package uk.org.toot.synth.modules;
 import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.BooleanControl;
 import uk.org.toot.control.CompoundControl;
@@ -42,17 +40,15 @@ public class GlideControls extends CompoundControl implements GlideVariables
 		this.idOffset = idOffset;
 		createControls();
 		deriveSampleRateIndependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				switch ( c.getId()-idOffset ) {
-				case ENABLE: glideEnable = deriveEnable(); break;
-				case TIME: glideMillis = deriveTime(); break;
-				}
-			}
-		});
 	}
 
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
+		case ENABLE: glideEnable = deriveEnable(); break;
+		case TIME: glideMillis = deriveTime(); break;
+		}    
+    }
 	protected void createControls() {
 		add(enableControl = createEnableControl());
 		add(timeControl = createTimeControl());

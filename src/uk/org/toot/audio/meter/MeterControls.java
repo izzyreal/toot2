@@ -31,11 +31,12 @@ public class MeterControls extends AudioControls
     private ChannelFormat channelFormat;
     private ChannelState[] channelState;
     private TypeControl typeControl;
-    private MeterIndicator meterIndicator;
     private MindBControl mindBControl;
     private float peakRelease = 0.005f; // default factor for 5ms
     private float averageSmooth = 0.038f; // default factor for 5ms
 
+    private float maxdB, mindB;
+    
     // have to have 2 channels for now
     public MeterControls(ChannelFormat format, String name) {
         super(METER, name);
@@ -49,26 +50,32 @@ public class MeterControls extends AudioControls
         add(new ResetControl());
         add(new OverIndicator());
         add(typeControl = new TypeControl());
-        add(meterIndicator = new MeterIndicator(name)); // !!!
+        add(new MeterIndicator(name)); // !!!
         add(mindBControl = new MindBControl());
+        derive(typeControl);
+        derive(mindBControl);
     }
 
+    @Override
+    protected void derive(Control c) {
+    	switch ( c.getId() ) {
+    	case METER_TYPE: maxdB = typeControl.getMaxdB(); break;
+    	case METER_MIN_DB: mindB = mindBControl.getMindB(); break;
+    	}
+    }
+    
 	public boolean canBypass() { return false; }
 
     public boolean isAlwaysVertical() {
         return true;
     }
 
-    public MeterIndicator getMeterIndicator() {
-        return meterIndicator;
-    }
-
     public float getMaxdB() {
-        return typeControl.getMaxdB();
+        return maxdB;
     }
 
     public float getMindB() {
-        return mindBControl.getMindB();
+        return mindB;
     }
 
     public ChannelFormat getChannelFormat() { return channelFormat; }

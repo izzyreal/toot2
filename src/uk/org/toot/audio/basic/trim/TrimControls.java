@@ -26,8 +26,7 @@ public class TrimControls extends AudioControls
 	public TrimControls() {
 		super(TRIM, getString("Trim"));
 		FloatControl trimControl = new FloatControl(0, getString("Trim"), TRIM_LAW, 0.01f, 0f) {
-		    protected void notifyParent(Control obj) {
-		    	super.notifyParent(obj);
+		    protected void derive(Control obj) {
 		    	trim = (float)TVolumeUtils.log2lin(getValue());
 		    }
 		};

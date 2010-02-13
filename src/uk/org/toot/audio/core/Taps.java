@@ -88,8 +88,7 @@ public class Taps
 		}
 
 		@Override
-		protected void notifyParent(Control obj) {
-			super.notifyParent(obj);
+		protected void derive(Control obj) {
 			String tapName = (String)getValue();
 			reference(prevTapName, -1);
 			reference(tapName, +1);

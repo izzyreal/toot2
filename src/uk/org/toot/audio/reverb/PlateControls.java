@@ -6,8 +6,6 @@
 package uk.org.toot.audio.reverb;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.control.Control;
@@ -48,26 +46,22 @@ public class PlateControls extends AudioControls implements PlateVariables
 		super(ReverbIds.PLATE_ID, "Plate Reverb");
 		createControls();
 		deriveControls();
-		addObserver(
-	        new Observer() {
-	        	public void update(Observable obs, Object obj) {
-	            	Control c = (Control)obj;
-	                if ( c.isIndicator() ) return;
-	                switch ( c.getId() ) {
-	                case PRE_DELAY: preDelaySamples = derivePreDelaySamples(); break;
-	                case BANDWIDTH: bandwidth = deriveBandwidth(); break;
-	                case INPUT_DIFFUSION_1: inputDiffusion1 = deriveInputDiffusion1(); break;
-	                case INPUT_DIFFUSION_2: inputDiffusion2 = deriveInputDiffusion2(); break;
-	                case DAMPING: damping = deriveDamping(); break;
-	                case DECAY: decay = deriveDecay(); break;
-	                case DECAY_DIFFUSION_1: decayDiffusion1 = deriveDecayDiffusion1(); break;
-	                case DECAY_DIFFUSION_2: decayDiffusion2 = deriveDecayDiffusion2(); break;
-	                }
-	            }
-	        }
-		);
 	}
 
+	@Override
+	protected void derive(Control c) {
+        switch ( c.getId() ) {
+        case PRE_DELAY: preDelaySamples = derivePreDelaySamples(); break;
+        case BANDWIDTH: bandwidth = deriveBandwidth(); break;
+        case INPUT_DIFFUSION_1: inputDiffusion1 = deriveInputDiffusion1(); break;
+        case INPUT_DIFFUSION_2: inputDiffusion2 = deriveInputDiffusion2(); break;
+        case DAMPING: damping = deriveDamping(); break;
+        case DECAY: decay = deriveDecay(); break;
+        case DECAY_DIFFUSION_1: decayDiffusion1 = deriveDecayDiffusion1(); break;
+        case DECAY_DIFFUSION_2: decayDiffusion2 = deriveDecayDiffusion2(); break;
+        }		
+	}
+	
 	protected void createControls() {
 		ControlColumn col1 = new ControlColumn();
 		col1.add(preDelayControl = createPreDelayControl());

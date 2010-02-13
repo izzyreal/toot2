@@ -4,6 +4,7 @@ package uk.org.toot.audio.dynamics;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
+import uk.org.toot.dsp.FastMath;
 
 abstract public class DynamicsProcess extends SimpleAudioProcess
 {
@@ -128,7 +129,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         			mean += squaresums[s];
         		}
         		if ( ++nsqsum >= NSQUARESUMS ) nsqsum = 0;
-        		key = (float)Math.sqrt(mean/NSQUARESUMS);
+        		key = (float)FastMath.sqrt(mean/NSQUARESUMS);
         		targetGain = function(key);
         	}
 

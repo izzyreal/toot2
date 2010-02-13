@@ -21,30 +21,39 @@ import static uk.org.toot.misc.Localisation.*;
 public class ClassicFilterControls extends CompoundControl
     implements FilterSpecification
     {
+	private final static int LEVEL_ID = 0;
+	private final static int FREQ_ID = 1;
+	private final static int RES_ID = 2;
+	
     private FilterShape shape;
 
     /**
      * @supplierCardinality 1
      * @link aggregationByValue 
      */
-    private FloatControl leveldB;
+    private FloatControl leveldBControl;
 
     /**
      * @supplierCardinality 1
      * @link aggregationByValue 
      */
-    private FloatControl freq;
+    private FloatControl freqControl;
 
     /**
      * @supplierCardinality 1
      * @link aggregationByValue 
      */
-    private FloatControl res;
+    private FloatControl resControl;
 
+    private int idOffset;
+    
+    private int freq;
+    private float leveldB, res, levelFactor;
+    
     /**
      * Construct with all specified values.
      */
-	public ClassicFilterControls(String name, int id,
+	public ClassicFilterControls(String name, int idOffset,
         FilterShape shape, boolean typefixed,
         float fmin, float fmax, float fvalue, boolean ffixed,
         ControlLaw qLaw, float qvalue, boolean qfixed,
@@ -52,11 +61,27 @@ public class ClassicFilterControls extends CompoundControl
         ) {
         super(0, name); // ??? ???
         this.shape = shape;
-        add(res = createResonanceControl(id+2, qLaw, qvalue, qfixed));
-        add(freq = createFrequencyControl(id+1, fmin, fmax, fvalue, ffixed));
-        add(leveldB = createLevelControl(id, levelLaw, dBvalue, dBfixed));
+        this.idOffset = idOffset;
+        add(resControl = createResonanceControl(idOffset+RES_ID, qLaw, qvalue, qfixed));
+        add(freqControl = createFrequencyControl(idOffset+FREQ_ID, fmin, fmax, fvalue, ffixed));
+        add(leveldBControl = createLevelControl(idOffset+LEVEL_ID, levelLaw, dBvalue, dBfixed));
+        derive(resControl);
+        derive(freqControl);
+        derive(leveldBControl);
     }
 
+	@Override
+	protected void derive(Control c) {
+		switch ( c.getId() - idOffset ) {
+		case LEVEL_ID: 
+			leveldB = leveldBControl.getValue();
+			levelFactor = (float)(Math.pow(10.0, getLeveldB()/20.0));
+			break;
+		case FREQ_ID: freq = (int)freqControl.getValue(); break;
+		case RES_ID: res = resControl.getValue(); break;
+		}
+	}
+	
     public boolean isAlwaysVertical() { return true; }
 
     public FilterShape getShape() {
@@ -64,19 +89,19 @@ public class ClassicFilterControls extends CompoundControl
     }
 
     public int getFrequency() {
-        return (int)freq.getValue();
+        return freq;
     }
 
     public void setFrequency(int frequency) {
-        freq.setValue(frequency);
+        freqControl.setValue(frequency);
     }
 
     public float getResonance() {
-        return res.getValue();
+        return res;
     }
 
     public void setResonance(float q) {
-        res.setValue(q);
+        resControl.setValue(q);
     }
 
     /**
@@ -86,16 +111,15 @@ public class ClassicFilterControls extends CompoundControl
      * amplitudeAdj = 10^(dB/20);
      **/
     public void setLeveldB(float dBlevel) {
-        leveldB.setValue(dBlevel);
+        leveldBControl.setValue(dBlevel);
     }
 
     public float getLeveldB() {
-        return leveldB.getValue();
+        return leveldB;
     }
 
     public float getLevelFactor() {
-        // evaluate on another thread when leveldB changes !!!
-		return (float)(Math.pow(10.0, getLeveldB()/20.0));
+		return levelFactor;
     }
 
     /**

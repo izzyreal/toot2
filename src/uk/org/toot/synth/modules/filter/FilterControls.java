@@ -8,9 +8,6 @@ package uk.org.toot.synth.modules.filter;
 import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.filter.FilterControlIds.*;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
@@ -37,17 +34,11 @@ public class FilterControls extends CompoundControl
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				deriveControl(c.getId()-idOffset);
-			}
-		});
 	}
 
-	protected void deriveControl(int id) {
-		switch ( id ) {
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
 		case FREQUENCY: cutoff = deriveCutoff(); break;
 		case RESONANCE: resonance = deriveResonance(); break;
 		}		

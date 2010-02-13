@@ -11,6 +11,7 @@ import static uk.org.toot.synth.modules.filter.FilterControlIds.*;
 import java.awt.Color;
 
 import uk.org.toot.control.BooleanControl;
+import uk.org.toot.control.Control;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 
@@ -27,11 +28,11 @@ public class StateVariableFilterControls extends FilterControls
 		super(FilterIds.STATE_VARIABLE_FILTER_ID, instanceIndex, name, idOffset);
 	}
 
-	protected void deriveControl(int id) {
-		switch ( id ) {
+	protected void derive(Control c) {
+		switch ( c.getId() - idOffset ) {
 		case MODE_MIX: modeMix = deriveModeMix();    break;
 		case BAND_MODE: bandMode = deriveBandMode(); break;
-		default: super.deriveControl(id); break;
+		default: super.derive(c); break;
 		}
 	}
 

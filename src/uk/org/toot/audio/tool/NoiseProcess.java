@@ -41,9 +41,9 @@ public class NoiseProcess extends SimpleAudioProcess
 		if ( pass ) return y2;
 		
         do {
-                x1 = (float)(2 * Math.random() - 1);
-                x2 = (float)(2 * Math.random() - 1);
-                w = x1 * x1 + x2 * x2;
+        	x1 = (float)(2 * Math.random() - 1);
+        	x2 = (float)(2 * Math.random() - 1);
+        	w = x1 * x1 + x2 * x2;
         } while ( w >= 1.0 );
 
         w = (float)Math.sqrt( (-2.0 * Math.log( w ) ) / w );

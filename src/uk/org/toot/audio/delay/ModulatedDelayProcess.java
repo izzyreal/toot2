@@ -172,7 +172,6 @@ public class ModulatedDelayProcess implements AudioProcess
         float getDry();
         int getLFOShape();
 
-        boolean isFeedbackInverted();
         boolean isPhaseQuadrature();
     }
 

@@ -9,8 +9,6 @@ import static uk.org.toot.misc.Localisation.getString;
 import static uk.org.toot.synth.modules.oscillator.OscillatorIds.DSF_OSCILLATOR_ID;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.tritonus.share.sampled.TVolumeUtils;
 
@@ -51,18 +49,16 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 		levelControls = new FloatControl[names.length];
 		createControls();
 		deriveSampleRateIndependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				int n = c.getId()-idOffset;
-				switch ( n ) {
-				case CLICK: click = deriveClick(); break;
-				default: levels[n] = deriveLevel(n); break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		int n = c.getId()-idOffset;
+		switch ( n ) {
+		case CLICK: click = deriveClick(); break;
+		default: levels[n] = deriveLevel(n); break;
+		}    	
+    }
 	private void createControls() {
 		Color color;
 		SliderColumn cc;
@@ -75,6 +71,7 @@ public class HammondOscillatorControls extends CompoundControl implements Hammon
 			cc = new SliderColumn(names[i]);
 			cc.add(levelControls[i]);
 			row.add(cc);
+			derive(levelControls[i]);
 		}
 /*		ControlColumn col = new ControlColumn();
 		col.add(clickControl = createClickControl(CLICK, getString("Click")));

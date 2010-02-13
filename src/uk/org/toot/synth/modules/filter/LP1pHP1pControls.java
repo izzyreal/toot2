@@ -8,8 +8,6 @@ package uk.org.toot.synth.modules.filter;
 import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -40,17 +38,10 @@ public class LP1pHP1pControls extends CompoundControl
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				deriveControl(c.getId()-idOffset);
-			}
-		});
 	}
 
-	protected void deriveControl(int id) {
-		switch ( id ) {
+	protected void derive(Control c) {
+		switch ( c.getId() - idOffset ) {
 		case LPRATIO: lpRatio = deriveLPRatio(); break;
 		case HPRATIO: hpRatio = deriveHPRatio(); break;
 		}		

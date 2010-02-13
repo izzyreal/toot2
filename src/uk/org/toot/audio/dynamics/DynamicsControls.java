@@ -31,6 +31,9 @@ abstract public class DynamicsControls extends AudioControls
     private FloatControl gainControl;
     private FloatControl depthControl;
     private TapControl keyControl;
+    
+    private float threshold, ratio = 1f, attack, hold, release, gain, depth = 40f;
+    private AudioBuffer key;
 
     private int idOffset = 0;
 
@@ -49,25 +52,31 @@ abstract public class DynamicsControls extends AudioControls
         if ( hasDepth() ) {
             depthControl = createDepthControl();
             g1.add(depthControl);
+            derive(depthControl);
         }
         if ( hasRatio() ) {
 	        ratioControl = createRatioControl();
     	    g1.add(ratioControl);
+    	    derive(ratioControl);
         }
         thresholdControl = createThresholdControl();
         g1.add(thresholdControl);
+        derive(thresholdControl);
         add(g1);
 
         ControlColumn g2 = new ControlColumn();
         attackControl = createAttackControl();
         g2.add(attackControl);
+        derive(attackControl);
         if ( hasHold() ) {
 	        holdControl = createHoldControl();
     	    g2.add(holdControl);
+    	    derive(holdControl);
         }
         releaseControl = createReleaseControl();
         g2.add(releaseControl);
 		add(g2);
+		derive(releaseControl);
 
         ControlColumn g3 = new ControlColumn();
         boolean useg3 = false;
@@ -75,17 +84,33 @@ abstract public class DynamicsControls extends AudioControls
         	keyControl = createKeyControl();
         	g3.add(keyControl);
         	useg3 = true;
+        	derive(keyControl);
         }
         if ( hasGain() ) {
             gainControl = createGainControl();
             g3.add(gainControl);
         	useg3 = true;
+        	derive(gainControl);
         }
         if ( useg3 ) {
         	add(g3);
         }
     }
 
+    @Override
+    protected void derive(Control c) {
+    	switch ( c.getId() - idOffset ) {
+    	case THRESHOLD: threshold = thresholdControl.getValue(); break;
+    	case RATIO: ratio = ratioControl.getValue(); break;
+    	case ATTACK: attack = attackControl.getValue(); break;
+    	case HOLD: hold = holdControl.getValue(); break;
+    	case RELEASE: release = releaseControl.getValue(); break;
+    	case GAIN: gain = gainControl.getValue(); break;
+    	case DEPTH: depth = depthControl.getValue(); break;
+    	case KEY: key = keyControl.getBuffer(); break; 
+    	}
+    }
+    
 	protected boolean hasGainReductionIndicator() { return false; }
 
 	protected ControlLaw getThresholdLaw() {
@@ -172,36 +197,31 @@ abstract public class DynamicsControls extends AudioControls
 //	implement DynamicsDesign.DesignVariables
 
     public float getThresholddB() {
-        return thresholdControl.getValue();
+        return threshold;
     }
 
     public float getRatio() {
-        if ( ratioControl == null ) return 1f;
-        return ratioControl.getValue();
+        return ratio;
     }
 
     public float getAttackMilliseconds() {
-        return attackControl.getValue();
+        return attack;
     }
 
     public float getHoldMilliseconds() {
-        if ( holdControl == null ) return 0f;
-        return holdControl.getValue();
+        return hold;
     }
 
     public float getReleaseMilliseconds() {
-        if ( releaseControl == null ) return 0f;
-        return releaseControl.getValue();
+        return release;
     }
 
     public float getGaindB() {
-        if ( gainControl == null ) return 0f;
-        return gainControl.getValue();
+        return gain;
     }
 
     public float getDepthdB() {
-        if ( depthControl == null ) return 40f;
-        return depthControl.getValue();
+        return depth;
     }
 
     public void setGainReduction(float dB) {
@@ -210,7 +230,6 @@ abstract public class DynamicsControls extends AudioControls
     }
     
     public AudioBuffer getKeyBuffer() {
-    	if ( keyControl == null ) return null;
-    	return keyControl.getBuffer();
+    	return key;
     }
 }

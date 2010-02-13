@@ -8,8 +8,6 @@ package uk.org.toot.synth.modules.mixer;
 import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -41,15 +39,14 @@ public class ModulationMixerControls extends CompoundControl implements Modulati
 		depth = new float[count];
 		createControls(labels);
 		deriveSampleRateIndependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				int n = c.getId()-idOffset - DEPTH;
-				depth[n] = deriveDepth(n);
-			}
-		});
 	}
 
+    @Override
+    protected void derive(Control c) {
+		int n = c.getId() - idOffset - DEPTH;
+		depth[n] = deriveDepth(n);    	
+    }
+    
 	protected void createControls(String[] labels) {
 		depthControl = new FloatControl[count];
 		for ( int i = 0; i < count; i++ ) {

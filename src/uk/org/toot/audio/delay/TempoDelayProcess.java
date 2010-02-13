@@ -7,6 +7,7 @@ package uk.org.toot.audio.delay;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
+import uk.org.toot.dsp.FastMath;
 import uk.org.toot.misc.plugin.Plugin;
 import uk.org.toot.misc.plugin.PluginSupport;
 import uk.org.toot.misc.TempoListener;
@@ -42,6 +43,10 @@ public class TempoDelayProcess implements AudioProcess
 
     private float bpm = 120f;
     
+    private float meansquare = 0f;
+    private float meanK = 0.2f;
+    private float smoothedMix;
+    
     public TempoDelayProcess(Variables vars) {
         this.vars = vars;
         wasBypassed = !vars.isBypassed(); // force update
@@ -50,7 +55,8 @@ public class TempoDelayProcess implements AudioProcess
 			public void tempoChanged(float newTempo) {
 				bpm = newTempo;				
 			}			
-		};		
+		};
+		smoothedMix = vars.getMix();
     }
 
     public void open() {
@@ -101,21 +107,40 @@ public class TempoDelayProcess implements AudioProcess
             }
         }
 
-    	// tapped from delay
+        float ducking = vars.getDucking();
+        if ( ducking < 1f ) {
+        	float square = buffer.square();
+        	//meansquare = meansquare * meanK + square * (1 - meanK); // !!!
+        	meansquare += meanK * (square - meansquare);
+        	// * 10 to normalise to ducking
+        	float rms = 10f * (float)FastMath.sqrt(meansquare);
+        	// calculate mix duck factor 0..1
+        	if ( rms < ducking ) {
+        		// intentionally empty, * 1
+        	} else if ( rms > 1f ) {
+        		mix *= ducking; // full ducking
+        	} else {
+        		// as rms [ducking .. 1], factor [1 .. ducking]
+        		mix *= ducking / rms; //? straight in linear, but not in log
+        		// also rms + ducking = 1 ?
+        	}
+        }
+        smoothedMix += 0.05f * (mix - smoothedMix);
+    	// tapped from delayed
     	tappedBuffer.makeSilence();
 		int delay = (int)msToSamples(60000*vars.getDelayFactor()/bpm, sampleRate);
         for ( int c = 0; c < nc; c++ ) {
             if ( delay < ns ) continue; // can't evaluate. push down to called method?
     		delayBuffer.tap(c, tappedBuffer, delay, 1f); // optimised mix
 		}
-    	// delay append process + tapped * feedback
-    	delayBuffer.append(buffer, tappedBuffer, feedback);
-    	// process mixed from process and tapped
+    	// append buffer + filtered tapped feedback to delayed
+    	delayBuffer.appendFiltered(buffer, tappedBuffer, feedback * 1.1f, vars.getLowpassCoefficient());
+    	// tapped mixed to buffer
         for ( int c = 0; c < nc; c++ ) {
             float[] samples = buffer.getChannel(c);
             float[] tapped = tappedBuffer.getChannel(c);
             for ( int i = 0; i < ns; i++ ) {
-                samples[i] += mix * tapped[i];
+                samples[i] += smoothedMix * tapped[i];
             }
         }
 
@@ -140,6 +165,10 @@ public class TempoDelayProcess implements AudioProcess
         float getFeedback();
 
         float getMix();
+        
+        float getDucking(); // >0 .. 1
+        
+        float getLowpassCoefficient();
     }
 
 }

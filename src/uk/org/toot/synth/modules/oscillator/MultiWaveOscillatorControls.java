@@ -10,8 +10,6 @@ import static uk.org.toot.misc.Localisation.getString;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -53,23 +51,22 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				switch (c.getId()-idOffset) {
-				case WAVE:		multiWave = deriveMultiWave(); 			break;
-				case DETUNE:	detuneFactor = deriveDetuneFactor(); 	break;
-				case WIDTH:		width = deriveWidth();					break;
-				case OCTAVE:	octave = deriveOctave();				break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		switch ( c.getId()-idOffset ) {
+		case WAVE:		multiWave = deriveMultiWave(); 			break;
+		case DETUNE:	detuneFactor = deriveDetuneFactor(); 	break;
+		case WIDTH:		width = deriveWidth();					break;
+		case OCTAVE:	octave = deriveOctave();				break;
+		}    	
+    }
+    
 	private void createControls() {
 		if ( getInstanceIndex() > 0 ) {
 			add(detuneControl = createDetuneControl());
+			derive(detuneControl);
 		}
 		ControlColumn cc = new ControlColumn() {
 			public float getAlignmentY() { return 0.20f; }
@@ -78,6 +75,9 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 		cc.add(octaveControl = createOctaveControl());
 		add(cc);
 		add(widthControl = createWidthControl());
+		derive(waveControl);
+		derive(octaveControl);
+		derive(widthControl);
 	}
 
 	protected FloatControl createDetuneControl() {
@@ -175,7 +175,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	}
 	
 	public float getSyncThreshold() {
-		return Integer.parseInt((String)octaveControl.getValue());
+		return 0f; // !!!
 	}
 
 	public float getDetuneFactor() {

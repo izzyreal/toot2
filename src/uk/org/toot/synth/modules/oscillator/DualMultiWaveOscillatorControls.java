@@ -8,8 +8,6 @@ package uk.org.toot.synth.modules.oscillator;
 import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -50,27 +48,29 @@ public class DualMultiWaveOscillatorControls extends CompoundControl implements 
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-//				if (c.isIndicator()) return;
-				switch (c.getId()-idOffset) {
-				case SAW_LEVEL:	sawLevel = deriveSawLevel();			break;
-				case SQR_LEVEL:	sqrLevel = deriveSquareLevel();			break; 
-				case WIDTH:		width = deriveWidth();					break;
-				case TUNING:	tuningFactor = deriveTuningFactor(); 	break;
-				}
-			}
-		});
 	}
 	
+    @Override
+    protected void derive(Control c) {
+		switch (c.getId()-idOffset) {
+		case SAW_LEVEL:	sawLevel = deriveSawLevel();			break;
+		case SQR_LEVEL:	sqrLevel = deriveSquareLevel();			break; 
+		case WIDTH:		width = deriveWidth();					break;
+		case TUNING:	tuningFactor = deriveTuningFactor(); 	break;
+		}    	
+    }
+    
 	private void createControls() {
 		if ( !syncMaster ) {
 			add(tuningControl = createTuningControl());
+			derive(tuningControl);
 		}
 		add(sawLevelControl = createLevelControl(SAW_LEVEL, "Saw"));
 		add(sqrLevelControl = createLevelControl(SQR_LEVEL, "Square"));
 		add(widthControl = createWidthControl());
+		derive(sawLevelControl);
+		derive(sqrLevelControl);
+		derive(widthControl);
 	}
 
 	protected FloatControl createLevelControl(int id, String name) {

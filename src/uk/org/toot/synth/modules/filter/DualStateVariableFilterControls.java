@@ -11,6 +11,7 @@ import static uk.org.toot.synth.modules.filter.FilterType.*;
 
 import java.util.List;
 
+import uk.org.toot.control.Control;
 import uk.org.toot.control.EnumControl;
 
 public class DualStateVariableFilterControls extends FilterControls
@@ -23,10 +24,10 @@ public class DualStateVariableFilterControls extends FilterControls
 		super(FilterIds.DUAL_STATE_VARIABLE_FILTER_ID, instanceIndex, name, idOffset);
 	}
 
-	protected void deriveControl(int id) {
-		switch ( id ) {
+	protected void derive(Control c) {
+		switch ( c.getId() - idOffset ) {
 		case TYPE: type = deriveType(); break;
-		default: super.deriveControl(id); break;
+		default: super.derive(c); break;
 		}
 	}
 

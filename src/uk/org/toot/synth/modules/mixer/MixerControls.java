@@ -6,8 +6,6 @@
 package uk.org.toot.synth.modules.mixer;
 
 import java.awt.Color;
-import java.util.Observable;
-import java.util.Observer;
 
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
@@ -37,15 +35,14 @@ public class MixerControls extends CompoundControl implements MixerVariables
 		createControls();
 		deriveSampleRateIndependentVariables();
 		deriveSampleRateDependentVariables();
-		addObserver(new Observer() {
-			public void update(Observable obs, Object obj) {
-				Control c = (Control) obj;
-				int n = c.getId()-idOffset - LEVEL;
-				level[n] = deriveLevel(n);
-			}
-		});
 	}
 
+    @Override
+    protected void derive(Control c) {
+		int n = c.getId() - idOffset - LEVEL;
+		level[n] = deriveLevel(n);    	
+    }
+    
 	protected void createControls() {
 		levelControl = new FloatControl[count];
 		for ( int i = 0; i < count; i++ ) {
