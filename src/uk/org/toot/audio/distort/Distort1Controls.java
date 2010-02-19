@@ -10,7 +10,6 @@ import uk.org.toot.audio.core.KVolumeUtils;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 
-import static uk.org.toot.audio.id.TootAudioControlsId.DISTORT_BASE_ID;
 import static uk.org.toot.misc.Localisation.getString;
 
 /**
@@ -18,7 +17,6 @@ import static uk.org.toot.misc.Localisation.getString;
  */
 public class Distort1Controls extends AudioControls implements Distort1Variables
 {
-	public static final int DISTORT1 = DISTORT_BASE_ID; 
 	private static final int GAIN = 0;
 	
 	private final static LinearLaw GAIN_LAW = new LinearLaw(0, 30, "dB");
@@ -26,7 +24,7 @@ public class Distort1Controls extends AudioControls implements Distort1Variables
 	private float gain = 1f;
 	
 	public Distort1Controls() {
-		super(DISTORT1, "OD");
+		super(DistortionIds.DISTORT1, "OD");
 		add(createGainControl());
 	}
 	
