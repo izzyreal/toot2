@@ -13,4 +13,5 @@ public interface FormantFilterVariables
 	public float getFreqencyShift();	// 0.25..4
 	public float getResonance();		// 0..1
 	public void setSampleRate(int rate);
+	public boolean isBypassed();
 }

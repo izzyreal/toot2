@@ -9,6 +9,7 @@ import static uk.org.toot.misc.Localisation.getString;
 
 import java.awt.Color;
 
+import uk.org.toot.control.BooleanControl;
 import uk.org.toot.control.CompoundControl;
 import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
@@ -28,16 +29,19 @@ public class FormantFilterControls extends CompoundControl
 	private final static int FREQSHIFT = 1;
 	private final static int FREQUENCY = 2; // ..4..6..8 etc.
 	private final static int LEVEL     = 3; // ..5..7..9 etc.
+	private final static int ENABLE	  = 15;
 	
 	private FloatControl frequencyControl[];
 	private FloatControl levelControl[];
 	private FloatControl frequencyShiftControl;
 	private FloatControl resonanceControl;
+	private BooleanControl enableControl;
 	
 	private float[] frequency;
 	private float[] level;
 	private float frequencyShift;
 	private float resonance;
+	private boolean bypass;
 	
 	protected int idOffset = 0;
 	
@@ -61,6 +65,7 @@ public class FormantFilterControls extends CompoundControl
 		switch ( id ) {
 		case RESONANCE: resonance = deriveResonance(); break;
 		case FREQSHIFT: frequencyShift = deriveFrequencyShift(); break;
+		case ENABLE: bypass = !deriveEnable(); break;
 		default:
 			int n = (id / 2) - 1;
 			if ( (id & 1) == 0 ) {
@@ -82,6 +87,7 @@ public class FormantFilterControls extends CompoundControl
 			add(col);
 		}
 		col = new ControlColumn();
+		col.add(enableControl = createPowerControl());
 		col.add(frequencyShiftControl = createFrequencyShiftControl());
 		col.add(resonanceControl = createResonanceControl());
 		add(col);
@@ -90,6 +96,7 @@ public class FormantFilterControls extends CompoundControl
 	protected void deriveSampleRateIndependentVariables() {
 		resonance = deriveResonance();
 		frequencyShift = deriveFrequencyShift();
+		bypass = !deriveEnable();
 		for ( int i = 0; i < nBands; i++ ) {
 			level[i] = deriveLevel(i);
 		}
@@ -117,6 +124,10 @@ public class FormantFilterControls extends CompoundControl
 		return frequencyShiftControl.getValue();
 	}
 
+	protected boolean deriveEnable() {
+		return enableControl.getValue();
+	}
+	
 	protected FloatControl createFrequencyControl(int n) {
         return new FloatControl(n+n+FREQUENCY+idOffset, getString("Frequency"), FREQ_LAW, 1f, 250 * (int)Math.pow(2, n));
 	}
@@ -135,6 +146,14 @@ public class FormantFilterControls extends CompoundControl
         return control;		
 	}
 
+	protected BooleanControl createPowerControl() {
+		BooleanControl control = new BooleanControl(ENABLE+idOffset, "Power", false);
+		control.setAnnotation("5010"); // force IEC 5010 power icon
+		control.setStateColor(false, Color.DARK_GRAY);
+		control.setStateColor(true, Color.GREEN.darker());
+		return control;
+	}
+	
 	public void setSampleRate(int rate) {
 		if ( sampleRate != rate ) {
 			sampleRate = rate;
@@ -158,6 +177,10 @@ public class FormantFilterControls extends CompoundControl
 		return resonance;
 	}
 
+	public boolean isBypassed() {
+		return bypass;
+	}
+	
 	public int size() {
 		return nBands;
 	}

@@ -12,6 +12,7 @@ import uk.org.toot.synth.modules.filter.HP1pFilter;
 import uk.org.toot.synth.modules.filter.LP1pFilter;
 import uk.org.toot.synth.modules.filter.LP1pHP1pVariables;
 import uk.org.toot.synth.modules.mixer.MixerVariables;
+import uk.org.toot.synth.modules.oscillator.MultiWaves;
 import uk.org.toot.synth.modules.oscillator.SawtoothOscillator;
 
 //import uk.org.toot.audio.core.FloatDenormals;
@@ -43,10 +44,12 @@ public class CopalSynthChannel extends ParaphonicSynthChannel
 		ampVars = controls.getAmplifierVariables();
 		formantVars = controls.getFormantFilterVariables();
 		formantFilter = new FormantFilter(formantVars);
+		MultiWaves.get("Square");
 	}
 
 	@Override
 	protected int postProcessAudio(AudioBuffer buffer, int ret) {
+		if ( formantVars.isBypassed() ) return 0;
 		if ( ret == AudioProcess.AUDIO_SILENCE ) return 0; // !!!
 		formantFilter.update();
 		float[] samples = buffer.getChannel(0);
@@ -59,6 +62,7 @@ public class CopalSynthChannel extends ParaphonicSynthChannel
 		// to avoid 100% output denormals :(
 //		FloatDenormals.zeroDenorms(samples, nsamples);
 		return 0;
+		
 	}
 
 	@Override
@@ -117,9 +121,9 @@ public class CopalSynthChannel extends ParaphonicSynthChannel
 		protected float getSample() {
 			float vibrato = 1f; // + vibratoLFO.getSample() / 50; // 2% freq change max
 			float sample = 
-				hp8.filter(lp8.filter(osc8.getSample(vibrato)) * osc8Level) +
-				hp4.filter(lp4.filter(osc4.getSample(vibrato)) * osc4Level) +
-				hp2.filter(lp2.filter(osc2.getSample(vibrato)) * osc2Level);
+				hp8.filter(lp8.filter(osc8.getSample(vibrato))) * osc8Level +
+				hp4.filter(lp4.filter(osc4.getSample(vibrato))) * osc4Level +
+				hp2.filter(lp2.filter(osc2.getSample(vibrato))) * osc2Level;
 			return sample * ampLevel * envelope.getEnvelope(release);
 		}
 
