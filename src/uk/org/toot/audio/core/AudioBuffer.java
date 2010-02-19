@@ -114,7 +114,14 @@ public class AudioBuffer extends FloatSampleBuffer
             mixDownChannels();
             channelFormat = format;
         } else if ( channelFormat.getCount() == 1 ) {	// 1 -> N
-            this.expandChannel(format.getCount());
+        	int nc = format.getCount();
+        	int ns = getSampleCount();
+        	float[] samples = getChannel(0);
+        	float gain = 1f / nc;
+        	for ( int s = 0; s < ns; s++ ) {
+        		samples[s] *= gain;
+        	}
+            expandChannel(nc);
             // does LFE need tweaking ??? !!!
             channelFormat = format;
         } else {										// N -> M
