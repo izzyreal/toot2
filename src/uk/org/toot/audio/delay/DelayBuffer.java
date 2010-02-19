@@ -194,13 +194,20 @@ public class DelayBuffer extends FloatSampleBuffer
     // single channel non-interpolating delay tap
     public void tap(int ch, FloatSampleBuffer buf, int delay, float weight) {
         if ( weight < 0.001f ) return; // anti-denormal and optimisation
-        int ns = getSampleCount();
-        float[] dest = buf.getChannel(ch);
+        int sns = getSampleCount();
         float[] source = getChannel(ch);
-        int j = readIndex - delay + ns;
-        // TODO optimise to 2 loops, without modulus !!!
-        for ( int i = 0; i < buf.getSampleCount(); i++ ) {
-        	dest[i] += source[(i+j) % ns] * weight ;
+        int dns = buf.getSampleCount();
+        float[] dest = buf.getChannel(ch);
+        int j = readIndex - delay;
+        if ( j < 0 ) j += sns;
+        int count = Math.min(sns - j, dns);
+        int i;
+        for ( i = 0; i < count; i++ ) {
+        	dest[i] += source[i+j] * weight ;
+        }
+        j = -i;
+        for ( ; i < dns; i++ ) {
+        	dest[i] += source[i+j] * weight ;
         }
     }
 
