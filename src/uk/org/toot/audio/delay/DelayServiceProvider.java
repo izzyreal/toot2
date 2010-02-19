@@ -15,14 +15,14 @@ import static uk.org.toot.misc.Localisation.*;
 public class DelayServiceProvider extends TootAudioServiceProvider
 {
     public DelayServiceProvider() {
-        super(getString("Delay"), "0.1");
+        super(getString("Delay"), "0.2");
 		String family = description;
         addControls(
             ModulatedDelayControls.class,
             DelayIds.MODULATED_DELAY_ID,
             getString("Modulated.Delay"),
             family,
-            "0.1");
+            "0.2");
         addControls(
             MultiTapDelayStereoControls.class,
             DelayIds.MULTI_TAP_DELAY_ID,
@@ -36,7 +36,7 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         	DelayIds.TEMPO_DELAY_ID,
         	getString("BPM.Delay"),
         	family,
-        	"0.1");
+        	"0.2");
         addControls(
             PhaserControls.class,
             DelayIds.PHASER_ID,
@@ -46,9 +46,9 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             ChannelFormat.MONO,
             null);
 
-        add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.1");
+        add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.2");
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
-        add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.1");
+        add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.2");
         add(PhaserProcess.class, getString("Phaser"), family, "0.1");
     }
 
