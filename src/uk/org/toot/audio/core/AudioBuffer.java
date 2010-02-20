@@ -34,6 +34,7 @@ public class AudioBuffer extends FloatSampleBuffer
     public AudioBuffer(String name, int channelCount, int sampleCount, float sampleRate) {
         super(channelCount, sampleCount, sampleRate);
         this.name = name;
+        channelFormat = guessFormat();
     }
 
     public String getName() { return name; }
@@ -77,22 +78,20 @@ public class AudioBuffer extends FloatSampleBuffer
         this.realTime = realTime;
     }
 
+    /**
+     * Guesses format.
+     */
     protected ChannelFormat guessFormat() {
-//        System.out.println(getName()+" format guessed");
         switch ( getChannelCount() ) {
         case 1: return ChannelFormat.MONO;
         case 2: return ChannelFormat.STEREO;
         case 4: return ChannelFormat.QUAD;
+        case 6: return ChannelFormat.FIVE_1;
         }
         return ChannelFormat.STEREO;
-
     }
 
-    /**
-     * Guesses format if unset.
-     */
     public ChannelFormat getChannelFormat() {
-        if ( channelFormat == null ) channelFormat = guessFormat();
         return channelFormat;
     }
 
@@ -108,7 +107,6 @@ public class AudioBuffer extends FloatSampleBuffer
     }
 
     public void convertTo(ChannelFormat format) {
-        if ( channelFormat == null ) channelFormat = guessFormat();
         if ( channelFormat == format ) return; // already requested format
         if ( format.getCount() == 1 ) { 				// N -> 1
             mixDownChannels();
@@ -137,6 +135,13 @@ public class AudioBuffer extends FloatSampleBuffer
         }
     }
 
+    // if mono, convert to stereo
+    public void monoToStereo() {
+		if ( getChannelCount() < 2 ) {
+			convertTo(ChannelFormat.STEREO);
+		}
+    }
+    
     public void swap(int a, int b) {
         int ns = getSampleCount();
         float[] asamples = getChannel(a);

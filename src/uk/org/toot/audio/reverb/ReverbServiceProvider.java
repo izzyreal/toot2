@@ -21,8 +21,8 @@ public class ReverbServiceProvider extends TootAudioServiceProvider
         super(getString("Reverb"), "0.1");
         String family = description;
         addControls(PlateControls.class, ReverbIds.PLATE_ID, 
-        	"Plate Reverb", family, "0.1");
-        add(PlateProcess.class, "Plate Reverb", family, "0.1");
+        	getString("Plate.Reverb"), family, "0.1");
+        add(PlateProcess.class, getString("Plate.Reverb"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {

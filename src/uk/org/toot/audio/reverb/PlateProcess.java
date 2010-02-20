@@ -6,7 +6,6 @@
 package uk.org.toot.audio.reverb;
 
 import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.core.SimpleAudioProcess;
 
 import static uk.org.toot.audio.core.FloatDenormals.*;
@@ -15,6 +14,7 @@ import static uk.org.toot.audio.core.FloatDenormals.*;
  * A literal implementation of the network diagram from Jon Dattorro's Effect Design Part 1,
  * Reverberator and Other Filters. Allegedly this is based on Griesinger's work, as were
  * Lexicon hardware reverberators.
+ * Constants are for the design sample rate, not 44.1kHz!
  * @author st
  */
 public class PlateProcess extends SimpleAudioProcess
@@ -61,21 +61,12 @@ public class PlateProcess extends SimpleAudioProcess
 	public int processAudio(AudioBuffer buffer) {
 		if ( vars.isBypassed() ) return AUDIO_OK;
 		cacheVariables();
-		int ns = buffer.getSampleCount();
-		int nc = buffer.getChannelCount();
-		if ( nc != 2 ) {
-			buffer.convertTo(ChannelFormat.STEREO);
-			if ( nc > 2 ) nc = 2;
-		}
+		buffer.monoToStereo();
 		samplesL = buffer.getChannel(0);
 		samplesR = buffer.getChannel(1);
+		int ns = buffer.getSampleCount();
 		for ( int i = 0; i < ns; i++ ) {
-			float in = samplesL[i];
-			if ( nc == 2 ) {
-				in += samplesR[i];
-				in *= 0.5f;
-			}
-			reverb(in * 0.6f);
+			reverb(0.3f * (samplesL[i] + samplesR[i]));
 			samplesL[i] = tank1.output(0) + tank2.output(0);
 			samplesR[i] = tank1.output(1) + tank2.output(1);
 		}

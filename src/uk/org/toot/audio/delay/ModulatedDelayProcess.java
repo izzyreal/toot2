@@ -60,9 +60,7 @@ public class ModulatedDelayProcess implements AudioProcess
         wasBypassed = bypassed;
 
         phaseQuad = vars.isPhaseQuadrature();
-        if ( phaseQuad && buffer.getChannelCount() == 1 ) {
-            buffer.convertTo(ChannelFormat.STEREO);
-        }
+        if ( phaseQuad ) buffer.monoToStereo();
 
         float sampleRate = buffer.getSampleRate();
         if ( delayBuffer == null ) {

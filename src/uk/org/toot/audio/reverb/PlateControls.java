@@ -13,6 +13,8 @@ import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 
+import static uk.org.toot.misc.Localisation.getString;
+
 /**
  * @author st
  */
@@ -43,7 +45,7 @@ public class PlateControls extends AudioControls implements PlateVariables
 	private float decayDiffusion1, decayDiffusion2;
 	
 	public PlateControls() {
-		super(ReverbIds.PLATE_ID, "Plate Reverb");
+		super(ReverbIds.PLATE_ID, getString("Plate.Reverb"));
 		createControls();
 		deriveControls();
 	}

@@ -64,9 +64,7 @@ public class MultiTapDelayProcess implements AudioProcess
             return AUDIO_OK;
         }
 
-        if ( buffer.getChannelCount() < 2 ) { // !!! must be mono
-        	buffer.convertTo(ChannelFormat.STEREO);
-        }
+        buffer.monoToStereo();
         float sampleRate = buffer.getSampleRate();
         int ns = buffer.getSampleCount();
         int nc = buffer.getChannelCount();
