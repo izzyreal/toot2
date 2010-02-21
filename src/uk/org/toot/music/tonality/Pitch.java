@@ -26,8 +26,8 @@ public class Pitch
     private static String[] flatNames = {
         "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" } ;
 
-    private static String[] sharpNames = {
-        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" } ;
+/*    private static String[] sharpNames = {
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" } ; */
 
     private Pitch() {
         // to prevent instantiation

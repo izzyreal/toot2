@@ -23,7 +23,7 @@ public class DualMultiWaveOscillator
 	private Wave sqrWave;
 	private int waveSize;
 	private int waveIndex = -1;		// index of the Wave in the MultiWave
-	private float k2;				// frequency / increment
+//	private float k2;				// frequency / increment
 	private float currentIncrement;
 	private boolean master;
 	private float index = 0;		// index of the sample within the Wave
@@ -58,7 +58,7 @@ public class DualMultiWaveOscillator
 //		index = waveSize * sqrMultiWave.getWidthStartFactor(vars.getWidth());		
 		float k = sqrWave.getPeriod() * frequency;
 		float increment = k / sampleRate;
-		k2 = frequency / increment;
+//		k2 = frequency / increment;
 		currentIncrement = increment * channel.getBendFactor();
 		if ( !master ) currentIncrement *= vars.getTuningFactor();
 		width = vars.getWidth();
