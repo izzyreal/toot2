@@ -103,15 +103,30 @@ public class AudioMixerStrip extends AudioProcessChain {
         return mixer.getBus(getName()).getBuffer();
     }
 
+    private final int silenceCount = 100; // at least 100ms worth
+    private int silenceCountdown = silenceCount;
+    
 	protected boolean processBuffer() {
+		int ret = AUDIO_OK;
         if ( isChannel ) {
-			// fast exit if CHANNEL with no input
+			// fast exit if no input
         	if ( input == null ) return false;
-	        int ret = input.processAudio(buffer);
+	        ret = input.processAudio(buffer);
 	        checkMetaInfo(buffer.getMetaInfo());
+	        // fast exit if input disconnected
             if ( ret == AUDIO_DISCONNECT ) return false;
+            // fast exit if process convolution finished due to input silence
+            if ( ret == AUDIO_SILENCE && silenceCountdown == 0 ) return false;
         }
         processAudio(buffer);
+        if ( isChannel ) {
+        	if ( ret == AUDIO_SILENCE ) {
+        		if ( buffer.square() > 0.00000001f ) silenceCountdown = silenceCount;
+        		else silenceCountdown--;
+        	} else {
+        		silenceCountdown = silenceCount;
+        	}
+        }
         if ( directOutput != null ) {
             directOutput.processAudio(buffer);
         }
@@ -131,10 +146,8 @@ public class AudioMixerStrip extends AudioProcessChain {
             AudioMixerStrip routedStrip;
             if ( vars.getName().equals(mixer.getMainBus().getName()) ) {
                 routedStrip = mixer.getMainStrip();
-//                System.out.println(getName()+"/"+vars.getName()+" routing to "+routedStrip.getName());
                 return new MainMixProcess(routedStrip, (MainMixVariables)vars, mixer);
             } else {
-//                System.out.println(getName()+"/"+vars.getName()+" routing to "+vars.getName());
 				routedStrip = mixer.getStripImpl(vars.getName());
 	            return new MixProcess(routedStrip, vars);
             }
