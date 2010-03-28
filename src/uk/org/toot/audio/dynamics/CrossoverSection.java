@@ -33,6 +33,8 @@ class CrossoverSection
     public float getLeveldB() { return 0f; }
 
     public float getLevelFactor() { return 1.0f; }
+    
+    public boolean is4thOrder() { return false; }
 
     public void addObserver(Observer o) { control.addObserver(o); }
 

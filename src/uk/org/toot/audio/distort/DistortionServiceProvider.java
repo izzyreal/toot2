@@ -10,6 +10,7 @@ import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.AudioControls;
 
 import static uk.org.toot.misc.Localisation.*;
+import static uk.org.toot.audio.distort.DistortionIds.*;
 
 /**
  * Exposes distortion as a plugin service
@@ -20,17 +21,20 @@ public class DistortionServiceProvider extends TootAudioServiceProvider
     public DistortionServiceProvider() {
         super(getString("Distortion"), "0.1");
         String family = description;
-        addControls(Distort1Controls.class, DistortionIds.DISTORT1, 
-        	"OD", family, "0.1");
-        addControls(BitCrusherControls.class, DistortionIds.BIT_CRUSH, getString("BitCrush"), 
-        		family, "0.1");
-
+        
+        addControls(Distort1Controls.class, DISTORT1, "OD", family, "0.2");
+        addControls(PreampControls.class, PREAMP, getString("Preamp"), family, "0.1");
+        addControls(BitCrusherControls.class, BIT_CRUSH, getString("BitCrush"),	family, "0.1");
+        
         add(Distort1Process.class, "OD", family, "0.1");
+        add(PreampProcess.class, "Preamp", family, "0.1");
         add(BitCrusherProcess.class, getString("BitCrush"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
-        if ( c instanceof Distort1Variables ) {
+    	if ( c instanceof PreampVariables ) {
+        	return new PreampProcess((PreampVariables)c);
+    	} else if ( c instanceof Distort1Variables ) {
             return new Distort1Process((Distort1Variables)c);
         } else if ( c instanceof BitCrusherControls ) {
         	return new BitCrusherProcess((BitCrusherControls)c);

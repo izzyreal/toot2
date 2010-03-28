@@ -16,14 +16,14 @@ import static uk.org.toot.dsp.FastMath.tanh;
 /*
  * A distortion effect which uses oversampling to significantly reduce aliasing.
  */
-public class Distort1Process extends SimpleAudioProcess
+public class PreampProcess extends SimpleAudioProcess
 {
-	private Distort1Variables vars;
+	private PreampVariables vars;
 	private OverSampler overSampler;
-	private DCBlocker dc;
+	private DCBlocker dc, dc2;
 	private int sampleRate = -1;
 	
-	public Distort1Process(Distort1Variables vars) {
+	public PreampProcess(PreampVariables vars) {
 		this.vars = vars;
 	}
 
@@ -41,13 +41,9 @@ public class Distort1Process extends SimpleAudioProcess
 
 		overSampler = new FIROverSampler2(R, 2, ia, da); // !!! STEREO
 		dc = new DCBlocker();
+		dc2 = new DCBlocker();
 	}
 	
-	/**
-	 * Our rms 0dB is typically 0.1 so we multiply by 2 before applying the function,
-	 * which maxes out at output 1 for input 1. We also apply a variable input gain to allow the user to select
-	 * the sweet spot. Afterwards we divide by 10 to get back to our nominal 0dB. 
-	 */
 	public int processAudio(AudioBuffer buffer) {
 		if ( vars.isBypassed() ) return AUDIO_OK;
 		int srate = (int)buffer.getSampleRate();
@@ -57,11 +53,15 @@ public class Distort1Process extends SimpleAudioProcess
 		}
         int nsamples = buffer.getSampleCount();
         int nchans = buffer.getChannelCount() > 2 ? 2 : 1; // only mono or stereo
+        float bias2 = vars.getBias2();
+        float gain2 = vars.getGain2();
         float bias = vars.getBias();
         float gain = vars.getGain();
         float inverseGain = 1f / gain;
+        gain /= gain2;
         // attempt to maintain contant rms level as signal saturates
         if ( inverseGain < 0.2f ) inverseGain = 0.2f;
+        float master = vars.getMaster() * inverseGain;
         float[] samples;
         float[] upSamples;
         for ( int c = 0; c < nchans; c++ ) {
@@ -69,9 +69,9 @@ public class Distort1Process extends SimpleAudioProcess
         	for ( int s = 0; s < nsamples; s++ ) {
         		upSamples = overSampler.interpolate(bias + gain * samples[s], c);
         		for ( int i = 0; i < upSamples.length; i++ ) {
-        			upSamples[i] = tanh(upSamples[i]);
+        			upSamples[i] = tanh(bias2 - gain2 * dc2.block(tanh(upSamples[i])));
         		}
-        		samples[s] = dc.block(inverseGain * overSampler.decimate(upSamples, c));
+        		samples[s] = dc.block(-master * overSampler.decimate(upSamples, c));
         	}
         }
 		return AUDIO_OK;

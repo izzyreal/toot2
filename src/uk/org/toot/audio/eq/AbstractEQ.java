@@ -59,6 +59,9 @@ abstract public class AbstractEQ extends EQ
     protected void createEQ(EQ.Specification spec) {
     	for ( FilterSpecification fspec : spec.getFilterSpecifications() ) {
 			filters.add(createFilter(fspec));
+			if ( fspec.is4thOrder() ) {
+				filters.add(createFilter(fspec));				
+			}
 		}
     }
 

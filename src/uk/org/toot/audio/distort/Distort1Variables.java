@@ -4,4 +4,5 @@ public interface Distort1Variables
 {
 	boolean isBypassed();
 	float getGain();
+	float getBias();
 }

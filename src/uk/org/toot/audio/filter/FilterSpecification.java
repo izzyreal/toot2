@@ -16,6 +16,7 @@ public interface FilterSpecification
     float getResonance();
     float getLeveldB();
     float getLevelFactor(); // derived from LeveldB !!!
+    boolean is4thOrder();
 
     // partial declaration of Observable, which subclasses should generally extend
     void addObserver(Observer observer);

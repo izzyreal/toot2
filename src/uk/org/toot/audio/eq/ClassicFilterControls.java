@@ -122,6 +122,8 @@ public class ClassicFilterControls extends CompoundControl
 		return levelFactor;
     }
 
+    public boolean is4thOrder() { return false; }
+
     /**
      * A TypeControl concretizes EnumControl with filter types.
      */
@@ -168,4 +170,5 @@ public class ClassicFilterControls extends CompoundControl
         lev.setHidden(fixed);
         return lev;
     }
+	
 }

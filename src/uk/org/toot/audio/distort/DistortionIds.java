@@ -6,4 +6,5 @@ class DistortionIds
 {
 	public final static int DISTORT1 = DISTORT_BASE_ID; 
 	public final static int BIT_CRUSH = DISTORT_BASE_ID+1;
+	public final static int PREAMP = DISTORT_BASE_ID+1;
 }

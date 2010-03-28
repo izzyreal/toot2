@@ -65,4 +65,20 @@ public class FastMath
 		final double x = Double.doubleToLongBits(val) >> 32;
 		return (x - 1072632447) / 1512775;
 	}
+	
+	/**
+	 * pade-approximation to tanh.
+	 * @param x input
+	 * @return tanh of input
+	 */
+	public final static float tanh(float x) {
+		// clamping is advisable because |x| > 5 does cause very high output
+		// we clamp at 3 because that's where output is unity and C1/C2 continuous
+		if ( x < -3 ) return -1;
+		if ( x > 3 ) return 1;
+		final float x2 = x * x;
+		return x * (27 + x2) / (27 + 9 * x2);
+	}
+
+
 }
