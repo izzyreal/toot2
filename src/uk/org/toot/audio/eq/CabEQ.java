@@ -40,32 +40,26 @@ public class CabEQ extends AbstractSerialEQ
      */
     public static class Controls extends EQ.Controls
     {
-        private final static ControlLaw GAIN_LAW = new LinearLaw(-15, 15, "dB"); // lin(dB) is log(val) !
-        private final static ControlLaw Q_LAW = new LogLaw(0.5f, 2f, "");
-        private final static ControlLaw Q_LAW_2 = new LogLaw(0.5f, 10f, "");
-        private final static float Q = 1;
+        private final static ControlLaw GAIN_LAW = new LinearLaw(-15, 0, "dB"); // lin(dB) is log(val) !
+        private final static ControlLaw Q_LAW = new LogLaw(0.5f, 10f, "");
+        private final static ControlLaw Q_LAW_2 = new LogLaw(0.5f, 2f, "");
 
         public Controls() {
             super(EQIds.CAB_EQ_ID, getString("Cab.EQ"));
-            add(new ClassicFilterControls("Low", 4, // !!! !!!
+            add(new ClassicFilterControls("Thump", 0,
                 	FilterShape.HPF, true,
-                    40f, 320f, 100f, false,
-                    Q_LAW, Q, false,
+                    80f, 200f, 120f, false,
+                    Q_LAW_2, 1.5f, false,
                     GAIN_LAW, 0, true));
-            add(new ClassicFilterControls(getString("Lo.Mid"), 4,
+            add(new ClassicFilterControls(getString("Notch"), 4,
                 	FilterShape.PEQ, true,
-                    200f, 1000f, 400, false,
-                    Q_LAW_2, 1f, false,
-                    GAIN_LAW, 0f, false));
-            add(new ClassicFilterControls(getString("Hi.Mid"), 8,
-                	FilterShape.PEQ, true,
-                    1000f, 4000f, 2000, false,
-                    Q_LAW_2, 1f, false,
-                    GAIN_LAW, 0f, false));
-            add(new ClassicFilterControls("High", 0, // !!! !!!
+                    400f, 1600f, 800, false,
+                    Q_LAW, 10f, true,
+                    GAIN_LAW, -6f, false));
+            add(new ClassicFilterControls("Pres", 8,
                 	FilterShape.LPF, true,
-                    3000f, 5000f, 4000f, false,
-                    Q_LAW, Q, false,
+                    2000f, 4500f, 4000f, false,
+                    Q_LAW_2, 1.5f, false,
                     GAIN_LAW, 0, true) {
             			public boolean is4thOrder() { return true; }
             	}
