@@ -22,21 +22,21 @@ import static uk.org.toot.misc.Localisation.*;
 public class CabEQ extends AbstractSerialEQ
 {
     /**
-     * Create a CutEQ with default controls.
+     * Create a CabEQ with default controls.
      */
     public CabEQ() {
         this(new Controls());
     }
 
     /**
-     * Create a CutEQ with the specified controls.
+     * Create a CabEQ with the specified controls.
      */
     public CabEQ(Controls controls) {
         super(controls, true);
     }
 
     /**
-     * The controls for a CutEQ.
+     * The controls for a CabEQ.
      */
     public static class Controls extends EQ.Controls
     {

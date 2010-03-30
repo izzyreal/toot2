@@ -64,12 +64,15 @@ public class Distort1Process extends SimpleAudioProcess
         if ( inverseGain < 0.2f ) inverseGain = 0.2f;
         float[] samples;
         float[] upSamples;
+        float sample;
         for ( int c = 0; c < nchans; c++ ) {
         	samples = buffer.getChannel(c);
         	for ( int s = 0; s < nsamples; s++ ) {
         		upSamples = overSampler.interpolate(bias + gain * samples[s], c);
         		for ( int i = 0; i < upSamples.length; i++ ) {
-        			upSamples[i] = tanh(upSamples[i]);
+        			sample = tanh(upSamples[i]);
+        			sample += 0.1f * sample * sample; // 10% 2nd harmonic, like valves
+        			upSamples[i] = sample;
         		}
         		samples[s] = dc.block(inverseGain * overSampler.decimate(upSamples, c));
         	}
