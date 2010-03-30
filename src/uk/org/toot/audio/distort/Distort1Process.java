@@ -44,9 +44,11 @@ public class Distort1Process extends SimpleAudioProcess
 	}
 	
 	/**
-	 * Our rms 0dB is typically 0.1 so we multiply by 2 before applying the function,
-	 * which maxes out at output 1 for input 1. We also apply a variable input gain to allow the user to select
-	 * the sweet spot. Afterwards we divide by 10 to get back to our nominal 0dB. 
+	 * Our rms 0dB is typically 0.1 so we apply gain before applying the function,
+	 * which maxes out at output 1 for input 1. 
+	 * Afterwards we divide by applied gain to get back to our nominal 0dB, allowing
+	 * for the fact that heavy saturation means we don't get much louder beyond a
+	 * certain point. 
 	 */
 	public int processAudio(AudioBuffer buffer) {
 		if ( vars.isBypassed() ) return AUDIO_OK;

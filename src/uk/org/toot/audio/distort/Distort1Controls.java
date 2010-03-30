@@ -25,15 +25,15 @@ public class Distort1Controls extends AudioControls implements Distort1Variables
 	private static final int BIAS = 1;
 	
 	protected final static LinearLaw GAIN_LAW = new LinearLaw(0, 30, "dB");
-	protected final static LinearLaw BIAS_LAW = new LinearLaw(0, 0.5f, "");
+	protected final static LinearLaw BIAS_LAW = new LinearLaw(-0.5f, 0.5f, "");
 	
 	private FloatControl gainControl, biasControl;
 	
 	private float gain = 1f;
-	private float bias = 0f;
+	private float bias = -0.33f;
 	
 	public Distort1Controls() {
-		this(DistortionIds.DISTORT1, "OD");
+		this(DistortionIds.DISTORT1, "Drive");
 	}
 	
 	public Distort1Controls(int id, String name) {

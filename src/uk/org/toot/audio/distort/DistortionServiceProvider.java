@@ -22,19 +22,15 @@ public class DistortionServiceProvider extends TootAudioServiceProvider
         super(getString("Distortion"), "0.1");
         String family = description;
         
-        addControls(Distort1Controls.class, DISTORT1, "OD", family, "0.2");
-        addControls(PreampControls.class, PREAMP, getString("Preamp"), family, "0.1");
+        addControls(Distort1Controls.class, DISTORT1, getString("Drive"), family, "0.2");
         addControls(BitCrusherControls.class, BIT_CRUSH, getString("BitCrush"),	family, "0.1");
         
-        add(Distort1Process.class, "OD", family, "0.1");
-        add(PreampProcess.class, "Preamp", family, "0.1");
+        add(Distort1Process.class, "Drive", family, "0.1");
         add(BitCrusherProcess.class, getString("BitCrush"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
-    	if ( c instanceof PreampVariables ) {
-        	return new PreampProcess((PreampVariables)c);
-    	} else if ( c instanceof Distort1Variables ) {
+    	if ( c instanceof Distort1Variables ) {
             return new Distort1Process((Distort1Variables)c);
         } else if ( c instanceof BitCrusherControls ) {
         	return new BitCrusherProcess((BitCrusherControls)c);
