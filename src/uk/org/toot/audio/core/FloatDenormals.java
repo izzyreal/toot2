@@ -22,7 +22,7 @@ public class FloatDenormals
     /**
      * Detect a denormal float (excluding zero).
      */
-    public static boolean isDenormal(float x) {
+    public final static boolean isDenormal(float x) {
         return x != 0f && abs(x) < THRESHOLD;
     }
 
@@ -30,21 +30,21 @@ public class FloatDenormals
      * Detect a denormal (or zero) float.
      * Faster than isDenormal() if appropriate.
      */
-    public static boolean isDenormalOrZero(float x) {
+    public final static boolean isDenormalOrZero(float x) {
         return abs(x) < THRESHOLD;
     }
 
     /**
      * Replace a denormal float with zero.
      */
-    public static float zeroDenorm(float x) {
+    public final static float zeroDenorm(float x) {
         return abs(x) < THRESHOLD ? 0f : x;
     }
 
     /**
      * Replace denormal floats in an array with zeros.
      */
-    public static void zeroDenorms(float[] array, int len) {
+    public final static void zeroDenorms(float[] array, int len) {
         for ( int i = 0; i < len; i++ ) {
             array[i] = zeroDenorm(array[i]);
         }
@@ -53,7 +53,7 @@ public class FloatDenormals
     /**
      * Count denormal floats in an array.
      */
-    public static int countDenorms(float[] array, int len) {
+    public final static int countDenorms(float[] array, int len) {
         int count = 0;
         for ( int i = 0; i < len; i++ ) {
             if ( isDenormal(array[i]) ) count++;
