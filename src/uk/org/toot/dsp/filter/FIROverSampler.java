@@ -93,4 +93,15 @@ public class FIROverSampler extends OverSampler
         }
 		return y;
 	}
+    
+    public void clear() {
+        for ( int c = 0; c < NC; c++ ) {
+            for ( int i = 0; i < nitaps; i++ ) {
+                ix[c][i] = 0f;
+            }
+            for ( int d = 0; d < ndtaps; d++ ) {
+                dx[c][d] = 0;
+            }
+        }
+    }
 }

@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class FIROverSampler2 extends OverSampler
 {
 	private int nitaps, ndtaps; // number of taps, interpolation/decimation
-	private int ih, dh;			// heads of x, interpolation/decimation
+	private int[] ih, dh;		// heads of history, per channel, interpolation/decimation
 	private float[][] ix, dx;	// history, per channel, interpolation/decimation
 	private float[] ia, da;		// filter coefficients, interpolation/decimation
 	private float[] isamples;
@@ -32,11 +32,13 @@ public class FIROverSampler2 extends OverSampler
 		ia = iCoeffs;
 		nitaps = ia.length;
 		ix = new float[NC][nitaps];
+        ih = new int[NC];
 		isamples = new float[R];
 		// setup decimation
 		da = dCoeffs;
 		ndtaps = da.length;
 		dx = new float[NC][ndtaps];
+        dh = new int[NC];
 	}
 
 	/**
@@ -50,14 +52,16 @@ public class FIROverSampler2 extends OverSampler
 	public float[] interpolate(float sample, int nchan) {
 		assert nchan >= 0 && nchan < NC;
 		float[] x = ix[nchan];
+        int h = ih[nchan];
+        assert h >= 0 && h < nitaps;
 		Arrays.fill(isamples, 0);
 		isamples[0] = sample * R;		// compensate for interpolation loss!
-		int k0 = ih > 0 ? ih-1 : nitaps-1;	// index of the non-zero sample
+		int k0 = h > 0 ? h-1 : nitaps-1;	// index of the non-zero sample
 		int i = 0;
 		while ( i < R ) {
 	        // insert a new sample
-			if ( ih == 0 ) ih = nitaps;
-			x[--ih] = isamples[i];
+			if ( h == 0 ) h = nitaps;
+			x[--h] = isamples[i];
 			// derive an output sample
 			float y = 0;
 			int j = 0;
@@ -75,6 +79,7 @@ public class FIROverSampler2 extends OverSampler
 			}
 	        isamples[i++] = y;
 		}
+        ih[nchan] = h;
 		return isamples;
 	}
 
@@ -87,23 +92,24 @@ public class FIROverSampler2 extends OverSampler
 	public float decimate(float[] samples, int nchan) {
 		assert samples.length == R;
 		assert nchan >= 0 && nchan < NC;
-		assert dh >= 0 && dh < ndtaps;
+        int h = dh[nchan];
+		assert h >= 0 && h < ndtaps;
 		float[] x = dx[nchan];
 		// insert R new samples
 		int i = 0;
-		if ( dh < R ) {
-			while ( dh > 0 ) {			// 0 .. R-1 iterations before wrap
-				x[--dh] = samples[i++];
+		if ( h < R ) {
+			while ( h > 0 ) {			// 0 .. R-1 iterations before wrap
+				x[--h] = samples[i++];
 			}
-			dh = ndtaps;				// wrap for predecrement
+			h = ndtaps;				// wrap for predecrement
 		}
 		while ( i < R ) {
-			x[--dh] = samples[i++];		// R .. 1 iterations	
+			x[--h] = samples[i++];		// R .. 1 iterations	
 		}			
 		// output decimated sample
 		float y = 0;
 		int j = 0;
-		int k = dh;
+		int k = h;
 		while ( k < ndtaps ) {
 			y += da[j++] * x[k++];		// 1 .. ndtaps iterations
 		}
@@ -111,6 +117,18 @@ public class FIROverSampler2 extends OverSampler
 		while ( j < ndtaps ) {
 			y += da[j++] * x[k++];		// ndtaps-1 .. 0 iterations
 		}
+        dh[nchan] = h;
 		return y;
 	}
+    
+    public void clear() {
+        for ( int c = 0; c < NC; c++ ) {
+            for ( int i = 0; i < nitaps; i++ ) {
+                ix[c][i] = 0f;
+            }
+            for ( int d = 0; d < ndtaps; d++ ) {
+                dx[c][d] = 0;
+            }
+        }
+    }
 }

@@ -23,4 +23,6 @@ public abstract class OverSampler
 	abstract public float[] interpolate(float sample, int nchan);
 	
 	abstract public float decimate(float[] samples, int nchan);
+    
+    abstract public void clear();
 }
