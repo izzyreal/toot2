@@ -20,11 +20,13 @@ public class Distort1Process extends SimpleAudioProcess
 {
 	private Distort1Variables vars;
 	private OverSampler overSampler;
-	private DCBlocker dc;
-	private int sampleRate = -1;
+	private DCBlocker[] blocker;
+	private int sampleRate = 44100;
+    private boolean wasBypassed;
 	
 	public Distort1Process(Distort1Variables vars) {
 		this.vars = vars;
+        design();
 	}
 
 	private void design() {
@@ -40,7 +42,9 @@ public class Distort1Process extends SimpleAudioProcess
 		float[] da = FIRDesigner.designLowPass(FD/NO, (NN-FD)/NO, A);
 
 		overSampler = new FIROverSampler2(R, 2, ia, da); // !!! STEREO
-		dc = new DCBlocker();
+        blocker = new DCBlocker[2];
+		blocker[0] = new DCBlocker();
+        blocker[1] = new DCBlocker();
 	}
 	
 	/**
@@ -51,32 +55,42 @@ public class Distort1Process extends SimpleAudioProcess
 	 * certain point. 
 	 */
 	public int processAudio(AudioBuffer buffer) {
-		if ( vars.isBypassed() ) return AUDIO_OK;
+        boolean bypassed = vars.isBypassed();
+        if ( bypassed ) {
+            if ( !wasBypassed ) {
+                overSampler.clear(); // clear oversampler histories
+                wasBypassed = true;
+            }
+            return AUDIO_OK;
+        }
+        wasBypassed = bypassed;
 		int srate = (int)buffer.getSampleRate();
 		if ( srate != sampleRate ) {
 			sampleRate = srate;
 			design();
 		}
         int nsamples = buffer.getSampleCount();
-        int nchans = buffer.getChannelCount() > 2 ? 2 : 1; // only mono or stereo
+        int nchans = buffer.getChannelCount() > 1 ? 2 : 1; // only mono or stereo
         float bias = vars.getBias();
         float gain = vars.getGain();
         float inverseGain = 1f / gain;
         // attempt to maintain contant rms level as signal saturates
-        if ( inverseGain < 0.2f ) inverseGain = 0.2f;
+        if ( inverseGain < 0.1f ) inverseGain = 0.1f;
         float[] samples;
         float[] upSamples;
         float sample;
+        DCBlocker dc;
         for ( int c = 0; c < nchans; c++ ) {
         	samples = buffer.getChannel(c);
+            dc = blocker[c];
         	for ( int s = 0; s < nsamples; s++ ) {
-        		upSamples = overSampler.interpolate(bias + gain * samples[s], c);
+        		upSamples = overSampler.interpolate(gain * samples[s], c);
         		for ( int i = 0; i < upSamples.length; i++ ) {
-        			sample = tanh(upSamples[i]);
+        			sample = tanh(bias + upSamples[i]);
         			sample += 0.1f * sample * sample; // 10% 2nd harmonic, like valves
         			upSamples[i] = sample;
         		}
-        		samples[s] = dc.block(inverseGain * overSampler.decimate(upSamples, c));
+        		samples[s] = inverseGain * dc.block(overSampler.decimate(upSamples, c));
         	}
         }
 		return AUDIO_OK;
