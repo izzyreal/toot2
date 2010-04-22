@@ -21,7 +21,7 @@ import static uk.org.toot.misc.Localisation.*;
 public class TrimControls extends AudioControls
 {
 	private static LinearLaw TRIM_LAW = new LinearLaw(-20f, 20f, "dB");
-	private float trim;
+	private float trim = 1f;
 	
 	public TrimControls() {
 		super(TRIM, getString("Trim"));
