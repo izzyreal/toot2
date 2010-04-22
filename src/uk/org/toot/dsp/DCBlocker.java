@@ -15,4 +15,8 @@ public class DCBlocker
 		p = m;
 		return y;
 	}
+    
+    public void clear() {
+        p = 0;
+    }
 }
