@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.filter;
 
-import uk.org.toot.dsp.filter.FIRDesigner;
+import uk.org.toot.dsp.filter.FIRDesignerKW;
 
 public class FIRDesign extends AbstractFilterDesign
 {
@@ -47,10 +47,12 @@ public class FIRDesign extends AbstractFilterDesign
 
     public void design(int sampleRate) {
         float fNyquist = sampleRate / 2f;
-        a = FIRDesigner.design( 
+        a = FIRDesignerKW.design( 
         		spec.getShape(),
-        		spec.getFrequency() / fNyquist, 
-        		getTransitionBandwidth() / fNyquist, 
+                0f,
+        		(float)spec.getFrequency(), 
+        		getTransitionBandwidth(),
+                fNyquist, 
         		getAttenuation(),
         		getOrder()
         		);

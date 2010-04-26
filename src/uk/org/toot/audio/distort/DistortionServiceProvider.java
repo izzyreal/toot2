@@ -23,9 +23,11 @@ public class DistortionServiceProvider extends TootAudioServiceProvider
         String family = description;
         
         addControls(Distort1Controls.class, DISTORT1, getString("Drive"), family, "0.2");
+        addControls(GuitarAmpControls.class, GUITAR_AMP, getString("Guitar.Amp"), family, "0.1");
         addControls(BitCrusherControls.class, BIT_CRUSH, getString("BitCrush"),	family, "0.1");
         
-        add(Distort1Process.class, "Drive", family, "0.1");
+        add(Distort1Process.class, getString("Drive"), family, "0.1");
+        add(GuitarAmpProcess.class, getString("Guitar.Amp"), family, "0.1");
         add(BitCrusherProcess.class, getString("BitCrush"), family, "0.1");
     }
 
@@ -34,6 +36,8 @@ public class DistortionServiceProvider extends TootAudioServiceProvider
             return new Distort1Process((Distort1Variables)c);
         } else if ( c instanceof BitCrusherControls ) {
         	return new BitCrusherProcess((BitCrusherControls)c);
+        } else if ( c instanceof GuitarAmpProcess.Variables ) {
+            return new GuitarAmpProcess((GuitarAmpProcess.Variables)c);
         }
         return null; // caller then tries another provider
     }

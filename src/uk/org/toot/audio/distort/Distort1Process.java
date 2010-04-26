@@ -8,9 +8,8 @@ package uk.org.toot.audio.distort;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
 import uk.org.toot.dsp.DCBlocker;
-import uk.org.toot.dsp.filter.FIRDesigner;
-import uk.org.toot.dsp.filter.FIROverSampler2;
-import uk.org.toot.dsp.filter.OverSampler;
+import uk.org.toot.dsp.filter.*;
+
 import static uk.org.toot.dsp.FastMath.tanh;
 
 /*
@@ -30,16 +29,18 @@ public class Distort1Process extends SimpleAudioProcess
 	}
 
 	private void design() {
-		final int R = 8;				// oversample Rate
-		final int A = 60;				// Attenuation
-		final int NN = sampleRate / 2;	// Nyquist Normal
-		final int NO = NN * R;			// Nyquist Oversampled
+		final int R = 4;				// oversample Rate
 		
-		final float FI = 7000f;		
-		float[] ia = FIRDesigner.designLowPass(FI/NO, (NN-FI)/NO, A);
+        FIRSpecification s = new FIRSpecification();
+        s.f1 = 0; s.fN = R * sampleRate / 2; s.dBatten = 60;
+
+        s.f2 = 9000; s.ft = 20000-s.f2;	s.mod = R; s.order = -1;	
+		float[] ia = FIRDesignerPM.design(s); // KW 51 taps, PM 32 taps (7000)
 		
-		final float FD = 14000f;
-		float[] da = FIRDesigner.designLowPass(FD/NO, (NN-FD)/NO, A);
+		s.f2 = 14000; s.ft = 20000-s.f2; s.mod = 0; s.order = -1;
+		float[] da = FIRDesignerPM.design(s); // KW 109 taps, PM 61 taps
+
+//        System.out.println("Distort1Process: ia["+ia.length+"], da["+da.length+"]");
 
 		overSampler = new FIROverSampler2(R, 2, ia, da); // !!! STEREO
         blocker = new DCBlocker[2];

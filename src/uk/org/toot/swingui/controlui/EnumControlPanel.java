@@ -73,6 +73,10 @@ public class EnumControlPanel extends ControlPanel
         add(button);
     }
 
+    protected String abbreviate(String string) {
+        return control.getWidthLimit() > 100 ? string : super.abbreviate(string);
+    }
+    
     public void addNotify() {
         super.addNotify();
    	    button.addActionListener(buttonListener);

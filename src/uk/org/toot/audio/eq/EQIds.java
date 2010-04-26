@@ -17,4 +17,5 @@ class EQIds
     final static int CUT_EQ_ID = EQ_BASE_ID + 3;
     final static int FORMANT_EQ_ID = EQ_BASE_ID + 4;
     final static int CAB_EQ_ID = EQ_BASE_ID + 5;
+    final static int TONE_STACK_EQ_ID = EQ_BASE_ID + 6;
 }

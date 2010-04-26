@@ -24,12 +24,14 @@ public class EQServiceProvider extends TootAudioServiceProvider
         addControls(CutEQ.Controls.class, EQIds.CUT_EQ_ID, getString("Cut.EQ"), family, "0.1");
         addControls(FormantEQ.Controls.class, EQIds.FORMANT_EQ_ID, getString("Formant.EQ"), family, "0.1");
         addControls(CabEQ.Controls.class, EQIds.CAB_EQ_ID, getString("Cab.EQ"), family, "0.1");
+//        addControls(ToneStackEQControls.class, EQIds.TONE_STACK_EQ_ID, getString("Tone.Stack.EQ"), family, "0.1");
 
         add(ParametricEQ.class, getString("Parametric.EQ"), family, "0.2");
         add(GraphicEQ.class, getString("Graphic.EQ"), family, "0.2");
         add(CutEQ.class, getString("Cut.EQ"), family, "0.1");
         add(FormantEQ.class, getString("Formant.EQ"), family, "0.1");
         add(CabEQ.class, getString("Cab.EQ"), family, "0.1");
+//        add(ToneStackEQProcess.class, getString("Tone.Stack.EQ"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -43,6 +45,8 @@ public class EQServiceProvider extends TootAudioServiceProvider
             return new FormantEQ((FormantEQ.Controls)c);
         } else if ( c instanceof CabEQ.Controls ) {
             return new CabEQ((CabEQ.Controls)c);
+        } else if ( c instanceof ToneStackEQProcess.Variables ) {
+            return new ToneStackEQProcess((ToneStackEQProcess.Variables)c);
         }
         return null; // caller then tries another provider
     }
