@@ -45,11 +45,18 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             "0.1",
             ChannelFormat.MONO,
             null);
-
+        addControls(
+            CabMicingControls.class,
+            DelayIds.CAB_MICING_ID,
+            getString("Cab.Micing"),
+            family,
+            "0.1");
+        
         add(ModulatedDelayProcess.class, getString("Modulated.Delay"), family, "0.2");
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
         add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.2");
         add(PhaserProcess.class, getString("Phaser"), family, "0.1");
+        add(CabMicingProcess.class, getString("Cab.Micing"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -61,6 +68,8 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         	return new TempoDelayProcess((TempoDelayControls)c);
         } else if ( c instanceof PhaserControls ) {
         	return new PhaserProcess((PhaserControls)c);
+        } else if ( c instanceof CabMicingProcess.Variables ) {
+            return new CabMicingProcess((CabMicingProcess.Variables)c);
         }
         return null; // caller then tries another provider
     }

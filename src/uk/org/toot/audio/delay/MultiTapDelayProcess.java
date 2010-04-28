@@ -66,6 +66,7 @@ public class MultiTapDelayProcess implements AudioProcess
 
         buffer.monoToStereo();
         float sampleRate = buffer.getSampleRate();
+        float samplesPerMilli = sampleRate * 0.001f;
         int ns = buffer.getSampleCount();
         int nc = buffer.getChannelCount();
 
@@ -74,7 +75,7 @@ public class MultiTapDelayProcess implements AudioProcess
 
         if ( delayBuffer == null ) {
 	        delayBuffer = new DelayBuffer(nc,
-                msToSamples(vars.getMaxDelayMilliseconds(), sampleRate),
+                (int)(vars.getMaxDelayMilliseconds() * samplesPerMilli),
                 sampleRate);
         } else {
             delayBuffer.conform(buffer);
@@ -102,7 +103,7 @@ public class MultiTapDelayProcess implements AudioProcess
 	        for ( DelayTap tap : vars.getTaps(c2) ) {
 	            float level = tap.getLevel();
     	        if ( level < 0.001 ) continue; // insignificant optimisation
-				int delay = (int)msToSamples(tap.getDelayMilliseconds()*delayFactor, sampleRate);
+				int delay = (int)(tap.getDelayMilliseconds()*delayFactor*samplesPerMilli);
             	if ( delay < ns ) continue; // can't evaluate. push down to called method?
     			delayBuffer.tap(c, tappedBuffer, delay, level); // optimised mix
 			}
@@ -127,10 +128,6 @@ public class MultiTapDelayProcess implements AudioProcess
         tappedBuffer = null;
     }
 
-    protected int msToSamples(float ms, float sr) {
-        return (int)((ms * sr) / 1000); // !!! !!! move elsewhere
-    }
-    
     public interface Variables extends DelayVariables
     {
 
