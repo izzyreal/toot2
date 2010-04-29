@@ -13,4 +13,5 @@ class ToolIds
     final static int NAN_TECTOR_ID = TOOL_BASE_ID + 2;
     final static int FORMAT_ID = TOOL_BASE_ID + 3;
     final static int NOISE_ID = TOOL_BASE_ID + 4;
+    final static int MONO_ID = TOOL_BASE_ID + 5;
 }
