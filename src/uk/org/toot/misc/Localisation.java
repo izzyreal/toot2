@@ -52,6 +52,7 @@ public class Localisation
         try {
             return strings.getString(key);
         } catch(Exception e) {
+            System.out.println(key);
             return key.replace('.', ' ');
         }
     }

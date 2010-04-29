@@ -378,13 +378,13 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         private CompoundControl control;
 
         public SaveAction(CompoundControl control) {
-            super(getString("Save.Preset.As"+"..."));
+            super(getString("Save.Preset.As")+"...");
             this.control = control;
         }
 
     	public void actionPerformed(ActionEvent e) {
             String name = JOptionPane.showInputDialog(
-                						getString("Save.Preset.As"+"..."));
+                						getString("Save.Preset.As")+"...");
             if ( name != null ) {
             	CompoundControl.getPersistence().savePreset(control, name);
             }
