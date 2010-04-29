@@ -17,7 +17,7 @@ import static uk.org.toot.audio.core.FloatDenormals.*;
  */
 public class PhaserProcess extends SimpleAudioProcess
 {
-	private final static int N = 6;
+	private final static int N = 12;
 	
 	private AllPass[] allpass = new AllPass[N];
 	private float zm1 = 0f;			// previous output
@@ -46,6 +46,7 @@ public class PhaserProcess extends SimpleAudioProcess
             sampleRate = sr;
         }
         
+        int n = vars.getStages();
         float depth = vars.getDepth();
         float fb = vars.getFeedback();
         float _lfoInc = 2 * (float)Math.PI * (vars.getRate() / sampleRate);
@@ -60,7 +61,7 @@ public class PhaserProcess extends SimpleAudioProcess
             // calculate allpass output
         	a1 = (1f - d) / (1f + d);
             float y = samples[i] + zm1 * fb; 
-            for ( int a = 0; a < N; a++ ) {
+            for ( int a = 0; a < n; a++ ) {
             	y = allpass[a].update(y);
             }
             zm1 = zeroDenorm(y);
@@ -84,6 +85,7 @@ public class PhaserProcess extends SimpleAudioProcess
 	public interface Variables
 	{
 		boolean isBypassed();
+        int getStages();
 		float getRate();		// Hz
 		float getDepth();		// 0..1
 		float getFeedback();	// 0..1
