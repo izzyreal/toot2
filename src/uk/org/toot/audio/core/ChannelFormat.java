@@ -112,10 +112,11 @@ public abstract class ChannelFormat
         int dnc = destBuffer.getChannelCount();
       	int ns = destBuffer.getSampleCount();
         float g;
+        float k = (float)(snc)/dnc; // conserve power for snc != dnc
         float[] in;
         float[] out;
         for ( int i = 0; i < dnc; i++ ) {
-            g = gain[i];
+            g = gain[i] * k;
             in = sourceBuffer.getChannel(i % snc); // OK for 1, 2, 4, 8
 	       	out = destBuffer.getChannel(i);
 			if ( doMix ) { // one branch per channel
