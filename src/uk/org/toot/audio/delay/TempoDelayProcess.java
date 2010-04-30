@@ -60,7 +60,11 @@ public class TempoDelayProcess implements AudioProcess
     }
 
     public void open() {
-		support.addTempoListener(tempoListener);
+		if ( support != null ) {
+            support.addTempoListener(tempoListener);
+        } else {
+            System.out.println("Plugin.setPluginSupport() has not been called, TempoDelayProcess can't listen for Tempo!");
+        }
         // defer delay buffer allocation until sample rate known
     }
 
@@ -151,7 +155,9 @@ public class TempoDelayProcess implements AudioProcess
     public void close() {
         delayBuffer = null;
         tappedBuffer = null;
-		support.removeTempoListener(tempoListener);
+        if ( support != null ) {
+            support.removeTempoListener(tempoListener);
+        }
     }
 
     protected int msToSamples(float ms, float sr) {
