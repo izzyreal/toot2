@@ -40,7 +40,7 @@ public class UnisonControls extends CompoundControl implements UnisonVariables
 	private float phaseSpread;
 
 	public UnisonControls(final int idOffset) {
-		super(UNISON_ID, 0, getString("Unsion"));
+		super(UNISON_ID, 0, getString("Unison"));
 		this.idOffset = idOffset;
 		createControls();
 		deriveSampleRateIndependentVariables();
