@@ -32,10 +32,10 @@ public class DistortionServiceProvider extends TootAudioServiceProvider
     }
 
     public AudioProcess createProcessor(AudioControls c) {
-    	if ( c instanceof Distort1Variables ) {
-            return new Distort1Process((Distort1Variables)c);
-        } else if ( c instanceof BitCrusherControls ) {
-        	return new BitCrusherProcess((BitCrusherControls)c);
+    	if ( c instanceof Distort1Process.Variables ) {
+            return new Distort1Process((Distort1Process.Variables)c);
+        } else if ( c instanceof BitCrusherProcess.Variables ) {
+        	return new BitCrusherProcess((BitCrusherProcess.Variables)c);
         } else if ( c instanceof GuitarAmpProcess.Variables ) {
             return new GuitarAmpProcess((GuitarAmpProcess.Variables)c);
         }

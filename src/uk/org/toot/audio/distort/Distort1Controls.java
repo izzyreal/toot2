@@ -19,7 +19,7 @@ import static uk.org.toot.misc.Localisation.getString;
 /**
  * @author st
  */
-public class Distort1Controls extends AudioControls implements Distort1Variables
+public class Distort1Controls extends AudioControls implements Distort1Process.Variables
 {
 	private static final int GAIN = 0;
 	private static final int BIAS = 1;

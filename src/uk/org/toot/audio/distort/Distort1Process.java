@@ -17,13 +17,13 @@ import static uk.org.toot.dsp.FastMath.tanh;
  */
 public class Distort1Process extends SimpleAudioProcess
 {
-	private Distort1Variables vars;
+	private Variables vars;
 	private OverSampler overSampler;
 	private DCBlocker[] blocker;
 	private int sampleRate = 44100;
     private boolean wasBypassed;
 	
-	public Distort1Process(Distort1Variables vars) {
+	public Distort1Process(Variables vars) {
 		this.vars = vars;
         design();
 	}
@@ -96,4 +96,11 @@ public class Distort1Process extends SimpleAudioProcess
         }
 		return AUDIO_OK;
 	}	
+    
+    public interface Variables
+    {
+        boolean isBypassed();
+        float getGain();
+        float getBias();
+    }
 }
