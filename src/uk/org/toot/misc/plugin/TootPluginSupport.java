@@ -6,9 +6,7 @@
 package uk.org.toot.misc.plugin;
 
 import uk.org.toot.misc.Tempo;
-import uk.org.toot.misc.TempoListener;
 import uk.org.toot.misc.TimeSignature;
-import uk.org.toot.misc.TimeSignatureListener;
 import uk.org.toot.transport.Transport;
 import uk.org.toot.transport.TransportListener;
 
@@ -37,7 +35,7 @@ public class TootPluginSupport extends BasicPluginSupport
 		);
 		
 		Tempo.addTempoListener(
-			new TempoListener() {
+			new Tempo.Listener() {
 				public void tempoChanged(float newTempo) {
 					TootPluginSupport.this.tempoChanged(newTempo);
 				}				
@@ -45,7 +43,7 @@ public class TootPluginSupport extends BasicPluginSupport
 		);
 
 		TimeSignature.addTimeSignatureListener(
-				new TimeSignatureListener() {
+				new TimeSignature.Listener() {
 					public void timeSignatureChanged(int numerator, int denominator) {
 						TootPluginSupport.this.timeSignatureChanged(numerator, denominator);
 					}				

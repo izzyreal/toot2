@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class TimeSignature
 {
-	private static List<TimeSignatureListener> listeners = new java.util.ArrayList<TimeSignatureListener>();
+	private static List<Listener> listeners = new java.util.ArrayList<Listener>();
 	private static int numerator = 4;
 	private static int denominator = 4;
 	
@@ -30,19 +30,31 @@ public class TimeSignature
 	public static void setTimeSignature(int aNumerator, int aDenominator) {
 		numerator = aNumerator;
 		denominator = aDenominator;
-		for ( TimeSignatureListener l : listeners ) {
+		for ( Listener l : listeners ) {
 			l.timeSignatureChanged(numerator, denominator);
 		}
 	}
 	
-	public static void addTimeSignatureListener(TimeSignatureListener listener) {
+	public static void addTimeSignatureListener(Listener listener) {
 		if ( listener == null ) return;
 		listeners.add(listener);
 		listener.timeSignatureChanged(numerator, denominator);
 	}
 	
-	public static void removeTimeSignatureListener(TimeSignatureListener listener) {
+	public static void removeTimeSignatureListener(Listener listener) {
 		if ( listener == null ) return;		
 		listeners.remove(listener);
 	}
+    
+    /**
+     * A plugin wishing to receive time signature change notifications should implement this
+     * interface and add (and remove) it using PluginSupport.
+     * @author st
+     *
+     */
+    public interface Listener
+    {
+        void timeSignatureChanged(int numerator, int denominator);
+    }
+
 }

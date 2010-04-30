@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Tempo
 {
-	private static List<TempoListener> listeners = new java.util.ArrayList<TempoListener>();
+	private static List<Listener> listeners = new java.util.ArrayList<Listener>();
 	private static float tempo = 123f;
 	
 	private Tempo() {} // prevent instantiation
@@ -24,19 +24,25 @@ public class Tempo
 	
 	public static void setTempo(float newTempo) {
 		tempo = newTempo;
-		for ( TempoListener l : listeners ) {
+		for ( Listener l : listeners ) {
 			l.tempoChanged(newTempo);
 		}
 	}
 	
-	public static void addTempoListener(TempoListener listener) {
+	public static void addTempoListener(Listener listener) {
 		if ( listener == null ) return;
 		listeners.add(listener);
 		listener.tempoChanged(tempo);
 	}
 	
-	public static void removeTempoListener(TempoListener listener) {
+	public static void removeTempoListener(Listener listener) {
 		if ( listener == null ) return;		
 		listeners.remove(listener);
 	}
+    
+    public interface Listener
+    {
+        void tempoChanged(float newTempo);
+    }
+
 }

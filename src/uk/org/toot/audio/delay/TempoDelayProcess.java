@@ -10,7 +10,7 @@ import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.dsp.FastMath;
 import uk.org.toot.misc.plugin.Plugin;
 import uk.org.toot.misc.plugin.PluginSupport;
-import uk.org.toot.misc.TempoListener;
+import uk.org.toot.misc.Tempo;
 
 /**
  * A Tempo linked Delay Process
@@ -31,7 +31,7 @@ public class TempoDelayProcess implements AudioProcess
     private DelayBuffer tappedBuffer; // just for conform()
 
     private PluginSupport support;
-	private TempoListener tempoListener;
+	private Tempo.Listener tempoListener;
 
 	/**
      * @link aggregation
@@ -51,7 +51,7 @@ public class TempoDelayProcess implements AudioProcess
         this.vars = vars;
         wasBypassed = !vars.isBypassed(); // force update
 		support = Plugin.getPluginSupport();
-		tempoListener = new TempoListener() {
+		tempoListener = new Tempo.Listener() {
 			public void tempoChanged(float newTempo) {
 				bpm = newTempo;				
 			}			

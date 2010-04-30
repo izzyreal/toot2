@@ -7,8 +7,8 @@ package uk.org.toot.misc.plugin;
 
 import java.util.List;
 
-import uk.org.toot.misc.TimeSignatureListener;
-import uk.org.toot.misc.TempoListener;
+import uk.org.toot.misc.TimeSignature;
+import uk.org.toot.misc.Tempo;
 
 /**
  * A basic implementation of PluginSupport that may be sufficient if an application
@@ -21,35 +21,35 @@ import uk.org.toot.misc.TempoListener;
  *
  */
 public class BasicPluginSupport implements 
-	PluginSupport, TempoListener, TimeSignatureListener, PluginTransportListener
+	PluginSupport, Tempo.Listener, TimeSignature.Listener, PluginTransportListener
 {
-	private List<TempoListener> tempoListeners = new java.util.ArrayList<TempoListener>();
-	private List<TimeSignatureListener> timeSignatureListeners = new java.util.ArrayList<TimeSignatureListener>();
+	private List<Tempo.Listener> tempoListeners = new java.util.ArrayList<Tempo.Listener>();
+	private List<TimeSignature.Listener> timeSignatureListeners = new java.util.ArrayList<TimeSignature.Listener>();
 	private List<PluginTransportListener> transportListeners = new java.util.ArrayList<PluginTransportListener>();
 
 	private float prevTempo = 120f;
 	private int prevNumerator = 4;
 	private int prevDenominator = 4;
 	
-	public void addTempoListener(TempoListener listener) {
+	public void addTempoListener(Tempo.Listener listener) {
 		if ( listener == null ) return;
 		tempoListeners.add(listener);
 		listener.tempoChanged(prevTempo);
 	}
 
-	public void removeTempoListener(TempoListener listener) {
+	public void removeTempoListener(Tempo.Listener listener) {
 		if ( listener == null ) return;
 		tempoListeners.remove(listener);
 	}
 
-	public void addTimeSignatureListener(TimeSignatureListener listener) {
+	public void addTimeSignatureListener(TimeSignature.Listener listener) {
 		if ( listener == null ) return;
 		timeSignatureListeners.add(listener);
 		listener.timeSignatureChanged(prevNumerator, prevDenominator);
 		
 	}
 
-	public void removeTimeSignatureListener(TimeSignatureListener listener) {
+	public void removeTimeSignatureListener(TimeSignature.Listener listener) {
 		// TODO Auto-generated method stub
 		if ( listener == null ) return;
 		timeSignatureListeners.remove(listener);		
@@ -66,14 +66,14 @@ public class BasicPluginSupport implements
 	}
 
 	public void tempoChanged(float newTempo) {
-		for ( TempoListener l : tempoListeners ) {
+		for ( Tempo.Listener l : tempoListeners ) {
 			l.tempoChanged(newTempo);
 		}
 		prevTempo = newTempo;
 	}
 
 	public void timeSignatureChanged(int numerator, int denominator) {
-		for ( TimeSignatureListener l : timeSignatureListeners ) {
+		for ( TimeSignature.Listener l : timeSignatureListeners ) {
 			l.timeSignatureChanged(numerator, denominator);
 		}
 		prevNumerator = numerator;

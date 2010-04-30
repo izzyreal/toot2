@@ -5,8 +5,8 @@
 
 package uk.org.toot.misc.plugin;
 
-import uk.org.toot.misc.TimeSignatureListener;
-import uk.org.toot.misc.TempoListener;
+import uk.org.toot.misc.TimeSignature;
+import uk.org.toot.misc.Tempo;
 
 /**
  * An interface that specifies the support required by plugins to receive
@@ -23,11 +23,11 @@ import uk.org.toot.misc.TempoListener;
  */
 public interface PluginSupport
 {
-	void addTempoListener(TempoListener listener);
-	void removeTempoListener(TempoListener listener);
+	void addTempoListener(Tempo.Listener listener);
+	void removeTempoListener(Tempo.Listener listener);
 	
-	void addTimeSignatureListener(TimeSignatureListener listener);
-	void removeTimeSignatureListener(TimeSignatureListener listener);
+	void addTimeSignatureListener(TimeSignature.Listener listener);
+	void removeTimeSignatureListener(TimeSignature.Listener listener);
 
 	void addTransportListener(PluginTransportListener listener);
 	void removeTransportListener(PluginTransportListener listener);
