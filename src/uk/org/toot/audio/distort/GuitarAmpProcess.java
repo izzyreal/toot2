@@ -81,6 +81,7 @@ public class GuitarAmpProcess extends SimpleAudioProcess
         float gain2 = vars.getGain2();
         float inverseGain2 = 1f / gain2;
         if ( inverseGain2 < 0.1f ) inverseGain2 = 0.1f;
+        inverseGain2 *= vars.getMaster();
         float[] upSamples;
         float sample;
         float[] samples = buffer.getChannel(0);
@@ -113,6 +114,7 @@ public class GuitarAmpProcess extends SimpleAudioProcess
         float getBias();
         float getGain1();
         float getGain2();
+        float getMaster();
         
         // tonestack
         boolean hasChanged();

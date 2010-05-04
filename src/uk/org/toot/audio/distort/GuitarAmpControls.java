@@ -32,17 +32,21 @@ public class GuitarAmpControls extends AudioControls
     private static final int BIAS = 4;
     private static final int GAIN1 = 5;    
     private static final int GAIN2 = 6;
+    private static final int MASTER = 7;
 	
 	private static final ControlLaw TEN_LAW = new LinearLaw(0, 10f, "");
-    protected final static LinearLaw GAIN_LAW = new LinearLaw(0, 30, "dB");
-    protected final static LinearLaw BIAS_LAW = new LinearLaw(-0.9f, 0.9f, "");
+    private final static LinearLaw GAIN_LAW = new LinearLaw(0, 30, "dB");
+    private final static LinearLaw BIAS_LAW = new LinearLaw(-0.9f, 0.9f, "");
+    private final static LinearLaw MASTER_LAW = new LinearLaw(0, 20, "dB");
 
 	private FloatControl bassControl, midControl, trebleControl;
     private EnumControl typeControl;
     private FloatControl biasControl, gain1Control, gain2Control;
+    private FloatControl masterControl;
 	
     private float gain1 = 1f, gain2 = 1f;
     private float bias = -0.33f;    
+    private float master = 1f;
 	private float b = 0f, m = 0f, t = 0f;
 	private float fs = 44100f;
 	private boolean changed = false;
@@ -67,6 +71,7 @@ public class GuitarAmpControls extends AudioControls
 		row.add(col);
         col = new ControlColumn();
         col.add(gain2Control = createGainControl(GAIN2));
+        col.add(masterControl = createMasterControl());
         row.add(col);
         add(row);
         stack.setComponents((ToneStackDesigner.Components)typeControl.getValue());
@@ -83,7 +88,8 @@ public class GuitarAmpControls extends AudioControls
     }
     
     protected FloatControl createGainControl(int id) {
-        FloatControl control = new FloatControl(id, getString("Gain"), GAIN_LAW, 0.1f, 0);
+        FloatControl control = new FloatControl(id, getString("Drive"), GAIN_LAW, 0.1f, 0);
+        control.setInsertColor(Color.MAGENTA.darker());
         return control;
     }
     
@@ -93,6 +99,10 @@ public class GuitarAmpControls extends AudioControls
 		return control;
 	}
 	
+    protected FloatControl createMasterControl() {
+        FloatControl control = new FloatControl(MASTER, getString("Level"), MASTER_LAW, 0.01f, 0f);
+        return control;
+    }
     @Override
     protected void derive(Control c) {
     	switch ( c.getId() ) {
@@ -103,6 +113,7 @@ public class GuitarAmpControls extends AudioControls
         case BIAS: bias = deriveBias(); return;
         case GAIN1: gain1 = deriveGain(gain1Control); return;
         case GAIN2: gain2 = deriveGain(gain2Control); return;
+        case MASTER: master = deriveGain(masterControl); return;
     	default: return;
     	}
     	coeffs = design();
@@ -127,6 +138,10 @@ public class GuitarAmpControls extends AudioControls
     
     public float getGain2() {
         return gain2;
+    }
+    
+    public float getMaster() {
+        return master;
     }
     
     // a power of 2.3 to 2.4 gives best match to log pot taper

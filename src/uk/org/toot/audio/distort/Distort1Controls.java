@@ -51,7 +51,8 @@ public class Distort1Controls extends AudioControls implements Distort1Process.V
 	}
 	
 	protected FloatControl createGainControl() {
-		FloatControl control = new FloatControl(GAIN, getString("Gain"), GAIN_LAW, 0.1f, 0);
+		FloatControl control = new FloatControl(GAIN, getString("Drive"), GAIN_LAW, 0.1f, 0);
+        control.setInsertColor(Color.MAGENTA.darker());
 		return control;
 	}
 	
