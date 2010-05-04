@@ -50,6 +50,9 @@ public class ClassicFilterControls extends CompoundControl
     private int freq;
     private float leveldB, res, levelFactor;
     
+    protected float minQ;
+    protected float deltaQ;
+    
     /**
      * Construct with all specified values.
      */
@@ -62,6 +65,9 @@ public class ClassicFilterControls extends CompoundControl
         super(0, name); // ??? ???
         this.shape = shape;
         this.idOffset = idOffset;
+        float maxLevel = (float)(Math.pow(10.0, levelLaw.getMaximum()/20.0));
+        minQ = qLaw.getMinimum();
+        deltaQ = (qLaw.getMaximum() - minQ) / (maxLevel - 1);
         add(resControl = createResonanceControl(idOffset+RES_ID, qLaw, qvalue, qfixed));
         add(freqControl = createFrequencyControl(idOffset+FREQ_ID, fmin, fmax, fvalue, ffixed));
         add(leveldBControl = createLevelControl(idOffset+LEVEL_ID, levelLaw, dBvalue, dBfixed));
@@ -76,6 +82,9 @@ public class ClassicFilterControls extends CompoundControl
 		case LEVEL_ID: 
 			leveldB = leveldBControl.getValue();
 			levelFactor = (float)(Math.pow(10.0, getLeveldB()/20.0));
+            if ( isProportionalQ() ) {
+                res = calculateProportionalQ(levelFactor);
+            }
 			break;
 		case FREQ_ID: freq = (int)freqControl.getValue(); break;
 		case RES_ID: res = resControl.getValue(); break;
@@ -92,29 +101,11 @@ public class ClassicFilterControls extends CompoundControl
         return freq;
     }
 
-    public void setFrequency(int frequency) {
-        freqControl.setValue(frequency);
-    }
-
     public float getResonance() {
         return res;
     }
 
-    public void setResonance(float q) {
-        resControl.setValue(q);
-    }
-
-    /**
-     * Set the level adjustment to be applied to filtered data
-     * Values typically range from -.25 to +4.0 or -12 to +12 db.
-     * dB = 20 * Math.log10(amplitudeAdj);
-     * amplitudeAdj = 10^(dB/20);
-     **/
-    public void setLeveldB(float dBlevel) {
-        leveldBControl.setValue(dBlevel);
-    }
-
-    public float getLeveldB() {
+   public float getLeveldB() {
         return leveldB;
     }
 
@@ -124,6 +115,14 @@ public class ClassicFilterControls extends CompoundControl
 
     public boolean is4thOrder() { return false; }
 
+    protected boolean isProportionalQ() { return false; }
+    
+    // 1 .. maxLevel -> minQ .. maxQ
+    protected float calculateProportionalQ(float level) {
+        if ( level < 1 ) level = 1f / level;
+        return minQ + (level - 1) * deltaQ;
+    }
+    
     /**
      * A TypeControl concretizes EnumControl with filter types.
      */

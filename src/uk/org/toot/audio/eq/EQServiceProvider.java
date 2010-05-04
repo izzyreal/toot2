@@ -19,12 +19,14 @@ public class EQServiceProvider extends TootAudioServiceProvider
     public EQServiceProvider() {
         super(getString("EQ"), "0.4");
 		String family = description;
+        addControls(ClassicEQ.Controls.class, EQIds.CLASSIC_EQ_ID, getString("Classic.EQ"), family, "0.1");
         addControls(ParametricEQ.Controls.class, EQIds.PARAMETRIC_EQ_ID, getString("Parametric.EQ"), family, "0.2");
         addControls(GraphicEQ.Controls.class, EQIds.GRAPHIC_EQ_ID, getString("Graphic.EQ"), family, "0.2");
         addControls(CutEQ.Controls.class, EQIds.CUT_EQ_ID, getString("Cut.EQ"), family, "0.1");
         addControls(FormantEQ.Controls.class, EQIds.FORMANT_EQ_ID, getString("Formant.EQ"), family, "0.1");
         addControls(CabEQ.Controls.class, EQIds.CAB_EQ_ID, getString("Cab.EQ"), family, "0.1");
 
+        add(ClassicEQ.class, getString("Classic.EQ"), family, "0.1");
         add(ParametricEQ.class, getString("Parametric.EQ"), family, "0.2");
         add(GraphicEQ.class, getString("Graphic.EQ"), family, "0.2");
         add(CutEQ.class, getString("Cut.EQ"), family, "0.1");
@@ -33,7 +35,9 @@ public class EQServiceProvider extends TootAudioServiceProvider
     }
 
     public AudioProcess createProcessor(AudioControls c) {
-        if ( c instanceof ParametricEQ.Controls ) {
+        if ( c instanceof ClassicEQ.Controls ) {
+            return new ClassicEQ((ClassicEQ.Controls)c);
+        } else if ( c instanceof ParametricEQ.Controls ) {
             return new ParametricEQ((ParametricEQ.Controls)c);
         } else if ( c instanceof GraphicEQ.Controls ) {
             return new GraphicEQ((GraphicEQ.Controls)c);
