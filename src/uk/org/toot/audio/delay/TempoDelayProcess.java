@@ -8,8 +8,6 @@ package uk.org.toot.audio.delay;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.dsp.FastMath;
-import uk.org.toot.misc.plugin.Plugin;
-import uk.org.toot.misc.plugin.PluginSupport;
 import uk.org.toot.misc.Tempo;
 
 /**
@@ -30,7 +28,6 @@ public class TempoDelayProcess implements AudioProcess
      */
     private DelayBuffer tappedBuffer; // just for conform()
 
-    private PluginSupport support;
 	private Tempo.Listener tempoListener;
 
 	/**
@@ -50,7 +47,6 @@ public class TempoDelayProcess implements AudioProcess
     public TempoDelayProcess(Variables vars) {
         this.vars = vars;
         wasBypassed = !vars.isBypassed(); // force update
-		support = Plugin.getPluginSupport();
 		tempoListener = new Tempo.Listener() {
 			public void tempoChanged(float newTempo) {
 				bpm = newTempo;				
@@ -60,11 +56,7 @@ public class TempoDelayProcess implements AudioProcess
     }
 
     public void open() {
-		if ( support != null ) {
-            support.addTempoListener(tempoListener);
-        } else {
-            System.out.println("Plugin.setPluginSupport() has not been called, TempoDelayProcess can't listen for Tempo!");
-        }
+        Tempo.addTempoListener(tempoListener);
         // defer delay buffer allocation until sample rate known
     }
 
@@ -155,9 +147,7 @@ public class TempoDelayProcess implements AudioProcess
     public void close() {
         delayBuffer = null;
         tappedBuffer = null;
-        if ( support != null ) {
-            support.removeTempoListener(tempoListener);
-        }
+        Tempo.removeTempoListener(tempoListener);
     }
 
     protected int msToSamples(float ms, float sr) {
