@@ -13,7 +13,7 @@ import uk.org.toot.dsp.filter.FilterShape;
 import static uk.org.toot.misc.Localisation.*;
 
 /**
- * A classic proportional Q EQ.
+ * A classic 4 band proportional Q EQ with shelves switchable to bells
  */
 public class ClassicEQ extends AbstractSerialEQ
 {
@@ -42,31 +42,37 @@ public class ClassicEQ extends AbstractSerialEQ
         public Controls() {
             super(EQIds.CLASSIC_EQ_ID, getString("Classic.EQ"));
             add(new ClassicFilterControls(getString("Low"), 0,
-                	FilterShape.LSH, true,
+                	FilterShape.LSH, false,
                     40f, 3000f, 80, false,
                     Q_LAW, 1f, true,
-                    GAIN_LAW, 0f, false));
+                    GAIN_LAW, 0f, false) {
+                @Override
+                protected boolean isProportionalQ() { return true; }                
+            });
             add(new ClassicFilterControls(getString("Lo.Mid"), 4,
                 	FilterShape.PEQ, true,
                     40f, 3000f, 600, false,
                     Q_LAW, 1f, true,
                     GAIN_LAW, 0f, false) {
-                        @Override
-                        protected boolean isProportionalQ() { return true; }
+                @Override
+                protected boolean isProportionalQ() { return true; }
             });
             add(new ClassicFilterControls(getString("Hi.Mid"), 8,
                 	FilterShape.PEQ, true,
                     3000f, 20000f, 4000, false,
                     Q_LAW, 1f, true,
                     GAIN_LAW, 0f, false) {
-                        @Override
-                        protected boolean isProportionalQ() { return true; }                
+                @Override
+                protected boolean isProportionalQ() { return true; }                
             });
             add(new ClassicFilterControls(getString("High"), 16,
-                	FilterShape.HSH, true,
+                	FilterShape.HSH, false,
                     3000f, 20000f, 12000, false,
                     Q_LAW, 1f, true,
-                    GAIN_LAW, 0f, false));
+                    GAIN_LAW, 0f, false) {
+                @Override
+                protected boolean isProportionalQ() { return true; }                
+            });
         }
     }
 }
