@@ -5,7 +5,7 @@
 
 package uk.org.toot.audio.eq;
 
-import java.util.List;
+import java.awt.Color;
 import uk.org.toot.control.*;
 import uk.org.toot.dsp.filter.FilterShape;
 import uk.org.toot.audio.filter.*;
@@ -24,8 +24,9 @@ public class ClassicFilterControls extends CompoundControl
 	private final static int LEVEL_ID = 0;
 	private final static int FREQ_ID = 1;
 	private final static int RES_ID = 2;
+    private final static int SHAPE_ID = 3;
 	
-    private FilterShape shape;
+    private FilterShape shape, defaultShape;
 
     /**
      * @supplierCardinality 1
@@ -45,6 +46,8 @@ public class ClassicFilterControls extends CompoundControl
      */
     private FloatControl resControl;
 
+    private BooleanControl shelfControl;
+    
     private int idOffset;
     
     private int freq;
@@ -52,6 +55,7 @@ public class ClassicFilterControls extends CompoundControl
     
     protected float minQ;
     protected float deltaQ;
+    protected float defaultQ;
     
     /**
      * Construct with all specified values.
@@ -63,17 +67,32 @@ public class ClassicFilterControls extends CompoundControl
         ControlLaw levelLaw, float dBvalue, boolean dBfixed
         ) {
         super(0, name); // ??? ???
-        this.shape = shape;
         this.idOffset = idOffset;
-        float maxLevel = (float)(Math.pow(10.0, levelLaw.getMaximum()/20.0));
+        this.shape = defaultShape = shape;
+        if ( shape != FilterShape.LSH && shape != FilterShape.HSH ) typefixed = true;
+        freq = (int)fvalue;
+        defaultQ = qvalue;
+        levelFactor = level(dBvalue);
+        res = isProportionalQ() ? calculateProportionalQ(levelFactor) : qvalue;
+        float maxLevel = level(levelLaw.getMaximum());
         minQ = qLaw.getMinimum();
         deltaQ = (qLaw.getMaximum() - minQ) / (maxLevel - 1);
-        add(resControl = createResonanceControl(idOffset+RES_ID, qLaw, qvalue, qfixed));
-        add(freqControl = createFrequencyControl(idOffset+FREQ_ID, fmin, fmax, fvalue, ffixed));
-        add(leveldBControl = createLevelControl(idOffset+LEVEL_ID, levelLaw, dBvalue, dBfixed));
-        derive(resControl);
-        derive(freqControl);
-        derive(leveldBControl);
+        if ( !typefixed ) {
+            add(shelfControl = createShelfControl(idOffset+SHAPE_ID, shape));
+            derive(shelfControl);
+        }
+        if ( !qfixed ) {
+            add(resControl = createResonanceControl(idOffset+RES_ID, qLaw, qvalue));
+            derive(resControl);
+        }
+        if ( !ffixed ) {
+            add(freqControl = createFrequencyControl(idOffset+FREQ_ID, fmin, fmax, fvalue));
+            derive(freqControl);
+        }
+        if ( !dBfixed ) {
+            add(leveldBControl = createLevelControl(idOffset+LEVEL_ID, levelLaw, dBvalue));
+            derive(leveldBControl);
+        }
     }
 
 	@Override
@@ -81,16 +100,21 @@ public class ClassicFilterControls extends CompoundControl
 		switch ( c.getId() - idOffset ) {
 		case LEVEL_ID: 
 			leveldB = leveldBControl.getValue();
-			levelFactor = (float)(Math.pow(10.0, getLeveldB()/20.0));
+			levelFactor = level(getLeveldB());
             if ( isProportionalQ() ) {
                 res = calculateProportionalQ(levelFactor);
             }
 			break;
 		case FREQ_ID: freq = (int)freqControl.getValue(); break;
 		case RES_ID: res = resControl.getValue(); break;
+        case SHAPE_ID: shape = shelfControl.getValue() ? defaultShape : FilterShape.PEQ; break;
 		}
 	}
 	
+    protected float level(float dB) {
+        return (float)(Math.pow(10.0, dB/20));
+    }
+    
     public boolean isAlwaysVertical() { return true; }
 
     public FilterShape getShape() {
@@ -119,33 +143,24 @@ public class ClassicFilterControls extends CompoundControl
     
     // 1 .. maxLevel -> minQ .. maxQ
     protected float calculateProportionalQ(float level) {
+        if ( shape != FilterShape.PEQ ) return defaultQ;
         if ( level < 1 ) level = 1f / level;
         return minQ + (level - 1) * deltaQ;
     }
     
-    /**
-     * A TypeControl concretizes EnumControl with filter types.
-     */
-    static public class TypeControl extends EnumControl
-    {
-    	public TypeControl(int id, Object value, boolean fixed) {
-            super(id, "Type", value);
-            setHidden(fixed);
-    	}
-
-    	public List getValues() {
-        	return null;
-    	}
+    protected BooleanControl createShelfControl(int id, FilterShape shelf) {
+        BooleanControl control = new BooleanControl(id, "Shelf", true);
+        control.setStateColor(true, Color.YELLOW);
+        return control;
     }
-
-	protected FloatControl createFrequencyControl(int id, float min, float max, float initial, boolean fixed) {
+    
+	protected FloatControl createFrequencyControl(int id, float min, float max, float initial) {
         ControlLaw law = new LogLaw(min, max, "Hz");
         FloatControl freq = new FloatControl(id, getString("Frequency"), law, 1f, initial);
-        freq.setHidden(fixed);
         return freq;
     }
 
-	protected FloatControl createLevelControl(int id, ControlLaw law, float initial, boolean fixed) {
+	protected FloatControl createLevelControl(int id, ControlLaw law, float initial) {
         FloatControl lev = new FloatControl(id, getString("Level"), law, 0.1f, initial) {
             private /*static*/ String[] presetNames = { getString("Flat") };
             public boolean isRotary() {
@@ -160,13 +175,11 @@ public class ClassicFilterControls extends CompoundControl
                 }
             }
         };
-        lev.setHidden(fixed);
         return lev;
     }
 
-	protected FloatControl createResonanceControl(int id, ControlLaw law, float initial, boolean fixed) {
+	protected FloatControl createResonanceControl(int id, ControlLaw law, float initial) {
         FloatControl lev = new FloatControl(id, getString("Resonance"), law, 0.1f, initial);
-        lev.setHidden(fixed);
         return lev;
     }
 	
