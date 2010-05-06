@@ -18,5 +18,6 @@ public interface TootAudioControlsId
     final static int TOOL_BASE_ID = 0x60; // !!!
     final static int DISTORT_BASE_ID = 0x70;
     // AUTOMATION_ID = 119
-    final static int MIXER_BASE_ID = 120;
+    final static int MIXER_BASE_ID = 120; // actually 125 is lowest used for busses
+    // because strip ids aren't used for modules in a strip!
 }

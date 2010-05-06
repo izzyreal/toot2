@@ -9,7 +9,8 @@ import static uk.org.toot.audio.id.TootAudioControlsId.DELAY_BASE_ID;
 
 class DelayIds
 {
-//    final static int STEREO_MODULATED_DELAY_ID = DELAY_BASE_ID + 1;
+    // STEREO_MODULATED_DELAY is for backwards compatibility
+    final static int STEREO_MODULATED_DELAY_ID = DELAY_BASE_ID + 1;
     final static int MULTI_TAP_DELAY_ID = DELAY_BASE_ID + 2;
     final static int ROOM_SIMULATOR = DELAY_BASE_ID + 3;
     final static int MODULATED_DELAY_ID = DELAY_BASE_ID + 4; // mono modulation

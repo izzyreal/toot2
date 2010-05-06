@@ -157,7 +157,7 @@ public abstract class CompoundControl extends Control
 
     public CompoundControl find(int providerId, int moduleId, int instanceIndex) {
         // linear search for matching module
-        for ( Control m : getMemberControls() ) {
+        for ( Control m : controls ) {
             if ( m instanceof CompoundControl ) {
 	            CompoundControl cc = (CompoundControl)m;
     	        if ( providerId == cc.getProviderId() &&
@@ -172,7 +172,7 @@ public abstract class CompoundControl extends Control
 
 	public Control deepFind(int controlId) {
         // depth first search of control tree
-        for ( Control c : getMemberControls() ) {
+        for ( Control c : controls ) {
             if ( c instanceof CompoundControl ) {
                 Control c2 = ((CompoundControl)c).deepFind(controlId);
                 if ( c2 != null ) return c2;

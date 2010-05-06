@@ -35,10 +35,13 @@ public class MeterControls extends AudioControls
     private float peakRelease = 0.005f; // default factor for 5ms
     private float averageSmooth = 0.038f; // default factor for 5ms
 
-    private float maxdB, mindB;
+    private float maxdB = 20, mindB = -80;
     
-    // have to have 2 channels for now
     public MeterControls(ChannelFormat format, String name) {
+        this(format, name, true);
+    }
+    // have to have 2 channels for now
+    public MeterControls(ChannelFormat format, String name, boolean full) {
         super(METER, name);
         channelFormat = format;
 		int nchannels = channelFormat.getCount();
@@ -47,13 +50,17 @@ public class MeterControls extends AudioControls
             channelState[i] = new ChannelState();
         }
         // momentary
-        add(new ResetControl());
-        add(new OverIndicator());
-        add(typeControl = new TypeControl());
+        if ( full ) {
+            add(new ResetControl());
+            add(new OverIndicator());
+            add(typeControl = new TypeControl());
+        }
         add(new MeterIndicator(name)); // !!!
-        add(mindBControl = new MindBControl());
-        derive(typeControl);
-        derive(mindBControl);
+        if ( full ) {
+            add(mindBControl = new MindBControl());
+            derive(typeControl);
+            derive(mindBControl);
+        }
     }
 
     @Override

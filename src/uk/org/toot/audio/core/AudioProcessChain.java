@@ -186,8 +186,8 @@ public class AudioProcessChain implements AudioProcess {
     	    }
         } catch ( Exception e ) {
             System.err.println("Exception for "+controlChain.getName()+
-                "Mutation: "+m);
-            e.printStackTrace();
+                ", Mutation: "+m);
+            System.err.println(e);
         }
     }
 

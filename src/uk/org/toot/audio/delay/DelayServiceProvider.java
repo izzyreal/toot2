@@ -73,4 +73,17 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         }
         return null; // caller then tries another provider
     }
+    
+    /*
+     * In place of the obsolete stero modulated delay, we return modulated delay
+     * (non-Javadoc)
+     * @see uk.org.toot.audio.spi.AudioServiceProvider#createControls(int)
+     */
+    @Override
+    public AudioControls createControls(int moduleId) {
+        if ( moduleId == DelayIds.STEREO_MODULATED_DELAY_ID ) {
+            return super.createControls(DelayIds.MODULATED_DELAY_ID);
+        }
+        return super.createControls(moduleId);
+    }
 }

@@ -17,6 +17,7 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.control.automation.ControlSysexMsg.*;
 import static uk.org.toot.midi.message.MetaMsg.*;
 import static uk.org.toot.midi.message.NoteMsg.*;
+import static uk.org.toot.control.id.ProviderId.TOOT_PROVIDER_ID;
 
 /**
  * Stores and recalls mixer automations snaphots as Midi Sequences.
@@ -139,9 +140,12 @@ public class MixerControlsMidiSequenceSnapshotAutomation
             	Control cInsert = AudioServices.createControls(
             			tin.getProviderId(), tin.getModuleId(), tin.getInstanceIndex());
             	if ( cInsert == null ) {
-            		System.err.println("configure: no service for "
+                    // don't fret about missing mixer busses
+                    if ( isPluggable(tin.getProviderId(), tin.getModuleId()) ) {
+                        System.err.println("configure: no service for "
             				+tin.getProviderId()+"/"+tin.getModuleId()+"/"+tin.getInstanceIndex()+
             				" in "+stripName); 
+                    }
             		n += 1;
             		continue;
             	}
@@ -162,6 +166,7 @@ public class MixerControlsMidiSequenceSnapshotAutomation
         Track track;
         int providerId = 0;
         int moduleId = 0;
+        int moduleIdReplacement = 0;
         int instanceIndex = -1;
         CompoundControl module = null;
         for ( int t = 0; t < tracks.length; t++ ) {
@@ -198,20 +203,35 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 int ii = getInstanceIndex(msg);
                 int cid = getControlId(msg);
                 // only find module if id's changed
-                if ( module == null || pid != providerId ||
-                     mid != moduleId || ii != instanceIndex ) {
+                if ( pid != providerId || mid != moduleId || ii != instanceIndex ) {
                     module = strip.find(pid, mid, ii);
+                    moduleIdReplacement = mid;
+                    if ( module == null ) {
+                        // check for module replacements
+                        CompoundControl mod2 = AudioServices.createControls(pid, mid, ii);
+                        if ( mod2 != null ) {
+                            moduleIdReplacement = mod2.getId();
+                            module = strip.find(pid, moduleIdReplacement, ii);
+                        }
+                        if ( module == null ) {
+                            System.err.println("recall: no module "+pid+"/"+mid+"/"+ii+" in "+stripName);
+                        }
+                    }
                     providerId = pid;
-                    moduleId = mid;
+                    moduleId = mid; // not accurate for module replacement!
                     instanceIndex = ii;
                 }
                 if ( module == null ) {
-	                System.err.println("recall: no module "+providerId+"/"+moduleId+"/"+instanceIndex+" in "+stripName);
                     continue;
                 }
                 Control control = module.deepFind(cid);
                 if ( control == null ) {
-	                System.err.println("recall: no control "+cid+" in "+module.getControlPath()+" in "+stripName);
+                    // don't fret about missing mixer busses
+                    if ( isPluggable(providerId, moduleId) ) {
+                        String extra = moduleId == moduleIdReplacement ? "" :
+                            " after mapping from"+" ("+providerId+"/"+moduleId+"/"+instanceIndex+")";
+                        System.err.println("recall: no control "+cid+" in "+module.getControlPath()+" in "+stripName+" ("+providerId+"/"+moduleIdReplacement+"/"+instanceIndex+")"+extra);
+                    }
 	                continue;
                 }
 //                System.out.println("recall: "+control.getControlPath());
@@ -268,6 +288,17 @@ public class MixerControlsMidiSequenceSnapshotAutomation
         return snapshot;
     }
 
+    /**
+     * Is this a module that should be able to be plugged in?
+     * @param pid
+     * @param mid
+     * @return true if can be plugged in
+     */
+    protected boolean isPluggable(int pid, int mid) {
+        return pid != TOOT_PROVIDER_ID || mid < CHANNEL_STRIP; 
+        
+    }
+    
     static public class AutomationIndices
     {
         private int providerId;
