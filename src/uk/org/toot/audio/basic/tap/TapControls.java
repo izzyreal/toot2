@@ -40,7 +40,9 @@ public class TapControls extends AudioControls
 	}
 	
 	public void removeBuffer() {
+        if ( buffer == null ) return;
 		Taps.remove(buffer);
+        buffer = null;
 	}
 	
 	public AudioBuffer getBuffer() {
