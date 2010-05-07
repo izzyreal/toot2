@@ -1,4 +1,4 @@
-// Copyright (C) 2006 Steve Taylor.
+// Copyright (C) 2006,2010 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org.uk/LICENSE_1_0.txt)
@@ -26,7 +26,7 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 
  * Prohibited: groups routing to groups
  *
- * 1 buffer per bus plus 1 buffer per group
+ * 1 buffer per bus plus 1 buffer per group plus 1 buffer
  */
 public class AudioMixer implements AudioClient
 {
@@ -34,7 +34,6 @@ public class AudioMixer implements AudioClient
      * @link aggregationByValue
      * @supplierCardinality 1 
      */
-    @SuppressWarnings("unused")
 	private MixerControls controls;
 
     /**
@@ -124,7 +123,6 @@ public class AudioMixer implements AudioClient
 
     private ConcurrentLinkedQueue<MixerControls.Mutation> mutationQueue;
     private boolean enabled = true;
-//    private int activeStripCount = 0;
 
     public AudioMixer(MixerControls controls, AudioServer server) throws Exception {
         if ( controls == null ) {
@@ -134,7 +132,7 @@ public class AudioMixer implements AudioClient
             throw new IllegalArgumentException("null AudioServer");
         }
         this.controls = controls;
-        this.server = server; // should be an audio buffer factory !!! !!!
+        this.server = server;
         Taps.setAudioServer(server);
         sharedAudioBuffer = server.createAudioBuffer("Mixer (shared)");
         mutationQueue = new ConcurrentLinkedQueue<MixerControls.Mutation>();
@@ -147,7 +145,6 @@ public class AudioMixer implements AudioClient
         createBusses(controls);
         createStrips(controls);
         controls.addObserver(new MixerControlsObserver());
-//       	System.out.println("Mixer created");
     }
 
     public MixerControls getMixerControls() {
@@ -197,7 +194,7 @@ public class AudioMixer implements AudioClient
         for ( AudioMixerStrip strip : strips ) {
             if ( strip.getName().equals(name) ) return strip;
         }
-        return null; // !!!
+        return null;
     }
 
     public List<AudioMixerStrip> getStrips() {
@@ -224,12 +221,12 @@ public class AudioMixer implements AudioClient
         silenceStrips(fxStrips);
         silenceStrips(auxStrips);
         mainStrip.silence();
-        evaluateStrips(channelStrips); // mix to main, aux & fx busses
-        evaluateStrips(groupStrips);   // mix to main, aux & fx busses
-        evaluateStrips(fxStrips); 	   // mix to main & aux busses
+        evaluateStrips(channelStrips);  // mix to main, aux & fx busses
+        evaluateStrips(groupStrips);    // mix to main, aux & fx busses
+        evaluateStrips(fxStrips); 	    // mix to main & aux busses
         evaluateStrips(auxStrips);
         mainStrip.processBuffer();
-        writeBusBuffers(); // export external busses
+        writeBusBuffers();              // export external busses
     }
 
     // process a single mutation each iteration
@@ -255,7 +252,7 @@ public class AudioMixer implements AudioClient
 
     protected void evaluateStrips(List<AudioMixerStrip> evalStrips) {
         for ( AudioMixerStrip strip : evalStrips) {
-            /*if ( */strip.processBuffer() /*) activeStrips += 1*/;
+            strip.processBuffer();
         }
     }
 
@@ -269,9 +266,6 @@ public class AudioMixer implements AudioClient
         for ( AudioMixerBus bus : busses ) {
             bus.write();
         }
-/*        for ( int i = 0; i < busses.size(); i++ ) {
-        	busses.get(i).write();
-        } */
     }
 
     protected void createBusses(MixerControls mixerControls) {
@@ -301,7 +295,7 @@ public class AudioMixer implements AudioClient
         for ( AudioMixerBus bus : busses ) {
             if ( bus.getName().equals(name) ) return bus;
         }
-        return null; // !!!
+        return null;
     }
 
     public AudioMixerBus getMainBus() {
@@ -332,7 +326,7 @@ public class AudioMixer implements AudioClient
                 return super.createProcess(controls);
             }
         };
-        switch ( strip.getId() ) {
+        switch ( controls.getId() ) {
         case CHANNEL_STRIP:	channelStrips.add(strip); break;
         case GROUP_STRIP: 	groupStrips.add(strip); break;
         case FX_STRIP: 		fxStrips.add(strip); break;
@@ -360,7 +354,7 @@ public class AudioMixer implements AudioClient
             if ( strip.getName().equals(controls.getName()) ) {
                 strip.close();
                 strips.remove(strip);
-		        switch ( strip.getId() ) {
+		        switch ( controls.getId() ) {
         		case CHANNEL_STRIP:	channelStrips.remove(strip); break;
 		        case GROUP_STRIP: 	groupStrips.remove(strip); break;
         		case FX_STRIP: 		fxStrips.remove(strip); break;
@@ -373,11 +367,9 @@ public class AudioMixer implements AudioClient
     }
 
     public void close() {
-//    	System.out.println("Closing Mixer Strips");
         for ( AudioMixerStrip strip : strips ) {
                 strip.close();
         }
-//    	System.out.println("All Mixer Strips Closed");
     }
     
     public boolean isEnabled() {

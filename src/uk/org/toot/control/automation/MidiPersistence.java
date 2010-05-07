@@ -26,7 +26,7 @@ public class MidiPersistence
     // providerId and moduleId must be passed in because recursive! DO NOT simplify ;)
     public static void store(int providerId, int moduleId, int instanceIndex,
 									        CompoundControl parent, Track t) {
-        for ( Control c : parent.getMemberControls() ) {
+        for ( Control c : parent.getControls() ) {
             if ( c instanceof CompoundControl ) {
 	            store(providerId, moduleId, instanceIndex, (CompoundControl)c, t);
             } else {

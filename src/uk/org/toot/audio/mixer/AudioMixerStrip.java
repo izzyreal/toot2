@@ -1,4 +1,4 @@
-// Copyright (C) 2006 Steve Taylor.
+// Copyright (C) 2006,2010 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org.uk/LICENSE_1_0.txt)
@@ -103,26 +103,24 @@ public class AudioMixerStrip extends AudioProcessChain {
         return mixer.getBus(getName()).getBuffer();
     }
 
-    private final int silenceCount = 1000; // at least 1000ms worth
+    private final static int silenceCount = 1000; // at least 1000ms worth
     private int silenceCountdown = silenceCount;
     
 	protected boolean processBuffer() {
 		int ret = AUDIO_OK;
         if ( isChannel ) {
-            // must process mutations in a timely manner, no fast exits then
-            boolean hasNoMutations = hasNoMutations();
         	if ( input != null ) {
         	    ret = input.processAudio(buffer);
                 checkMetaInfo(buffer.getMetaInfo());
                 if ( ret == AUDIO_DISCONNECT ) {
-                    if ( hasNoMutations ) return false; // fast exit if input disconnected 
-                    buffer.makeSilence();
+                    processMutations();
+                    return false; // fast exit if input disconnected 
                 } else if ( ret == AUDIO_SILENCE && silenceCountdown == 0 ) {                     
-                    return false; // fast exit if convolution finished due to input silence
+                    return false; // fast exit if convolution effects finished 
                 }
             } else {
-                if ( hasNoMutations ) return false; // fast exit if no input
-                buffer.makeSilence();
+                processMutations();
+                return false; // fast exit if no input
             }
         }
         processAudio(buffer);

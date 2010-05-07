@@ -1,4 +1,4 @@
-// Copyright (C) 2006 Steve Taylor.
+// Copyright (C) 2006,2010 Steve Taylor.
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org.uk/LICENSE_1_0.txt)
@@ -52,7 +52,7 @@ public class AudioProcessChain implements AudioProcess {
     }
 
     public void open() throws Exception {
-         for ( Control control : controlChain.getMemberControls() ) {
+         for ( Control control : controlChain.getControls() ) {
             if ( control instanceof AudioControls ) {
        	        AudioProcess p = createProcess((AudioControls)control);
    	        	processes.add(p);
@@ -144,19 +144,10 @@ public class AudioProcessChain implements AudioProcess {
         return controlChain.getName();
     }
 
-    // hmm, id is a control issue
-    public int getId() {
-        return controlChain.getId();
-    }
-
     protected AudioProcess createProcess(AudioControls controls) {
         return AudioServices.createProcess(controls);
     }
 
-    protected final boolean hasNoMutations() {
-        return mutationQueue.isEmpty();
-    }
-    
     // process a single mutation each iteration
     protected void processMutations() {
         AudioControlsChain.ChainMutation m = mutationQueue.poll();
@@ -176,13 +167,7 @@ public class AudioProcessChain implements AudioProcess {
             		processes.add(m.getIndex0(), p);
         	        if ( p != null ) {
             	        p.open();
-/*	                } else {
-                        System.out.println(controlChain.getName()+
-                            " adding null process at "+m.getIndex0()); */
         	        }
-//                    System.out.println(controlChain.getName()+" Inserted "+controls.getName()+" at "+m.getIndex0());
-        		} else {
-//                    System.out.println(controlChain.getName()+" Inserted? "+controls.getName()+" at "+m.getIndex0());        		    
                 }
 	            break;
     	    case AudioControlsChain.ChainMutation.MOVE:

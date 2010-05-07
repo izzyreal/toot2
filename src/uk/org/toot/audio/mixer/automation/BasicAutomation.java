@@ -27,7 +27,7 @@ abstract public class BasicAutomation
     public BasicAutomation(MixerControls controls) {
         mixerControls = controls;
         // add automation controls to each initial strip
-        for ( Control c : mixerControls.getMemberControls() ) {
+        for ( Control c : mixerControls.getControls() ) {
             if ( c instanceof AudioControlsChain ) {
                 ensureControls((AudioControlsChain)c);
             }

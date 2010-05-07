@@ -266,7 +266,7 @@ public class MixerControlsMidiSequenceSnapshotAutomation
         int moduleId = -1;
         int instanceIndex = -1;
 	    // must separate strips
-        for ( Control c : mixerControls.getMemberControls() ) {
+        for ( Control c : mixerControls.getControls() ) {
             if ( c.getId() < 0 ) continue;
             AudioControlsChain strip = (AudioControlsChain)c;
             AutomationControls autoc = strip.find(AutomationControls.class);
@@ -282,7 +282,7 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                 System.out.println("store: error storing strip "+strip.getName());
        		}
             // store all modules in this strip
-            for ( Control m : ((CompoundControl)c).getMemberControls() ) {
+            for ( Control m : ((CompoundControl)c).getControls() ) {
                 CompoundControl cc = (CompoundControl)m;
 //                System.out.println("store: storing module "+cc.getName());
                 providerId = cc.getProviderId();
