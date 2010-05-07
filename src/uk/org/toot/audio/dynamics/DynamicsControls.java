@@ -6,6 +6,7 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.Taps.TapControl;
 import uk.org.toot.control.*;
+
 import java.awt.Color;
 
 import static uk.org.toot.audio.dynamics.DynamicsControlIds.*;
@@ -109,6 +110,14 @@ abstract public class DynamicsControls extends AudioControls
     	case DEPTH: depth = depthControl.getValue(); break;
     	case KEY: key = keyControl.getBuffer(); break; 
     	}
+    }
+    
+    @Override
+    protected void setParent(CompoundControl parent) {
+        super.setParent(parent);
+        if ( parent == null && keyControl != null ) {
+            keyControl.remove(); // dereferences tap
+        }
     }
     
 	protected boolean hasGainReductionIndicator() { return false; }

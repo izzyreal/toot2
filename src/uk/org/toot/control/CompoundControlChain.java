@@ -81,15 +81,21 @@ public class CompoundControlChain extends CompoundControl
 
     public void delete(String deleteName) {
         Control controlToDelete = find(deleteName);
-        if ( controlToDelete == null ) return;
+//        if ( controlToDelete == null ) return;
 //        System.out.println(getControlPath()+" Deleting "+deleteName);
-        delete(controls.indexOf(controlToDelete));
+//        delete(controls.indexOf(controlToDelete));
+        int index = controls.indexOf(controlToDelete);
+        remove(controlToDelete);
+        setChanged();
+        notifyObservers(
+            new ChainMutation(ChainMutation.DELETE, index));
 	}
 
     // provided to allow faulty processes to remove themselves and their controls
     // but not good because it notifies observers on wrong thread
     public void delete(int indexToDelete) {
-        controls.remove(indexToDelete);
+//        controls.remove(indexToDelete);
+        remove(controls.get(indexToDelete));
         setChanged();
 	    notifyObservers(
             new ChainMutation(ChainMutation.DELETE, indexToDelete));

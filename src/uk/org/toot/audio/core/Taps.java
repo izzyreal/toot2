@@ -87,6 +87,10 @@ public class Taps
 			return buffer;
 		}
 
+        public void remove() {
+            reference((String)getValue(), -1);
+        }
+        
 		@Override
 		protected void derive(Control obj) {
 			String tapName = (String)getValue();

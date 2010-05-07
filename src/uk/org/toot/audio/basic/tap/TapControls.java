@@ -32,7 +32,11 @@ public class TapControls extends AudioControls
 	@Override
 	protected void setParent(CompoundControl parent) {
 		super.setParent(parent);
-		buffer = Taps.create(this); // needs parent so done here
+        if ( parent != null ) {
+            buffer = Taps.create(this); // needs parent so done here
+        } else {
+            removeBuffer();
+        }
 	}
 	
 	public void removeBuffer() {
