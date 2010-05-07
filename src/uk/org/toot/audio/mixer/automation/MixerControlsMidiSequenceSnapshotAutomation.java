@@ -82,7 +82,6 @@ public class MixerControlsMidiSequenceSnapshotAutomation
             for ( Control c : stripControls.getControls() ) {
                 if ( c instanceof CompoundControl ) {
                     CompoundControl cc = (CompoundControl)c;
-                    if ( !cc.canBeDeleted() ) continue;
                     AutomationIndices triple = new AutomationIndices(cc.getProviderId(),
                         cc.getId(), cc.getInstanceIndex());
                     if ( !needed.contains(triple) ) {
@@ -90,8 +89,20 @@ public class MixerControlsMidiSequenceSnapshotAutomation
                     }
                 }
             }
+            List<String> deletions2 = new java.util.ArrayList<String>();
             for ( String s : deletions ) {
-                 stripControls.delete(s);
+                CompoundControl d = (CompoundControl)stripControls.find(s);
+                if ( d.canBeDeleted() ) {
+                    stripControls.delete(s);
+                } else {
+                    deletions2.add(s); // e.g. Taps may be deletable after client deleted
+                }
+            }
+            for ( String s : deletions2 ) {
+                CompoundControl d = (CompoundControl)stripControls.find(s);
+                if ( d.canBeDeleted() ) {
+                    stripControls.delete(s);
+                }                
             }
 
             // moves, as a sort
