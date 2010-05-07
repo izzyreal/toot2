@@ -153,6 +153,10 @@ public class AudioProcessChain implements AudioProcess {
         return AudioServices.createProcess(controls);
     }
 
+    protected final boolean hasNoMutations() {
+        return mutationQueue.isEmpty();
+    }
+    
     // process a single mutation each iteration
     protected void processMutations() {
         AudioControlsChain.ChainMutation m = mutationQueue.poll();
@@ -176,7 +180,10 @@ public class AudioProcessChain implements AudioProcess {
                         System.out.println(controlChain.getName()+
                             " adding null process at "+m.getIndex0()); */
         	        }
-        		}
+//                    System.out.println(controlChain.getName()+" Inserted "+controls.getName()+" at "+m.getIndex0());
+        		} else {
+//                    System.out.println(controlChain.getName()+" Inserted? "+controls.getName()+" at "+m.getIndex0());        		    
+                }
 	            break;
     	    case AudioControlsChain.ChainMutation.MOVE:
         	    AudioProcess process = processes.get(m.getIndex0());

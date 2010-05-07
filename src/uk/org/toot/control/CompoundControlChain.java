@@ -58,9 +58,9 @@ public class CompoundControlChain extends CompoundControl
                 System.err.println(getName()+": insert "+controlToInsert.getName()+" before "+insertBeforeName+" not allowed");
                 return;
             }
-//        	System.out.println(getControlPath()+" Inserting "+controlToInsert.getName()+" before "+insertBeforeName);
         	insertionIndex = controls.indexOf(controlToInsertBefore);
         }
+//        System.out.println(getControlPath()+" Inserting "+controlToInsert.getName()+" before "+insertBeforeName+" at "+insertionIndex);
         controls.add(insertionIndex, controlToInsert);
         controlToInsert.setParent(this); // !!! superclass responsibility?
         setChanged();

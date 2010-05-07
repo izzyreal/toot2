@@ -103,20 +103,27 @@ public class AudioMixerStrip extends AudioProcessChain {
         return mixer.getBus(getName()).getBuffer();
     }
 
-    private final int silenceCount = 100; // at least 100ms worth
+    private final int silenceCount = 1000; // at least 1000ms worth
     private int silenceCountdown = silenceCount;
     
 	protected boolean processBuffer() {
 		int ret = AUDIO_OK;
         if ( isChannel ) {
-			// fast exit if no input
-        	if ( input == null ) return false;
-	        ret = input.processAudio(buffer);
-	        checkMetaInfo(buffer.getMetaInfo());
-	        // fast exit if input disconnected
-            if ( ret == AUDIO_DISCONNECT ) return false;
-            // fast exit if process convolution finished due to input silence
-            if ( ret == AUDIO_SILENCE && silenceCountdown == 0 ) return false;
+            // must process mutations in a timely manner, no fast exits then
+            boolean hasNoMutations = hasNoMutations();
+        	if ( input != null ) {
+        	    ret = input.processAudio(buffer);
+                checkMetaInfo(buffer.getMetaInfo());
+                if ( ret == AUDIO_DISCONNECT ) {
+                    if ( hasNoMutations ) return false; // fast exit if input disconnected 
+                    buffer.makeSilence();
+                } else if ( ret == AUDIO_SILENCE && silenceCountdown == 0 ) {                     
+                    return false; // fast exit if convolution finished due to input silence
+                }
+            } else {
+                if ( hasNoMutations ) return false; // fast exit if no input
+                buffer.makeSilence();
+            }
         }
         processAudio(buffer);
         if ( isChannel ) {
