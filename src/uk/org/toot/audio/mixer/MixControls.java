@@ -136,6 +136,14 @@ public class MixControls extends AudioControls
     	}
     }
     
+    public BooleanControl getSoloControl() {
+        return soloControl; // may be null!
+    }
+    
+    public BooleanControl getMuteControl() {
+        return muteControl;
+    }
+    
     public boolean isMaster() { return isMaster; }
 
     public ChannelFormat getChannelFormat() {
