@@ -7,16 +7,16 @@ package uk.org.toot.audio.dynamics;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
-import uk.org.toot.dsp.FastMath;
+
+import static uk.org.toot.dsp.FastMath.*;
 
 abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
 {
     protected float[] envelope = new float[2];
 
     protected boolean isPeak = false;
-    protected float[] threshold;
-    protected float[] thresholddB;
-    protected float[] ratio;
+    protected float[] threshold, thresholddB;
+    protected float[] ratio, inverseRatio;
     protected float[] attack, release;
     protected float[] makeupGain;
     protected float[] ratio2 = new float[2];
@@ -57,11 +57,12 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
         threshold = vars.getThreshold();
         thresholddB = vars.getThresholddB();
         ratio = vars.getRatio();
+        inverseRatio = vars.getInverseRatio();
         attack = vars.getAttack();
         release = vars.getRelease();
         makeupGain = vars.getGain();
-        ratio2[0] = (1f - ratio[0]) / ratio[0];
-        ratio2[1] = (1f - ratio[1]) / ratio[1];
+        ratio2[0] = (1f - ratio[0]) * inverseRatio[0];
+        ratio2[1] = (1f - ratio[1]) * inverseRatio[1];
     }
 
     /**
@@ -84,39 +85,35 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
         cacheProcessVariables();
         float targetGainM = 1f; // unity
         float targetGainS = 1f;
-        float gainM = makeupGain[0]; // keeps compiler happy
-        float gainS = makeupGain[1];
+        float gainM = 0f; // keeps compiler happy
+        float gainS = 0f;
 
         int len = buffer.getSampleCount();
         int mslen = (int)(buffer.getSampleRate() * 0.001f);
+        float sumdiv = 1f / (mslen + mslen);
         
-        buffer.encodeMidSide();
+        if ( !buffer.encodeMidSide() ) return AUDIO_OK; // mono abort, TODO sumfin better
 		samplesM = buffer.getChannel(0);
         samplesS = buffer.getChannel(1);
 
-		float sample;
         for ( int i = 0; i < len; i++ ) {
         	float keyM = 0;
             float keyS = 0;
         	if ( isPeak ) {
-        	    sample = samplesM[i];
-        	    sample = sample < 0 ? -sample : sample;
-        	    keyM = keyM > sample ? keyM : sample;
-                sample = samplesS[i];
-                sample = sample < 0 ? -sample : sample;
-                keyS = keyS > sample ? keyS : sample;
+                keyM = max(keyM, abs(samplesM[i]));
+                keyS = max(keyS, abs(samplesS[i]));
         		targetGainM = function(0, keyM);
                 targetGainS = function(1, keyS);
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
         		// the rms side chain calculations, every millisecond
         		float sumOfSquaresM = 0f;
                 float sumOfSquaresS = 0f;
-                for ( int j = 0; j < mslen; j++ ) {
-                    sumOfSquaresM += samplesM[i+j] * samplesM[i+j];
-                    sumOfSquaresS += samplesS[i+j] * samplesS[i+j];
+                for ( int j = 0, k = i; j < mslen; j++, k++ ) {
+                    sumOfSquaresM += samplesM[k] * samplesM[k];
+                    sumOfSquaresS += samplesS[k] * samplesS[k];
                 }
-        		squaresumsM[nsqsum] = sumOfSquaresM / (mslen * 2);
-                squaresumsS[nsqsum] = sumOfSquaresS / (mslen * 2);
+        		squaresumsM[nsqsum] = sumOfSquaresM * sumdiv;
+                squaresumsS[nsqsum] = sumOfSquaresS * sumdiv;
         		float meanM = 0;
                 float meanS = 0;
         		for ( int s = 0; s < NSQUARESUMS; s++ ) {
@@ -124,10 +121,8 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
                     meanS += squaresumsS[s];
         		}
         		if ( ++nsqsum >= NSQUARESUMS ) nsqsum = 0;
-        		keyM = (float)FastMath.sqrt(meanM/NSQUARESUMS);
-                keyS = (float)FastMath.sqrt(meanS/NSQUARESUMS);
-                targetGainM = function(0, keyM);
-                targetGainS = function(1, keyS);
+                targetGainM = function(0, (float)sqrt(meanM/NSQUARESUMS));
+                targetGainS = function(1, (float)sqrt(meanS/NSQUARESUMS));
         	}
 
         	gainM = dynamics(0, targetGainM);
@@ -164,15 +159,16 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
     public interface Variables {
         void update(float sampleRate);
         boolean isBypassed();
-        float[] getThreshold(); 	//  NOT dB, the actual level
-        float[] getThresholddB(); //  dB
+        float[] getThreshold();     //  NOT dB, the actual level
+        float[] getThresholddB();   //  dB
         float[] getRatio();
-        float[] getKnee();		//	NOT dB, the actual level
+        float[] getInverseRatio();  // 1/ratio avoids real-time divides
+        float[] getKnee();		    //	NOT dB, the actual level
         float[] getAttack();		//	NOT ms, the exponential coefficient
         int[] getHold();			//	NOT ms, samples
         float[] getRelease();		//	NOT ms, the exponential coefficient
-//        float getDepth();		//	NOT dB, the actual level
-        float[] getGain();		// 	NOT dB, the actual static makeup gain
+        float[] getDepth();	        //	NOT dB, the actual level
+        float[] getGain();		    // 	NOT dB, the actual static makeup gain
         void setDynamicGain(float gainM, float gainS); // NOT dB, the actual (sub sampled) dynamic gain
     }
 }

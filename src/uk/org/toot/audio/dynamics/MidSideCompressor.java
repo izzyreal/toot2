@@ -36,18 +36,22 @@ public class MidSideCompressor extends MidSideDynamicsProcess
         private float[] thresholddB = new float[2];
         private float[] knee = new float[2];
         private float[] ratio = new float[2];
+        private float[] inverseRatio = new float[2];
         private float[] attack = new float[2];
         private int[] hold = new int[2];
         private float[] release = new float[2];
         private float[] gain = new float[2];
+        private float[] depth = new float[2];
         
         public Controls() {
             super(DynamicsIds.MID_SIDE_COMPRESSOR_ID, getString("Mid-Side Compressor"));
             add(mid = new Compressor.Controls(getString("Mid"), 0) {
                 protected boolean hasKey() { return false; }
+                public boolean canBypass() { return false; }
             });
             add(side = new Compressor.Controls(getString("Side"), 0x10) {
                 protected boolean hasKey() { return false; }
+                public boolean canBypass() { return false; }
             });
             deriveIndependentVariables();
             deriveDependentVariables(); // at default 44100 sample rate
@@ -60,8 +64,12 @@ public class MidSideCompressor extends MidSideDynamicsProcess
             thresholddB[1] = side.getThresholddB();
             ratio[0] = mid.getRatio();
             ratio[1] = side.getRatio();
+            inverseRatio[0] = 1f / ratio[0];
+            inverseRatio[1] = 1f / ratio[1];
             gain[0] = mid.getGain();
             gain[1] = side.getGain();
+            depth[0] = mid.getDepth();
+            depth[1] = side.getDepth();
         }
 
         protected void deriveDependentVariables() {
@@ -85,12 +93,15 @@ public class MidSideCompressor extends MidSideDynamicsProcess
             case THRESHOLD: 
                 threshold[n] = cc.getThreshold();
                 thresholddB[n] = cc.getThresholddB(); break;
-            case RATIO: ratio[n] = cc.getRatio(); break;
+            case RATIO: 
+                ratio[n] = cc.getRatio(); 
+                inverseRatio[n] = 1f / ratio[n]; 
+                break;
             case ATTACK: attack[n] = cc.getAttack(); break;
-            //case HOLD: hold[n] = cc.getHold(); break;
+            case HOLD: hold[n] = cc.getHold(); break;
             case RELEASE: release[n] = cc.getRelease(); break;
             case GAIN: gain[n] = cc.getGain(); break;
-            //case DEPTH: depth[n] = cc.getDepth(); break;
+            case DEPTH: depth[n] = cc.getDepth(); break;
             //case KEY: key[n] = cc.getKeyBuffer(); break; 
             }
         }
@@ -117,6 +128,10 @@ public class MidSideCompressor extends MidSideDynamicsProcess
             return ratio;
         }
 
+        public float[] getInverseRatio() {
+            return inverseRatio;
+        }
+
         public float[] getAttack() {
             return attack;
         }
@@ -133,6 +148,10 @@ public class MidSideCompressor extends MidSideDynamicsProcess
             return gain;
         }
 
+        public float[] getDepth() {
+            return depth;
+        }
+        
         public void setDynamicGain(float gainM, float gainS) {
             mid.setDynamicGain(gainM);
             side.setDynamicGain(gainS);
