@@ -1,4 +1,7 @@
-/* Copyright (C) 2006 Steve Taylor (toot.org.uk) */
+// Copyright (C) 2006, 2010 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.audio.dynamics;
 
@@ -18,7 +21,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
     protected float makeupGain;
     protected float ratio2;
 
-    protected ProcessVariables vars;
+    protected Variables vars;
 
     private boolean wasBypassed;
 
@@ -33,14 +36,14 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
 	private float[][] keySamples;
 	
 
-    public DynamicsProcess(ProcessVariables vars) {
+    public DynamicsProcess(Variables vars) {
         this(vars, false);
-        wasBypassed = !vars.isBypassed(); // force update
     }
 
-    public DynamicsProcess(ProcessVariables vars, boolean peak) {
+    public DynamicsProcess(Variables vars, boolean peak) {
         this.vars = vars;
         this.isPeak = peak;
+        wasBypassed = !vars.isBypassed(); // force update
     }
 
     public void clear() {
@@ -163,7 +166,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
     /**
      * Specifies parameters in implementation terms
      */
-    public interface ProcessVariables {
+    public interface Variables {
         void update(float sampleRate);
         boolean isBypassed();
         float getThreshold(); 	//  NOT dB, the actual level

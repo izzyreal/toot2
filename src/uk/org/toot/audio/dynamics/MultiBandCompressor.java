@@ -1,4 +1,7 @@
-/* Copyright (C) 2006 Steve Taylor (toot.org.uk) */
+// Copyright (C) 2006 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.audio.dynamics;
 
@@ -69,7 +72,7 @@ public class MultiBandCompressor implements AudioProcess
         }
         compressors = new Compressor[nbands];
         for ( int i = 0; i < nbands; i++ ) {
-            compressors[i] = new Compressor(new DynamicsDesign((Compressor.Controls)controls.get(1+i*2)));
+            compressors[i] = new Compressor((Compressor.Controls)controls.get(1+i*2));
         }
     }
 

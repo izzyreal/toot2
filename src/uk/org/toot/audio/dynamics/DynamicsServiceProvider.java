@@ -38,13 +38,13 @@ public class DynamicsServiceProvider extends TootAudioServiceProvider
  		}
  		if ( !(c instanceof DynamicsControls) ) return null;
         if ( c instanceof Compressor.Controls ) {
-            return new Compressor(new DynamicsDesign((Compressor.Controls)c));
+            return new Compressor((Compressor.Controls)c);
         } else if ( c instanceof Limiter.Controls ) {
-            return new Limiter(new DynamicsDesign((Limiter.Controls)c));
+            return new Limiter((Limiter.Controls)c);
         } else if ( c instanceof Expander.Controls ) {
-            return new Expander(new DynamicsDesign((Expander.Controls)c));
+            return new Expander((Expander.Controls)c);
         } else if ( c instanceof Gate.Controls ) {
-            return new Gate(new DynamicsDesign((Gate.Controls)c));
+            return new Gate((Gate.Controls)c);
         }
         return null; // caller then tries another provider
     }

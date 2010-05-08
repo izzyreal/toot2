@@ -174,6 +174,58 @@ public class AudioBuffer extends FloatSampleBuffer
 		}
 		return sumOfSquares / (nc * ns);
     }
+    
+    /*
+     * Encodes all Left/Right pairs to Mid/Side pairs
+     * M = 0.5 * (L + R)
+     * S = 0.5 * (L - R)
+     */
+    public boolean encodeMidSide() {
+        int[] lefts = channelFormat.getLeft();
+        int[] rights = channelFormat.getRight();
+        assert lefts.length == rights.length;
+        if ( lefts.length == 0 ) return false;
+        int np = lefts.length;
+        int ns = getSampleCount();
+        for ( int p = 0; p < np; p++ ) {
+            float[] left = getChannel(lefts[p]);
+            float[] right = getChannel(rights[p]);
+            for ( int s = 0; s < ns; s++ ) {
+                float mid = 0.5f * (left[s] + right[s]);
+                float side = 0.5f * (left[s] - right[s]);
+                left[s] = mid;      // left is now mid  
+                right[s] = side;    // right is now side
+            }
+        }
+        return true;
+    }
+    
+    /*
+     * Decodes all Mid/Side pairs to Left/Right pairs
+     * L = M + S
+     * R = M - S
+     */
+    public boolean decodeMidSide() {
+        int[] mids = channelFormat.getLeft();
+        int[] sides = channelFormat.getRight();
+        assert mids.length == sides.length;
+        if ( mids.length == 0 ) return false;
+        int np = mids.length;
+        int ns = getSampleCount();
+        for ( int p = 0; p < np; p++ ) {
+            float[] mid = getChannel(mids[p]);
+            float[] side = getChannel(sides[p]);
+            for ( int s = 0; s < ns; s++ ) {
+                float left = mid[s] + side[s];
+                float right = mid[s] - side[s];
+                mid[s] = left;      // mid is now left
+                side[s] = right;    // side is now right
+            }
+        }
+        return true;
+        
+    }
+    
     /**
      * MetaInfo holds meta information for an AudioBuffer.
      * MetaInfo is intentionally immutable.

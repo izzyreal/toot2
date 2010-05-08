@@ -1,19 +1,25 @@
-/* Copyright (C) 2006 Steve Taylor (toot.org.uk) */
+// Copyright (C) 2006, 2010 Steve Taylor.
+// Distributed under the Toot Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.toot.org.uk/LICENSE_1_0.txt)
 
 package uk.org.toot.audio.dynamics;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioControls;
+import uk.org.toot.audio.core.KVolumeUtils;
 import uk.org.toot.audio.core.Taps.TapControl;
 import uk.org.toot.control.*;
 
 import java.awt.Color;
 
+import org.tritonus.share.sampled.TVolumeUtils;
+
 import static uk.org.toot.audio.dynamics.DynamicsControlIds.*;
 import static uk.org.toot.misc.Localisation.*;
 
 abstract public class DynamicsControls extends AudioControls
-    implements DynamicsDesign.DesignVariables
+    implements DynamicsProcess.Variables
 {
 	private final static ControlLaw THRESH_LAW = new LinearLaw(-40f, 20f, "dB");
     private final static ControlLaw RATIO_LAW = new LogLaw(1.5f, 10f, "");
@@ -33,7 +39,10 @@ abstract public class DynamicsControls extends AudioControls
     private FloatControl depthControl;
     private TapControl keyControl;
     
-    private float threshold, ratio = 1f, attack, hold, release, gain, depth = 40f;
+    private float sampleRate = 44100;
+    private float threshold, thresholddB, ratio = 1f, knee = 0f;
+    private float attack, release, gain = 1f, depth = 40f;
+    public int hold = 0;
     private AudioBuffer key;
 
     private int idOffset = 0;
@@ -98,18 +107,74 @@ abstract public class DynamicsControls extends AudioControls
         }
     }
 
+    public void update(float sampleRate) {
+        this.sampleRate = sampleRate;
+        // derive sample rate dependent variables
+        deriveAttack();
+        deriveHold();
+        deriveRelease();
+    }
+
     @Override
     protected void derive(Control c) {
     	switch ( c.getId() - idOffset ) {
-    	case THRESHOLD: threshold = thresholdControl.getValue(); break;
-    	case RATIO: ratio = ratioControl.getValue(); break;
-    	case ATTACK: attack = attackControl.getValue(); break;
-    	case HOLD: hold = holdControl.getValue(); break;
-    	case RELEASE: release = releaseControl.getValue(); break;
-    	case GAIN: gain = gainControl.getValue(); break;
-    	case DEPTH: depth = depthControl.getValue(); break;
-    	case KEY: key = keyControl.getBuffer(); break; 
+    	case THRESHOLD: deriveThreshold(); break;
+    	case RATIO: deriveRatio(); break;
+    	case ATTACK: deriveAttack(); break;
+    	case HOLD: deriveHold(); break;
+    	case RELEASE: deriveRelease(); break;
+    	case GAIN: deriveGain(); break;
+    	case DEPTH: deriveDepth(); break;
+    	case KEY: deriveKey(); break; 
     	}
+    }
+    
+    protected void deriveThreshold() {
+        thresholddB = thresholdControl.getValue();
+        threshold = (float)KVolumeUtils.log2lin(thresholddB);
+    }
+
+    protected void deriveRatio() {
+        if ( ratioControl == null ) return;
+        ratio = ratioControl.getValue();
+    }
+    
+    private static float LOG_0_01 = (float)Math.log(0.01);
+    // http://www.physics.uoguelph.ca/tutorials/exp/Q.exp.html
+    // http://www.musicdsp.org/showArchiveComment.php?ArchiveID=136
+    // return per sample factor for 99% in specified milliseconds
+    protected float deriveTimeFactor(float milliseconds) {
+        float ns = milliseconds * sampleRate / 1000;
+        float k = LOG_0_01 / ns ; // k, per sample
+        return (float)Math.exp(k);
+    }
+
+    protected void deriveAttack() {
+        attack = deriveTimeFactor(attackControl.getValue());
+    }
+
+    protected void deriveHold() {
+        if ( holdControl == null ) return;
+        hold = (int)(holdControl.getValue()*sampleRate*0.001f);
+    }
+
+    protected void deriveRelease() {
+        release = deriveTimeFactor(releaseControl.getValue());
+    }
+
+    protected void deriveGain() {
+        if ( gainControl == null ) return;
+        gain = (float)TVolumeUtils.log2lin(gainControl.getValue());
+    }
+
+    protected void deriveDepth() {
+        if ( depthControl == null ) return;
+        depth = (float)TVolumeUtils.log2lin(depthControl.getValue());
+    }
+
+    protected void deriveKey() {
+        if ( keyControl == null ) return;
+        key = keyControl.getBuffer();
     }
     
     @Override
@@ -203,42 +268,51 @@ abstract public class DynamicsControls extends AudioControls
         }
     }
 
-//	implement DynamicsDesign.DesignVariables
+//	implement DynamicsProcess.Variables
 
     public float getThresholddB() {
+        return thresholddB;
+    }
+
+    public float getThreshold() {
         return threshold;
+    }
+
+    public float getKnee() {
+        return knee;
     }
 
     public float getRatio() {
         return ratio;
     }
-
-    public float getAttackMilliseconds() {
+    
+    public float getAttack() {
         return attack;
     }
 
-    public float getHoldMilliseconds() {
+    public int getHold() {
         return hold;
     }
 
-    public float getReleaseMilliseconds() {
+    public float getRelease() {
         return release;
     }
 
-    public float getGaindB() {
+    public float getGain() {
         return gain;
     }
 
-    public float getDepthdB() {
+    public float getDepth() {
         return depth;
     }
 
-    public void setGainReduction(float dB) {
-        if ( gainReductionIndicator == null ) return;
-        gainReductionIndicator.setValue(dB);
-    }
-    
     public AudioBuffer getKeyBuffer() {
-    	return key;
+        return key;
+    }
+
+    public void setDynamicGain(float dynamicGain) {
+        if ( gainReductionIndicator == null ) return;
+        // ideally we'd offload the log to another thread !!!
+        gainReductionIndicator.setValue((float)(20*Math.log(dynamicGain)));
     }
 }
