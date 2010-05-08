@@ -18,6 +18,7 @@ public class DynamicsServiceProvider extends TootAudioServiceProvider
 //        addControls(Expander.Controls.class, DynamicsIds.EXPANDER_ID, getString("Expander"), family, "0.1");
         addControls(Gate.Controls.class, DynamicsIds.GATE_ID, getString("Gate"), family, "0.1");
         addControls(MultiBandCompressor.DualBandControls.class, DynamicsIds.MULTI_BAND_COMPRESSOR_ID, getString("Dual.Band.Compressor"), family, "0.2");
+        addControls(MidSideCompressor.Controls.class, DynamicsIds.MID_SIDE_COMPRESSOR_ID, getString("Mid.Side.Compressor"), family, "0.1");
 //        addControls(MultiBandCompressor.QuadBandControls.class, DynamicsIds.MULTI_BAND_COMPRESSOR_ID, getString("Quad.Band.Compressor"), family, "0.1");
         addControls(TremoloControls.class, DynamicsIds.TREMOLO_ID, getString("Tremolo"), family, "0.1");
 
@@ -26,10 +27,14 @@ public class DynamicsServiceProvider extends TootAudioServiceProvider
 //        add(Expander.class, getString("Expander"), family, "0.1");
         add(Gate.class, getString("Gate"), family, "0.1");
         add(MultiBandCompressor.class, getString("Multi.Band.Compressor"), family, "0.2");
+        add(MidSideCompressor.class, getString("Mid.Side.Compressor"), family, "0.1");
         add(TremoloProcess.class, getString("Tremolo"), family, "0.1");
     }
 
     public AudioProcess createProcessor(AudioControls c) {
+        if ( c instanceof MidSideCompressor.Controls ) {
+            return new MidSideCompressor((MidSideCompressor.Controls)c);
+        }
  		if ( c instanceof MultiBandCompressor.MultiBandControls ) {
             return new MultiBandCompressor((MultiBandCompressor.MultiBandControls)c);
         }
