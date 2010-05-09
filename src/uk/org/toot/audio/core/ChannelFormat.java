@@ -110,7 +110,7 @@ public abstract class ChannelFormat
         boolean doMix = destBuffer != sourceBuffer;
         int snc = sourceBuffer.getChannelCount();
         int dnc = destBuffer.getChannelCount();
-        if ( dnc > 4 ) dnc = 4; // 5.1 taken as quad, centre and LFE ignored
+        if ( dnc > 4 && snc != dnc ) dnc = 4; // upmixed to 5.1 as quad, centre and LFE ignored
       	int ns = destBuffer.getSampleCount();
         float g;
         float k = (float)(snc)/dnc; // conserve power for snc != dnc
