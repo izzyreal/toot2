@@ -110,6 +110,7 @@ public abstract class ChannelFormat
         boolean doMix = destBuffer != sourceBuffer;
         int snc = sourceBuffer.getChannelCount();
         int dnc = destBuffer.getChannelCount();
+        if ( dnc > 4 ) dnc = 4; // 5.1 taken as quad, centre and LFE ignored
       	int ns = destBuffer.getSampleCount();
         float g;
         float k = (float)(snc)/dnc; // conserve power for snc != dnc
@@ -253,11 +254,11 @@ public abstract class ChannelFormat
             }
         }
 
-		public int mix(AudioBuffer destBuffer, AudioBuffer sourceBuffer, float[] gain) {
+/*		public int mix(AudioBuffer destBuffer, AudioBuffer sourceBuffer, float[] gain) {
             throw new IllegalArgumentException("5.1 mix not implemented!");
             // and probaby can't be implemented by float gain[]
-            // center?
-            // LFE? all channels?
-        }
+            // center? requires divergence
+            // LFE? ignore for music, its not a sub, its for LF special effects
+        } */
     };
 }
