@@ -181,8 +181,8 @@ public class MixControls extends AudioControls
     public void getChannelGains(float[] dest) {
         switch ( channelCount ) {
         case 6: // FIVE_1
-//        	dest[5] = g * getLFE();
-//        	dest[4] = g * getCenter();
+        	dest[5] = gain; // * getLFE();
+        	dest[4] = gain; // * getCenter();
 			// intentional fall-through
         case 4: // QUAD
         	// rear
@@ -199,7 +199,7 @@ public class MixControls extends AudioControls
 	        dest[0] = gain * left;
             break;
         case 1: // MONO
-        	dest[0] = 1f;
+        	dest[0] = gain;
         	break;
         }
     }
