@@ -23,7 +23,7 @@ abstract public class DynamicsControls extends AudioControls
 {
 	private final static ControlLaw THRESH_LAW = new LinearLaw(-40f, 20f, "dB");
     private final static ControlLaw RATIO_LAW = new LogLaw(1.5f, 10f, "");
-    private final static ControlLaw ATTACK_LAW = new LogLaw(20f, 100f, "ms");
+    private final static ControlLaw ATTACK_LAW = new LogLaw(10f, 100f, "ms");
     private final static ControlLaw HOLD_LAW = new LogLaw(1f, 1000f, "ms");
     private final static ControlLaw RELEASE_LAW = new LogLaw(200f, 2000f, "ms");
     private final static ControlLaw GAIN_LAW = new LinearLaw(-12f, 12f, "dB");

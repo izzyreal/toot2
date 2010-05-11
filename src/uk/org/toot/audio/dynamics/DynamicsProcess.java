@@ -7,7 +7,8 @@ package uk.org.toot.audio.dynamics;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.SimpleAudioProcess;
-import uk.org.toot.dsp.FastMath;
+
+import static uk.org.toot.dsp.FastMath.*;
 
 abstract public class DynamicsProcess extends SimpleAudioProcess
 {
@@ -112,9 +113,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         	float key = 0;
         	if ( isPeak ) {
         		for ( int c = 0; c < nck; c++ ) {
-        			sample = keySamples[c][i];
-        			sample = sample < 0 ? -sample : sample;
-        			key = key > sample ? key : sample;
+                    key = max(key, abs(keySamples[c][i]));
         		}
         		targetGain = function(key);
         	} else if ( (i % mslen) == 0 && (i + mslen) < len ) {
@@ -132,7 +131,7 @@ abstract public class DynamicsProcess extends SimpleAudioProcess
         			mean += squaresums[s];
         		}
         		if ( ++nsqsum >= NSQUARESUMS ) nsqsum = 0;
-        		key = (float)FastMath.sqrt(mean/NSQUARESUMS);
+        		key = (float)sqrt(mean/NSQUARESUMS);
         		targetGain = function(key);
         	}
 

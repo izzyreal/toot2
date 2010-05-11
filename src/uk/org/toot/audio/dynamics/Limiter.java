@@ -17,15 +17,12 @@ public class Limiter extends DynamicsProcess
 
     // limit
     protected float function(float value) {
-        if ( value > threshold ) {
-            return threshold / value; // infinity ratio limit
-        }
-        return 1f; // not limited
+        return value > threshold ? threshold / value : 1f;
     }
 
     public static class Controls extends DynamicsControls
     {
-        private final static ControlLaw ATTACK_LAW = new LogLaw(1f, 100f, "ms");
+        private final static ControlLaw ATTACK_LAW = new LogLaw(0.1f, 100f, "ms");
         private final static ControlLaw RELEASE_LAW = new LogLaw(20f, 2000f, "ms");
 
         public Controls() {

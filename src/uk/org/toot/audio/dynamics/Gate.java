@@ -11,33 +11,39 @@ import uk.org.toot.control.LinearLaw;
 
 public class Gate extends DynamicsProcess
 {
-    private int hold = 0;
+    private int holdCount = 0;
+    private int hold;
     private boolean wasOpen = false;
+    private float depth;
 
     public Gate(Variables vars) {
-        super(vars, true); // peak detection
+        super(vars, false); // rms detection
     }
 
+    @Override
+    protected void cacheProcessVariables() {
+        super.cacheProcessVariables();
+        depth = vars.getDepth();
+        hold = vars.getHold();
+    }
+    
     // gate
     protected float function(float value) {
-        if ( value < threshold ) {
-            return vars.getDepth(); // gated
-        }
-        return 1f; // not gated
+        return value < threshold ? depth : 1f;
     }
 
     // implements hold
     // gate must open before it can close !!!
     // but it can open before it has closed
     protected float dynamics(float target) {
-        if ( hold > 0 ) {
-            hold -= 1;
+        if ( holdCount > 0 ) {
+            holdCount -= 1;
             return super.dynamics(1f); // hold envelope
         }
         boolean isOpen = target > 0.9f;
         // on transition to release (close)
         if ( !isOpen && wasOpen ) {
-            hold = vars.getHold();
+            holdCount = hold;
             wasOpen = false;
             return super.dynamics(1f);
         }
