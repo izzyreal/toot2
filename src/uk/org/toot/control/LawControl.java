@@ -39,8 +39,8 @@ public class LawControl extends Control
         this.law = law;
         this.precision = precision;
         this.value = initialValue;
-        assert initialValue >= law.getMinimum();
-        assert initialValue <= law.getMaximum();
+        assert initialValue >= Math.min(law.getMinimum(), law.getMaximum());
+        assert initialValue <= Math.max(law.getMinimum(), law.getMaximum());
         valueFormat = "%1$."+calculateDecimalPlaces()+"f %2$s";
         insertColor = colorer.getColor(this);
     }
