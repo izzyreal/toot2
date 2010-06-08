@@ -20,12 +20,14 @@ public class ToolServiceProvider extends TootAudioServiceProvider
         addControls(NaNTectorControls.class, ToolIds.NAN_TECTOR_ID, "NaN Tector", family, "0.1");
         addControls(FormatControls.class, ToolIds.FORMAT_ID, "Format", family, "0.1");
         addControls(NoiseControls.class, ToolIds.NOISE_ID, "Noise", family, "0.1");
+        addControls(SineControls.class, ToolIds.SINE_ID, "Sine", family, "0.1");
         addControls(MonoControls.class, ToolIds.MONO_ID, "Mono", family, "0.1");
 
         add(DenormalProcess.class, "Denormaliser", family, "0.1");
         add(NaNTectorProcess.class, "NaN Tector", family, "0.1");
         add(FormatProcess.class, "Format", family, "0.1");
         add(NoiseProcess.class, "Noise", family, "0.1");
+        add(SineProcess.class, "Sine", family, "0.1");
         add(MonoProcess.class, "Mono", family, "0.1");
     }
 
@@ -38,6 +40,8 @@ public class ToolServiceProvider extends TootAudioServiceProvider
             return new FormatProcess((FormatControls)c);
         } else if ( c instanceof NoiseControls ) {
             return new NoiseProcess((NoiseControls)c);
+        } else if ( c instanceof SineControls ) {
+            return new SineProcess((SineControls)c);
         } else if ( c instanceof MonoProcess.Variables ) {
             return new MonoProcess((MonoProcess.Variables)c);
         }
