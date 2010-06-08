@@ -15,11 +15,9 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
     protected float[] envelope = new float[2];
 
     protected boolean isPeak = false;
-    protected float[] threshold, thresholddB;
-    protected float[] ratio, inverseRatio;
+    protected float[] threshold;
     protected float[] attack, release;
     protected float[] makeupGain;
-    protected float[] ratio2 = new float[2];
 
     protected Variables vars;
 
@@ -55,14 +53,9 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
     protected void cacheProcessVariables() {
         // update local variables
         threshold = vars.getThreshold();
-        thresholddB = vars.getThresholddB();
-        ratio = vars.getRatio();
-        inverseRatio = vars.getInverseRatio();
         attack = vars.getAttack();
         release = vars.getRelease();
         makeupGain = vars.getGain();
-        ratio2[0] = (1f - ratio[0]) * inverseRatio[0];
-        ratio2[1] = (1f - ratio[1]) * inverseRatio[1];
     }
 
     /**
@@ -160,8 +153,7 @@ abstract public class MidSideDynamicsProcess extends SimpleAudioProcess
         void update(float sampleRate);
         boolean isBypassed();
         float[] getThreshold();     //  NOT dB, the actual level
-        float[] getThresholddB();   //  dB
-        float[] getRatio();
+        float[] getInverseThreshold();     //  NOT dB, the actual level
         float[] getInverseRatio();  // 1/ratio avoids real-time divides
         float[] getKnee();		    //	NOT dB, the actual level
         float[] getAttack();		//	NOT ms, the exponential coefficient

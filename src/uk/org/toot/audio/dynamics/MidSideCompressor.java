@@ -5,24 +5,34 @@
 
 package uk.org.toot.audio.dynamics;
 
-import org.tritonus.share.sampled.TVolumeUtils;
-
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.control.Control;
 
 import static uk.org.toot.audio.dynamics.DynamicsControlIds.*;
 import static uk.org.toot.misc.Localisation.*;
+import static uk.org.toot.dsp.FastMath.pow;
 
 public class MidSideCompressor extends MidSideDynamicsProcess
 {
+    protected float[] inverseRatio;
+    protected float[] ratio2 = new float[2];
+    protected float[] inverseThreshold;
+
     public MidSideCompressor(Variables vars) {
 		super(vars, false); // RMS, not peak
     }
 
+    protected void cacheProcessVariables() {
+        super.cacheProcessVariables();
+        inverseRatio = vars.getInverseRatio();
+        ratio2[0] = 1f - inverseRatio[0];
+        ratio2[1] = 1f - inverseRatio[1];
+        inverseThreshold = vars.getInverseThreshold();
+    }
+    
     protected float function(int i, float value) {
-        if ( value > threshold[i] ) { // -knee/2 etc. interpolate around knee !!!
-        	float overdB = (float)TVolumeUtils.lin2log(value/threshold[i]);
-            return (float)TVolumeUtils.log2lin(overdB * ratio2[i]);
+        if ( value > threshold[i] ) {
+            return 1f / (float)pow(value * inverseThreshold[i], ratio2[i]);
         }
         return 1f;
     }
@@ -33,9 +43,8 @@ public class MidSideCompressor extends MidSideDynamicsProcess
         private Compressor.Controls mid, side;
 
         private float[] threshold = new float[2];
-        private float[] thresholddB = new float[2];
+        private float[] inverseThreshold = new float[2];
         private float[] knee = new float[2];
-        private float[] ratio = new float[2];
         private float[] inverseRatio = new float[2];
         private float[] attack = new float[2];
         private int[] hold = new int[2];
@@ -60,12 +69,10 @@ public class MidSideCompressor extends MidSideDynamicsProcess
         protected void deriveIndependentVariables() {
             threshold[0] = mid.getThreshold();
             threshold[1] = side.getThreshold();
-            thresholddB[0] = mid.getThresholddB();
-            thresholddB[1] = side.getThresholddB();
-            ratio[0] = mid.getRatio();
-            ratio[1] = side.getRatio();
-            inverseRatio[0] = 1f / ratio[0];
-            inverseRatio[1] = 1f / ratio[1];
+            inverseThreshold[0] = mid.getInverseThreshold();
+            inverseThreshold[1] = side.getInverseThreshold();
+            inverseRatio[0] = mid.getInverseRatio();
+            inverseRatio[1] = side.getInverseRatio();
             gain[0] = mid.getGain();
             gain[1] = side.getGain();
             depth[0] = mid.getDepth();
@@ -92,10 +99,9 @@ public class MidSideCompressor extends MidSideDynamicsProcess
             switch ( id ) {
             case THRESHOLD: 
                 threshold[n] = cc.getThreshold();
-                thresholddB[n] = cc.getThresholddB(); break;
+                inverseThreshold[n] = cc.getInverseThreshold();
             case RATIO: 
-                ratio[n] = cc.getRatio(); 
-                inverseRatio[n] = 1f / ratio[n]; 
+                inverseRatio[n] = cc.getInverseRatio(); 
                 break;
             case ATTACK: attack[n] = cc.getAttack(); break;
             case HOLD: hold[n] = cc.getHold(); break;
@@ -116,16 +122,12 @@ public class MidSideCompressor extends MidSideDynamicsProcess
             return threshold;
         }
 
-        public float[] getThresholddB() {
-            return thresholddB;
+        public float[] getInverseThreshold() {
+            return inverseThreshold;
         }
-
+        
         public float[] getKnee() {
             return knee;
-        }
-
-        public float[] getRatio() {
-            return ratio;
         }
 
         public float[] getInverseRatio() {

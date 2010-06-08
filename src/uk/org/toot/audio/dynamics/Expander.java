@@ -11,7 +11,7 @@ import uk.org.toot.control.LinearLaw;
 
 public class Expander extends DynamicsProcess
 {
-    public Expander(Variables vars) {
+    public Expander(DynamicsVariables vars) {
         super(vars, false); // RMS, not peak
     }
 

@@ -7,15 +7,17 @@ package uk.org.toot.audio.dynamics;
 
 public class DynamicsControlIds
 {
-    public static final int KEY = 0;
-    public static final int THRESHOLD = 1;
-    public static final int RATIO = 2;
-    public static final int KNEE = 3;
-    public static final int ATTACK = 4;
-    public static final int HOLD = 5;
-    public static final int RELEASE = 6;
-    public static final int GAIN = 7;
-    public static final int MIX = 8;
-    public static final int DEPTH = 9;
-    public static final int CROSSOVER_FREQUENCY = 10;
+    public static final int KEY = 0;                    // all
+    public static final int THRESHOLD = 1;              // all
+    public static final int RATIO = 2;                  // compress / expand
+    public static final int KNEE = 3;                   // compress / limit / expand
+    public static final int ATTACK = 4;                 // all
+    public static final int HOLD = 5;                   // gate
+    public static final int RELEASE = 6;                // all
+    public static final int GAIN = 7;                   // compress / limit
+    public static final int DRY_GAIN = 8;               // compress / limit
+    public static final int DEPTH = 9;                  // gate
+    public static final int CROSSOVER_FREQUENCY = 10;   // multiband
+    public static final int HYSTERESIS = 11;            // gate
+    public static final int RMS = 12;                   // compress / expand
 }

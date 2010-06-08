@@ -13,10 +13,11 @@ public class Gate extends DynamicsProcess
 {
     private int holdCount = 0;
     private int hold;
-    private boolean wasOpen = false;
+    private boolean open = false;
     private float depth;
+    private float hysteresis;
 
-    public Gate(Variables vars) {
+    public Gate(DynamicsVariables vars) {
         super(vars, false); // rms detection
     }
 
@@ -25,30 +26,26 @@ public class Gate extends DynamicsProcess
         super.cacheProcessVariables();
         depth = vars.getDepth();
         hold = vars.getHold();
+        hysteresis = vars.getHysteresis();
     }
     
     // gate
     protected float function(float value) {
-        return value < threshold ? depth : 1f;
-    }
-
-    // implements hold
-    // gate must open before it can close !!!
-    // but it can open before it has closed
-    protected float dynamics(float target) {
-        if ( holdCount > 0 ) {
-            holdCount -= 1;
-            return super.dynamics(1f); // hold envelope
+        if ( open ) {
+            if ( value < threshold * hysteresis ) {
+                if ( holdCount > 0 ) {
+                    holdCount -= 1;
+                    return 1f; // hold open
+                }
+                open = false;
+            }
+        } else { // !wasOpen
+            if ( value > threshold ) {
+                holdCount = hold;
+                open = true;
+            }
         }
-        boolean isOpen = target > 0.9f;
-        // on transition to release (close)
-        if ( !isOpen && wasOpen ) {
-            holdCount = hold;
-            wasOpen = false;
-            return super.dynamics(1f);
-        }
-		wasOpen = isOpen;
-		return super.dynamics(target);
+        return open ? 1f : depth;
     }
 
     public static class Controls extends DynamicsControls
@@ -64,5 +61,7 @@ public class Gate extends DynamicsProcess
 	    protected boolean hasHold() { return true; }
 
 	    protected boolean hasDepth() { return true; }
+
+        protected boolean hasHysteresis() { return true; }
     }
 }

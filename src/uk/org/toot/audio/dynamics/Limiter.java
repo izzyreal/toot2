@@ -11,7 +11,7 @@ import uk.org.toot.control.LogLaw;
 
 public class Limiter extends DynamicsProcess
 {
-    public Limiter(Variables vars) {
+    public Limiter(DynamicsVariables vars) {
         super(vars, true); // peak detection
     }
 
@@ -22,14 +22,11 @@ public class Limiter extends DynamicsProcess
 
     public static class Controls extends DynamicsControls
     {
-        private final static ControlLaw ATTACK_LAW = new LogLaw(0.1f, 100f, "ms");
         private final static ControlLaw RELEASE_LAW = new LogLaw(20f, 2000f, "ms");
 
         public Controls() {
             super(DynamicsIds.LIMITER_ID, getString("Limiter"));
         }
-        
-        protected ControlLaw getAttackLaw() { return ATTACK_LAW; }
         
         protected ControlLaw getRelaseLaw() { return RELEASE_LAW; }
         

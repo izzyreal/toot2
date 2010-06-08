@@ -5,26 +5,38 @@
 
 package uk.org.toot.audio.dynamics;
 
-import org.tritonus.share.sampled.TVolumeUtils;
-
 import static uk.org.toot.misc.Localisation.*;
+import static uk.org.toot.dsp.FastMath.pow;
+import uk.org.toot.control.ControlLaw;
+import uk.org.toot.control.LogLaw;
 
 public class Compressor extends DynamicsProcess
 {
-    public Compressor(Variables vars) {
+    protected float ratio2;
+    protected float inverseThreshold;
+
+    public Compressor(DynamicsVariables vars) {
 		super(vars, false); // RMS, not peak
     }
 
+    @Override
+    protected void cacheProcessVariables() {
+        super.cacheProcessVariables();
+        ratio2 = 1f - vars.getInverseRatio();
+        inverseThreshold = vars.getInverseThreshold();
+    }
+    
     protected float function(float value) {
-        if ( value > threshold ) { // -knee/2 etc. interpolate around knee !!!
-        	float overdB = (float)TVolumeUtils.lin2log(value/threshold);
-            return (float)TVolumeUtils.log2lin(overdB * ratio2);
+        if ( value > threshold ) {
+            return 1f / (float)pow(value * inverseThreshold, ratio2);
         }
         return 1f;
     }
     
     public static class Controls extends DynamicsControls
     {
+        private final static ControlLaw ATTACK_LAW = new LogLaw(10f, 100f, "ms");
+
         public Controls() {
             super(DynamicsIds.COMPRESSOR_ID, getString("Compressor"));
         }
@@ -33,12 +45,16 @@ public class Compressor extends DynamicsProcess
             super(DynamicsIds.COMPRESSOR_ID, name, idOffset);
         }
 
-		protected boolean hasGainReductionIndicator() { return true; }
+        protected ControlLaw getAttackLaw() { return ATTACK_LAW; }
+        
+        protected boolean hasGainReductionIndicator() { return true; }
 
 	    protected boolean hasRatio() { return true; }
 
 	    protected boolean hasGain() { return true; }
 	    
-	    protected boolean hasKey() { return true; }
+        protected boolean hasDryGain() { return true; }
+
+        protected boolean hasKey() { return true; }
     }
 }
