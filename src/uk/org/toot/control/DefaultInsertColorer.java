@@ -20,7 +20,8 @@ public class DefaultInsertColorer implements InsertColorer
     	} else if ( units.equals(getString("semitones")) ) {
 			return Color.YELLOW;    							// Frequency
     	} else if ( units.equals("dB") ) {						
-    		if ( control.getLaw().getMinimum() >= -60 ) {
+    		if ( control.getLaw().getMinimum() >= -60 ||
+                    control.getLaw().getMaximum() < 0 ) {
     			return Color.WHITE;
     		} else {
     			return Color.BLACK;								// Amplitude
