@@ -16,7 +16,7 @@ import javax.swing.*;
 
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioControlsChain;
-import uk.org.toot.audio.dynamics.DynamicsControls;
+import uk.org.toot.audio.dynamics.GainReductionIndicator;
 import uk.org.toot.control.*;
 import uk.org.toot.swingui.audioui.meterui.GainReductionIndicatorPanel;
 import uk.org.toot.swingui.controlui.*;
@@ -83,7 +83,7 @@ public class AudioPanelFactory extends ControlPanelFactory
 	}
 
     public JComponent createComponent(Control control, int axis, boolean hasHeader) {
-    	if ( control instanceof DynamicsControls.GainReductionIndicator ) {
+    	if ( control instanceof GainReductionIndicator ) {
             return new GainReductionIndicatorPanel((FloatControl)control);
     	}
     	return super.createComponent(control, axis, hasHeader);
