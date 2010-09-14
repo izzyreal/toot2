@@ -14,4 +14,5 @@ import static uk.org.toot.audio.id.TootAudioControlsId.REVERB_BASE_ID;
 public interface ReverbIds
 {
 	int PLATE_ID = REVERB_BASE_ID;
+    int BARR_ID = REVERB_BASE_ID + 1;
 }

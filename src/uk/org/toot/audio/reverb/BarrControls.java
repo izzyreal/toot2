@@ -18,7 +18,7 @@ import static uk.org.toot.misc.Localisation.getString;
 /**
  * @author st
  */
-public class PlateControls extends AudioControls implements PlateProcess.Variables
+public class BarrControls extends AudioControls implements BarrProcess.Variables
 {
 	private final static int MAX_PRE_DELAY_MS = 200;
 	private final static ControlLaw PRE_DELAY_LAW = new LinearLaw(0, MAX_PRE_DELAY_MS, "ms");
@@ -45,8 +45,8 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 	private float damping, decay;
 	private float decayDiffusion1, decayDiffusion2;
 	
-	public PlateControls() {
-		super(ReverbIds.PLATE_ID, getString("Plate.Reverb"));
+	public BarrControls() {
+		super(ReverbIds.BARR_ID, getString("Barr.Reverb"));
 		createControls();
 		deriveControls();
 	}
@@ -143,7 +143,7 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 	}
 	
 	protected int derivePreDelaySamples() {
-		return (int)(preDelayControl.getValue() * 44100 / 1000); // !!! TODO
+		return (int)(preDelayControl.getValue() * 44100 / 1000); // !!! TODO SR
 	}
 	
 	protected float deriveBandwidth() {
@@ -209,4 +209,35 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 	public float getDecayDiffusion2() {
 		return decayDiffusion2;
 	}
+    
+    // KB keeps block diffuser length much longer than input diffuser lengths
+    // KB keeps delay length a bit less than sum of dif1 and dif2 lengths
+    // converted to 44100 from 29761Hz sample rate for original Griesinger literals
+    private int[][] sizes = {{ 996, 2667, 6598 }, 
+                             { 1777, 3579, 4687 },
+                             { 1345, 3936, 6249 },
+                             { 1173, 4167, 5512 },
+                             { 210, 159, 562, 410 }}; // input diffusers
+    
+    private int[][] leftTaps = {{ 253, 5211 },
+                                { 1745, 4111 },
+                                { 634, 5873},
+                                { 1423, 5173 }};
+
+    private int[][] rightTaps = {{ 1111, 3576 },
+                                 { 568, 4666 },
+                                 { 1964, 4236 },
+                                 { 47, 3533 }}; 
+    
+    public int[][] getSizes() {
+        return sizes;
+    }
+    
+    public int[][] getLeftTaps() {
+        return leftTaps;
+    }
+    
+    public int[][] getRightTaps() {
+        return rightTaps;
+    }
 }

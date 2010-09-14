@@ -5,11 +5,6 @@
 
 package uk.org.toot.audio.reverb;
 
-import uk.org.toot.audio.core.AudioBuffer;
-import uk.org.toot.audio.core.SimpleAudioProcess;
-
-import static uk.org.toot.audio.core.FloatDenormals.*;
-
 /**
  * A literal implementation of the network diagram from Jon Dattorro's Effect Design Part 1,
  * Reverberator and Other Filters. Allegedly this is based on Griesinger's work, as were
@@ -17,9 +12,9 @@ import static uk.org.toot.audio.core.FloatDenormals.*;
  * Constants are for the design sample rate, not 44.1kHz!
  * @author st
  */
-public class PlateProcess extends SimpleAudioProcess
+public class PlateProcess extends AbstractReverbProcess
 {
-	private PlateVariables vars;
+	private Variables vars;
 	private float tank1zm1 = 0f;
 	private Tank tank1, tank2;
 	
@@ -33,9 +28,7 @@ public class PlateProcess extends SimpleAudioProcess
 	private float damping, decay;
 	private float decayDiffusion1, decayDiffusion2;
 	
-	private float[] samplesL, samplesR;
-	
-	public PlateProcess(PlateVariables vars) {
+	public PlateProcess(Variables vars) {
 		this.vars = vars;
 		tank1 = new Tank(true);
 		tank2 = new Tank(false);
@@ -47,7 +40,7 @@ public class PlateProcess extends SimpleAudioProcess
 		id2b = new Diffuser(277);
 	}
 	
-	private void cacheVariables() {
+	protected void cacheVariables() {
 		preDelaySamples = vars.getPreDelaySamples();
 		bandwidth = vars.getBandwidth();
 		inputDiffusion1 = vars.getInputDiffusion1();
@@ -58,26 +51,15 @@ public class PlateProcess extends SimpleAudioProcess
 		decayDiffusion2 = vars.getDecayDiffusion2();
 	}
 	
-	public int processAudio(AudioBuffer buffer) {
-		if ( vars.isBypassed() ) return AUDIO_OK;
-		cacheVariables();
-		buffer.monoToStereo();
-		samplesL = buffer.getChannel(0);
-		samplesR = buffer.getChannel(1);
-		int ns = buffer.getSampleCount();
-		for ( int i = 0; i < ns; i++ ) {
-			reverb(0.3f * (samplesL[i] + samplesR[i]));
-			samplesL[i] = tank1.output(0) + tank2.output(0);
-			samplesR[i] = tank1.output(1) + tank2.output(1);
-		}
-		return AUDIO_OK;
-	}
-
-	private void reverb(float sample) {
-		sample = idiffuse(sample);
+	protected void reverb(float left, float right) {
+		float sample = 0.3f * idiffuse(left + right);
 		tank1zm1 = tank1.tick(sample + tank2.tick(sample + tank1zm1));
 	}
 	
+    protected float left() { return tank1.output(0) + tank2.output(0); }
+    
+    protected float right() { return tank1.output(1) + tank2.output(1); }
+    
 	private float idiffuse(float sample) {
 		// pre delay
 		ipd.delay(sample);
@@ -142,57 +124,19 @@ public class PlateProcess extends SimpleAudioProcess
 			}
 		}
 	}
-	
-	private class Filter
-	{
-		private float zm1 = 0;
-		
-		public float filter(float sample, float k) {
-			return zm1 = zeroDenorm(k * (zm1 - sample) + sample);
-		}
-	}
-	
-	/**
-	 * A fixed length delay that can be tapped
-	 * @author st
-	 */
-	private class Delay
-	{
-		private float[] line;
-		private int head = 0;
-		
-		public Delay(int length) {
-			line = new float[length];
-		}
-		
-		public float delay(float sample) {
-			float s = line[head];
-			line[head++] = sample;
-			if ( head > line.length-1 ) head = 0;
-			return s;
-		}
-		
-		public float tap(int zm) {
-			assert zm < line.length;
-			int p = head - zm;
-			if ( p < 0 ) p += line.length;
-			return line[p];
-		}
-	}
-	
-	private class Diffuser extends Delay
-	{
-		private float b = 0;
-		
-		public Diffuser(int length) {
-			super(length-1);
-		}
-		
-		public float diffuse(float sample, float k) {
-			float a = sample - k * b;
-			float out = k * a + b;
-			b = zeroDenorm(delay(a));
-			return out;
-		}
-	}
+    
+    public interface Variables
+    {
+        boolean isBypassed();
+        int getMaxPreDelaySamples();
+        int getPreDelaySamples();
+        float getBandwidth();       // 0..1
+        float getInputDiffusion1(); // 0..1
+        float getInputDiffusion2(); // 0..1
+        float getDecayDiffusion1(); // 0..1
+        float getDecayDiffusion2(); // 0..1
+        float getDamping();         // 0..1
+        float getDecay();           // 0..1
+    }
+
 }
