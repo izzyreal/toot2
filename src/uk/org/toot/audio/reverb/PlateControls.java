@@ -209,4 +209,6 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 	public float getDecayDiffusion2() {
 		return decayDiffusion2;
 	}
+        
+    public boolean canBypass() { return false; }
 }

@@ -5,6 +5,8 @@
 
 package uk.org.toot.audio.reverb;
 
+import java.util.Arrays;
+
 /**
  * An implementation of the network diagram from 
  * http://spinsemi.com/knowledge_base/effects.html#Reverberation
@@ -14,6 +16,11 @@ package uk.org.toot.audio.reverb;
  */
 public class BarrProcess extends AbstractReverbProcess
 {
+    // gain compensation based on square root of number of taps
+    private final static float GAIN_8 = 0.35f;
+//    private final static float GAIN_4 = 0.5f;
+//    private final static float GAIN_2 = 0.71f;
+    
 	private Variables vars;
 	private float zm1 = 0f;
 	private Block block1, block2, block3, block4;
@@ -25,9 +32,11 @@ public class BarrProcess extends AbstractReverbProcess
 	
 	private int preDelaySamples;
 	private float bandwidth;
-	private float inputDiffusion1, inputDiffusion2;
+	private float inputDiffusion;
 	private float damping, decay;
-	private float decayDiffusion1, decayDiffusion2;
+	private float decayDiffusion;
+    private float size, prevSize = 1f;
+    private boolean halfInserts = false;
 	
 	public BarrProcess(Variables vars) {
 		this.vars = vars;
@@ -52,24 +61,33 @@ public class BarrProcess extends AbstractReverbProcess
 	}
 	
 	protected void cacheVariables() {
+        
 		preDelaySamples = vars.getPreDelaySamples();
 		bandwidth = vars.getBandwidth();
-		inputDiffusion1 = vars.getInputDiffusion1();
-		inputDiffusion2 = vars.getInputDiffusion2();
+		inputDiffusion = vars.getInputDiffusion();
 		damping = vars.getDamping();
 		decay = vars.getDecay();
-		decayDiffusion1 = vars.getDecayDiffusion1();
-		decayDiffusion2 = vars.getDecayDiffusion2();
+		decayDiffusion = vars.getDecayDiffusion();
+        size = vars.getSize();
+        if ( size != prevSize ) {
+            block1.resize(size);
+            block2.resize(size);
+            block3.resize(size);
+            block4.resize(size);
+            prevSize = size;
+        }
+        decay -= 0.25f*(1f - size); // fix blowup at small sizes 
 	}
 	
     // could feed left into 1, right into 3 but input diffusion would need to be stereo!
 	protected void reverb(float left, float right) {
-		float sample = 0.3f * idiffuse(left + right);
-		zm1 = 
-            block4.tick(sample + 
+		float sample = GAIN_8*idiffuse(left + right);
+        float sample2 = halfInserts ? 0f : sample;
+        zm1 = 
+            block4.tick(sample2 + 
                 damp2.filter(
                     block3.tick(sample + 
-                        block2.tick(sample +
+                        block2.tick(sample2 +
                             damp1.filter(
                                 block1.tick(sample + zm1), 
                             damping))), 
@@ -77,17 +95,11 @@ public class BarrProcess extends AbstractReverbProcess
 	}
 	
     protected float left() { 
-        return block1.left() + 
-               block2.left() +
-               block3.left() +
-               block4.left(); 
+        return block1.left()+ block2.left()+block3.left()+block4.left();
     }
     
     protected float right() { 
-        return block1.right() + 
-               block2.right() +
-               block3.right() +
-               block4.right(); 
+        return block1.right()+block2.right()+block3.right()+block4.right();
     }
     
 	private float idiffuse(float sample) {
@@ -101,21 +113,23 @@ public class BarrProcess extends AbstractReverbProcess
 							bw.filter(
 								ipd.tap(preDelaySamples), 
                                 1-bandwidth), 
-							inputDiffusion1), 
-						inputDiffusion1), 
-					inputDiffusion2), 
-				inputDiffusion2);
+							inputDiffusion), 
+						inputDiffusion), 
+					inputDiffusion), 
+				inputDiffusion);
 	}
 	
 	private class Block
 	{
 		private final Diffuser dif1, dif2;
 		private final Delay del;
-        private final int[] tapsLeft, tapsRight;
+        private final int[] tapsLeft, tapsRight, tl, tr;
 		
 		public Block(int[] sz, int[] left, int[] right) {
             tapsLeft = left;
             tapsRight = right;
+            tl = Arrays.copyOf(tapsLeft, 2);
+            tr = Arrays.copyOf(tapsRight, 2);
 			dif1 = new Diffuser(sz[0]);
 			dif2 = new Diffuser(sz[1]);
             del = new Delay(sz[2]);
@@ -126,16 +140,30 @@ public class BarrProcess extends AbstractReverbProcess
 			return decay * del.delay(
                     dif2.diffuse(
                         dif1.diffuse(sample, 
-                            -decayDiffusion1), 
-                        decayDiffusion2));
+                            decayDiffusion), 
+                        decayDiffusion));
 		}
 		
         public float left() {
-            return del.tap(tapsLeft[0]) + del.tap(tapsLeft[1]);
+            return del.tap(tl[0]) + del.tap(tl[1]);
         }
         
         public float right() {
-            return del.tap(tapsRight[0]) + del.tap(tapsRight[1]);
+            return del.tap(tr[0]) + del.tap(tr[1]);
+        }
+        
+        public void resize(float factor) {
+            dif1.resize(factor);
+            dif2.resize(factor);
+            del.resize(factor);
+            calcTaps();
+        }
+        
+        private void calcTaps() {
+            for ( int i = 0; i < 2; i++ ) {
+                tl[i] = (int)(tapsLeft[i] * size);
+                tr[i] = (int)(tapsRight[i] * size);
+            }
         }
 	}
     
@@ -144,12 +172,11 @@ public class BarrProcess extends AbstractReverbProcess
         boolean isBypassed();
         int getPreDelaySamples();
         float getBandwidth();       // 0..1
-        float getInputDiffusion1(); // 0..1
-        float getInputDiffusion2(); // 0..1
-        float getDecayDiffusion1(); // 0..1
-        float getDecayDiffusion2(); // 0..1
+        float getInputDiffusion(); // 0..1
+        float getDecayDiffusion(); // 0..1
         float getDamping();         // 0..1
         float getDecay();           // 0..1
+        float getSize();            // >0..1
         // following methods are called once at startup
         int getMaxPreDelaySamples();
         int[][] getSizes();         // [block][3|4] (dif1, dif2, del)|(id1, id2, id3, id4)

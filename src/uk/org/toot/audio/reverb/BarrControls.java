@@ -12,6 +12,7 @@ import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
+import uk.org.toot.control.LogLaw;
 
 import static uk.org.toot.misc.Localisation.getString;
 
@@ -23,27 +24,31 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 	private final static int MAX_PRE_DELAY_MS = 200;
 	private final static ControlLaw PRE_DELAY_LAW = new LinearLaw(0, MAX_PRE_DELAY_MS, "ms");
     private final static ControlLaw DIFFUSION_LAW = new LinearLaw(0, 0.99f, "");
+    private final static ControlLaw SIZE_LAW = new LogLaw(0.2f, 1f, "");
+    
 	private final static int PRE_DELAY = 0;
 	private final static int BANDWIDTH = 1;
-	private final static int INPUT_DIFFUSION_1 = 2;
-	private final static int INPUT_DIFFUSION_2 = 3;
+	private final static int INPUT_DIFFUSION = 2;
 	private final static int DAMPING = 4;
 	private final static int DECAY = 5;
-	private final static int DECAY_DIFFUSION_1 = 6;
-	private final static int DECAY_DIFFUSION_2 = 7;
+	private final static int DECAY_DIFFUSION = 6;
+    private final static int SIZE = 7;
+    
 	
 	private FloatControl preDelayControl;
 	private FloatControl bandwidthControl;
-	private FloatControl inputDiffusion1Control, inputDiffusion2Control;
+	private FloatControl inputDiffusionControl;
 	private FloatControl dampingControl;
 	private FloatControl decayControl;
-	private FloatControl decayDiffusion1Control, decayDiffusion2Control;
+	private FloatControl decayDiffusionControl;
+    private FloatControl sizeControl;
 	
 	private int preDelaySamples;
 	private float bandwidth;
-	private float inputDiffusion1, inputDiffusion2;
+	private float inputDiffusion;
 	private float damping, decay;
-	private float decayDiffusion1, decayDiffusion2;
+	private float decayDiffusion;
+    private float size;
 	
 	public BarrControls() {
 		super(ReverbIds.BARR_ID, getString("Barr.Reverb"));
@@ -56,12 +61,11 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
         switch ( c.getId() ) {
         case PRE_DELAY: preDelaySamples = derivePreDelaySamples(); break;
         case BANDWIDTH: bandwidth = deriveBandwidth(); break;
-        case INPUT_DIFFUSION_1: inputDiffusion1 = deriveInputDiffusion1(); break;
-        case INPUT_DIFFUSION_2: inputDiffusion2 = deriveInputDiffusion2(); break;
+        case INPUT_DIFFUSION: inputDiffusion = deriveInputDiffusion(); break;
         case DAMPING: damping = deriveDamping(); break;
         case DECAY: decay = deriveDecay(); break;
-        case DECAY_DIFFUSION_1: decayDiffusion1 = deriveDecayDiffusion1(); break;
-        case DECAY_DIFFUSION_2: decayDiffusion2 = deriveDecayDiffusion2(); break;
+        case DECAY_DIFFUSION: decayDiffusion = deriveDecayDiffusion(); break;
+        case SIZE: size = deriveSize(); break;
         }		
 	}
 	
@@ -71,17 +75,16 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 		col1.add(bandwidthControl = createBandwidthControl());
 		add(col1);
 		ControlColumn col2 = new ControlColumn();
-		col2.add(inputDiffusion1Control = createInputDiffusion1Control());
-		col2.add(inputDiffusion2Control = createInputDiffusion2Control());
+        col2.add(inputDiffusionControl = createInputDiffusionControl());
+        col2.add(sizeControl = createSizeControl());
 		add(col2);
 		ControlColumn col3 = new ControlColumn();
 		col3.add(dampingControl = createDampingControl());
 		col3.add(decayControl = createDecayControl());
 		add(col3);
-		ControlColumn col4 = new ControlColumn();
-		col4.add(decayDiffusion1Control = createDecayDiffusion1Control());
-		col4.add(decayDiffusion2Control = createDecayDiffusion2Control());
-		add(col4);
+//		ControlColumn col4 = new ControlColumn();
+/*		col4.add(decayDiffusionControl = createDecayDiffusionControl()); */
+//		add(col4);
 	}
 	
 	protected FloatControl createPreDelayControl() {
@@ -95,14 +98,8 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 		return control;
 	}
 	
-	protected FloatControl createInputDiffusion1Control() {
-		FloatControl control = new FloatControl(INPUT_DIFFUSION_1, "Diff1", DIFFUSION_LAW, 0.01f, 0.75f);
-		control.setInsertColor(Color.DARK_GRAY);
-		return control;
-	}
-	
-	protected FloatControl createInputDiffusion2Control() {
-		FloatControl control = new FloatControl(INPUT_DIFFUSION_2, "Diff2", DIFFUSION_LAW, 0.01f, 0.625f);
+	protected FloatControl createInputDiffusionControl() {
+		FloatControl control = new FloatControl(INPUT_DIFFUSION, "Diff", DIFFUSION_LAW, 0.01f, 0.75f);
 		control.setInsertColor(Color.DARK_GRAY);
 		return control;
 	}
@@ -119,43 +116,38 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 		return control;
 	}
 	
-	protected FloatControl createDecayDiffusion1Control() {
-		FloatControl control = new FloatControl(DECAY_DIFFUSION_1, "Diff1", DIFFUSION_LAW, 0.01f, 0.7f);
+	protected FloatControl createDecayDiffusionControl() {
+		FloatControl control = new FloatControl(DECAY_DIFFUSION, "Diff", DIFFUSION_LAW, 0.01f, 0.7f);
 		control.setInsertColor(Color.DARK_GRAY);
 		return control;
 	}
 	
-	protected FloatControl createDecayDiffusion2Control() {
-		FloatControl control = new FloatControl(DECAY_DIFFUSION_2, "Diff2", DIFFUSION_LAW, 0.01f, 0.5f);
-		control.setInsertColor(Color.DARK_GRAY);
-		return control;
-	}
-	
+    protected FloatControl createSizeControl() {
+        FloatControl control = new FloatControl(SIZE, "Size", SIZE_LAW, 0.01f, 1f);
+        control.setInsertColor(Color.RED.darker());
+        return control;        
+    }
+    
 	protected void deriveControls() {
 		preDelaySamples = derivePreDelaySamples();
 		bandwidth = deriveBandwidth();
-		inputDiffusion1 = deriveInputDiffusion1();
-		inputDiffusion2 = deriveInputDiffusion2();
+		inputDiffusion = deriveInputDiffusion();
 		damping = deriveDamping();
 		decay = deriveDecay();
-		decayDiffusion1 = deriveDecayDiffusion1();
-		decayDiffusion2 = deriveDecayDiffusion2();
+		decayDiffusion = deriveDecayDiffusion();
+        size = deriveSize();
 	}
 	
 	protected int derivePreDelaySamples() {
-		return (int)(preDelayControl.getValue() * 44100 / 1000); // !!! TODO SR
+		return Math.max(1, (int)(preDelayControl.getValue() * 44100 / 1000)); // !!! TODO SR
 	}
 	
 	protected float deriveBandwidth() {
 		return bandwidthControl.getValue();
 	}
 	
-	protected float deriveInputDiffusion1() {
-		return inputDiffusion1Control.getValue();
-	}
-	
-	protected float deriveInputDiffusion2() {
-		return inputDiffusion2Control.getValue();
+	protected float deriveInputDiffusion() {
+		return inputDiffusionControl.getValue();
 	}
 	
 	protected float deriveDamping() {
@@ -166,14 +158,15 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 		return decayControl.getValue();
 	}
 	
-	protected float deriveDecayDiffusion1() {
-		return decayDiffusion1Control.getValue();
+	protected float deriveDecayDiffusion() {
+        if ( decayDiffusionControl == null ) return 0.5f;
+		return decayDiffusionControl.getValue();
 	}
 	
-	protected float deriveDecayDiffusion2() {
-		return decayDiffusion2Control.getValue();
-	}
-	
+    protected float deriveSize() {
+        return sizeControl.getValue();
+    }
+    
 	public int getMaxPreDelaySamples() {
 		return 44100 * MAX_PRE_DELAY_MS / 1000;
 	}
@@ -186,12 +179,8 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 		return bandwidth;
 	}
 
-	public float getInputDiffusion1() {
-		return inputDiffusion1;
-	}
-
-	public float getInputDiffusion2() {
-		return inputDiffusion2;
+	public float getInputDiffusion() {
+		return inputDiffusion;
 	}
 
 	public float getDamping() {
@@ -202,14 +191,16 @@ public class BarrControls extends AudioControls implements BarrProcess.Variables
 		return decay;
 	}
 
-	public float getDecayDiffusion1() {
-		return decayDiffusion1;
+	public float getDecayDiffusion() {
+		return decayDiffusion;
 	}
 
-	public float getDecayDiffusion2() {
-		return decayDiffusion2;
-	}
+    public float getSize() {
+        return size;
+    }
     
+    public boolean canBypass() { return false; }
+
     // KB keeps block diffuser length much longer than input diffuser lengths
     // KB keeps delay length a bit less than sum of dif1 and dif2 lengths
     // converted to 44100 from 29761Hz sample rate for original Griesinger literals

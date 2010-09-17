@@ -54,9 +54,13 @@ public abstract class AbstractReverbProcess extends SimpleAudioProcess
     {
         private float[] line;
         private int head = 0;
+        private int length;
+        private final int maxLength;
         
         public Delay(int length) {
             line = new float[length];
+            maxLength = length;
+            this.length = length;
         }
         
         public float read() {
@@ -65,7 +69,7 @@ public abstract class AbstractReverbProcess extends SimpleAudioProcess
         
         public void append(float sample) {
             line[head++] = sample;
-            if ( head > line.length-1 ) head = 0;            
+            if ( head > length-1 ) head = 0;            
         }
         
         public float delay(float sample) {
@@ -75,10 +79,16 @@ public abstract class AbstractReverbProcess extends SimpleAudioProcess
         }
         
         public float tap(int zm) {
-            assert zm < line.length;
+            assert zm > 0;
+            assert zm < length;
             int p = head - zm;
-            if ( p < 0 ) p += line.length;
+            if ( p < 0 ) p += length;
             return line[p];
+        }
+        
+        public void resize(float factor) {
+            length = (int)(factor * maxLength);
+            if ( head > length-1 ) head = 0; // may glitch!            
         }
     }
     
