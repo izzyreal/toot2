@@ -46,6 +46,12 @@ public class DelayServiceProvider extends TootAudioServiceProvider
             ChannelFormat.MONO,
             null);
         addControls(
+            WowFlutterControls.class,
+            DelayIds.WOW_FLUTTER_ID,
+            getString("Wow & Flutter"),
+            family,
+            "0.1");
+        addControls(
             CabMicingControls.class,
             DelayIds.CAB_MICING_ID,
             getString("Cab.Mic"),
@@ -56,7 +62,8 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         add(MultiTapDelayProcess.class, getString("Multi.Tap.Delay"), family, "0.1");
         add(TempoDelayProcess.class, getString("BPM.Delay"), family, "0.2");
         add(PhaserProcess.class, getString("Phaser"), family, "0.1");
-        add(CabMicingProcess.class, getString("Cab.Mic"), "EQ", "0.1");
+        add(WowFlutterProcess.class, getString("Wow & Flutter"), family, "0.1");
+        add(CabMicingProcess.class, getString("Cab.Mic"), "EQ", "0.1"); // note family!
     }
 
     public AudioProcess createProcessor(AudioControls c) {
@@ -70,6 +77,8 @@ public class DelayServiceProvider extends TootAudioServiceProvider
         	return new PhaserProcess((PhaserControls)c);
         } else if ( c instanceof CabMicingProcess.Variables ) {
             return new CabMicingProcess((CabMicingProcess.Variables)c);
+        } else if ( c instanceof WowFlutterProcess.Variables ) {
+            return new WowFlutterProcess((WowFlutterProcess.Variables)c);
         }
         return null; // caller then tries another provider
     }

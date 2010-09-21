@@ -17,4 +17,5 @@ class DelayIds
     final static int TEMPO_DELAY_ID = DELAY_BASE_ID + 5;
     final static int PHASER_ID = DELAY_BASE_ID + 6;
     final static int CAB_MICING_ID = DELAY_BASE_ID + 7;
+    final static int WOW_FLUTTER_ID = DELAY_BASE_ID + 8;
 }
