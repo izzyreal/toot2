@@ -130,6 +130,7 @@ public class AudioProcessChain implements AudioProcess {
     public void close() {
 		controlChain.deleteObserver(controlChainObserver);
         for ( AudioProcess p : processes ) {
+            if ( p == null ) continue;
         	try {
         		p.close();
         	} catch ( Exception e ) {
