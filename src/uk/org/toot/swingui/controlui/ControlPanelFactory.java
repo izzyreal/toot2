@@ -6,6 +6,7 @@
 package uk.org.toot.swingui.controlui;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,9 @@ public class ControlPanelFactory extends Observable implements PanelFactory
 	        	if ( comp != null ) return comp;
             }
             // default compound UI
-            return createCompoundComponent(cc, a, null, this, true, hasHeader);
+            JComponent jc = createCompoundComponent(cc, a, null, this, true, hasHeader);
+            jc.setVisible(cc.getVisibility() <= cc.getParent().getCurrentVisibility());
+            return jc;
         } else if ( control instanceof FloatControl ) {
         	if ( control.isIndicator() ) {
         		return new FloatIndicatorPanel((FloatControl)control);
@@ -229,6 +232,18 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         			item.setSelected(control.getLearn());
         			add(item);
         		}
+                int maxVis = control.getMaxVisibility(); 
+                if ( maxVis > 0 ) {
+                    addSeparator();
+                    int curVis = control.getCurrentVisibility();
+                    if ( curVis > maxVis ) curVis = maxVis;
+                    if ( curVis > 0 ) {
+                        add(new LessAction(curVis, control, compoundPanel));
+                    }
+                    if ( curVis < maxVis ) {
+                        add(new MoreAction(curVis, control, compoundPanel));
+                    }
+                }
             }
             if ( control.canBeMinimized() && !control.isAlwaysVertical() ) {
             	String minOrMax = isMinimised(name) ?
@@ -419,5 +434,52 @@ public class ControlPanelFactory extends Observable implements PanelFactory
         }
     }
 
+    static protected class VisibilityAction extends AbstractAction
+    {
+        private CompoundControl control;
+        private CompoundControlPanel panel;
+        private int newVisibility;
+        
+        public VisibilityAction(String name, int vis, 
+                CompoundControl control, CompoundControlPanel panel) {
+            super(name);
+            this.control = control;
+            this.panel = panel;
+            newVisibility = vis;
+        }
+        
+        public void actionPerformed(ActionEvent arg0) {
+            control.setCurrentVisibility(newVisibility);
+            checkPanel(panel);
+        }
+        
+        private void checkPanel(CompoundControlPanel p) {
+            Container container = p.getContainer();
+            for ( Component c : container.getComponents() ) {
+                if ( c instanceof CompoundControlPanel ) {
+                    CompoundControlPanel ccp = (CompoundControlPanel)c;
+                    if ( ccp.getControl().getVisibility() <= newVisibility ) {
+                        if ( !ccp.isVisible() ) ccp.setVisible(true);
+                    } else {
+                        if ( ccp.isVisible() ) ccp.setVisible(false);
+                    }
+                    checkPanel(ccp);
+                }
+            }
+        }
+    }
 
+    static protected class LessAction extends VisibilityAction
+    {
+        public LessAction(int cur, CompoundControl control, CompoundControlPanel panel) {
+            super(getString("Less"), cur-1, control, panel);
+        }
+    }
+
+    static protected class MoreAction extends VisibilityAction
+    {
+        public MoreAction(int cur, CompoundControl control, CompoundControlPanel panel) {
+            super(getString("More"), cur+1, control, panel);            
+        }
+    }
 }

@@ -262,7 +262,23 @@ public abstract class CompoundControl extends Control
 
 	public void close() {}
 	
-	/**
+    // if the visibility is more than the max visibility the UI should supppress display
+    public int getVisibility() { return 0; }
+    
+    public int getMaxVisibility() { return 0; }
+        
+    private final static String VISIBILITY_KEY = "Visibility";
+    
+    public int getCurrentVisibility() {
+        Integer i = (Integer)getClientProperty(VISIBILITY_KEY);
+        if ( i == null ) return 99;
+        return i.intValue();
+    }
+    
+    public void setCurrentVisibility(int i) {
+        putClientProperty(VISIBILITY_KEY, new Integer(i));
+    }
+    /**
      * A ControlColumn groups certain Controls vertically.
      * It is always vertical and never bordered.
      */

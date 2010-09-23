@@ -70,7 +70,9 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 		col1.add(preDelayControl = createPreDelayControl());
 		col1.add(bandwidthControl = createBandwidthControl());
 		add(col1);
-		ControlColumn col2 = new ControlColumn();
+		ControlColumn col2 = new ControlColumn() {
+            public int getVisibility() { return 1; }            
+        };
 		col2.add(inputDiffusion1Control = createInputDiffusion1Control());
 		col2.add(inputDiffusion2Control = createInputDiffusion2Control());
 		add(col2);
@@ -78,7 +80,9 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 		col3.add(dampingControl = createDampingControl());
 		col3.add(decayControl = createDecayControl());
 		add(col3);
-		ControlColumn col4 = new ControlColumn();
+		ControlColumn col4 = new ControlColumn() {
+            public int getVisibility() { return 1; }                        
+        };
 		col4.add(decayDiffusion1Control = createDecayDiffusion1Control());
 		col4.add(decayDiffusion2Control = createDecayDiffusion2Control());
 		add(col4);
@@ -211,4 +215,9 @@ public class PlateControls extends AudioControls implements PlateProcess.Variabl
 	}
         
     public boolean canBypass() { return false; }
+    
+    // Diffusion is level 1
+    public int getMaxVisibility() { return 1; }
+    
+
 }

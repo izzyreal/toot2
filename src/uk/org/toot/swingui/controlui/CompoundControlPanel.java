@@ -146,4 +146,7 @@ public class CompoundControlPanel extends ControlPanel
     }
 
     public CompoundControl getControl() { return control; }
+    
+    @SuppressWarnings("all")
+    public Container getContainer() { return target; }
 }

@@ -56,7 +56,8 @@ public class WowFlutterControls extends AudioControls implements WowFlutterProce
         case LEVEL:
             level = levelControl.getValue();
             break;
-        default: super.derive(c); break;
+        default:
+            break;
         }
     }
     
