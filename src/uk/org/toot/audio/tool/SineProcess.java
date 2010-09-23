@@ -16,22 +16,47 @@ import uk.org.toot.dsp.Sine;
  */
 public class SineProcess extends SimpleAudioProcess
 {
-	private SineControls controls;
+	private Variables vars;
     private Sine sine;
+    private int freq = -1;
+    private int sampleRate = 44100;
 	
-	public SineProcess(SineControls controls) {
-		this.controls = controls;
-        sine = new Sine(910*2*Math.PI/44100);
+	public SineProcess(Variables variables) {
+		vars = variables;
 	}
 	
 	public int processAudio(AudioBuffer buffer) {
-		if ( controls.isBypassed() ) return AUDIO_OK;
+		if ( vars.isBypassed() ) return AUDIO_OK;
+        final int f = vars.getFrequency();
+        final int sr = (int)buffer.getSampleRate();
+        boolean update = false;
+        if ( freq != f ) {
+            freq = f;
+            update = true;
+        }
+        if ( sampleRate != sr ) {
+            sampleRate = sr;
+            update = true;
+        }
+        if ( update ) {
+            sine = createOscillator(freq, sampleRate);
+        }
 		buffer.setChannelFormat(ChannelFormat.MONO);
-		int ns = buffer.getSampleCount();
+		final int ns = buffer.getSampleCount();
 		float[] samples = buffer.getChannel(0);
 		for ( int i = 0; i < ns; i++ ) {
 			samples[i] = sine.out() * 0.1f;
 		}
 		return AUDIO_OK;
 	}
+    
+    protected Sine createOscillator(int f, int fs) {
+        return new Sine(f*2*Math.PI/fs);
+    }
+    
+    public interface Variables
+    {
+        boolean isBypassed();
+        int getFrequency();
+    }
 }
