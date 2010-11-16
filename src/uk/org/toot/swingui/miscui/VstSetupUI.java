@@ -24,6 +24,11 @@ import uk.org.toot.misc.VstSetup;
 
 public class VstSetupUI
 {
+    // edit existing paths
+    public static void showDialog() {
+        showDialog(VstSetup.readPaths());
+    }
+    
 	public static void showDialog(final List<File> paths) {
     	try {
     		SwingUtilities.invokeAndWait(new Runnable() {
