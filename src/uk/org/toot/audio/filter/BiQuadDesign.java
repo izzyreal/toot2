@@ -16,6 +16,6 @@ public class BiQuadDesign extends AbstractFilterDesign
     }
 
     public void design(int sampleRate) {
-        a = BiQuadDesigner.design(spec.getShape(), spec.getLeveldB(), spec.getFrequency(), (float)sampleRate, FilterTools.getOctaveBandwidth(spec.getResonance()));
+        a = BiQuadDesigner.design(spec.getShape(), spec.getLeveldB(), spec.getFrequency(), (float)sampleRate, spec.getResonance());
     }
 }

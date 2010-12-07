@@ -1,5 +1,7 @@
 package uk.org.toot.dsp.filter;
 
+import uk.org.toot.audio.filter.FilterTools;
+
 /* Simple implementation of Biquad filters -- Tom St Denis
 *
 * Based on the work
@@ -12,17 +14,39 @@ by Robert Bristow-Johnson
 *
 * Tom St Denis -- http://tomstdenis.home.dhs.org
 */
+/*
+ * Now delegates to OrfanidisBiQuadDesigner for decramped filters
+ * st
+ */
 
 public class BiQuadDesigner
 {
+    public static boolean decramped = true;
+    
     private static double M_LN2 = 0.69314718055994530942;
 
-    public static double[] design(FilterShape type, float dbGain, float freq, float srate, float bandwidth) {
-//        System.out.println("design t="+type+", f="+freq+", sr="+srate+", obw="+bandwidth);
+    public static double[] design(FilterShape type, float dbGain, float freq, float srate, float resonance) {
         double A, omega, sn, cs, alpha, beta;
         double a0, a1, a2, b0, b1, b2;
 
-        A = Math.pow(10, dbGain / 40);
+        // delegate types which can be decramped to Orfanidis designer
+        if ( decramped ) {
+            A = Math.pow(10, dbGain / 20); // for peaking and shelving only
+            float bwHz = FilterTools.getHzBandwidth(freq, resonance);
+            switch ( type) {
+            case PEQ:
+                if ( Math.abs(dbGain) > 0.1 ) { // avoid flat problems
+                    return OrfanidisBiQuadDesigner.designPeak(srate, freq, bwHz, (float)A);
+                }
+                break;
+            case NOTCH:
+                return OrfanidisBiQuadDesigner.designNotch(srate, freq, bwHz);                
+            case RESONATOR:
+                return OrfanidisBiQuadDesigner.designResonator(srate, freq, bwHz);                
+            }
+        }
+        A = Math.pow(10, dbGain / 40); // for peaking and shelving only
+        float bandwidth = FilterTools.getOctaveBandwidth(resonance);
         omega = 2 * Math.PI * freq / srate;
         sn = Math.sin(omega);
         cs = Math.cos(omega);

@@ -13,8 +13,9 @@ public enum FilterShape {
     LPF, 	/* low pass filter */
     HPF, 	/* High pass filter */
     BPF, 	/* band pass filter */
-    NOTCH, 	/* Notch Filter */
+    NOTCH, 	/* Notch Filter, unity gain passband */
     PEQ, 	/* Peaking band EQ filter */
     LSH, 	/* Low shelf filter */
-    HSH 	/* High shelf filter */
+    HSH, 	/* High shelf filter */
+    RESONATOR // Resonator filter, unity gain peak
 }
