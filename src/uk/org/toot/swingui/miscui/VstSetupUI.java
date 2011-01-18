@@ -30,6 +30,10 @@ public class VstSetupUI
     }
     
 	public static void showDialog(final List<File> paths) {
+        if ( SwingUtilities.isEventDispatchThread() ) {
+            new PathSetupDialog(paths);
+            return;
+        }
     	try {
     		SwingUtilities.invokeAndWait(new Runnable() {
     			public void run() {
@@ -123,4 +127,16 @@ public class VstSetupUI
 			}
 		}
 	}
+    
+    public static class Button extends JButton implements ActionListener
+    {
+        public Button() {
+            super("VST");
+            addActionListener(this);
+        }
+        
+        public void actionPerformed(ActionEvent arg0) {
+            showDialog();
+        }        
+    }
 }
