@@ -29,6 +29,7 @@ public class Key extends Observable
     public Key(int root, Scale scale) {
         this.root = Pitch.classValue(root) ;
         this.scale = scale ;
+        decideNoteNames();
     }
 
     public Key(String root, Scale scale) {
@@ -104,6 +105,7 @@ public class Key extends Observable
      */
     public void setRoot(int root) {
         this.root = Pitch.classValue(root);
+        decideNoteNames();
         setChanged();
         notifyObservers();
 //        System.out.println("Key of "+PitchClass.name(root));
@@ -121,6 +123,7 @@ public class Key extends Observable
      */
     public void setScale(Scale scale) {
         this.scale = scale;
+        decideNoteNames();
         setChanged();
         notifyObservers();
     }
@@ -190,28 +193,6 @@ public class Key extends Observable
     }
 
     /**
-     * Return the name of this Key, e.g. "C Major" and it's notes
-     */
-    public String toString() {
-    	StringBuilder sb = new StringBuilder(80);
-    	sb.append(name());
-    	sb.append(":  ");
-    	for ( int i = 0; i < scale.length(); i++ ) {
-    		sb.append(Pitch.className(getNote(i)));
-    		sb.append(' ');
-    	}
-        return sb.toString();
-    }
-
-    // TODO PROPERLY
-    public boolean equals(Object o) {
-    	if ( o instanceof Key ) {
-    		return toString().equals(((Key)o).toString());
-    	}
-    	return super.equals(o);
-    }
-    
-    /**
      * Return the name of this Key as root note (pitch class) and Scale.
      */
     public String name() {
@@ -229,6 +210,47 @@ public class Key extends Observable
         return names[index % names.length] ;
     }
 
+    // TODO PROPERLY
+    public boolean equals(Object o) {
+        if ( o instanceof Key ) {
+            return toString().equals(((Key)o).toString());
+        }
+        return super.equals(o);
+    }
+    
+    /**
+     * Return the name of this Key, e.g. "C Major" and it's notes
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder(80);
+        sb.append(name());
+        sb.append(":  ");
+        for ( int i = 0; i < scale.length(); i++ ) {
+            sb.append(names[i]);
+            sb.append(' ');
+        }
+        return sb.toString();
+    }
+
+    protected void decideNoteNames() {
+        String[] flatNames = new String[scale.length()];
+        String[] sharpNames = new String[scale.length()];
+        int flatRepeats = 0, sharpRepeats = 0;
+        for ( int i = 0; i < scale.length(); i++ ) {
+            int n = getNote(i);
+            flatNames[i] = Pitch.classFlatName(n);
+            sharpNames[i] = Pitch.classSharpName(n);
+            if ( i > 1 ) {
+                if ( flatNames[i].charAt(0) == flatNames[i-1].charAt(0) ) flatRepeats += 1;
+                if ( sharpNames[i].charAt(0) == sharpNames[i-1].charAt(0) ) sharpRepeats += 1;
+            }
+        }
+        int last = scale.length()-1;
+        if ( flatNames[0].charAt(0) == flatNames[last].charAt(0) ) flatRepeats += 1;
+        if ( sharpNames[0].charAt(0) == sharpNames[last].charAt(0) ) sharpRepeats += 1;
+        names = sharpRepeats < flatRepeats ? sharpNames : flatNames;
+    }
+    
     /**
      * A Provider provides a mutable Key for Observers to observe.
      * Typically at any given time an application will use a single Key.Provider, 

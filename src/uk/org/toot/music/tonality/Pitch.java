@@ -26,8 +26,8 @@ public class Pitch
     private static String[] flatNames = {
         "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B" } ;
 
-/*    private static String[] sharpNames = {
-        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" } ; */
+    private static String[] sharpNames = {
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" } ;
 
     private Pitch() {
         // to prevent instantiation
@@ -76,6 +76,14 @@ public class Pitch
      */
     public static String className(int pitch) {
         return flatNames[classValue(pitch)] ;
+    }
+
+    public static String classFlatName(int pitch) {
+        return flatNames[classValue(pitch)] ;
+    }
+
+    public static String classSharpName(int pitch) {
+        return sharpNames[classValue(pitch)] ;
     }
 
     /**
