@@ -51,8 +51,6 @@ public class History extends UndoManager {
             this.command = command;
         }
 
-        public UndoableCommand getCommand() { return command; }
-
         public boolean canRedo() { return true; }
 
         public void redo() { command.execute(); }

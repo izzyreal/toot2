@@ -70,12 +70,12 @@ public class MixerSectionPanel extends AudioCompoundStripPanel
 //        System.out.print('R');
         removeAll(); // !!! brute force change
 //        System.out.print('S');
-        int cnt = 0;
+//        int cnt = 0;
         for ( Control control : controls.getControls() ) {
             if ( control instanceof CompoundControl &&
                 control.getId() != sectionId ) continue;
             setupStrip((CompoundControl)control);
-            cnt++;
+//            cnt++;
 //	        Thread.yield(); // ???
         }
 //        System.out.println("MSP setup id "+sectionId+" ("+cnt+" controls)");

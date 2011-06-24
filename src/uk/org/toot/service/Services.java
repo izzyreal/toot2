@@ -13,7 +13,6 @@ import javax.imageio.spi.ServiceRegistry;
  */
 public class Services
 {
-    @SuppressWarnings(value={"unchecked"})
     public static <T extends ServiceProvider> Iterator<T> lookup(Class<T> clazz) {
 		ClassLoader cl = ClassLoader.getSystemClassLoader();
 //      return java.util.ServiceLoader.load(clazz, cl).iterator(); // jse 6

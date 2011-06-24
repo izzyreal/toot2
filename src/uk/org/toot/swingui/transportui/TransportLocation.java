@@ -15,8 +15,7 @@ public class TransportLocation extends JLabel
     private Timer timer = null;
     private String seperator1; // avoid continuous instantiation
     public TransportLocation(final Transport transport) {
-        @SuppressWarnings("unused")
-		ActionListener actionListener = new ActionListener() {
+        ActionListener actionListener = new ActionListener() {
             private long prevus = -1;
             public void actionPerformed(ActionEvent ae) {
                 long us = transport.getMicrosecondLocation();

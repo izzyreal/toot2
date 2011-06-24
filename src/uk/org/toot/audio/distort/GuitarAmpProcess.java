@@ -15,7 +15,7 @@ import uk.org.toot.dsp.filter.*;
 import static uk.org.toot.dsp.FastMath.tanh;
 
 /*
- * A model of a mono guitar amp/speaker combo mic'd up
+ * A model of a mono guitar amp
  * Uses oversampling to significantly reduce aliasing due to non-linear parts.
  */
 public class GuitarAmpProcess extends SimpleAudioProcess
@@ -101,8 +101,6 @@ public class GuitarAmpProcess extends SimpleAudioProcess
             }
             samples[s] = inverseGain2 * dc2.block(overSampler.decimate(upSamples, 0));
         }
-        // cab sim, hp will avoid dc2.block
-        // mic sim
 		return AUDIO_OK;
 	}
     
