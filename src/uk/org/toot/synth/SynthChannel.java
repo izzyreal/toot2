@@ -9,6 +9,8 @@ import java.util.Observable;
 
 import javax.sound.midi.MidiChannel;
 
+import uk.org.toot.audio.core.ChannelFormat;
+
 import static uk.org.toot.midi.misc.Controller.*;
 
 /**
@@ -65,6 +67,10 @@ public abstract class SynthChannel extends Observable implements MidiChannel
 	protected void setSampleRate(int rate) {
 		sampleRate = rate;
 		inverseNyquist = 2f / sampleRate;
+	}
+	
+	protected ChannelFormat getChannelFormat() {
+	    return ChannelFormat.MONO;
 	}
 	
 	// implement MidiChannel ------------------------------------

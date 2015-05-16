@@ -79,7 +79,7 @@ public abstract class MonophonicSynthChannel extends SynthChannel implements Aud
 	
 	public int processAudio(AudioBuffer buffer) {
 	    buffer.setMetaInfo(info);
-	    buffer.setChannelFormat(ChannelFormat.MONO);
+	    buffer.setChannelFormat(getChannelFormat());
 		if ( isComplete() ) {
 			buffer.makeSilence();
 			return AudioProcess.AUDIO_SILENCE;

@@ -50,7 +50,7 @@ abstract public class PolyphonicSynthChannel extends SynthChannel implements Aud
 	
 	public int processAudio(AudioBuffer buffer) {
 	    buffer.setMetaInfo(info);
-	    buffer.setChannelFormat(ChannelFormat.MONO);
+	    buffer.setChannelFormat(getChannelFormat());
 		buffer.makeSilence();
 		finished.clear();
 		int sr = (int)buffer.getSampleRate();
