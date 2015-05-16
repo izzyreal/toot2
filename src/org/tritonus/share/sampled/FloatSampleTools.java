@@ -499,8 +499,8 @@ public class FloatSampleTools {
 	 * @see #DEFAULT_DITHER_BITS
 	 * @see #float2byteInterleaved(float[],int,byte[],int,int,AudioFormat,float)
 	 */
-	//public static void float2byte(List<float[]> input, int inOffset,
-	public static void float2byte(List input, int inOffset,
+	public static void float2byte(List<float[]> input, int inOffset,
+	//public static void float2byte(List input, int inOffset,
 	                              byte[] output, int outByteOffset,
 	                              int frameCount,
 	                              AudioFormat format, float ditherBits) {
@@ -548,7 +548,7 @@ public class FloatSampleTools {
 	 * @see #DEFAULT_DITHER_BITS
 	 * @see #float2byteInterleaved(float[],int,byte[],int,int,AudioFormat,float)
 	 */	
-    public static void float2byteNonInterleaved(List input, int inOffset,
+    public static void float2byteNonInterleaved(List<float []> input, int inOffset,
     	                              byte[] output, int outByteOffset,
     	                              int frameCount,
     	                              AudioFormat format, float ditherBits) {

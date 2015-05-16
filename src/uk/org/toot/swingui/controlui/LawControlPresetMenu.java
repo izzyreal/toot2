@@ -6,11 +6,15 @@
 package uk.org.toot.swingui.controlui;
 
 import java.awt.Component;
+
 import javax.swing.*;
+
 import uk.org.toot.control.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@SuppressWarnings("serial")
 public class LawControlPresetMenu extends JPopupMenu implements ActionListener
 {
     /**

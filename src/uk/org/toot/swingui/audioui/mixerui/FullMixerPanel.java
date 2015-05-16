@@ -8,24 +8,29 @@ package uk.org.toot.swingui.audioui.mixerui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import uk.org.toot.control.*;
 import uk.org.toot.audio.meter.*;
 import uk.org.toot.audio.mixer.*;
+
 import java.awt.BorderLayout;
+
 import javax.swing.*;
+
 import java.util.Observer;
 import java.util.Observable;
+
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.audioui.meterui.KMeterPanel;
 import uk.org.toot.control.ControlSelector;
 import uk.org.toot.swingui.controlui.PanelFactory;
 import static javax.swing.ScrollPaneConstants.*;
-
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.audio.mixer.automation.AutomationControls.AUTOMATION_ID;
 import static uk.org.toot.misc.Localisation.*;
 
+@SuppressWarnings("serial")
 public class FullMixerPanel extends DisposablePanel
 {
     protected MixerControls mixerControls;

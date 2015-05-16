@@ -3,7 +3,9 @@
 package uk.org.toot.swingui.transportui;
 
 import uk.org.toot.transport.*;
+
 import java.awt.event.ActionEvent;
+
 import javax.swing.Action;
 import javax.swing.JToolBar;
 
@@ -12,6 +14,7 @@ import uk.org.toot.audio.server.NonRealTimeAudioServer;
 /**
  * Transport Actions, Play, Stop, Record
  */
+@SuppressWarnings("serial")
 public class TransportActions
 {
     private TransportAction loopAction = new LoopAction(); // !!! !!!

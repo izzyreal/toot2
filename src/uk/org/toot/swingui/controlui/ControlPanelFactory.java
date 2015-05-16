@@ -12,13 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Observable;
+
 import javax.swing.*;
 import javax.swing.border.*;
+
 import uk.org.toot.control.*;
 import uk.org.toot.service.*;
-
 import static uk.org.toot.misc.Localisation.*;
 
+@SuppressWarnings("serial")
 public class ControlPanelFactory extends Observable implements PanelFactory
 {
     private Set<String> minimisedControlNames = new java.util.HashSet<String>();

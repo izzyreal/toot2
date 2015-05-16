@@ -159,7 +159,7 @@ abstract public class ServiceProvider
     /**
      * Adds a ServiceDescriptor for the matching service.
      */
-    protected void add(Class clazz, String name, String description, String version) {
+    protected void add(Class<?> clazz, String name, String description, String version) {
         add(new ServiceDescriptor(clazz, name, description, version));
     }
 

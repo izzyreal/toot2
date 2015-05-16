@@ -11,6 +11,7 @@ import javax.swing.JList;
 
 import uk.org.toot.music.tonality.Chord;
 
+@SuppressWarnings("serial")
 public class ChordList extends JList 
 {
 	public ChordList() {

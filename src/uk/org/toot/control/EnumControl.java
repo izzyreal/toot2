@@ -52,7 +52,7 @@ public abstract class EnumControl extends Control
         return value;
     }
 
-    public abstract List getValues();
+    public abstract List<?> getValues();
 
     /**
      * Indicates whether the value specified is supported.

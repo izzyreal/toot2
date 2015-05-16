@@ -41,7 +41,7 @@ public abstract class AudioServerConfiguration extends Observable
     	   return;
     	}
 		Properties scp = getProperties();
-		for ( Enumeration e = scp.propertyNames(); e.hasMoreElements(); ) {
+		for ( Enumeration<?> e = scp.propertyNames(); e.hasMoreElements(); ) {
 			String key = (String)e.nextElement();
 			if ( key == null ) {
 				System.err.println("null key from AudioServerConfiguration.getProperties() ignored");

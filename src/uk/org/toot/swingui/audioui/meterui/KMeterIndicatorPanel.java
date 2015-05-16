@@ -9,10 +9,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Font;
+
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.meter.MeterControls;
+
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class KMeterIndicatorPanel extends AbstractMeterIndicatorPanel
 {
     private MeterControls controls;

@@ -18,7 +18,6 @@ import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.EnumControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
-
 import static uk.org.toot.audio.distort.DistortionIds.GUITAR_AMP;
 import static uk.org.toot.misc.Localisation.getString;
 
@@ -186,7 +185,7 @@ public class GuitarAmpControls extends AudioControls
         }
 
         @Override
-        public List getValues() {
+        public List<ToneStackDesigner.Components> getValues() {
             return values;
         }
         

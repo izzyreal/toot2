@@ -6,9 +6,11 @@
 package uk.org.toot.swingui.audioui.mixerui;
 
 import javax.swing.*;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class PopupButton extends JButton
 {
     private ActionListener buttonListener;

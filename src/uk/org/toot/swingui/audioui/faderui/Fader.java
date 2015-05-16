@@ -9,11 +9,13 @@ import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Hashtable;
+
 import uk.org.toot.audio.fader.FaderControl;
 import uk.org.toot.swingui.controlui.SliderKnobColor;
 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class Fader extends JSlider implements Observer, SliderKnobColor
 {
     private final FaderControl control;
@@ -50,7 +52,7 @@ public class Fader extends JSlider implements Observer, SliderKnobColor
    		SwingUtilities.invokeLater(updater);
     }
 
-    protected Hashtable createLabelTable() {
+    protected Hashtable<Integer, JLabel> createLabelTable() {
         Hashtable<Integer,JLabel> table = new Hashtable<Integer,JLabel>();
         JLabel label;
         for ( int i = 15; i > -101; i -= (i > -39) ? 5 : 20 ) {

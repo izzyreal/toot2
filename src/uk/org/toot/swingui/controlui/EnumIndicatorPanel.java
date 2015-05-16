@@ -6,12 +6,16 @@
 package uk.org.toot.swingui.controlui;
 
 import java.awt.Dimension;
+
 import uk.org.toot.control.EnumControl;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
+
 import java.util.Observable;
 
+@SuppressWarnings("serial")
 public class EnumIndicatorPanel extends ControlPanel
 {
     private final EnumControl control;

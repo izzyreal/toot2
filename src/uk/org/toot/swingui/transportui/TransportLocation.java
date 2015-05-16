@@ -6,10 +6,13 @@
 package uk.org.toot.swingui.transportui;
 
 import uk.org.toot.transport.*;
+
 import javax.swing.*;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class TransportLocation extends JLabel
 {
     private Timer timer = null;

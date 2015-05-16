@@ -8,6 +8,7 @@ import javax.swing.JTable;
 
 import uk.org.toot.midi.core.ConnectedMidiSystem;
 
+@SuppressWarnings("serial")
 public class MidiConnectionView extends JPanel
 {
 	public MidiConnectionView(ConnectedMidiSystem system) {

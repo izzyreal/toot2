@@ -4,6 +4,7 @@ package uk.org.toot.swingui.midiui;
 
 import javax.swing.JComboBox;
 
+@SuppressWarnings("serial")
 public class MidiChannelCombo extends JComboBox
 {
    	public MidiChannelCombo() {

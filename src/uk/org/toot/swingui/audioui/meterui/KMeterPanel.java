@@ -9,6 +9,7 @@ import uk.org.toot.audio.meter.MeterControls;
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.swingui.controlui.*;
 
+@SuppressWarnings("serial")
 public class KMeterPanel extends CompoundControlPanel
 {
     private MeterControls controls;

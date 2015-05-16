@@ -6,6 +6,7 @@
 package uk.org.toot.swingui.audioui.mixerui;
 
 import java.awt.Component;
+
 import javax.swing.*;
 
 import uk.org.toot.control.automation.SnapshotAutomation;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 
 import static uk.org.toot.misc.Localisation.*;
 
+@SuppressWarnings("serial")
 public class SnapshotAutomationPopupMenu extends JPopupMenu implements ActionListener
 {
     private SnapshotAutomation automation;

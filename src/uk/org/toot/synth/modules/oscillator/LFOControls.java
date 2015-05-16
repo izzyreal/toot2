@@ -72,7 +72,7 @@ public class LFOControls extends CompoundControl implements LFOVariables
 		shapeNames.add("Sine");
 		shapeNames.add("Triangle");
 		return new EnumControl(SHAPE+idOffset, "Shape", "Sine") {
-			public List getValues() {
+			public List<String> getValues() {
 				return shapeNames;
 			}
 		};

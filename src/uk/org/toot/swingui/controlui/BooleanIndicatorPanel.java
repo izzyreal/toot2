@@ -9,12 +9,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 //import java.awt.event.FocusListener;
 import java.util.Observable;
+
 import uk.org.toot.control.BooleanControl;
+
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
 import javax.swing.border.EtchedBorder;
 
+@SuppressWarnings("serial")
 public class BooleanIndicatorPanel extends ControlPanel
 {
     private final BooleanControl control;

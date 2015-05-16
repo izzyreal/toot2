@@ -4,11 +4,14 @@
 
 import java.io.*;
 import java.net.*;
+
 import javax.swing.*;
+
 import java.util.zip.*;
 import java.util.*;
 import java.text.*;
 
+@SuppressWarnings("serial")
 public class Installer extends JFrame
 {
     private String myClassName;
@@ -70,7 +73,7 @@ public class Installer extends JFrame
 			pm.setMillisToDecideToPopup(0);
 			pm.setMillisToPopup(0);
 
-			Enumeration entries = zf.entries();
+			Enumeration<? extends ZipEntry> entries = zf.entries();
 
 			for (int i=0; i<size; i++) {
 			    ZipEntry entry = (ZipEntry) entries.nextElement();

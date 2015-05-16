@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+@SuppressWarnings("serial")
 public class AudioServerUIButton extends JButton implements ActionListener
 {
     private JFrame serverFrame;

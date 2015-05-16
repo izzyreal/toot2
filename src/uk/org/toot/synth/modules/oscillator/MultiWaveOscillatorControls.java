@@ -100,7 +100,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	
 	protected EnumControl createWaveControl() {
 		return new EnumControl(WAVE+idOffset, "Wave", "Square") {
-			public List getValues() {
+			public List<String> getValues() {
 				return MultiWaves.getNames();
 			}
 		};
@@ -131,7 +131,7 @@ public class MultiWaveOscillatorControls extends CompoundControl implements Mult
 	
 	protected EnumControl createOctaveControl() {
 		return new EnumControl(OCTAVE+idOffset, "Octave", "0") {
-			public List getValues() {
+			public List<String> getValues() {
 				return octaveList;
 			}
 		};

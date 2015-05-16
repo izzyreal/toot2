@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import uk.org.toot.misc.VstSetup;
 
+@SuppressWarnings("serial")
 public class VstSetupUI
 {
     // edit existing paths
@@ -45,7 +46,8 @@ public class VstSetupUI
     	}		
 	}
 	
-	private static class PathSetupDialog extends JDialog implements ActionListener
+
+    private static class PathSetupDialog extends JDialog implements ActionListener
 	{
 		private JButton okButton;
 		private PathSetupPanel panel;

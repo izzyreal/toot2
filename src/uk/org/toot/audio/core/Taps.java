@@ -119,7 +119,7 @@ public class Taps
 		}
 
 		@Override
-		public List getValues() {
+		public List<String> getValues() {
 			List<String> values = new java.util.ArrayList<String>();
 			values.add(SELF_STR);
 			for ( TapControls c : Taps.taps ) {

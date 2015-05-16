@@ -6,13 +6,16 @@
 package uk.org.toot.swingui.audioui;
 
 import java.util.Observer;
+
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+
 import uk.org.toot.swingui.controlui.*;
 
+@SuppressWarnings("serial")
 public class AudioCompoundControlPanel extends CompoundControlPanel implements Observer
 {
     public AudioCompoundControlPanel(CompoundControl control, int axis,

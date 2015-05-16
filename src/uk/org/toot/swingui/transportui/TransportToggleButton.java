@@ -4,11 +4,14 @@ package uk.org.toot.swingui.transportui;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.Action;
 import javax.swing.JToggleButton;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
+@SuppressWarnings("serial")
 public class TransportToggleButton extends JToggleButton
 {
     private PropertyChangeListener changeListener;

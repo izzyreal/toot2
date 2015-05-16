@@ -7,10 +7,10 @@ package uk.org.toot.audio.meter;
 
 import java.util.List;
 import java.util.ArrayList;
+
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.ChannelFormat;
-
 import static uk.org.toot.misc.Localisation.*;
 
 /**
@@ -179,7 +179,7 @@ public class MeterControls extends AudioControls
             }
         }
 
-        public List getValues() {
+        public List<String> getValues() {
 			return values; // !!! unmodifiable list
         }
 
@@ -247,7 +247,7 @@ public class MeterControls extends AudioControls
             }
         }
 
-        public List getValues() {
+        public List<String> getValues() {
 			return values; // !!! unmodifiable list
         }
 

@@ -6,10 +6,13 @@
 package uk.org.toot.swingui.controlui;
 
 import uk.org.toot.control.LawControl;
+
 import java.util.Observer;
 import java.util.Observable;
 import java.awt.*;
+
 import javax.swing.*;
+
 import java.awt.event.*;
 
 /**
@@ -17,6 +20,7 @@ import java.awt.event.*;
  * the knob around in a circle.
  * From source by Grant William Braught, Dickinson College, 12/4/2000
  */
+@SuppressWarnings("serial")
 public class ControlKnob extends JComponent implements Observer
 {
 	public static final int ROTARY_MODE = 0;

@@ -6,13 +6,16 @@
 package uk.org.toot.swingui.tonalityui;
 
 import java.awt.Dimension;
+
 import javax.swing.JComboBox;
+
 import java.util.Observer;
 import java.util.Observable;
 
 import uk.org.toot.music.tonality.Key;
 import uk.org.toot.music.tonality.Pitch;
 
+@SuppressWarnings("serial")
 public class RootCombo extends JComboBox implements Observer
 {
     private static String[] roots = { "G#", "C#", "F#", "B", "E", "A", "D", "G", "C", "F", "Bb", "Eb" };

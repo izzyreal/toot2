@@ -12,11 +12,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 import java.io.File;
+
 import javax.swing.UIManager;
 import javax.swing.JFrame;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
+
 import java.awt.Rectangle;
 
 // for the camera
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.awt.Robot;
 import java.awt.Point;
 import java.awt.AWTException;
+
 import javax.imageio.ImageIO;
 public class SwingApplication
 {
@@ -118,6 +121,7 @@ public class SwingApplication
     private final static String SHOOT_KEYS = "control alt S";
     private final static String SHOOT = "shoot";
 
+    @SuppressWarnings("serial")
     static private class ShootAction extends AbstractAction
     {
         private Component subject;

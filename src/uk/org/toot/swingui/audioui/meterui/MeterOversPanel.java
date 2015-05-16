@@ -9,6 +9,7 @@ import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.control.Control;
 import uk.org.toot.audio.meter.MeterControls;
 import uk.org.toot.swingui.controlui.*;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+@SuppressWarnings("serial")
 public class MeterOversPanel extends ControlPanel
 {
     private MeterControls controls;

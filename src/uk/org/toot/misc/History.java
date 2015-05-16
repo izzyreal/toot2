@@ -6,6 +6,7 @@ import javax.swing.undo.UndoManager;
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.event.ChangeEvent;
 
+@SuppressWarnings("serial")
 public class History extends UndoManager {
 
     public boolean nowdo(UndoableCommand edit) {

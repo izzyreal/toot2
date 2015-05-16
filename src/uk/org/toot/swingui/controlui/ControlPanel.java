@@ -8,10 +8,13 @@ package uk.org.toot.swingui.controlui;
 import java.awt.Font;
 import java.util.Observer;
 import java.util.Observable;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
 import uk.org.toot.control.Control;
 
+@SuppressWarnings("serial")
 public abstract class ControlPanel extends JPanel implements Observer
 {
     private Control control;

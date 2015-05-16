@@ -8,22 +8,27 @@ package uk.org.toot.swingui.audioui.mixerui;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import uk.org.toot.control.*;
+
 //import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 import javax.swing.SwingUtilities;
+
 import java.util.Observer;
 import java.util.Observable;
+
+
 //import java.util.Set;
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.control.ControlSelector;
 import uk.org.toot.swingui.controlui.PanelFactory;
 import uk.org.toot.swingui.audioui.AudioCompoundControlPanel;
 import uk.org.toot.swingui.audioui.AudioCompoundStripPanel;
-
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 
+@SuppressWarnings("serial")
 public class MixerSectionPanel extends AudioCompoundStripPanel
 {
     protected Observer controlObserver;

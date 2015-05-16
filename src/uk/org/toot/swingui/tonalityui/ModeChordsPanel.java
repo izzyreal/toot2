@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 
 import uk.org.toot.music.tonality.*;
 
+@SuppressWarnings("serial")
 public class ModeChordsPanel extends JPanel 
 {
 	private Scale scale;

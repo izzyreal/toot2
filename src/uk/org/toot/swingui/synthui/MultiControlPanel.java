@@ -28,6 +28,7 @@ import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.controlui.CompoundControlPanel;
 import uk.org.toot.swingui.controlui.ControlPanelFactory;
 
+@SuppressWarnings("serial")
 public abstract class MultiControlPanel extends DisposablePanel
 {
 	protected final static String NONE = "<none>";

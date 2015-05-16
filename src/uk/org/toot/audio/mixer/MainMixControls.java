@@ -8,6 +8,7 @@ package uk.org.toot.audio.mixer;
 import uk.org.toot.audio.mixer.MixControls;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.control.*;
+
 import java.util.List;
 
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
@@ -53,7 +54,7 @@ public class MainMixControls extends MixControls implements MainMixVariables
             indicator = !canRouteToGroups;
         }
 
-        public List getValues() {
+        public List<String> getValues() {
             List<String> values = new java.util.ArrayList<String>();
             for ( Control control : mixerControls.getControls() ) {
                 if ( control instanceof AudioControlsChain ) {

@@ -9,7 +9,6 @@ import java.util.List;
 
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
-import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.system.AudioOutput;
 
 /**

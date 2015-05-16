@@ -3,8 +3,10 @@
 package uk.org.toot.swingui.miscui;
 
 import java.awt.Component;
+
 import javax.swing.JPopupMenu;
 
+@SuppressWarnings("serial")
 abstract public class DynamicPopup extends JPopupMenu
 {
     public DynamicPopup() {

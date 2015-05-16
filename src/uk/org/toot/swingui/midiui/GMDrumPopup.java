@@ -4,12 +4,15 @@ package uk.org.toot.swingui.midiui;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JPopupMenu;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 //import uk.org.toot.midi.transport.MidiChannel;
 import uk.org.toot.midi.misc.GM;
 
+@SuppressWarnings("serial")
 public class GMDrumPopup extends JPopupMenu
 {
 //    private MidiChannel channel;

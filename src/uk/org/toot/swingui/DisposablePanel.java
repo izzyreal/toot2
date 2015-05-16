@@ -4,8 +4,10 @@
 package uk.org.toot.swingui;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 abstract public class DisposablePanel extends JPanel
 {
     // should be private with a protected accessor !!! !!!

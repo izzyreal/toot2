@@ -27,6 +27,7 @@ import uk.org.toot.synth.SynthServices;
 import uk.org.toot.synth.SynthRackControls;
 import uk.org.toot.synth.synths.multi.MultiSynthControls;
 
+@SuppressWarnings("serial")
 public class SynthRackPanel extends MultiControlPanel 
 {
 	private static Vector<String> selectionNames = new Vector<String>();

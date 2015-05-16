@@ -12,6 +12,7 @@ import javax.swing.*;
 
 import uk.org.toot.audio.server.AudioServerServices;
  
+@SuppressWarnings("serial")
 public class AudioServerChooser extends JDialog implements ActionListener 
 { 
     private static String chosenServerName;

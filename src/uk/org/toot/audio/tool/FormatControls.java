@@ -44,7 +44,7 @@ public class FormatControls extends AudioControls
 			}
 		}
 		
-	    public List getValues() {
+	    public List<ChannelFormat> getValues() {
 	    	return values;
 	    }
 	    

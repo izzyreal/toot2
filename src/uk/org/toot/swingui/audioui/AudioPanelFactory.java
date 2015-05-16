@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
+
 import javax.swing.*;
 
 import uk.org.toot.audio.core.AudioControls;
@@ -89,6 +90,7 @@ public class AudioPanelFactory extends ControlPanelFactory
     	return super.createComponent(control, axis, hasHeader);
     }
     
+    @SuppressWarnings("serial")
     static protected class SourceLabel extends JLabel implements Observer
     {
         private AudioControlsChain chain;
@@ -133,6 +135,7 @@ public class AudioPanelFactory extends ControlPanelFactory
     	}
     }
 
+    @SuppressWarnings("serial")
     protected class BypassButton extends JButton implements Observer, ActionListener
     {
         private BooleanControl bypassControl;

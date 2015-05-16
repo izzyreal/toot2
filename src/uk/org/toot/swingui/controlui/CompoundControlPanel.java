@@ -8,13 +8,16 @@ package uk.org.toot.swingui.controlui;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+
 import javax.swing.*;
+
 import java.util.Observable;
 import java.util.List;
-import uk.org.toot.control.*;
 
+import uk.org.toot.control.*;
 import static uk.org.toot.control.CompoundControlChain.ChainMutation.*;
 
+@SuppressWarnings("serial")
 public class CompoundControlPanel extends ControlPanel
 {
     /**

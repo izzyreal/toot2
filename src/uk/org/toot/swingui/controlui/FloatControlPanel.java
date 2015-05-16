@@ -6,8 +6,10 @@
 package uk.org.toot.swingui.controlui;
 
 import uk.org.toot.control.FloatControl;
+
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class FloatControlPanel extends ControlPanel
 {
     private final FloatControl control;

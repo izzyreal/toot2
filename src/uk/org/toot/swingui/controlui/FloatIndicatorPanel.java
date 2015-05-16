@@ -14,6 +14,7 @@ import javax.swing.Timer;
 
 import uk.org.toot.control.FloatControl;
 
+@SuppressWarnings("serial")
 public class FloatIndicatorPanel extends ControlPanel
 {
 	private JLabel nameLabel;

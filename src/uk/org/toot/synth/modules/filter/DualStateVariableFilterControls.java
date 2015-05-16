@@ -92,7 +92,7 @@ public class DualStateVariableFilterControls extends FilterControls
 		}
 		
 		@Override
-		public List getValues() {
+		public List<DualStateVariableFilterConfig> getValues() {
 			return values;
 		}
 		

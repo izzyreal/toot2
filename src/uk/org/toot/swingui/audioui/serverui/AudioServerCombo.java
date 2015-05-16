@@ -6,9 +6,11 @@
 package uk.org.toot.swingui.audioui.serverui;
 
 import javax.swing.*;
+
 import uk.org.toot.service.*;
 import uk.org.toot.audio.server.*;
 
+@SuppressWarnings("serial")
 public class AudioServerCombo extends JComboBox
 {
 	public AudioServerCombo(final String serverName) {

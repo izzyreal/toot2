@@ -42,7 +42,9 @@ public class BiQuadDesigner
             case NOTCH:
                 return OrfanidisBiQuadDesigner.designNotch(srate, freq, bwHz);                
             case RESONATOR:
-                return OrfanidisBiQuadDesigner.designResonator(srate, freq, bwHz);                
+                return OrfanidisBiQuadDesigner.designResonator(srate, freq, bwHz);
+            default:
+                break;                
             }
         }
         A = Math.pow(10, dbGain / 40); // for peaking and shelving only

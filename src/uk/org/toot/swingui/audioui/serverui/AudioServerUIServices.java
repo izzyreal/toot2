@@ -10,9 +10,11 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+
 import uk.org.toot.service.*;
 import uk.org.toot.audio.server.*;
 import uk.org.toot.swingui.audioui.serverui.spi.AudioServerUIServiceProvider;
+
 import javax.swing.*;
 
 public class AudioServerUIServices extends Services
@@ -67,7 +69,8 @@ public class AudioServerUIServices extends Services
         accept(new ServicePrinter(), clazz);
     }
 
-	public static class SetupDialog extends JDialog implements ActionListener 
+	@SuppressWarnings("serial")
+    public static class SetupDialog extends JDialog implements ActionListener 
 	{ 
 	    private JButton     okButton;
 

@@ -6,11 +6,14 @@
 package uk.org.toot.swingui.tonalityui;
 
 import java.awt.Dimension;
+
 import javax.swing.JComboBox;
+
 import java.util.List;
 
 import uk.org.toot.music.tonality.Scales;
 
+@SuppressWarnings("serial")
 public class ScaleCombo extends JComboBox
 {
     public ScaleCombo() {

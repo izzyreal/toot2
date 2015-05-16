@@ -15,7 +15,6 @@ import uk.org.toot.control.EnumControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.LogLaw;
-
 import static uk.org.toot.misc.Localisation.*;
 import static uk.org.toot.audio.delay.DelayIds.TEMPO_DELAY_ID;
 
@@ -111,7 +110,7 @@ public class TempoDelayControls extends AbstractDelayControls
 		}
 
 		@Override
-		public List getValues() {
+		public List<NamedFactor> getValues() {
 			return factors;
 		}
 		

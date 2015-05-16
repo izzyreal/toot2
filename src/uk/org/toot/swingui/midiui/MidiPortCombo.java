@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import uk.org.toot.midi.core.MidiSystem;
 import uk.org.toot.midi.core.MidiPort;
 
+@SuppressWarnings("serial")
 public class MidiPortCombo extends JComboBox
 {
 	public MidiPortCombo(MidiSystem system, boolean ins) {

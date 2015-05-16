@@ -6,11 +6,14 @@
 package uk.org.toot.swingui.audioui.meterui;
 
 import javax.swing.*;
+
 import uk.org.toot.control.FloatControl;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+@SuppressWarnings("serial")
 public class GainReductionIndicatorPanel extends AbstractMeterIndicatorPanel
 {
     private FloatControl indicator;

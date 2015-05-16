@@ -7,7 +7,6 @@ package uk.org.toot.music.tonality;
 
 import static uk.org.toot.music.tonality.Interval.*;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,10 +56,8 @@ public class Scales
     static public List<String> getScaleNames() {
     	checkScales();
         List<String> scaleNames = new java.util.ArrayList<String>();
-        Iterator iterator = scales.iterator();
-        while ( iterator.hasNext() ) {
-            Scale scale = (Scale)iterator.next();
-			scaleNames.add(scale.getName());
+        for ( Scale scale : scales ) {
+            scaleNames.add(scale.getName());            
         }
         return scaleNames;
     }
@@ -81,9 +78,7 @@ public class Scales
      */
     static public Scale getScale(String scaleName) {
     	checkScales();
-        Iterator iterator = scales.iterator();
-        while ( iterator.hasNext() ) {
-            Scale scale = (Scale)iterator.next();
+    	for ( Scale scale : scales ) {
             if ( scale.getName().indexOf(scaleName) >= 0 ) {
                 return scale;
             }

@@ -7,6 +7,7 @@ package uk.org.toot.swingui.tonalityui;
 
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class NoteField extends JTextField 
 {
 	public NoteField() {

@@ -58,6 +58,8 @@ public class FIRDesignerKW
             case BPF: w0 = 0.5f * (float)Math.PI * (f1 + f2) / fN;
                      w1 = 0.5f * (float)Math.PI * (f2 - f1 + ft) / fN;
             break;
+        default:
+            break;
         }
 
         // filter coefficients (NB not normalised to unit maximum gain)

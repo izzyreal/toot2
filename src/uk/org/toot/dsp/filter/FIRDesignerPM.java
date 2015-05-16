@@ -129,6 +129,8 @@ public class FIRDesignerPM
           weights[1] = rippleRatio;
           weights[2] = 1;
         } break;
+        default:
+            break;
         }
         // BANDPASS as opposed to DIFFERENTIATOR or HILBERT !
         a = remez(numTaps, bands, desired, weights, BANDPASS);

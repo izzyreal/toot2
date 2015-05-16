@@ -6,10 +6,14 @@
 package uk.org.toot.swingui.audioui.faderui;
 
 import java.awt.Font;
+
 import uk.org.toot.audio.fader.FaderControl;
+
 import javax.swing.*;
+
 import uk.org.toot.swingui.controlui.*;
 
+@SuppressWarnings("serial")
 public class FaderPanel extends ControlPanel
 {
     private final FaderControl control;

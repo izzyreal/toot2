@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -67,7 +68,7 @@ public class ChangeSupport implements java.io.Serializable
 		if (listeners != null) {
 			returnList.addAll(listeners);
 		}
-		return (ChangeListener[])(returnList.toArray(
+		return (returnList.toArray(
 				new ChangeListener[0]));
 	}
 
@@ -78,7 +79,7 @@ public class ChangeSupport implements java.io.Serializable
 	public void fireChange(ChangeEvent evt) {
 		if (listeners != null) {
 			for (int i = 0; i < listeners.size(); i++) {
-				ChangeListener listener = (ChangeListener)listeners.elementAt(i);
+				ChangeListener listener = listeners.elementAt(i);
 				listener.stateChanged(evt);
 			}
 		}
@@ -104,19 +105,20 @@ public class ChangeSupport implements java.io.Serializable
 	 * only serialize the serializable listeners.
 	 *
 	 */
-	private void writeObject(ObjectOutputStream s) throws IOException {
+	@SuppressWarnings("unchecked")
+    private void writeObject(ObjectOutputStream s) throws IOException {
 		s.defaultWriteObject();
 
-		java.util.Vector v = null;
+		java.util.Vector<ChangeListener> v = null;
 		synchronized (this) {
 			if (listeners != null) {
-				v = (java.util.Vector) listeners.clone();
+				v = (java.util.Vector<ChangeListener>) listeners.clone();
 			}
 		}
 
 		if (v != null) {
 			for (int i = 0; i < v.size(); i++) {
-				ChangeListener l = (ChangeListener)v.elementAt(i);
+				ChangeListener l = v.elementAt(i);
 				if (l instanceof Serializable) {
 					s.writeObject(l);
 				}
@@ -145,5 +147,5 @@ public class ChangeSupport implements java.io.Serializable
 	/**
 	 * Serialization version ID, so we're compatible with JDK 1.1
 	 */
-//	static final long serialVersionUID = 6401253773779951803L;
+	static final long serialVersionUID = 6401253773779951803L;
 }

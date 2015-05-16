@@ -6,13 +6,16 @@
 package uk.org.toot.swingui.audioui;
 
 import uk.org.toot.control.*;
+
 import javax.swing.*;
+
 //import java.util.Observer;
 //import java.util.Observable;
 import uk.org.toot.control.ControlSelector;
 import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.controlui.PanelFactory;
 
+@SuppressWarnings("serial")
 public class AudioCompoundStripPanel extends DisposablePanel
 {
     protected CompoundControl controls;

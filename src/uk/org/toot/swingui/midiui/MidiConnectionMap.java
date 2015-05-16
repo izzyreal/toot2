@@ -16,6 +16,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JPanel;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -23,8 +24,10 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.DefaultListCellRenderer;
+
 import uk.org.toot.midi.core.*;
 
+@SuppressWarnings("serial")
 public class MidiConnectionMap extends JPanel implements Observer
 {
     private JList outPorts;

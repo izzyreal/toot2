@@ -3,10 +3,12 @@
 package uk.org.toot.swingui.transportui;
 
 import java.net.URL;
+
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+@SuppressWarnings("serial")
 abstract public class TransportAction extends AbstractAction
 {
     private boolean selected = false;

@@ -16,6 +16,7 @@ import javax.swing.table.TableColumn;
 
 import uk.org.toot.midi.core.*;
 
+@SuppressWarnings("serial")
 public class MidiConnectionTable extends JTable
 {
     public MidiConnectionTable(ConnectedMidiSystem system) {

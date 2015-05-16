@@ -15,9 +15,12 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
+
 import uk.org.toot.control.BooleanControl;
+
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class BooleanControlPanel extends ControlPanel
 {
     private final BooleanControl control;

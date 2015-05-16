@@ -136,7 +136,7 @@ public class WowFlutterControls extends AudioControls implements WowFlutterProce
         }
 
         @Override
-        public List getValues() { return speeds; }  
+        public List<String> getValues() { return speeds; }  
                 
         @Override
         public boolean hasLabel() { return true; } // show "ips" label

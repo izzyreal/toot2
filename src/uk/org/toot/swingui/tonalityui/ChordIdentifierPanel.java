@@ -8,14 +8,17 @@ package uk.org.toot.swingui.tonalityui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
 import java.util.List;
 
 import uk.org.toot.music.tonality.Chord;
 import uk.org.toot.music.tonality.Chords;
 import uk.org.toot.music.tonality.Pitch;
 
+@SuppressWarnings("serial")
 public class ChordIdentifierPanel extends JPanel 
 {
 	private NoteField noteField;

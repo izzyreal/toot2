@@ -12,9 +12,12 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.util.Observable;
 import java.util.Observer;
+
 import uk.org.toot.control.*;
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.audio.mixer.automation.AutomationControls;
@@ -23,10 +26,10 @@ import uk.org.toot.control.automation.SnapshotAutomation;
 import uk.org.toot.swingui.DisposablePanel;
 import uk.org.toot.swingui.audioui.AudioCompoundControlPanel;
 import uk.org.toot.swingui.controlui.PanelFactory;
-
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.misc.Localisation.*;
 
+@SuppressWarnings("serial")
 public class CompactMixerPanel extends DisposablePanel
 {
     private String currentStripName;

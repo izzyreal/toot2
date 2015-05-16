@@ -15,7 +15,6 @@ import uk.org.toot.control.EnumControl;
 import uk.org.toot.control.FloatControl;
 import uk.org.toot.control.LinearLaw;
 import uk.org.toot.control.LogLaw;
-
 import static uk.org.toot.misc.Localisation.*;
 
 /**
@@ -177,7 +176,7 @@ public class CabMicingControls extends AudioControls implements CabMicingProcess
         }
         
         @Override
-        public List getValues() {
+        public List<String> getValues() {
             return values;
         }
         
@@ -201,7 +200,7 @@ public class CabMicingControls extends AudioControls implements CabMicingProcess
         }
         
         @Override
-        public List getValues() {
+        public List<String> getValues() {
             return values;
         }
         

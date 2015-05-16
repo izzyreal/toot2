@@ -105,7 +105,7 @@ public class ShortMsg extends MidiMsg
 		        MidiMessage msg = null;
                 for ( int i = 0; i < track.size(); i++ ) {
                     msg = track.get(i).getMessage();
-                    Class clazz = msg.getClass();
+                    Class<? extends MidiMessage> clazz = msg.getClass();
                     if ( fastShortPrototype == null &&
                          	clazz.getCanonicalName().equals("com.sun.media.sound.FastShortMessage") ) {
 						fastShortPrototype = msg;

@@ -8,10 +8,12 @@ package uk.org.toot.swingui.tonalityui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JPanel;
 
 import uk.org.toot.music.tonality.*;
 
+@SuppressWarnings("serial")
 public class ChordChooserPanel extends JPanel 
 {
 	private ScaleCombo scaleCombo;
