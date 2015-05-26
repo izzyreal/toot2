@@ -54,6 +54,13 @@ public class MixerControls extends CompoundControl //AudioControls
      */
     private SnapshotAutomation snapshotAutomation;
 
+    private float smoothingFactor = 0.05f; // default for 1ms buffers
+
+    public MixerControls(String name, float smoothingFactor) {
+        this(name);
+        this.smoothingFactor = smoothingFactor;
+    }
+    
     public MixerControls(String name) {
         this(name, getString("Main"), ChannelFormat.STEREO);
     }
@@ -67,6 +74,10 @@ public class MixerControls extends CompoundControl //AudioControls
         return ProviderId.TOOT_PROVIDER_ID;
     }
 
+    public float getSmoothingFactor() {
+        return smoothingFactor;
+    }
+    
     public BusControls createFxBusControls(String name, ChannelFormat format) {
         if ( !canAddBusses ) {
             throw new IllegalStateException(

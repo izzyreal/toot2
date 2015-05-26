@@ -204,6 +204,10 @@ public class MixControls extends AudioControls
         }
     }
 
+    public float getSmoothingFactor() {
+        return mixerControls.getSmoothingFactor();
+    }
+    
     protected EnumControl createRouteControl(int stripId) {
         return null;
     }

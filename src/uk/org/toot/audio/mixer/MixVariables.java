@@ -18,6 +18,7 @@ public interface MixVariables {
     float getGain();
     void getChannelGains(float[] dest);
     ChannelFormat getChannelFormat();
+    float getSmoothingFactor();
 }
 
 

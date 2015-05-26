@@ -30,6 +30,7 @@ public class MixProcess extends SimpleAudioProcess {
     private float gain = 1;
 	private float[] channelGains;
     private float[] smoothedChannelGains;
+    private float smoothingFactor;
 
     public MixProcess(AudioMixerStrip strip, MixVariables vars) {
         if ( strip == null ) {
@@ -38,13 +39,12 @@ public class MixProcess extends SimpleAudioProcess {
     	routedStrip = strip;
         this.vars = vars;
         ChannelFormat format = vars.getChannelFormat();
+        smoothingFactor = vars.getSmoothingFactor();
 		channelGains = new float[format.getCount()];
         smoothedChannelGains = new float[format.getCount()];
 	}
 
-    private float factor = 0.05f; // !!! !!! buffer size relationship?
-
-	protected AudioMixerStrip getRoutedStrip() { return routedStrip; }
+    protected AudioMixerStrip getRoutedStrip() { return routedStrip; }
 
 	public int processAudio(AudioBuffer buffer) {
         if ( !vars.isEnabled() && vars.isMaster() ) {
@@ -55,7 +55,7 @@ public class MixProcess extends SimpleAudioProcess {
                 vars.getChannelGains(channelGains);
                 // exponential average of control values
                 for ( int c = 0; c < channelGains.length; c++ ) {
-                    smoothedChannelGains[c] += factor *
+                    smoothedChannelGains[c] += smoothingFactor *
                         (channelGains[c] - smoothedChannelGains[c]);
                 }
 				getRoutedStrip().mix(buffer, smoothedChannelGains);
