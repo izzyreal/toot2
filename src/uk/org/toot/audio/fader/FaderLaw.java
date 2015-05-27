@@ -40,6 +40,7 @@ public class FaderLaw implements ControlLaw {
     private float[] floatValues;
 
 	public static float ATTENUATION_CUTOFF = 100f;
+	public static FaderLaw defaultLaw = BROADCAST;
 
     protected FaderLaw(int resolution, float halfdB, float maxdB, float attenuationCutoffFactor) {
         this.resolution = resolution;

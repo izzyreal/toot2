@@ -369,7 +369,7 @@ public class MixControls extends AudioControls
         private float gain;
 
         public GainControl(float initialdB) {
-            super(GAIN, FaderLaw.BROADCAST, initialdB);
+            super(GAIN, FaderLaw.defaultLaw, initialdB);
     	    gain = (float)Math.pow(10.0, initialdB/20.0);
             if ( initialdB <= -FaderLaw.ATTENUATION_CUTOFF ) {
                 gain = 0f;
