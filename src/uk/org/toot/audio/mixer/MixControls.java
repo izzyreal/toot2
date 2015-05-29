@@ -6,11 +6,11 @@
 package uk.org.toot.audio.mixer;
 
 import java.awt.Color;
+
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import uk.org.toot.audio.fader.*;
-
 import static uk.org.toot.audio.mixer.MixControlIds.*;
 import static uk.org.toot.misc.Localisation.*;
 
@@ -25,7 +25,7 @@ public class MixControls extends AudioControls
 
     private BooleanControl muteControl;
 
-    private GainControl gainControl;
+    private FaderControl gainControl;
 
     private LCRControl lcrControl;
 
@@ -110,10 +110,8 @@ public class MixControls extends AudioControls
             }
         }
         // all busses have a fader
-        float initialdB = ( (busId == AUX_BUS ||
-        	 				 busId == FX_BUS) && !isMaster ) ?
-                            -FaderLaw.ATTENUATION_CUTOFF : 0f;
-        gainControl = new GainControl(initialdB);
+        boolean muted = ( (busId == AUX_BUS || busId == FX_BUS) && !isMaster );
+        gainControl = mixerControls.createFaderControl(muted);
         gainControl.setInsertColor(isMaster ? Color.BLUE.darker() : Color.black);
         add(gainControl);
         derive(gainControl);
@@ -366,21 +364,18 @@ public class MixControls extends AudioControls
      * A GainControl is a FaderControl which implements GainVariables.
      */
     public static class GainControl extends FaderControl {
-        private float gain;
+        protected float gain;
 
-        public GainControl(float initialdB) {
-            super(GAIN, FaderLaw.defaultLaw, initialdB);
-    	    gain = (float)Math.pow(10.0, initialdB/20.0);
-            if ( initialdB <= -FaderLaw.ATTENUATION_CUTOFF ) {
-                gain = 0f;
-            }
+        public GainControl(boolean muted) {
+            super(GAIN, FaderLaw.defaultLaw, muted ? -FaderLaw.ATTENUATION_CUTOFF : 0f);
+            gain = muted ? 0f : 1f;
     	}
-
+        
         public void setValue(float value) {
             if ( value <= -FaderLaw.ATTENUATION_CUTOFF ) {
                 gain = 0f;
             } else {
-        	    gain = (float)Math.pow(10.0, value/20.0);
+                gain = (float)Math.pow(10.0, value/20.0);
             }
             super.setValue(value);
         }
@@ -388,6 +383,8 @@ public class MixControls extends AudioControls
         public float getGain() {
             return gain;
         }
+
+
     }
 }
 

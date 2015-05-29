@@ -8,12 +8,13 @@ package uk.org.toot.audio.mixer;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+
 import uk.org.toot.control.*;
 import uk.org.toot.control.automation.SnapshotAutomation;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.audio.core.ChannelFormat;
+import uk.org.toot.audio.fader.FaderControl;
 import uk.org.toot.audio.id.ProviderId;
-
 import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 import static uk.org.toot.misc.Localisation.*;
 
@@ -210,6 +211,11 @@ public class MixerControls extends CompoundControl //AudioControls
         return null;
     }
 
+    // provided to allow overriding for different implementations of FaderControl
+    public FaderControl createFaderControl(boolean muted) {
+        return new MixControls.GainControl(muted);
+    }
+    
     public SnapshotAutomation getSnapshotAutomation() {
         return snapshotAutomation;
     }

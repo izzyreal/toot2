@@ -11,7 +11,7 @@ import uk.org.toot.control.LawControl;
  * A FaderControl extends LawControl and differs from FloatControl in that
  * it is concerned with the unity gain point.
  */
-public class FaderControl extends LawControl {
+public abstract class FaderControl extends LawControl {
     // INSTANCE VARIABLES
     /** A label for the minimum value, such as "-inf" */
     private final String minLabel;
@@ -25,8 +25,7 @@ public class FaderControl extends LawControl {
     private static final String[] presetNames = { "Unity" };
 
     public FaderControl(int id, FaderLaw law) {
-        this(id, law, 0f,
-        "-inf", "U", String.valueOf(law.getMaxdB()));
+        this(id, law, 0f, "-inf", "U", String.valueOf(law.getMaxdB()));
     }
 
     /**
@@ -96,4 +95,10 @@ public class FaderControl extends LawControl {
         return getName() + " with current value: " + getValue() + " " + getLaw().getUnits() + " (max: " +((FaderLaw)getLaw()).getMaxdB() + ")";
     }
 
+    /**
+     * Implement this method to return the dsp value, i.e. the gain factor to multiply by
+     * @return the gain factor
+     */
+    public abstract float getGain();
+    
 } // class FaderControl
