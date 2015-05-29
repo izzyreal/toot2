@@ -43,12 +43,16 @@ public class FaderLaw implements ControlLaw {
 	public static FaderLaw defaultLaw = BROADCAST;
 
     protected FaderLaw(int resolution, float halfdB, float maxdB, float attenuationCutoffFactor) {
-        this.resolution = resolution;
+        this(resolution);
         this.halfdB = halfdB;
         this.maxdB = maxdB;
         this.attenuationCutoffFactor = attenuationCutoffFactor;
     }
 
+    protected FaderLaw(int resolution) {
+        this.resolution = resolution;        
+    }
+    
     public int getResolution() {
         return resolution;
     }
@@ -56,10 +60,6 @@ public class FaderLaw implements ControlLaw {
     public float getMaximum() { return maxdB; }
 
     public float getMinimum() { return -ATTENUATION_CUTOFF; }
-
-    public float getMaxdB() { // !!! !!! use getMaximum()
-        return maxdB;
-    }
 
     public String getUnits() { return "dB"; }
 

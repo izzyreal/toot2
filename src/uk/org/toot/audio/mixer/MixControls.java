@@ -361,9 +361,11 @@ public class MixControls extends AudioControls
     }
 
     /**
-     * A GainControl is a FaderControl which implements GainVariables.
+     * A GainControl is a FaderControl which implements a tapered log law.
      */
     public static class GainControl extends FaderControl {
+        private static final String[] presetNames = { "Unity" };
+
         protected float gain;
 
         public GainControl(boolean muted) {
@@ -382,6 +384,14 @@ public class MixControls extends AudioControls
 
         public float getGain() {
             return gain;
+        }
+
+        public String[] getPresetNames() { return presetNames; }
+
+        public void applyPreset(String name) {
+            if ( name.equals("Unity") ) {
+                setValue(0f);
+            }
         }
 
 
