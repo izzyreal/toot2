@@ -5,18 +5,20 @@
 
 package uk.org.toot.audio.fader;
 
+import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LawControl;
 
 /**
  * A FaderControl extends LawControl and differs from FloatControl in that
  * it generally uses a log law that needs to go to -infinity.
+ * This class also is a hint for UI generation
  */
 public abstract class FaderControl extends LawControl {
     /**
      * Constructs a new fader control object with the given parameters
      * @param initialValue the value that the control starts with when constructed
      */
-    public FaderControl(int id, FaderLaw law, float initialValue) {
+    public FaderControl(int id, ControlLaw law, float initialValue) {
         super(id, "Level", law, 0.1f, initialValue);
     }
 
