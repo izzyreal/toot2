@@ -366,8 +366,6 @@ public class MixControls extends AudioControls
     public static class GainControl extends FaderControl {
         private static final String[] presetNames = { "Unity" };
 
-        protected float gain;
-
         public GainControl(boolean muted) {
             super(GAIN, FaderLaw.defaultLaw, muted ? -FaderLaw.ATTENUATION_CUTOFF : 0f);
             gain = muted ? 0f : 1f;
@@ -380,10 +378,6 @@ public class MixControls extends AudioControls
                 gain = (float)Math.pow(10.0, value/20.0);
             }
             super.setValue(value);
-        }
-
-        public float getGain() {
-            return gain;
         }
 
         public String[] getPresetNames() { return presetNames; }
