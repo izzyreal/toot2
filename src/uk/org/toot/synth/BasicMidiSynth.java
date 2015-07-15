@@ -62,46 +62,62 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 		return synthChannels[chan];
 	}
 
-	protected SynthChannel mapChannel(int chan) {
-	    return synthChannels[chan];
+	protected void transportChannel(MidiMessage msg, SynthChannel synthChannel) {
+        if ( synthChannel == null ) return;
+        if ( NoteMsg.isNote(msg) ) {
+            int pitch = NoteMsg.getPitch(msg);
+            int velocity = NoteMsg.getVelocity(msg);
+            boolean on = NoteMsg.isOn(msg);
+            if ( on ) {
+                synthChannel.noteOn(pitch, velocity);
+            } else {
+                synthChannel.noteOff(pitch, velocity);
+            }
+        } else {
+            int cmd = getCommand(msg);
+            switch ( cmd ) {
+            case PITCH_BEND:
+                synthChannel.setPitchBend(getData1and2(msg));
+                break;
+            case CONTROL_CHANGE:
+                int controller = getData1(msg);
+                if ( controller == ALL_CONTROLLERS_OFF ) {
+                    synthChannel.resetAllControllers();
+                } else if ( controller == ALL_NOTES_OFF ) {
+                    synthChannel.allNotesOff();
+                } else if ( controller == ALL_SOUND_OFF ) {
+                    synthChannel.allSoundOff();
+                } else {
+                    synthChannel.controlChange(controller, getData2(msg));
+                }
+                break;
+            case ChannelMsg.CHANNEL_PRESSURE:
+                synthChannel.setChannelPressure(getData1(msg));
+                break;
+            }
+        }
+	    
 	}
-	public void transport(MidiMessage msg, long timestamp) {
+	
+    /*
+     * one to one chan to SynthChannel default map
+     * override for an alternate one to one mapping
+     */
+    protected SynthChannel mapChannel(int chan) {
+        return synthChannels[chan];
+    }
+    
+	/*
+	 * one to one chan to SynthChannel map, msg only goes to one place
+	 * override and call called method multiple times if msg need to go to multiple places
+	 */
+    protected void transportChannel(MidiMessage msg, int chan) {
+        transportChannel(msg, mapChannel(chan));        
+    }
+
+    public void transport(MidiMessage msg, long timestamp) {
 		if ( isChannel(msg) ) {
-			int chan = ChannelMsg.getChannel(msg);
-			SynthChannel synthChannel = mapChannel(chan); 
-			if ( synthChannel == null ) return;
-			if ( NoteMsg.isNote(msg) ) {
-				int pitch = NoteMsg.getPitch(msg);
-				int velocity = NoteMsg.getVelocity(msg);
-				boolean on = NoteMsg.isOn(msg);
-				if ( on ) {
-					synthChannel.noteOn(pitch, velocity);
-				} else {
-					synthChannel.noteOff(pitch, velocity);
-				}
-			} else {
-				int cmd = getCommand(msg);
-				switch ( cmd ) {
-				case PITCH_BEND:
-					synthChannel.setPitchBend(getData1and2(msg));
-					break;
-				case CONTROL_CHANGE:
-					int controller = getData1(msg);
-					if ( controller == ALL_CONTROLLERS_OFF ) {
-						synthChannel.resetAllControllers();
-					} else if ( controller == ALL_NOTES_OFF ) {
-						synthChannel.allNotesOff();
-					} else if ( controller == ALL_SOUND_OFF ) {
-						synthChannel.allSoundOff();
-					} else {
-						synthChannel.controlChange(controller, getData2(msg));
-					}
-					break;
-				case ChannelMsg.CHANNEL_PRESSURE:
-					synthChannel.setChannelPressure(getData1(msg));
-					break;
-				}
-			}
+		    transportChannel(msg, ChannelMsg.getChannel(msg));
 		}
 	}
 	
