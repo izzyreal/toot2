@@ -61,11 +61,14 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 	public SynthChannel getChannel(int chan) {
 		return synthChannels[chan];
 	}
-	
+
+	protected SynthChannel mapChannel(int chan) {
+	    return synthChannels[chan];
+	}
 	public void transport(MidiMessage msg, long timestamp) {
 		if ( isChannel(msg) ) {
 			int chan = ChannelMsg.getChannel(msg);
-			SynthChannel synthChannel = synthChannels[chan];
+			SynthChannel synthChannel = mapChannel(chan); 
 			if ( synthChannel == null ) return;
 			if ( NoteMsg.isNote(msg) ) {
 				int pitch = NoteMsg.getPitch(msg);
