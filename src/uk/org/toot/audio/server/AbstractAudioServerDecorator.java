@@ -83,6 +83,10 @@ public abstract class AbstractAudioServerDecorator implements AudioServer
 		server.stop();
 	}
 
+	public void close() {
+	    server.close();
+	}
+	
 	public float getSampleRate() {
 		return server.getSampleRate();
 	}

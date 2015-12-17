@@ -107,6 +107,8 @@ public class NonRealTimeAudioServer
        	isRunning = false;
     }
 
+    public void close() {}
+    
     public void setClient(AudioClient client) {
         server.setClient(this);
         this.client = client;

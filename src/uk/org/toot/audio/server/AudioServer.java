@@ -62,6 +62,11 @@ public interface AudioServer
     boolean isRunning();
 
     /**
+     * Release any acquired resources, all inputs and outputs will be closed.
+     */
+    void close();
+    
+    /**
      * Sets the single AudioClient.
      * Use CompoundAudioClient for multiple client support.
      * Typically start may be deferred until called at least once.
