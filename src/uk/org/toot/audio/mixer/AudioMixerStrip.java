@@ -166,6 +166,20 @@ public class AudioMixerStrip extends AudioProcessChain {
         if ( ret != 0 ) nmixed += 1;
         return ret;
     }
+	
+	@Override
+    public void close() {
+        super.close();
+        // we may not have created our buffer so AudioServer should be able to cope if it has
+        // already been removed by something we are sharing it with
+        mixer.removeBuffer(buffer);
+        buffer = null;
+        input = null;
+        directOutput = null;
+        metaInfo = null;
+        channelFormat = null;
+        mixer = null;
+    }
 }
 
 

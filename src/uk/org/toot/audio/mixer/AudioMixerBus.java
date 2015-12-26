@@ -15,6 +15,7 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
  * It has a K-System meter.
  */
 public class AudioMixerBus {
+    private AudioMixer mixer;
     /**
      * @link aggregationByValue
      * @supplierCardinality 1 
@@ -37,6 +38,7 @@ public class AudioMixerBus {
     private ChannelFormat channelFormat;
 
     public AudioMixerBus(AudioMixer mixer, BusControls busControls) {
+        this.mixer = mixer;
         name = busControls.getName();
         isFx = busControls.getId() == FX_BUS; // !!! !!!
         channelFormat = busControls.getChannelFormat();
@@ -69,6 +71,15 @@ public class AudioMixerBus {
         if ( meter != null ) {
             meter.processAudio(buffer);
         }
+    }
+    
+    public void close() {
+        mixer.removeBuffer(buffer);
+        buffer = null;
+        mixer = null;
+        output = null;
+        meter = null;
+        name = null;
     }
 }
 

@@ -125,6 +125,8 @@ public class AudioMixer implements AudioClient
     private ConcurrentLinkedQueue<MixerControls.Mutation> mutationQueue;
     private boolean enabled = true;
 
+    private MixerControlsObserver observer;
+    
     public AudioMixer(MixerControls controls, AudioServer server) throws Exception {
         if ( controls == null ) {
             throw new IllegalArgumentException("null MixerControls");
@@ -145,7 +147,7 @@ public class AudioMixer implements AudioClient
         // must create Busses first, bus Strips borrow their bus buffers
         createBusses(controls);
         createStrips(controls);
-        controls.addObserver(new MixerControlsObserver());
+        controls.addObserver(observer = new MixerControlsObserver());
     }
 
     public MixerControls getMixerControls() {
@@ -160,6 +162,10 @@ public class AudioMixer implements AudioClient
         return server.createAudioBuffer(name);
     }
 
+    protected void removeBuffer(AudioBuffer buffer) {
+        server.removeAudioBuffer(buffer);
+    }
+    
     public boolean isMutating() {
         return !mutationQueue.isEmpty();
     }
@@ -368,9 +374,41 @@ public class AudioMixer implements AudioClient
     }
 
     public void close() {
+        enabled = false;
+        controls.deleteObserver(observer);
+        controls = null;
+        observer = null;
+        server.removeAudioBuffer(sharedAudioBuffer);
+        server = null;
+        sharedAudioBuffer = null;
+                
         for ( AudioMixerStrip strip : strips ) {
-                strip.close();
+            strip.close();
         }
+        strips.clear();
+        strips = null;
+        channelStrips.clear();
+        channelStrips = null;
+        groupStrips.clear();
+        groupStrips = null;
+        fxStrips.clear();
+        fxStrips = null;
+        auxStrips.clear();
+        auxStrips = null;
+        mainStrip = null;
+        
+        for ( AudioMixerBus bus : busses ) {
+            bus.close();
+        }
+        busses.clear();
+        busses = null;
+        auxBusses.clear();
+        auxBusses = null;
+        fxBusses.clear();
+        fxBusses = null;
+        mainBus = null;
+        
+        mutationQueue = null;
     }
     
     public boolean isEnabled() {
