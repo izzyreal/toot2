@@ -10,6 +10,7 @@ import java.util.Observer;
 import java.util.Observable;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import uk.org.toot.control.*;
 import uk.org.toot.audio.core.*;
 import uk.org.toot.audio.server.AudioClient;
@@ -398,4 +399,52 @@ public class AudioMixer implements AudioClient
             }
         }
     }
-}
+    
+    /**
+     * Return an implementation of MixerInterconnection.
+     * @param name the name of the interconnection
+     * @return a MixerInterconnection
+     */
+    public MixerInterconnection createInterconnection(String name) {
+        return new DefaultMixerInterconnection(name);
+    }
+    
+    /**
+     * An implementation of MixerInterconnection to allow mixer inputs and outputs
+     * to be interconnected. Without this they can only be connected to external
+     * AudioProcesses.
+     * 
+     * There is no way of destroying this interconnection. The AudioBuffer would
+     * need to be removed by the AudioServer but it isn't safe to do that because
+     * we don't know whether it is still being used.
+     */
+    protected class DefaultMixerInterconnection implements MixerInterconnection
+    {
+        AudioProcess inputProcess;
+        AudioProcess outputProcess;
+
+        DefaultMixerInterconnection(String name) {
+            final AudioBuffer sharedBuffer = server.createAudioBuffer(name);
+            inputProcess = new SimpleAudioProcess() {
+                public int processAudio(AudioBuffer buffer) {
+                    sharedBuffer.copyFrom(buffer);
+                    return AUDIO_OK;
+                }                
+            };
+            outputProcess = new SimpleAudioProcess() {
+                public int processAudio(AudioBuffer buffer) {
+                    buffer.copyFrom(sharedBuffer);
+                    return AUDIO_OK;
+                }                
+            };
+        }
+            
+        public AudioProcess getInputProcess() {
+            return inputProcess;
+        }
+        
+        public AudioProcess getOutputProcess() {
+            return outputProcess;
+        }
+    }
+ }
