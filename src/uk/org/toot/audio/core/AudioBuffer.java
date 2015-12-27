@@ -227,6 +227,22 @@ public class AudioBuffer extends FloatSampleBuffer
     }
     
     /**
+     * Copy the state from another AudioBuffer
+     */
+    public void copyFrom(AudioBuffer src) {
+        if ( src == null ) return;
+        setChannelFormat(src.getChannelFormat());
+        int nc = getChannelCount();
+        int ns = getSampleCount();
+        for ( int c = 0; c < nc; c++ ) {
+            float[] from = src.getChannel(c);
+            float[] to = getChannel(c);
+            for ( int s = 0; s < ns; s++ ) {
+                to[s] = from[s];
+            }
+        }
+    }
+    /**
      * MetaInfo holds meta information for an AudioBuffer.
      * MetaInfo is intentionally immutable.
      * 'observers' will be able to simply detect a different MetaInfo
