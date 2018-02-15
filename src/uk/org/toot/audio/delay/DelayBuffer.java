@@ -198,7 +198,7 @@ public class DelayBuffer extends FloatSampleBuffer
         float[] source = getChannel(ch);
         int dns = buf.getSampleCount();
         float[] dest = buf.getChannel(ch);
-        int j = readIndex - delay;
+        int j = readIndex - delay + dns;
         if ( j < 0 ) j += sns;
         int count = Math.min(sns - j, dns);
         int i;
