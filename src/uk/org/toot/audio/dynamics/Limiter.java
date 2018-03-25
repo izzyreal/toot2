@@ -28,7 +28,7 @@ public class Limiter extends DynamicsProcess
             super(DynamicsIds.LIMITER_ID, getString("Limiter"));
         }
         
-        protected ControlLaw getRelaseLaw() { return RELEASE_LAW; }
+        protected ControlLaw getReleaseLaw() { return RELEASE_LAW; }
         
 		protected boolean hasGainReductionIndicator() { return true; }
     }
