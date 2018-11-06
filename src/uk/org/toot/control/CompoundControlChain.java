@@ -66,7 +66,7 @@ public class CompoundControlChain extends CompoundControl
         setChanged();
         // observer insert something equivalent to controlToInsert which is now at insertionIndex
         notifyObservers(
-            new ChainMutation(ChainMutation.INSERT, insertionIndex));
+            new InsertMutation(insertionIndex, controlToInsert));
     }
 
     // override for domain specific stuff
@@ -87,8 +87,7 @@ public class CompoundControlChain extends CompoundControl
         int index = controls.indexOf(controlToDelete);
         remove(controlToDelete);
         setChanged();
-        notifyObservers(
-            new ChainMutation(ChainMutation.DELETE, index));
+        notifyObservers(new DeleteMutation(index));
 	}
 
     // provided to allow faulty processes to remove themselves and their controls
@@ -97,8 +96,7 @@ public class CompoundControlChain extends CompoundControl
 //        controls.remove(indexToDelete);
         remove(controls.get(indexToDelete));
         setChanged();
-	    notifyObservers(
-            new ChainMutation(ChainMutation.DELETE, indexToDelete));
+	    notifyObservers(new DeleteMutation(indexToDelete));
     }
 
     public void move(String moveName, String moveBeforeName) {
@@ -111,8 +109,7 @@ public class CompoundControlChain extends CompoundControl
         int insertionIndex = controls.indexOf(controlToMoveBefore);
         controls.add(insertionIndex, controlToMove);
         setChanged();
-        notifyObservers(
-            new ChainMutation(ChainMutation.MOVE, indexToMove, insertionIndex));
+        notifyObservers(new MoveMutation(indexToMove, insertionIndex));
     }
 
     public void setMutating(boolean mutating) {
@@ -144,23 +141,19 @@ public class CompoundControlChain extends CompoundControl
 
         private int type;
         private int index0 = -1;
-        private int index1 = -1;
+        protected int index1 = -1;
+        protected Control control;
 
-        public ChainMutation(int type) {
+        protected ChainMutation(int type) {
             if ( type != COMMENCE && type != COMPLETE ) {
                 throw new IllegalArgumentException("illegal no indices costructor for this type");
             }
             this.type = type;
         }
 
-        public ChainMutation(int type, int index) {
+        protected ChainMutation(int type, int index) {
             this.type = type;
             index0 = index;
-        }
-
-        public ChainMutation(int type, int index0, int index1) {
-            this(type, index0);
-            this.index1 = index1;
         }
 
         public int getType() { return type; }
@@ -169,6 +162,8 @@ public class CompoundControlChain extends CompoundControl
 
         public int getIndex1() { return index1; }
 
+        public Control getControl() { return control; }
+        
         public String toString() {
             return typeName()+"("+index0+", "+index1+")";
         }
@@ -184,4 +179,28 @@ public class CompoundControlChain extends CompoundControl
             return "unknown mutation";
         }
     }
+    
+    static public class DeleteMutation extends ChainMutation
+    {
+    	public DeleteMutation(int index) {
+    		super(ChainMutation.DELETE, index);
+    	}
+    }
+
+    static public class InsertMutation extends ChainMutation
+    {
+    	public InsertMutation(int index, Control c) {
+    		super(ChainMutation.INSERT, index);
+    		this.control = c;
+    	}
+    }
+    
+    static public class MoveMutation extends ChainMutation
+    {
+    	public MoveMutation(int index0, int index1) {
+    		super(ChainMutation.MOVE, index0);
+    		this.index1 = index1;
+    	}
+    }
+
 }

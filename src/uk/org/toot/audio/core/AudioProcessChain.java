@@ -162,7 +162,7 @@ public class AudioProcessChain implements AudioProcess {
 	            processes.remove(p);
     	        break;
         	case AudioControlsChain.ChainMutation.INSERT:
-            	Control controls = controlChain.getControls().get(m.getIndex0());
+            	Control controls = m.getControl();
 	        	if ( controls instanceof AudioControls ) {
 		            p = createProcess((AudioControls)controls);
             		processes.add(m.getIndex0(), p);

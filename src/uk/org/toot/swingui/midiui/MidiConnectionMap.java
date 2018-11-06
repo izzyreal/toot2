@@ -162,7 +162,7 @@ public class MidiConnectionMap extends JPanel implements Observer
         }
     }
 
-    private class RightAlignedListCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
+    private class RightAlignedListCellRenderer extends DefaultListCellRenderer {
 	    // This is the only method defined by ListCellRenderer.
     	// We just reconfigure the JLabel each time we're called.
 	    public Component getListCellRendererComponent(
