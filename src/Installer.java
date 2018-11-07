@@ -87,8 +87,10 @@ public class Installer extends JFrame
 			    extracted ++;
                 pm.setProgress(i);
                 pm.setNote(pathname);
-			    if(pm.isCanceled())
+			    if(pm.isCanceled()) {
+			    	zf.close();
 					return;
+			    }
 
                 in = zf.getInputStream(entry);
 
