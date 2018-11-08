@@ -27,7 +27,7 @@ public class LogLaw extends AbstractLaw
     //  min <= userVal <= max
     public int intValue(float userVal) {
         if ( userVal == 0 ) userVal = 1; // !!! protect log
-        return (int)((resolution-1) * (Math.log10(userVal)-logMin) / logSpan);
+        return (int)(0.5 + ((resolution-1) * (Math.log10(userVal)-logMin) / logSpan));
     }
 
     // 0 <= intVal < resolution
