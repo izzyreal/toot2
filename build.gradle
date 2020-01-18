@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group 'uk.org.toot'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.googlecode.soundlibs', name: 'tritonus-share', version: '0.3.7.4'
+}
