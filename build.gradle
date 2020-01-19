@@ -4,8 +4,8 @@ plugins {
     id 'signing'
 }
 
-group 'uk.org.toot'
-version '1.0-SNAPSHOT'
+group 'com.github.izzyreal'
+version '1.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -38,6 +38,7 @@ publishing {
             pom {
                 name = 'toot2'
                 description = 'Audio, MIDI and Music Theory models as reusable components'
+                url = 'https://github.com/izzyreal/toot2'
                 licenses {
                     license {
                         name = 'GNU General Public License, version 2'
@@ -63,12 +64,16 @@ publishing {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
         }
     }
 }
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html4', true)
     }
 }
