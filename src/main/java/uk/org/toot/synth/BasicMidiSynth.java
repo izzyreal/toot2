@@ -29,8 +29,8 @@ abstract public class BasicMidiSynth extends AbstractMidiDevice implements MidiS
 	private List<AudioOutput> audioOutputs;
 	
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 16 
+     * aggregationByValue
+     * supplierCardinality 16
      */
 	private SynthChannel[] synthChannels = new SynthChannel[16];
 	private String location = "?";

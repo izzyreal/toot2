@@ -8,8 +8,8 @@ package uk.org.toot.audio.filter;
 abstract public class AbstractFilterDesign implements FilterDesign
 {
     /**
-     * @supplierCardinality 1 
-     * @link aggregation
+     * supplierCardinality 1
+     * aggregation
      */
     protected FilterSpecification spec;
 

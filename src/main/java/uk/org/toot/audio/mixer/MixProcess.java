@@ -15,15 +15,15 @@ import uk.org.toot.audio.core.ChannelFormat;
  */
 public class MixProcess extends SimpleAudioProcess {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     protected MixVariables vars;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
-     * @label routed
+     * aggregation
+     * supplierCardinality 1
+     * label routed
      */
     protected AudioMixerStrip routedStrip;
 

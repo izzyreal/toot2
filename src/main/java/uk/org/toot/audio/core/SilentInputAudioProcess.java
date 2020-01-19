@@ -12,8 +12,8 @@ package uk.org.toot.audio.core;
  */
 public class SilentInputAudioProcess extends SimpleAudioProcess {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private ChannelFormat channelFormat;
     private AudioBuffer.MetaInfo metaInfo;

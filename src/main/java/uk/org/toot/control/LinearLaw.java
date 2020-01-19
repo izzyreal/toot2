@@ -15,9 +15,9 @@ public class LinearLaw extends AbstractLaw
 	 */
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1
-     * @label UNITY 
+     * aggregationByValue
+     * supplierCardinality 1
+     * label UNITY
      */
 	public final static LinearLaw UNITY = new LinearLaw(0, 1, "");
 	

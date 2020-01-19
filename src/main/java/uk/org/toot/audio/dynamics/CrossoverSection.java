@@ -13,8 +13,8 @@ class CrossoverSection
     implements FilterSpecification
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     private CrossoverControl control;
     private FilterShape shape;

@@ -11,7 +11,7 @@ import org.tritonus.share.sampled.FloatSampleBuffer;
  * Encapsulates buffered multi-channel sampled audio.
  * 
  * It has a ChannelFormat and enables meta information to be attached to buffers.
- * It can convert to another ChannelFormat (1->N and N->1 only)
+ * It can convert to another ChannelFormat (1 to N and N to 1 only)
  * 
  * It has a real-time property to allow AudioProcesses to discriminate
  * between real-time and non-real-time for quality purposes etc.
@@ -24,8 +24,8 @@ public class AudioBuffer extends FloatSampleBuffer
     private MetaInfo metaInfo;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 0..1 
+     * aggregation
+     * supplierCardinality 0..1
      */
     private ChannelFormat channelFormat;
     private boolean realTime = true;

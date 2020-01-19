@@ -28,13 +28,13 @@ public class ChannelReadWriteMidiInput implements MidiInput,
 	private MidiInput input;
 	
     /**
-     * @supplierCardinality 16
-     * @link aggregationByValue
+     * supplierCardinality 16
+     * aggregationByValue
      */
     private MidiChannelReader[] decoders;
     /**
-     * @supplierCardinality 16
-     * @link aggregationByValue
+     * supplierCardinality 16
+     * aggregationByValue
      */
     private MidiChannelWriter[] encoders;
     private PropertyChangeSupport propertyChangeSupport;

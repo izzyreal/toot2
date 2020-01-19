@@ -19,8 +19,8 @@ import static uk.org.toot.midi.message.MachineControlMsg.*;
 abstract public class AbstractMMCSlave
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
 	private Transport transport;
 

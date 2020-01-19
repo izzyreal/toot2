@@ -137,9 +137,9 @@ public abstract class ChannelFormat
 
     /**
      * The Mono ChannelFormat
-     * @label MONO 
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * label MONO
+     * aggregationByValue
+     * supplierCardinality 1
      */
     public final static ChannelFormat MONO = new ChannelFormat() {
         private int[] empty = new int[0];
@@ -160,9 +160,9 @@ public abstract class ChannelFormat
 
     /**
      * The default Stereo ChannelFormat
-     * @label STEREO 
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * label STEREO
+     * aggregationByValue
+     * supplierCardinality 1
      */
     public final static ChannelFormat STEREO = new ChannelFormat() {
         private int[] left = { 0 };
@@ -190,9 +190,9 @@ public abstract class ChannelFormat
 
     /**
      * The default Quad ChannelFormat
-     * @label QUAD
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * label QUAD
+     * aggregationByValue
+     * supplierCardinality 1
      */
     public final static ChannelFormat QUAD = new ChannelFormat() {
         private int[] left = { 0, 2 };
@@ -223,9 +223,9 @@ public abstract class ChannelFormat
 
     /**
      * The default 5.1 ChannelFormat
-     * @label 5.1
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * label 5.1
+     * aggregationByValue
+     * supplierCardinality 1
      */
     public final static ChannelFormat FIVE_1 = new ChannelFormat() {
         private int[] left = { 0, 2 };

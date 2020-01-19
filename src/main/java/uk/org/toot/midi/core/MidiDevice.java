@@ -21,16 +21,16 @@ public interface MidiDevice extends IObservable
 
    /**
      * Get the list of MidiInputs for this MidiDevice.
-     * @supplierCardinality 0..*
-     * @link aggregationByValue
+     * supplierCardinality 0..*
+     * aggregationByValue
      */
     /*#MidiInput lnkMidiInput;*/
     List<MidiInput> getMidiInputs();
 
     /**
      * Get the list of MidiOutputs for this MidiDevice.
-     * @supplierCardinality 0..*
-     * @link aggregationByValue
+     * supplierCardinality 0..*
+     * aggregationByValue
      */
     /*#MidiOutput lnkMidiOutput;*/
     List<MidiOutput> getMidiOutputs();

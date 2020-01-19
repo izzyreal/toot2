@@ -18,20 +18,20 @@ import uk.org.toot.audio.core.ChannelFormat;
 public class MultiTapDelayProcess implements AudioProcess
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer delayBuffer;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer tappedBuffer; // just for conform()
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private final Variables vars;
 

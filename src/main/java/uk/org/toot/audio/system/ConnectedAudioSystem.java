@@ -14,8 +14,8 @@ public interface ConnectedAudioSystem extends AudioSystem
 //    void closeAudioConnection(String fromPortName, String toPortName);
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..* 
+     * aggregationByValue
+     * supplierCardinality 0..*
      */
     /*#AudioConnection lnkAudioConnection;*/
     List<AudioConnection> getConnections();

@@ -42,7 +42,6 @@ public class Performer
 	 * @param notes the notes to render
 	 * @param track the MIDI Track to render to
 	 * @param startTick the tick at the start of the bar
-	 * @param ticksPerBar the number of ticks per bar
 	 */
 	public void renderBar(int[] notes, Track track, 
 			long startTick, int ppqn)

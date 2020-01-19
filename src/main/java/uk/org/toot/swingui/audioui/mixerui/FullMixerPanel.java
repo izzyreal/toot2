@@ -39,44 +39,44 @@ public class FullMixerPanel extends DisposablePanel
     protected JPanel stripsPanel;
 
     /**
-     * @link aggregationByValue
-     * @label channels
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * label channels
+     * supplierCardinality 1
      */
     protected MixerSectionPanel channelsPanel;
 
 	/**
-	 * @link aggregationByValue
-	 * @label groups
-	 * @supplierCardinality 1
+	 * aggregationByValue
+	 * label groups
+	 * supplierCardinality 1
 	 */
 	protected MixerSectionPanel groupsPanel;
 
 	/**
-	 * @link aggregationByValue
-	 * @label fx
-	 * @supplierCardinality 1
+	 * aggregationByValue
+	 * label fx
+	 * supplierCardinality 1
 	 */
 	protected MixerSectionPanel fxPanel;
 
 	/**
-	 * @link aggregationByValue
-	 * @label aux
-	 * @supplierCardinality 1
+	 * aggregationByValue
+	 * label aux
+	 * supplierCardinality 1
 	 */
 	protected MixerSectionPanel auxPanel;
 
 	/**
-	 * @link aggregationByValue
-	 * @label main
-	 * @supplierCardinality 1
+	 * aggregationByValue
+	 * label main
+	 * supplierCardinality 1
 	 */
 	protected MixerSectionPanel masterPanel;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..1
-     * @label global controls 
+     * aggregationByValue
+     * supplierCardinality 0..1
+     * label global controls
      */
     protected MixerSectionPanel controlsPanel;
 

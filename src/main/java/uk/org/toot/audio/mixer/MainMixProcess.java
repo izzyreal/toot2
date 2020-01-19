@@ -16,8 +16,8 @@ import uk.org.toot.control.EnumControl;
 public class MainMixProcess extends MixProcess
 {
     /**
-     * @supplierCardinality 0..1 
-     * @label next
+     * supplierCardinality 0..1
+     * label next
      */
     protected AudioMixerStrip nextRoutedStrip = null;
     private Observer routeObserver;

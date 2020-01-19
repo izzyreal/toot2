@@ -16,8 +16,8 @@ import uk.org.toot.audio.core.ChannelFormat;
  */
 public class StereoImageProcess extends SimpleAudioProcess
 {
-    /** @link aggregation
-     * @supplierCardinality 1 
+    /** aggregation
+     * supplierCardinality 1
      */
     private StereoImageProcessVariables vars;
 

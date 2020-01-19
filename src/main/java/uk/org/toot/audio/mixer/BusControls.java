@@ -20,8 +20,8 @@ import static uk.org.toot.misc.Localisation.*;
 public class BusControls extends AudioControls implements Observer
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     private SoloIndicator soloIndicator;
     private MeterControls meterControls;

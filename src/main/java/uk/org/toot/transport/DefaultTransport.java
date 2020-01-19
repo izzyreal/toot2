@@ -17,8 +17,8 @@ public class DefaultTransport implements Transport
     private List<TransportListener> listeners;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     private TimeSource timeSource;
 

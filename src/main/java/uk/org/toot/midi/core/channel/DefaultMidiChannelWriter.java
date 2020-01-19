@@ -63,7 +63,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * a pitch-bend sensitivity setting.  However, the General MIDI
      * specification says that the default range should be two semitones up and down from center.
      * @param bend the amount of pitch change, as a nonnegative 14-bit value (8192 = no bend)
-     * @see #getPitchBend
      */
     public void setPitchBend(int bend) {
 //        pitchBend = bend;
@@ -132,7 +131,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * used to vary such features as the volume, brightness, or vibrato of the note.
      * @param noteNumber the MIDI note number, from 0 to 127 (60 = Middle C)
      * @param pressure value for the specified key, from 0 to 127 (127 = maximum pressure)
-     * @see #getPolyPressure(int)
      */
     public void setPolyPressure(int noteNumber, int pressure) {
 //        polyPressure[noteNumber] = pressure;
@@ -147,7 +145,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * aspects of the sound, as described under {@link #setPolyPressure(int, int) setPolyPressure}.
      * @param pressure the pressure with which the keyboard is being depressed, from 0 to 127 (127 = maximum pressure)
      * @see #setPolyPressure(int, int)
-     * @see #getChannelPressure
      */
     public void setChannelPressure(int pressure) {
 //        channelPressure = pressure;
@@ -178,7 +175,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * number for the lower 7 bits may then be used to further modulate the controller value.
      * @param controller the controller number (0 to 127; see the MIDI 1.0 Specification for the interpretation)
      * @param value the value to which the specified controller is changed (0 to 127)
-     * @see #getController(int)
      */
     public void controlChange(int controller, int value) {
         encode(CONTROL_CHANGE, controller, value);
@@ -192,7 +188,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * Note that MIDI hardware displays and literature about MIDI typically use the range 1 to 128 instead.
      * @param program the program number to switch to (0 to 127)
      * @see #programChange(int, int)
-     * @see #getProgram()
      */
     public void programChange(int program) {
 //        if (program == this.program) return; // no change
@@ -205,7 +200,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * @param bank the bank number to switch to (0 to 16383)
      * @param program the program (patch) to use in the specified bank (0 to 127)
      * @see #programChange(int)
-     * @see #getProgram()
      */
     public void programChange(int bank, int program) {
         // !! set the bank here;
@@ -277,7 +271,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * is opposed to the word "polyphonic" and refers to a single synthesizer voice per MIDI channel.  It has nothing to do
      * with how many audio channels there might be (as in "monophonic" versus "stereophonic" recordings).
      * @param on <code>true</code> to turn mono mode on, <code>false</code> to turn it off (which means turning poly mode on).
-     * @see #getMono
      */
     public void setMono(boolean on) {
         encode(CONTROL_CHANGE, MONO_MODE, on ? 127 : 0);
@@ -288,7 +281,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * to messages sent on all channels.  When omni is off, the channel responds only to messages sent on its channel number.
      * The default is omni off.
      * @param on <code>true</code> to turn omni mode on, <code>false</code> to turn it off.
-     * @see #getOmni
      */
     public void setOmni(boolean on) {
         encode(CONTROL_CHANGE, OMNI_MODE_ON, on ? 127 : 0);
@@ -300,7 +292,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * applies to only a specific channel, not to all channels.  Further, it
      * silences not only currently sounding notes, but also subsequently received notes.
      * @param mute the new mute state
-     * @see #getMute
      * @see #setSolo(boolean)
      */
     public void setMute(boolean mute) {
@@ -312,7 +303,6 @@ public class DefaultMidiChannelWriter implements MidiChannelWriter
      * and other soloed channels will sound. If <code>solo</code> is <code>false</code> then only other soloed channels will
      * sound, unless no channels are soloed, in which case all unmuted channels will sound.
      * @param soloState new solo state for the channel
-     * @see #getSolo
      * @see #setMute(boolean)
      */
     public void setSolo(boolean soloState) {

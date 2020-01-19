@@ -20,14 +20,14 @@ public class NonRealTimeAudioServer
     private boolean isRunning = false;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private AudioServer server;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private AudioClient client;
 

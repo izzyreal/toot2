@@ -6,8 +6,8 @@ public interface MidiChannelReaderProvider
 {
     /**
      * Return a MidiChannelReader for the specified channel index.
-     * @supplierCardinality 16
-     * @link aggregation
+     * supplierCardinality 16
+     * aggregation
      */
     /*#MidiChannelReader lnkMidiChannelReader;*/
     MidiChannelReader getChannelReader(int chan);

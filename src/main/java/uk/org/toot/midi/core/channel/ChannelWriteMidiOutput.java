@@ -14,8 +14,8 @@ public class ChannelWriteMidiOutput extends DefaultMidiOutput
     implements MidiChannelWriterProvider
 {
     /**
-     * @supplierCardinality 16
-     * @link aggregationByValue
+     * supplierCardinality 16
+     * aggregationByValue
      */
     private MidiChannelWriter[] encoders = new MidiChannelWriter[16];
 

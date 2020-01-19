@@ -13,7 +13,7 @@ public class DefaultMidiOutput implements MidiOutput, MidiTransport
     private String name;
 
     /**
-     * @supplierCardinality 0..n 
+     * supplierCardinality 0..n
      */
     private List<MidiInput> tos;
 

@@ -18,8 +18,8 @@ public interface ConnectedMidiSystem extends MidiSystem
     void closeMidiConnection(String fromPortName, String toPortName);
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..* 
+     * aggregationByValue
+     * supplierCardinality 0..*
      */
     /*#MidiConnection lnkMidiConnection;*/
     List<MidiConnection> getMidiConnections();

@@ -21,8 +21,8 @@ import static uk.org.toot.music.tonality.Interval.*;
 public class Chords 
 {
 	/**
-     * @supplierCardinality 1..*
-     * @label chords 
+     * supplierCardinality 1..*
+     * label chords
      * @directed
      */
     /*#Chord lnkChords;*/

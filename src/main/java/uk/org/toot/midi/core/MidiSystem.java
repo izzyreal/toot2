@@ -18,8 +18,8 @@ public interface MidiSystem extends IObservable
 	void removeMidiDevice(MidiDevice device);
 	
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..* 
+     * aggregationByValue
+     * supplierCardinality 0..*
      */
     /*#MidiDevice lnkMidiDevice;*/
     List<MidiDevice> getMidiDevices();

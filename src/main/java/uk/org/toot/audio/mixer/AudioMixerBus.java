@@ -17,15 +17,15 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 public class AudioMixerBus {
     private AudioMixer mixer;
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private AudioBuffer buffer;
 
     /**
-     * @label output
-     * @supplierCardinality 0..1
-     * @link aggregation 
+     * label output
+     * supplierCardinality 0..1
+     * aggregation
      */
     private AudioProcess output = null;
 

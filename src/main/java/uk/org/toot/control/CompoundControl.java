@@ -19,15 +19,15 @@ public abstract class CompoundControl extends Control
     public static final int USE_PARENT_PROVIDER_ID = 0;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 0..1 
+     * aggregation
+     * supplierCardinality 0..1
      */
     private static CompoundControlPersistence persistence;
 
     /**
      * The set of member controls.
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
+     * aggregationByValue
+     * supplierCardinality 0..*
      */
     protected List<Control> controls;
 

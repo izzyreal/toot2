@@ -41,14 +41,14 @@ public class MidiConnection
 	public final static int INPUT_LOCKED = 8;
 	
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private MidiOutput from;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private MidiInput to;
     

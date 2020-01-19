@@ -21,9 +21,6 @@ abstract public class BasicAutomation
     protected MixerControls mixerControls;
     private MutationObserver mutationObserver;
 
-    /** @link dependency */
-    /*#AutomationControls lnkAutomationControls;*/
-
     public BasicAutomation(MixerControls controls) {
         mixerControls = controls;
         // add automation controls to each initial strip

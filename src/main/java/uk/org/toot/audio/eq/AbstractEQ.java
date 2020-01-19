@@ -16,15 +16,15 @@ import uk.org.toot.audio.filter.*;
 abstract public class AbstractEQ extends EQ
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1..*
+     * aggregationByValue
+     * supplierCardinality 1..*
      */
     /*#Filter lnkFilters;*/
     protected ArrayList<Filter> filters = new ArrayList<Filter>();
 
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     protected EQ.Specification specification;
     protected int sampleRate = -1;

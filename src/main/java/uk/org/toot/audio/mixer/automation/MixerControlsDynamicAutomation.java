@@ -18,8 +18,8 @@ import uk.org.toot.audio.mixer.MixerControls;
  **/
 abstract public class MixerControlsDynamicAutomation extends BasicDynamicAutomation {
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     protected GlobalDynamicAutomationControls autoControls;
 

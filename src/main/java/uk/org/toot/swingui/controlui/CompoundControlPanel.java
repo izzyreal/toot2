@@ -21,14 +21,14 @@ import static uk.org.toot.control.CompoundControlChain.ChainMutation.*;
 public class CompoundControlPanel extends ControlPanel
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     protected ControlSelector controlSelector = null;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     protected PanelFactory panelFactory;
     protected CompoundControl control;

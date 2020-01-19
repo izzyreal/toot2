@@ -24,27 +24,27 @@ public class MultiBandCompressor implements AudioProcess
     private MultiBandControls multiBandControls;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 2..* 
+     * aggregationByValue
+     * supplierCardinality 2..*
      */
     private Compressor[] compressors;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1
-     * @label mid
+     * aggregationByValue
+     * supplierCardinality 1
+     * label mid
      */
     private Crossover midXO;
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..1
-     * @label lo
+     * aggregationByValue
+     * supplierCardinality 0..1
+     * label lo
      */
     private Crossover hiXO;
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..1
-     * @label hi
+     * aggregationByValue
+     * supplierCardinality 0..1
+     * label hi
      */
     private Crossover loXO;
 

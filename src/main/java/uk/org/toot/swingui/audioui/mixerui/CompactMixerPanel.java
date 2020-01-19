@@ -34,8 +34,8 @@ public class CompactMixerPanel extends DisposablePanel
 {
     private String currentStripName;
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private JPanel stripPanel;
     protected MixerControls mixerControls;
@@ -43,8 +43,8 @@ public class CompactMixerPanel extends DisposablePanel
 //	private ControlSelector controlSelector;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1*/
+     * aggregationByValue
+     * supplierCardinality 1*/
 	protected FullMixerPanel fullMixerPanel;
     protected PanelFactory topPanelFactory;
 

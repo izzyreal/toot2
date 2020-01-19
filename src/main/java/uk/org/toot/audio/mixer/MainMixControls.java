@@ -21,8 +21,8 @@ import static uk.org.toot.misc.Localisation.*;
 public class MainMixControls extends MixControls implements MainMixVariables
 {
     /**
-     * @supplierCardinality 0..1
-     * @link aggregationByValue 
+     * supplierCardinality 0..1
+     * aggregationByValue
      */
     private EnumControl routeControl;
 

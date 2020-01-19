@@ -29,20 +29,20 @@ public class ClassicFilterControls extends CompoundControl
     private FilterShape shape, defaultShape;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     private FloatControl leveldBControl;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     private FloatControl freqControl;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     private FloatControl resControl;
 

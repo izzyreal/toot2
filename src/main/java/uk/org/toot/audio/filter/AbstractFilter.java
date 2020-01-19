@@ -11,8 +11,8 @@ import java.util.Observable;
 abstract public class AbstractFilter implements Filter
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 1*/
+     * aggregation
+     * supplierCardinality 1*/
     private FilterDesign design = null;
     private Observer specObserver = null;
 

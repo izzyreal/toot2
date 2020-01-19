@@ -8,16 +8,16 @@ package uk.org.toot.audio.filter;
 public class IIRCrossover implements Crossover
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
-     * @label high pass
+     * supplierCardinality 1
+     * aggregationByValue
+     * label high pass
      */
     private Filter hpf;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
-     * @label low pass
+     * supplierCardinality 1
+     * aggregationByValue
+     * label low pass
      */
     private Filter lpf;
 

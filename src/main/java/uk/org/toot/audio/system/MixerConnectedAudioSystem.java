@@ -217,14 +217,14 @@ public class MixerConnectedAudioSystem extends DefaultAudioSystem
     protected class MixerInputConnection extends AudioConnection
     {
         /**
-         * @link aggregation
-         * @supplierCardinality 1 
+         * aggregation
+         * supplierCardinality 1
          */
         private AudioOutput from;
 
         /**
-         * @link aggregation
-         * @supplierCardinality 1 
+         * aggregation
+         * supplierCardinality 1
          */
         private AudioMixerStrip to;
         

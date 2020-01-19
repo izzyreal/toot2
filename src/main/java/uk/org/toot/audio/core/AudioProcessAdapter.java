@@ -14,8 +14,8 @@ package uk.org.toot.audio.core;
 abstract public class AudioProcessAdapter implements AudioProcess
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private AudioProcess process;
 

@@ -28,30 +28,30 @@ public class MixerControls extends CompoundControl //AudioControls
     private boolean canAddBusses = true; // until strip added
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
-     * @label Main
+     * supplierCardinality 1
+     * aggregationByValue
+     * label Main
      */
     private BusControls mainBusControls;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..* 
-     * @label Fx
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Fx
      */
     /*#private BusControls lnkFxBusControls;*/
     private List<BusControls> fxBusControls = new ArrayList<BusControls>();
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..* 
-     * @label Aux
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Aux
      */
     /*#private BusControls lnkAuxBusControls;*/
     private List<BusControls> auxBusControls = new ArrayList<BusControls>();
 
     /**
-     * @link aggregation
-     * @supplierCardinality 0..1 
+     * aggregation
+     * supplierCardinality 0..1
      */
     private SnapshotAutomation snapshotAutomation;
 

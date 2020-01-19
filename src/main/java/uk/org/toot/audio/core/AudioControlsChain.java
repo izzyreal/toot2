@@ -26,8 +26,8 @@ public class AudioControlsChain extends CompoundControlChain
      * null means there are no format constraints
      * so all descriptors are available for insert
      * if set non-null, only compatible descriptors are returned
-     * @supplierCardinality 0..1
-     * @link aggregation 
+     * supplierCardinality 0..1
+     * aggregation
      */
     private ChannelFormat constraintChannelFormat = null;
 

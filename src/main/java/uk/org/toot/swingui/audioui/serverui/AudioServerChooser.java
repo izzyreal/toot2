@@ -25,8 +25,8 @@ public class AudioServerChooser extends JDialog implements ActionListener
     }
     
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private AudioServerCombo serverCombo;
 

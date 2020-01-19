@@ -11,8 +11,8 @@ package uk.org.toot.transport;
 public class SystemTimeSource implements TimeSource
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     private Transport transport;
     private long startTime = 0;

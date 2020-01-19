@@ -25,16 +25,16 @@ public interface AudioDevice extends IObservable
 
    /**
      * Get the list of AudioInputs for this AudioDevice.
-     * @supplierCardinality 0..*
-     * @link aggregationByValue
+     * supplierCardinality 0..*
+     * aggregationByValue
      */
     /*#AudioInput lnkAudioInput;*/
     List<AudioInput> getAudioInputs();
 
     /**
      * Get the list of AudioOutputs for this AudioDevice.
-     * @supplierCardinality 0..*
-     * @link aggregationByValue
+     * supplierCardinality 0..*
+     * aggregationByValue
      */
     /*#AudioOutput lnkAudioOutput;*/
     List<AudioOutput> getAudioOutputs();

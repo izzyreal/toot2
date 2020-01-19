@@ -18,14 +18,14 @@ import static uk.org.toot.audio.core.FloatDenormals.*;
 public class ModulatedDelayProcess implements AudioProcess
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer delayBuffer; // needs to interpolate !!! !!!
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private final Variables vars;
     protected int[] modulatorMap;

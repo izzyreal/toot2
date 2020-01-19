@@ -28,14 +28,14 @@ import uk.org.toot.control.*;
  */
 public class AudioProcessChain implements AudioProcess {
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     protected AudioControlsChain controlChain;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 0..* 
+     * aggregation
+     * supplierCardinality 0..*
      */
     /*#protected AudioProcess linkProcesses;*/
     protected List<AudioProcess> processes;

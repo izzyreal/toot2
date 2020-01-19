@@ -18,8 +18,8 @@ public interface AudioSystem extends IObservable
 	void removeAudioDevice(AudioDevice device);
 	
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..* 
+     * aggregationByValue
+     * supplierCardinality 0..*
      */
     /*#AudioDevice lnkAudioDevice;*/
     List<AudioDevice> getAudioDevices();

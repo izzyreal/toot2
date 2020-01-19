@@ -16,8 +16,8 @@ import java.util.List;
 public class Scales 
 {
     /**
-     * @supplierCardinality 1..*
-     * @label scales 
+     * supplierCardinality 1..*
+     * label scales
      * @directed
      */
     /*#Scale lnkScales;*/

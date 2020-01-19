@@ -18,8 +18,8 @@ import java.awt.event.ActionListener;
 public class LawControlPresetMenu extends JPopupMenu implements ActionListener
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     private static LawControlPresetMenu instance;
 	private LawControl control;

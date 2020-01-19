@@ -13,23 +13,23 @@ import uk.org.toot.control.ControlLaw;
  */
 public class FaderLaw implements ControlLaw {
     /**
-     * @label SEMI_LOG
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * label SEMI_LOG
+     * supplierCardinality 1
+     * aggregationByValue
      */
     public static final FaderLaw SEMI_LOG = new FaderLaw(1024, -10f, 10f, 0.33f);
 
     /**
-     * @label LOG
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * label LOG
+     * supplierCardinality 1
+     * aggregationByValue
      */
     public static final FaderLaw LOG = new FaderLaw(1024, -20f, 15f, 0.2f);
 
     /**
-     * @label BROADCAST
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * label BROADCAST
+     * supplierCardinality 1
+     * aggregationByValue
      */
     public static final FaderLaw BROADCAST = new FaderLaw(1024, -30f, 15f, 0.125f);
 

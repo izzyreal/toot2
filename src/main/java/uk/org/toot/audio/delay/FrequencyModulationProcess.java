@@ -11,19 +11,19 @@ import uk.org.toot.audio.core.ChannelFormat;
 
 /**
  * A Modulated Delay Process for Frequency Modulation effects such
- * as Vibrato and Wow & Flutter.
+ * as Vibrato and Wow &amp; Flutter.
  */
 public abstract class FrequencyModulationProcess implements AudioProcess
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer delayBuffer;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private final DelayVariables vars;
     private float[][] samples = new float[6][];

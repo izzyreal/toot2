@@ -31,14 +31,14 @@ public class MixControls extends AudioControls
 
     private FrontRearControl frontRearControl;
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
+     * supplierCardinality 1
+     * aggregationByValue
      */
     private BusControls busControls;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     protected MixerControls mixerControls;
 

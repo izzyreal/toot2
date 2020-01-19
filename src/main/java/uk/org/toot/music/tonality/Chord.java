@@ -353,7 +353,6 @@ public class Chord
     	
     	/**
     	 * @param bar
-    	 * @param chord
     	 * @return a RelativeVoicing or null
     	 */
     	RelativeVoicing getRelativeVoicing(int bar, int step);
@@ -404,7 +403,6 @@ public class Chord
 		/**
 		 * @param bar - the bar
 		 * @param step - the step within the bar
-		 * @param voicing - the RelativeVoicing to be added at this position
 		 */
 		protected void add(int bar, int step, int offset, String symbol) {
 			Chord chord = Chords.withSymbol(symbol);

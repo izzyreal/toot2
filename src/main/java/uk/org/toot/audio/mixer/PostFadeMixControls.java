@@ -13,8 +13,8 @@ package uk.org.toot.audio.mixer;
 public class PostFadeMixControls extends MixControls
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private MainMixControls mainMixControls;
 

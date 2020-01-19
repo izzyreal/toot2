@@ -15,23 +15,23 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
  */
 public class AudioMixerStrip extends AudioProcessChain {
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     protected AudioMixer mixer;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 0..1
+     * aggregation
+     * supplierCardinality 0..1
      */
     private AudioBuffer buffer = null;
 
     private AudioBuffer.MetaInfo metaInfo;
 
     /**
-     * @supplierCardinality 0..1
-     * @link aggregation 
-     * @label input
+     * supplierCardinality 0..1
+     * aggregation
+     * label input
      */
     private AudioProcess input = null;
 

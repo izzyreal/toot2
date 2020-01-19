@@ -32,91 +32,91 @@ import static uk.org.toot.audio.mixer.MixerControlsIds.*;
 public class AudioMixer implements AudioClient
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
 	private MixerControls controls;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue 
-     * @label Main
+     * supplierCardinality 1
+     * aggregationByValue
+     * label Main
      */
     protected AudioMixerBus mainBus;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1..*
-     * @label all 
+     * aggregationByValue
+     * supplierCardinality 1..*
+     * label all
      */
     /*#protected AudioMixerBus lnkBusses;*/
     protected List<AudioMixerBus> busses;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     * @label Aux
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Aux
      */
     /*#protected AudioMixerBus lnkAuxBusses;*/
     protected List<AudioMixerBus> auxBusses;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     * @label Fx
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Fx
      */
     /*#protected AudioMixerBus lnkFxBusses;*/
     protected List<AudioMixerBus> fxBusses;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1..*
-     * @label All
+     * aggregationByValue
+     * supplierCardinality 1..*
+     * label All
      */
     /*#protected AudioMixerStrip lnkStrips;*/
     private List<AudioMixerStrip> strips;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     * @label Channels
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Channels
      */
     /*#protected AudioMixerStrip lnkChannelStrips;*/
     private List<AudioMixerStrip> channelStrips;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     * @label Groups
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Groups
      */
     /*#protected AudioMixerStrip lnkGroupStrips;*/
     private List<AudioMixerStrip> groupStrips;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     * @label Fx
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Fx
      */
     /*#protected AudioMixerStrip lnkFxStrips;*/
     private List<AudioMixerStrip> fxStrips;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 0..*
-     * @label Aux
+     * aggregationByValue
+     * supplierCardinality 0..*
+     * label Aux
      */
     /*#protected AudioMixerStrip lnkAuxStrips;*/
     private List<AudioMixerStrip> auxStrips;
 
     /**
-     * @supplierCardinality 1
-     * @link aggregationByValue
-     * @label Main*/
+     * supplierCardinality 1
+     * aggregationByValue
+     * label Main*/
     private AudioMixerStrip mainStrip;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private AudioServer server;
 

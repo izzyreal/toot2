@@ -14,8 +14,8 @@ import static uk.org.toot.audio.core.FloatDenormals.*;
 public class DenormalProcess extends SimpleAudioProcess
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private DenormalControls controls;
 

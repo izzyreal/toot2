@@ -39,7 +39,7 @@ import java.util.Stack;
  */
 public class SwitchedAudioClient implements AudioClient {
     /**
-     * @supplierCardinality 0..1 
+     * supplierCardinality 0..1
      */
 	private AudioClient client;
 

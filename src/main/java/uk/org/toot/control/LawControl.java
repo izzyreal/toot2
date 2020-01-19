@@ -13,14 +13,14 @@ import java.awt.Color;
 public class LawControl extends Control
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private static InsertColorer colorer = new DefaultInsertColorer();
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private ControlLaw law;
 

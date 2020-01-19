@@ -18,14 +18,14 @@ import uk.org.toot.audio.core.ChannelFormat;
 public class CabMicingProcess implements AudioProcess
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer delayBuffer;
 
     /**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private final Variables vars;
 

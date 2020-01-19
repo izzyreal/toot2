@@ -19,8 +19,8 @@ import uk.org.toot.audio.core.SimpleAudioProcess;
 public class MeterProcess extends SimpleAudioProcess
 {
     /**
-     * @supplierCardinality 1
-     * @link aggregation 
+     * supplierCardinality 1
+     * aggregation
      */
     private MeterControls controls;
 

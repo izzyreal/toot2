@@ -10,7 +10,7 @@ public interface BarComposer
 	/**
 	 * Create a 4/4 bar of notes in the specified Keys, changed
 	 * at the specified times.
-	 * @param BarContext the context for compsing this bar
+	 * @param barContext the context for compsing this bar
 	 */
 	public abstract int[] composeBar(BarContext barContext);
 }

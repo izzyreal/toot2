@@ -17,8 +17,6 @@ public interface MidiChannelWriter {
  * Sets the solo state for this channel. If <code>solo</code> is <code>true</code> only this channel
  * and other soloed channels will sound. If <code>solo</code> is <code>false</code> then only other soloed channels will
  * sound, unless no channels are soloed, in which case all unmuted channels will sound.
- * @param soloState new solo state for the channel
- * @see #getSolo
  * @see #setMute(boolean)
  */
 void setSolo(boolean solo);
@@ -34,8 +32,7 @@ int getIndex();
  * 8192 is the center (no pitch bend).  The actual amount of pitch change is not specified; it can be changed by
  * a pitch-bend sensitivity setting.  However, the General MIDI
  * specification says that the default range should be two semitones up and down from center.
- * @param bend the amount of pitch change, as a nonnegative 14-bit value (8192 = no bend)
- * @see #getPitchBend
+ * @param pitchBend the amount of pitch change, as a nonnegative 14-bit value (8192 = no bend)
  */
 void setPitchBend(int pitchBend);
 
@@ -45,9 +42,8 @@ void setPitchBend(int pitchBend);
  * <code>setPolyPressure</code>.  More commonly, it is a measurement of
  * a single sensor on a device that doesn't implement polyphonic key pressure.  Pressure can be used to control various
  * aspects of the sound, as described under {@link #setPolyPressure(int, int) setPolyPressure}.
- * @param pressure the pressure with which the keyboard is being depressed, from 0 to 127 (127 = maximum pressure)
+ * @param channelPressure the pressure with which the keyboard is being depressed, from 0 to 127 (127 = maximum pressure)
  * @see #setPolyPressure(int, int)
- * @see #getChannelPressure
  */
 void setChannelPressure(int channelPressure);
 
@@ -62,8 +58,7 @@ void setPan(int pan);
  * "Mono" is short for the word "monophonic," which in this context
  * is opposed to the word "polyphonic" and refers to a single synthesizer voice per MIDI channel.  It has nothing to do
  * with how many audio channels there might be (as in "monophonic" versus "stereophonic" recordings).
- * @param on <code>true</code> to turn mono mode on, <code>false</code> to turn it off (which means turning poly mode on).
- * @see #getMono
+ * @param mono <code>true</code> to turn mono mode on, <code>false</code> to turn it off (which means turning poly mode on).
  */
 void setMono(boolean mono);
 
@@ -71,8 +66,7 @@ void setMono(boolean mono);
  * Turns omni mode on or off.  In omni mode, the channel responds
  * to messages sent on all channels.  When omni is off, the channel responds only to messages sent on its channel number.
  * The default is omni off.
- * @param on <code>true</code> to turn omni mode on, <code>false</code> to turn it off.
- * @see #getOmni
+ * @param omni <code>true</code> to turn omni mode on, <code>false</code> to turn it off.
  */
 void setOmni(boolean omni);
 
@@ -82,7 +76,6 @@ void setOmni(boolean omni);
  * applies to only a specific channel, not to all channels.  Further, it
  * silences not only currently sounding notes, but also subsequently received notes.
  * @param mute the new mute state
- * @see #getMute
  * @see #setSolo(boolean)
  */
 void setMute(boolean mute);
@@ -123,7 +116,6 @@ void noteOff(int noteNumber);
  * used to vary such features as the volume, brightness, or vibrato of the note.
  * @param noteNumber the MIDI note number, from 0 to 127 (60 = Middle C)
  * @param pressure value for the specified key, from 0 to 127 (127 = maximum pressure)
- * @see #getPolyPressure(int)
  */
 void setPolyPressure(int noteNumber, int pressure);
 
@@ -150,7 +142,6 @@ void setPolyPressure(int noteNumber, int pressure);
  * number for the lower 7 bits may then be used to further modulate the controller value.
  * @param controller the controller number (0 to 127; see the MIDI 1.0 Specification for the interpretation)
  * @param value the value to which the specified controller is changed (0 to 127)
- * @see #getController(int)
  */
 void controlChange(int controller, int value);
 
@@ -162,7 +153,6 @@ void controlChange(int controller, int value);
  * Note that MIDI hardware displays and literature about MIDI typically use the range 1 to 128 instead.
  * @param program the program number to switch to (0 to 127)
  * @see #programChange(int, int)
- * @see #getProgram()
  */
 void programChange(int program);
 
@@ -171,7 +161,6 @@ void programChange(int program);
  * @param bank the bank number to switch to (0 to 16383)
  * @param program the program (patch) to use in the specified bank (0 to 127)
  * @see #programChange(int)
- * @see #getProgram()
  */
 void programChange(int bank, int program);
 

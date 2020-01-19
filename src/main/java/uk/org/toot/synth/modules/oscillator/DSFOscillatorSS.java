@@ -10,7 +10,7 @@ import uk.org.toot.dsp.Sine;
 
 /**
  * This class implements a properly band limited Oscillator using the Discrete 
- * Summation Formula by Moorer, 1975, as specified by Stilson & Smith, 1996.
+ * Summation Formula by Moorer, 1975, as specified by Stilson &amp; Smith, 1996.
  * Efficient Sine and Cosine phasors are used to avoid costly evaluation of standard
  * trigonometric methods.
  * @author st
@@ -28,8 +28,8 @@ public class DSFOscillatorSS implements DSFOscillator
 	 * a fundamental frequency, wn, and np-1 partial frequencies separated by wp, 
 	 * with amplitude rolling off exponentially with increasing frequency.
 	 * 
-	 * @param wn - fundamental normalised frequency, > 0, < PI 
-	 * @param wp - partial separation normalised frequency > 0
+	 * @param wn - fundamental normalised frequency, &gt; 0, &lt; PI
+	 * @param wp - partial separation normalised frequency &gt; 0
 	 * @param a - partial rolloff weight 0..1
 	 * @param np - number of partials, 1..
 	 */

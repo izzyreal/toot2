@@ -8,8 +8,8 @@ package uk.org.toot.midi.core;
 public interface MidiOutput extends MidiPort
 {
     /**
-     * @link aggregation
-     * @supplierCardinality 0..* 
+     * aggregation
+     * supplierCardinality 0..*
      */
     /*#MidiInput lnkMidiInput;*/
 

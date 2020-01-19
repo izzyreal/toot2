@@ -17,7 +17,7 @@ public class Key extends Observable
     protected int root;
 
     /**
-     * @link aggregation 
+     * aggregation
      */
     protected Scale scale;
 

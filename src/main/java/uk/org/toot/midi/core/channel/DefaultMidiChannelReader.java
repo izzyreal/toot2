@@ -70,7 +70,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
      * Obtains the pressure with which the specified key is being depressed.
      * @param noteNumber the MIDI note number, from 0 to 127 (60 = Middle C)
      * @return the amount of pressure for that note, from 0 to 127 (127 = maximum pressure)
-     * @see #setPolyPressure(int, int)
      */
     public int getPolyPressure(int noteNumber) {
         return polyPressure[noteNumber];
@@ -92,7 +91,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
     /**
      * Obtains the channel's keyboard pressure.
      * @return the pressure with which the keyboard is being depressed, from 0 to 127 (127 = maximum pressure)
-     * @see #setChannelPressure(int)
      */
     public int getChannelPressure() {
         return channelPressure;
@@ -127,7 +125,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
      * @param controller the number of the controller whose value is desired. The allowed range is 0-127; see the MIDI
      * 1.0 Specification for the interpretation.
      * @return the current value of the specified controller (0 to 127)
-     * @see #controlChange(int, int)
      */
     public int getController(int controller) {
         return control[controller];
@@ -146,7 +143,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
      * @return the program number of the currently selected patch
      * @see javax.sound.midi.Patch#getProgram
      * @see javax.sound.midi.Synthesizer#loadInstrument
-     * @see #programChange(int)
      */
     public int getProgram() {
         return program;
@@ -162,7 +158,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
     /**
      * Obtains the upward or downward pitch offset for this channel.
      * @return bend amount, as a nonnegative 14-bit value (8192 = no bend)
-     * @see #setPitchBend(int)
      */
     public int getPitchBend() {
         return pitchBend;
@@ -183,7 +178,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
     /**
      * Obtains the current mono/poly mode.
      * @return <code>true</code> if mono mode is on, otherwise <code>false</code> (meaning poly mode is on).
-     * @see #setMono(boolean)
      */
     public boolean getMono() {
         return mono;
@@ -192,7 +186,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
     /**
      * Obtains the current omni mode status.
      * @return <code>true</code> if omni mode is on, otherwise <code>false</code>.
-     * @see #setOmni(boolean)
      */
     public boolean getOmni() {
         return omni;
@@ -201,7 +194,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
     /**
      * Obtains the current mute state for this channel.
      * @return <code>true</code> the channel is muted, <code>false</code> if not
-     * @see #setMute(boolean)
      */
     public boolean getMute() {
         return mute;
@@ -210,7 +202,6 @@ public class DefaultMidiChannelReader implements MidiChannelReader
     /**
      * Obtains the current solo state for this channel.
      * @return <code>true</code> if soloed, <code>false</code> if not
-     * @see #setSolo(boolean)
      */
     public boolean getSolo() {
         return solo;

@@ -40,7 +40,7 @@ public abstract class TimedCoding {
 	
 	/**
 	 * Return the time, in ticks, of the specified event.
-	 * @param note the int which contains the time of the event
+	 * @param coded the int which contains the time of the event
 	 * @return the time, in ticks, of the event
 	 */
 	public static int getTime(int coded) {

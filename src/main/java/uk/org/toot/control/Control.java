@@ -40,8 +40,8 @@ public abstract class Control extends Observable
 
     /**
      * The parent of the control.
-     * @supplierCardinality 0..1
-     * @link aggregation
+     * supplierCardinality 0..1
+     * aggregation
      */
     private CompoundControl parent = null;
 

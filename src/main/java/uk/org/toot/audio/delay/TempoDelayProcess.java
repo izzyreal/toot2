@@ -17,22 +17,22 @@ import uk.org.toot.misc.Tempo;
 public class TempoDelayProcess implements AudioProcess
 {
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer delayBuffer;
 
     /**
-     * @link aggregationByValue
-     * @supplierCardinality 1 
+     * aggregationByValue
+     * supplierCardinality 1
      */
     private DelayBuffer tappedBuffer; // just for conform()
 
 	private Tempo.Listener tempoListener;
 
 	/**
-     * @link aggregation
-     * @supplierCardinality 1 
+     * aggregation
+     * supplierCardinality 1
      */
     private final Variables vars;
 
