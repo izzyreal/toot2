@@ -3,7 +3,7 @@ Audio, MIDI and Music Theory models for Java in the form of simple, reusable com
 
 ## Author
 
-* [**Steve Taylor**](https://github.com/toot)
+* **Steve Taylor**
 
 See also the list of [contributors](https://github.com/toot/toot2/contributors) who participated in this project.
 
