@@ -26,6 +26,12 @@ repositories {
 
 dependencies {
     compile group: 'com.googlecode.soundlibs', name: 'tritonus-share', version: '0.3.7.4'
+
+    testImplementation 'junit:junit:4.12'
+}
+
+test {
+    useJUnit()
 }
 
 publishing {
