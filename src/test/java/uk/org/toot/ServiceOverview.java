@@ -3,7 +3,7 @@ package uk.org.toot;
 import junit.framework.TestCase;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioServices;
-import uk.org.toot.service.ServiceDescriptor;
+import uk.org.toot.service.ServicePrinter;
 import uk.org.toot.service.ServiceVisitor;
 import uk.org.toot.synth.SynthChannelControls;
 import uk.org.toot.synth.SynthChannelServices;
@@ -16,11 +16,7 @@ import uk.org.toot.synth.SynthServices;
 
 public class ServiceOverview extends TestCase {
 
-    private ServiceVisitor serviceVisitor = new ServiceVisitor() {
-        public void visitDescriptor(ServiceDescriptor d) {
-            System.out.println(d.getName());
-        }
-    };
+    private ServiceVisitor serviceVisitor = new ServicePrinter();
 
     public void testSynthChannelServices() {
         System.out.println("\nSynthChannelServices:");
